@@ -1,49 +1,77 @@
 import React from 'react';
+import Link from 'next/link';
+import { ArrowRight, Globe } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
-import { TextLink } from '@/components/ui/TextLink';
 
 export const DestinationShowcase: React.FC = () => {
-  const destinations = [
-    { country: 'United Kingdom', slug: 'uk', region: 'Europe' },
-    { country: 'United Arab Emirates', slug: 'uae', region: 'Middle East' },
-    { country: 'United States', slug: 'usa', region: 'North America' },
-    { country: 'Canada', slug: 'canada', region: 'North America' },
-    { country: 'Saudi Arabia', slug: 'ksa', region: 'Middle East' },
+  const corridors = [
+    { country: 'United Kingdom', code: 'uk', hub: 'London (LHR / LGW)', mode: 'Air & Sea Cargo' },
+    { country: 'United Arab Emirates', code: 'uae', hub: 'Dubai (DXB / DWC)', mode: 'Express & Door-to-Door' },
+    { country: 'United States', code: 'usa', hub: 'New York (JFK) & Major Ports', mode: 'Commercial Air & Ocean' },
+    { country: 'Canada', code: 'canada', hub: 'Toronto (YYZ)', mode: 'Air & Consolidated Ocean' },
+    { country: 'Saudi Arabia', code: 'ksa', hub: 'Riyadh (RUH) & Jeddah (JED)', mode: 'Direct Air & Doorstep' },
   ];
 
   return (
-    <section className="w-full bg-brand-navy py-16 lg:py-24 border-b border-border-dark text-slate-200">
+    <section className="w-full bg-surface-subtle py-20 lg:py-28 border-b border-border text-brand-black">
       <Container>
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-          <SectionHeading
-            badge="Global Reach"
-            title="International Shipping Corridors"
-            subtitle="Connecting shippers in Pakistan with key international cargo destinations."
-            className="[&_h2]:text-white [&_p]:text-slate-300"
-          />
-          <TextLink href="/destinations" showIcon className="shrink-0 font-semibold text-accent">
-            View All Destinations
-          </TextLink>
+        <SectionHeading
+          badge="Trade Corridors"
+          title="Direct International Freight Routes"
+          subtitle="Scheduled commercial freight routes connecting Pakistan export hubs with destination markets."
+          className="mb-14"
+        />
+
+        {/* Trade Corridor Route Rows (Clean Editorial Separators, Not Heavy Cards) */}
+        <div className="bg-surface rounded-md border border-border divide-y divide-border shadow-xs overflow-hidden">
+          {corridors.map((item) => (
+            <Link
+              key={item.code}
+              href={`/destinations/${item.code}`}
+              className="p-6 lg:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:bg-surface-subtle/80 transition-colors group"
+            >
+              {/* Route Direction & Country */}
+              <div className="space-y-1 md:w-1/3">
+                <div className="text-xs font-mono text-slate-500 uppercase tracking-wider flex items-center gap-2">
+                  <span>Pakistan</span>
+                  <span className="text-slate-400 font-bold">→</span>
+                  <span className="font-semibold text-brand-black">{item.country}</span>
+                </div>
+                <h3 className="text-heading-md font-bold text-brand-black group-hover:text-accent transition-colors">
+                  Cargo to {item.country}
+                </h3>
+              </div>
+
+              {/* Hub & Transit Mode Metadata */}
+              <div className="flex flex-wrap md:flex-nowrap items-center gap-6 text-xs font-mono text-slate-600 md:w-1/2">
+                <div className="space-y-0.5">
+                  <span className="text-slate-400 block">Destination Hubs</span>
+                  <span className="font-medium text-slate-800">{item.hub}</span>
+                </div>
+                <div className="space-y-0.5">
+                  <span className="text-slate-400 block">Available Service</span>
+                  <span className="font-medium text-slate-800">{item.mode}</span>
+                </div>
+              </div>
+
+              {/* Action Link Indicator */}
+              <div className="flex items-center gap-2 text-xs font-mono font-semibold text-brand-black group-hover:text-accent transition-colors shrink-0">
+                <span>View Route</span>
+                <ArrowRight className="w-4 h-4 text-brand-black group-hover:text-accent transition-colors" />
+              </div>
+            </Link>
+          ))}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          {destinations.map((dest) => (
-            <div
-              key={dest.slug}
-              className="bg-surface p-5 rounded-md border border-border-dark flex flex-col justify-between space-y-4 hover:border-slate-700 transition-colors"
-            >
-              <div>
-                <span className="text-[11px] font-mono text-muted-foreground uppercase tracking-wider block mb-1">
-                  {dest.region}
-                </span>
-                <h3 className="text-heading-sm font-bold text-foreground">{dest.country}</h3>
-              </div>
-              <TextLink href={`/destinations/${dest.slug}`} variant="muted" showIcon className="text-xs">
-                Destination Guide
-              </TextLink>
-            </div>
-          ))}
+        <div className="mt-10 text-center">
+          <Link
+            href="/destinations"
+            className="inline-flex items-center gap-2 text-xs font-mono font-semibold text-brand-black hover:text-accent transition-colors"
+          >
+            <Globe className="w-4 h-4 text-slate-500" />
+            <span>Explore All International Destination Corridors →</span>
+          </Link>
         </div>
       </Container>
     </section>

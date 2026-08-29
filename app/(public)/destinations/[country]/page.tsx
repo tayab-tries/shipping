@@ -14,23 +14,30 @@ import { DestinationOriginGrid } from '@/components/destinations/DestinationOrig
 import { DestinationProcess } from '@/components/destinations/DestinationProcess';
 import { DestinationConsiderations } from '@/components/destinations/DestinationConsiderations';
 import { DestinationSubCitiesGrid } from '@/components/destinations/DestinationSubCitiesGrid';
+import { DestinationGuides } from '@/components/destinations/DestinationGuides';
 import { DestinationFaq } from '@/components/destinations/DestinationFaq';
 import { DestinationCta } from '@/components/destinations/DestinationCta';
 
-interface DestinationCountryPageProps {
+interface CountryPageProps {
   params: Promise<{ country: string }>;
 }
 
+/**
+ * Pre-render static params for published and verified country destination routes.
+ */
 export async function generateStaticParams() {
   const publishedDestinations = getPublishedStaticDestinations();
-  return publishedDestinations.map((destination) => ({
-    country: destination.slug,
+  return publishedDestinations.map((dest) => ({
+    country: dest.slug,
   }));
 }
 
-export async function generateMetadata({ params }: DestinationCountryPageProps): Promise<Metadata> {
-  const { country: countrySlug } = await params;
-  const destination = getStaticDestinationBySlug(countrySlug);
+/**
+ * Dynamic metadata generator for country destination pages.
+ */
+export async function generateMetadata({ params }: CountryPageProps): Promise<Metadata> {
+  const { country } = await params;
+  const destination = getStaticDestinationBySlug(country);
 
   if (!destination) {
     return {
@@ -55,11 +62,11 @@ export async function generateMetadata({ params }: DestinationCountryPageProps):
   };
 }
 
-export default async function DestinationCountryDetailPage({ params }: DestinationCountryPageProps) {
-  const { country: countrySlug } = await params;
-  const destination = getStaticDestinationBySlug(countrySlug);
+export default async function CountryDetailPage({ params }: CountryPageProps) {
+  const { country } = await params;
+  const destination = getStaticDestinationBySlug(country);
 
-  // Authoritative Verification Check
+  // 1. Authoritative Verification & Publication Check
   if (!destination) {
     notFound();
   }
@@ -73,11 +80,11 @@ export default async function DestinationCountryDetailPage({ params }: Destinati
 
   const breadcrumbJsonLd = getBreadcrumbJsonLd(breadcrumbs);
 
-  // Service Schema for Destination Page
+  // Service Schema for country page
   const destinationServiceJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Service',
-    name: `Cargo Shipping from Pakistan to ${destination.name}`,
+    name: `International Cargo Shipping to ${destination.name}`,
     description: destination.seoDescription,
     provider: {
       '@type': 'Organization',
@@ -88,11 +95,29 @@ export default async function DestinationCountryDetailPage({ params }: Destinati
       '@type': 'Country',
       name: destination.name,
     },
-    serviceType: 'International Freight Forwarding',
+    serviceType: 'International Cargo Shipping',
   };
+
+  // FAQ Schema if visible FAQ content exists
+  const faqJsonLd =
+    destination.faqs && destination.faqs.length > 0
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: destination.faqs.map((item) => ({
+            '@type': 'Question',
+            name: item.question,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: item.answer,
+            },
+          })),
+        }
+      : null;
 
   return (
     <article className="w-full bg-background">
+      {/* Schema.org Structured Data Injection */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(destinationServiceJsonLd) }}
@@ -101,8 +126,14 @@ export default async function DestinationCountryDetailPage({ params }: Destinati
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
 
-      {/* 1. Destination Hero */}
+      {/* 01 HERO (Dark / Photo-led) */}
       <DestinationHero
         countryName={destination.name}
         region={destination.region}
@@ -112,45 +143,50 @@ export default async function DestinationCountryDetailPage({ params }: Destinati
         breadcrumbs={breadcrumbs}
       />
 
-      {/* 2. Shipping Overview */}
+      {/* 02 OVERVIEW (LIGHT) */}
       <DestinationOverview
         countryName={destination.name}
         shippingOverview={destination.shippingOverview}
       />
 
-      {/* 3. Available Cargo Services */}
+      {/* 03 AVAILABLE SERVICES (LIGHT / WHITE) */}
       <DestinationServiceGrid
         countryName={destination.name}
+        countrySlug={destination.slug}
         supportedServices={destination.supportedServices}
       />
 
-      {/* 4. Pakistan Origin Cargo Hubs */}
+      {/* 04 PAKISTAN ORIGIN CITIES (WHITE) */}
       <DestinationOriginGrid
         countryName={destination.name}
+        countrySlug={destination.slug}
         supportedOrigins={destination.supportedOrigins}
       />
 
-      {/* 5. 4-Step Shipping Workflow */}
+      {/* 05 SHIPPING PROCESS (LIGHT) */}
       <DestinationProcess countryName={destination.name} />
 
-      {/* 6. Packing & Customs Considerations */}
+      {/* 06 PREPARATION / CUSTOMS (WHITE) */}
       <DestinationConsiderations
         countryName={destination.name}
         customsGuidance={destination.customsGuidance}
       />
 
-      {/* 7. Published Sub-Destination Cities */}
+      {/* 07 DESTINATION CITIES (LIGHT) */}
       <DestinationSubCitiesGrid
         countryName={destination.name}
         countrySlug={destination.slug}
         cities={destination.cities}
       />
 
-      {/* 8. Country FAQ Accordion */}
+      {/* 08 GUIDES (WHITE) */}
+      <DestinationGuides countryName={destination.name} />
+
+      {/* 09 FAQ (LIGHT) */}
       <DestinationFaq countryName={destination.name} faqs={destination.faqs} />
 
-      {/* 9. High-Impact Quote CTA */}
-      <DestinationCta countryName={destination.name} slug={destination.slug} />
+      {/* 10 CTA (BLACK) */}
+      <DestinationCta countryName={destination.name} countrySlug={destination.slug} />
     </article>
   );
 }

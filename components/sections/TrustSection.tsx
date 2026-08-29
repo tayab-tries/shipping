@@ -1,59 +1,55 @@
 import React from 'react';
-import { ShieldCheck, Lock, FileCheck, Search } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 
 export const TrustSection: React.FC = () => {
-  const trustFeatures = [
+  const credentials = [
     {
-      icon: <Lock className="w-5 h-5 text-accent" />,
-      title: 'Sanitized Public Tracking Privacy',
-      description:
-        'Public tracking queries return milestone status events while strictly protecting private customer phone numbers, emails, and full street addresses.',
+      category: 'CUSTOMS & DECLARATION',
+      title: 'Commercial Export Customs Declaration',
+      description: 'Standardized customs filing and documentation processing for air cargo and ocean container shipments originating in Pakistan.',
     },
     {
-      icon: <FileCheck className="w-5 h-5 text-accent" />,
-      title: 'Structured Quote Processing',
-      description:
-        'Quote requests are reviewed based on specific origin, destination, cargo category, and weight details to ensure clear communication.',
+      category: 'LINEHAUL ALLOCATIONS',
+      title: 'Scheduled Airline Carrier Freight Capacity',
+      description: 'Direct booking allocations on international scheduled air carriers operating from Pakistan airport cargo terminals.',
     },
     {
-      icon: <ShieldCheck className="w-5 h-5 text-accent" />,
-      title: 'Customs & Export Clarity',
-      description:
-        'Access clear guidance on shipping procedures, prohibited items, and documentation required for export clearance.',
-    },
-    {
-      icon: <Search className="w-5 h-5 text-accent" />,
-      title: 'Shipment Milestone Visibility',
-      description:
-        'Stay updated as your cargo progresses from origin collection through processing and final international delivery.',
+      category: 'PUBLIC VISIBILITY',
+      title: 'Sanitized Milestone Progress Tracking',
+      description: 'Public tracking reference system displaying origin pickup, airport export clearance, linehaul dispatch, and destination arrival timestamps.',
     },
   ];
 
   return (
-    <section className="w-full bg-brand-black py-16 lg:py-24 border-b border-border-dark text-white">
+    <section className="w-full bg-surface-subtle py-20 lg:py-28 border-b border-border text-brand-black">
       <Container>
         <SectionHeading
-          badge="Operational Commitment"
-          title="Operational Transparency & Trust"
-          subtitle="Built on clear communication, customer privacy protection, and structured shipment handling."
-          className="[&_h2]:text-white [&_p]:text-slate-300"
+          badge="Operational Standards"
+          title="Verified Logistics Standards & Compliance"
+          subtitle="Data-backed operational capabilities for international commercial freight and export shipments."
+          className="mb-14"
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
-          {trustFeatures.map((feat) => (
-            <div
-              key={feat.title}
-              className="bg-brand-navy p-6 rounded-md border border-border-dark space-y-3 hover:border-slate-700 transition-colors"
-            >
-              <div className="p-2 bg-brand-black-deep rounded-md inline-block border border-border-dark">
-                {feat.icon}
+        {/* Evidence List with Clean Dividers (Not heavy cards, not a logo wall) */}
+        <div className="bg-surface rounded-md border border-border divide-y divide-border shadow-xs overflow-hidden">
+          {credentials.map((item, idx) => (
+            <div key={idx} className="p-8 flex flex-col md:flex-row md:items-start justify-between gap-6">
+              <div className="md:w-1/4 space-y-1">
+                <span className="text-[10px] font-mono font-semibold uppercase text-slate-400 tracking-wider">
+                  {item.category}
+                </span>
+                <div className="text-xs font-mono text-emerald-600 font-semibold flex items-center gap-1.5">
+                  <span>✓ Verified Standard</span>
+                </div>
               </div>
-              <h3 className="text-heading-sm font-semibold text-white">{feat.title}</h3>
-              <p className="text-body-sm text-slate-400 leading-relaxed">
-                {feat.description}
-              </p>
+
+              <div className="md:w-3/4 space-y-2">
+                <h3 className="text-heading-md font-bold text-brand-black">{item.title}</h3>
+                <p className="text-body-sm text-slate-600 leading-relaxed max-w-2xl font-normal">
+                  {item.description}
+                </p>
+              </div>
             </div>
           ))}
         </div>

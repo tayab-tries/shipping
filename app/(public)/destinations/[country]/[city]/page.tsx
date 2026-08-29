@@ -13,21 +13,25 @@ import { DestinationServiceGrid } from '@/components/destinations/DestinationSer
 import { DestinationOriginGrid } from '@/components/destinations/DestinationOriginGrid';
 import { DestinationProcess } from '@/components/destinations/DestinationProcess';
 import { DestinationConsiderations } from '@/components/destinations/DestinationConsiderations';
+import { DestinationGuides } from '@/components/destinations/DestinationGuides';
 import { DestinationFaq } from '@/components/destinations/DestinationFaq';
 import { DestinationCta } from '@/components/destinations/DestinationCta';
 
-interface DestinationCityPageProps {
+interface CityPageProps {
   params: Promise<{ country: string; city: string }>;
 }
 
+/**
+ * Pre-render static params for published destination city routes.
+ */
 export async function generateStaticParams() {
-  const publishedDestinations = getPublishedStaticDestinations();
-  const paramsList: Array<{ country: string; city: string }> = [];
+  const publishedCountries = getPublishedStaticDestinations();
+  const params: Array<{ country: string; city: string }> = [];
 
-  for (const country of publishedDestinations) {
+  for (const country of publishedCountries) {
     for (const city of country.cities) {
       if (city.status === 'published' && city.isVerified === true && city.isIndexable === true) {
-        paramsList.push({
+        params.push({
           country: country.slug,
           city: city.slug,
         });
@@ -35,20 +39,23 @@ export async function generateStaticParams() {
     }
   }
 
-  return paramsList;
+  return params;
 }
 
-export async function generateMetadata({ params }: DestinationCityPageProps): Promise<Metadata> {
+/**
+ * Dynamic metadata generator for destination city pages.
+ */
+export async function generateMetadata({ params }: CityPageProps): Promise<Metadata> {
   const { country: countrySlug, city: citySlug } = await params;
-  const match = getStaticDestinationCity(countrySlug, citySlug);
+  const result = getStaticDestinationCity(countrySlug, citySlug);
 
-  if (!match) {
+  if (!result) {
     return {
       title: `Destination City Not Found | ${siteConfig.name}`,
     };
   }
 
-  const { city } = match;
+  const { city } = result;
   const canonicalUrl = `${siteConfig.domain}/destinations/${countrySlug}/${city.slug}`;
 
   return {
@@ -66,17 +73,18 @@ export async function generateMetadata({ params }: DestinationCityPageProps): Pr
   };
 }
 
-export default async function DestinationCityDetailPage({ params }: DestinationCityPageProps) {
+export default async function DestinationCityDetailPage({ params }: CityPageProps) {
   const { country: countrySlug, city: citySlug } = await params;
-  const match = getStaticDestinationCity(countrySlug, citySlug);
+  const result = getStaticDestinationCity(countrySlug, citySlug);
 
-  // Authoritative Parent & Child Publication Check
-  if (!match) {
+  // 1. Authoritative Publication Check (Parent Country + City 3-Way Gate)
+  if (!result) {
     notFound();
   }
 
-  const { country, city } = match;
+  const { country, city } = result;
   const quoteUrl = `/quote?destination=${country.slug}`;
+
   const breadcrumbs = [
     { label: 'Home', url: '/' },
     { label: 'Destinations', url: '/destinations' },
@@ -86,11 +94,11 @@ export default async function DestinationCityDetailPage({ params }: DestinationC
 
   const breadcrumbJsonLd = getBreadcrumbJsonLd(breadcrumbs);
 
-  // Service Schema for Destination City Page
+  // Service Schema for destination city page
   const cityServiceJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Service',
-    name: `Cargo Shipping from Pakistan to ${city.name}, ${country.name}`,
+    name: `Cargo & Shipping Services to ${city.name}, ${country.name}`,
     description: city.seoDescription,
     provider: {
       '@type': 'Organization',
@@ -105,11 +113,12 @@ export default async function DestinationCityDetailPage({ params }: DestinationC
         name: country.name,
       },
     },
-    serviceType: 'International Cargo Delivery',
+    serviceType: 'International Cargo Shipping',
   };
 
   return (
     <article className="w-full bg-background">
+      {/* Schema.org Structured Data Injection */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(cityServiceJsonLd) }}
@@ -119,9 +128,10 @@ export default async function DestinationCityDetailPage({ params }: DestinationC
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
-      {/* 1. Destination City Hero */}
+      {/* 01 HERO (Dark / Photo-led) */}
       <DestinationHero
-        countryName={`${city.name}, ${country.name}`}
+        countryName={country.name}
+        cityName={city.name}
         region={country.region}
         h1={city.h1}
         introduction={city.introduction}
@@ -129,38 +139,43 @@ export default async function DestinationCityDetailPage({ params }: DestinationC
         breadcrumbs={breadcrumbs}
       />
 
-      {/* 2. City Shipping Overview */}
+      {/* 02 OVERVIEW (LIGHT) */}
       <DestinationOverview
         countryName={`${city.name}, ${country.name}`}
-        shippingOverview={city.overview || country.shippingOverview}
+        shippingOverview={city.overview || city.introduction}
       />
 
-      {/* 3. Inherited Cargo Services Grid */}
+      {/* 03 AVAILABLE SERVICES (LIGHT / WHITE - Inherited from parent country) */}
       <DestinationServiceGrid
-        countryName={city.name}
+        countryName={`${city.name}, ${country.name}`}
+        countrySlug={country.slug}
         supportedServices={country.supportedServices}
       />
 
-      {/* 4. Inherited Pakistan Origin Cargo Hubs */}
+      {/* 04 PAKISTAN ORIGIN CITIES (WHITE - Inherited from parent country) */}
       <DestinationOriginGrid
-        countryName={city.name}
+        countryName={`${city.name}, ${country.name}`}
+        countrySlug={country.slug}
         supportedOrigins={country.supportedOrigins}
       />
 
-      {/* 5. 4-Step Shipping Process */}
+      {/* 05 SHIPPING PROCESS (LIGHT) */}
       <DestinationProcess countryName={`${city.name}, ${country.name}`} />
 
-      {/* 6. City-Specific Preparation & Coverage Considerations */}
+      {/* 06 PREPARATION / CUSTOMS / DELIVERY NOTES (WHITE) */}
       <DestinationConsiderations
         countryName={`${city.name}, ${country.name}`}
-        customsGuidance={city.preparationConsiderations || city.deliveryCoverageNotes || country.customsGuidance}
+        preparationConsiderations={city.preparationConsiderations || city.deliveryCoverageNotes}
       />
 
-      {/* 7. Country FAQ Accordion */}
-      <DestinationFaq countryName={`${city.name}, ${country.name}`} faqs={country.faqs} />
+      {/* 07 GUIDES (WHITE) */}
+      <DestinationGuides countryName={city.name} />
 
-      {/* 8. High-Impact Quote CTA */}
-      <DestinationCta countryName={`${city.name}, ${country.name}`} slug={country.slug} />
+      {/* 08 FAQ (LIGHT) */}
+      <DestinationFaq countryName={city.name} faqs={country.faqs} />
+
+      {/* 09 CTA (BLACK) */}
+      <DestinationCta countryName={`${city.name}, ${country.name}`} countrySlug={country.slug} />
     </article>
   );
 }

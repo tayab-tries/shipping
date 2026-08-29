@@ -1,83 +1,146 @@
 import React from 'react';
+import Link from 'next/link';
 import Image from 'next/image';
-import { FileText } from 'lucide-react';
+import { ArrowRight, BookOpen, Clock } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
-import { TextLink } from '@/components/ui/TextLink';
+import { Badge } from '@/components/ui/Badge';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
 
 export const GuidesPreviewSection: React.FC = () => {
   const guides = [
     {
-      title: 'Air vs Sea Freight: Transit Time & Cost Comparison',
       slug: 'air-vs-sea-cargo',
-      description: 'Understanding key differences between air freight speed and ocean cargo volume economy.',
-      image: IMAGE_SLOTS.guideCover.src,
-      alt: IMAGE_SLOTS.guideCover.alt,
+      title: 'Air Freight vs Sea Cargo: Choosing the Right Transit Mode',
+      category: 'Shipping Guide',
+      readTime: '6 min read',
+      excerpt: 'Comprehensive comparison of volumetric weight calculations, transit speeds, and cost structures for commercial exports.',
+      isFeatured: true,
     },
     {
-      title: 'Pakistan Export Customs & Documentation Guide',
       slug: 'export-customs-documentation-guide',
-      description: 'Mandatory shipping invoices, packing lists, declared value rules, and clearance procedures.',
-      image: IMAGE_SLOTS.guideCover.src,
-      alt: IMAGE_SLOTS.guideCover.alt,
+      title: 'Pakistan Export Customs Documentation Checklist',
+      category: 'Customs & Compliance',
+      readTime: '8 min read',
+      excerpt: 'Essential commercial invoice preparation, packing lists, and export declaration procedures.',
+      isFeatured: false,
     },
     {
-      title: 'International Cargo Packaging & Protection Guide',
       slug: 'packing-cargo-guide',
-      description: 'How to properly pack, weigh, and measure cargo items for international transit protection.',
-      image: IMAGE_SLOTS.guideCover.src,
-      alt: IMAGE_SLOTS.guideCover.alt,
+      title: 'International Cargo Packaging & Wooden Crating Rules',
+      category: 'Packaging',
+      readTime: '5 min read',
+      excerpt: 'Standardized crating requirements to prevent cargo damage during international air and ocean transit.',
+      isFeatured: false,
     },
   ];
 
-  return (
-    <section className="w-full bg-surface-subtle py-16 lg:py-24 border-b border-border">
-      <Container>
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-          <SectionHeading
-            badge="Shipping Resources"
-            title="Customs & Shipping Guides"
-            subtitle="Factual regulatory guidance and packaging resources for international shippers."
-          />
-          <TextLink href="/guides" showIcon className="shrink-0 font-semibold text-accent">
-            View All Guides
-          </TextLink>
-        </div>
+  const featured = guides.find((g) => g.isFeatured);
+  const supporting = guides.filter((g) => !g.isFeatured);
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {guides.map((guide) => (
-            <div
-              key={guide.slug}
-              className="bg-surface rounded-md border border-border overflow-hidden flex flex-col justify-between hover:border-border-strong transition-colors shadow-2xs group"
-            >
-              <div>
-                <div className="relative w-full aspect-[3/2] bg-surface-muted">
+  return (
+    <section className="w-full bg-surface-subtle py-20 lg:py-28 border-b border-border text-brand-black">
+      <Container>
+        <SectionHeading
+          badge="Resources & Knowledge"
+          title="Freight & Export Educational Guides"
+          subtitle="Practical guidance on packaging standards, export documentation rules, and transit mode selection."
+          className="mb-14"
+        />
+
+        {/* 1 Dominant Featured Article + 2 Editorial Supporting Rows (Not 3 identical cards) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
+          {/* Dominant Featured Article (Col-span-7) */}
+          {featured && (
+            <div className="lg:col-span-7 bg-surface rounded-md border border-border overflow-hidden p-8 flex flex-col justify-between space-y-6 group hover:border-accent transition-colors shadow-xs">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Badge variant="outline">{featured.category}</Badge>
+                  <div className="flex items-center gap-1.5 text-xs font-mono text-slate-500">
+                    <Clock className="w-3.5 h-3.5 text-slate-400" />
+                    <span>{featured.readTime}</span>
+                  </div>
+                </div>
+
+                <h3 className="text-heading-xl font-bold text-brand-black group-hover:text-accent transition-colors">
+                  <Link href={`/guides/${featured.slug}`}>{featured.title}</Link>
+                </h3>
+
+                <p className="text-body-md text-slate-600 leading-relaxed font-normal">
+                  {featured.excerpt}
+                </p>
+
+                {/* Featured Photo Slot */}
+                <div className="relative aspect-[16/9] rounded-md overflow-hidden bg-brand-black-deep mt-4 border border-border">
                   <Image
-                    src={guide.image}
-                    alt={guide.alt}
+                    src={IMAGE_SLOTS.guideCover.src}
+                    alt={IMAGE_SLOTS.guideCover.alt}
                     fill
-                    sizes="(max-width: 1024px) 100vw, 33vw"
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    sizes="(max-width: 1024px) 100vw, 650px"
+                    className="object-cover object-center group-hover:scale-102 transition-transform duration-500"
                   />
                 </div>
-                <div className="p-6 space-y-3">
-                  <div className="p-2 bg-surface-muted rounded-md inline-block">
-                    <FileText className="w-5 h-5 text-accent" />
-                  </div>
-                  <h3 className="text-heading-sm font-bold text-foreground">{guide.title}</h3>
-                  <p className="text-body-sm text-muted-foreground leading-relaxed">
-                    {guide.description}
-                  </p>
-                </div>
               </div>
-              <div className="p-6 pt-0">
-                <TextLink href={`/guides/${guide.slug}`} showIcon className="text-xs">
-                  Read Full Guide
-                </TextLink>
+
+              <div className="pt-4 border-t border-border flex items-center justify-between">
+                <span className="text-xs font-mono text-slate-500">Featured Article</span>
+                <Link
+                  href={`/guides/${featured.slug}`}
+                  className="text-xs font-mono font-semibold text-brand-black group-hover:text-accent flex items-center gap-1.5 transition-colors"
+                >
+                  <span>Read Full Article</span>
+                  <ArrowRight className="w-4 h-4 text-brand-black group-hover:text-accent" />
+                </Link>
               </div>
             </div>
-          ))}
+          )}
+
+          {/* Supporting Articles as Clean Rows with Dividers (Col-span-5) */}
+          <div className="lg:col-span-5 bg-surface rounded-md border border-border p-8 flex flex-col justify-between divide-y divide-border shadow-xs">
+            <div className="text-xs font-mono font-semibold uppercase text-slate-400 tracking-wider pb-4">
+              Supporting Guides & Documentation
+            </div>
+
+            {supporting.map((guide) => (
+              <div key={guide.slug} className="py-6 space-y-3 group first:pt-4 last:pb-0">
+                <div className="flex items-center justify-between text-xs font-mono text-slate-500">
+                  <span className="font-medium text-slate-600">{guide.category}</span>
+                  <div className="flex items-center gap-1">
+                    <Clock className="w-3 h-3 text-slate-400" />
+                    <span>{guide.readTime}</span>
+                  </div>
+                </div>
+
+                <h3 className="text-heading-sm font-bold text-brand-black group-hover:text-accent transition-colors">
+                  <Link href={`/guides/${guide.slug}`}>{guide.title}</Link>
+                </h3>
+
+                <p className="text-body-sm text-slate-600 leading-relaxed line-clamp-2">
+                  {guide.excerpt}
+                </p>
+
+                <div className="pt-1">
+                  <Link
+                    href={`/guides/${guide.slug}`}
+                    className="text-xs font-mono font-semibold text-brand-black group-hover:text-accent flex items-center gap-1 transition-colors"
+                  >
+                    <span>Read Guide</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-accent" />
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-10 text-center">
+          <Link
+            href="/guides"
+            className="inline-flex items-center gap-2 text-xs font-mono font-semibold text-brand-black hover:text-accent transition-colors"
+          >
+            <BookOpen className="w-4 h-4 text-slate-500" />
+            <span>Explore All Educational Resources & Articles →</span>
+          </Link>
         </div>
       </Container>
     </section>

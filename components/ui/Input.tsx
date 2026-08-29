@@ -1,11 +1,11 @@
 import React from 'react';
-import { clsx } from 'clsx';
-import { FormLabel, FormHint, FormError } from './FormControls';
+import { cn } from './Button';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
-  hint?: string;
   error?: string;
+  helperText?: string;
+  variantSurface?: 'light' | 'dark';
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
 }
@@ -15,61 +15,66 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     {
       className,
       label,
-      hint,
       error,
+      helperText,
+      variantSurface = 'light',
       leftIcon,
       rightIcon,
       id,
-      required,
-      disabled,
-      type = 'text',
       ...props
     },
     ref
   ) => {
     const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined);
 
+    const surfaceStyles = {
+      light: 'bg-surface text-brand-black border-border placeholder:text-slate-400 focus:border-accent focus:ring-accent/30',
+      dark: 'bg-brand-navy text-white border-border-dark placeholder:text-slate-500 focus:border-accent focus:ring-accent/30',
+    }[variantSurface];
+
     return (
-      <div className="w-full">
+      <div className="w-full space-y-1.5">
         {label && (
-          <FormLabel htmlFor={inputId} required={required}>
+          <label
+            htmlFor={inputId}
+            className={cn(
+              'block text-xs font-mono font-semibold uppercase tracking-wider',
+              variantSurface === 'dark' ? 'text-slate-300' : 'text-slate-700'
+            )}
+          >
             {label}
-          </FormLabel>
+          </label>
         )}
         <div className="relative flex items-center">
           {leftIcon && (
-            <div className="absolute left-3 text-muted-foreground pointer-events-none shrink-0">
+            <div className="absolute left-3.5 pointer-events-none text-slate-400">
               {leftIcon}
             </div>
           )}
           <input
             ref={ref}
             id={inputId}
-            type={type}
-            required={required}
-            disabled={disabled}
-            aria-invalid={Boolean(error)}
-            className={clsx(
-              'w-full bg-surface text-foreground placeholder:text-muted-foreground text-sm font-normal rounded-md border border-border transition-colors duration-150',
-              'focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent',
-              'disabled:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-60',
-              {
-                'pl-10': leftIcon,
-                'pr-10': rightIcon,
-                'px-3.5 py-2.5': !leftIcon,
-                'border-danger focus:ring-danger': Boolean(error),
-              },
+            className={cn(
+              'w-full h-11 px-3.5 py-2.5 text-sm rounded-md border transition-colors outline-none focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed',
+              leftIcon && 'pl-10',
+              rightIcon && 'pr-10',
+              error && 'border-danger focus:border-danger focus:ring-danger/30',
+              surfaceStyles,
               className
             )}
             {...props}
           />
           {rightIcon && (
-            <div className="absolute right-3 text-muted-foreground shrink-0">
+            <div className="absolute right-3.5 pointer-events-none text-slate-400">
               {rightIcon}
             </div>
           )}
         </div>
-        {error ? <FormError>{error}</FormError> : hint ? <FormHint>{hint}</FormHint> : null}
+        {error ? (
+          <p className="text-xs text-danger font-medium mt-1">{error}</p>
+        ) : helperText ? (
+          <p className="text-xs text-slate-400 mt-1">{helperText}</p>
+        ) : null}
       </div>
     );
   }

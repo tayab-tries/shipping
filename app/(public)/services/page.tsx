@@ -1,15 +1,17 @@
 import React from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { Package, Plane, Ship, Truck, FileText, Building2, Luggage, ArrowRight } from 'lucide-react';
+import Image from 'next/image';
+import { Package, Plane, Ship, Truck, FileText, Building2, Luggage, ArrowRight, ShieldCheck, Search } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
-import { TextLink } from '@/components/ui/TextLink';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
+import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
 import { getEnabledServices } from '@/config/services.config';
 import { siteConfig } from '@/config/site.config';
+import { IMAGE_SLOTS } from '@/lib/constants/images';
 
 export const metadata: Metadata = {
   title: `Core Cargo & Logistics Services | ${siteConfig.name}`,
@@ -33,7 +35,8 @@ const iconMap = {
 export default function ServicesHubPage() {
   const services = getEnabledServices();
 
-  const coreServices = services.filter((s) => s.category === 'core');
+  const featuredService = services.find((s) => s.slug === 'air-freight') || services[0];
+  const secondaryCoreServices = services.filter((s) => s.category === 'core' && s.slug !== featuredService?.slug);
   const specializedServices = services.filter((s) => s.category === 'specialized');
 
   const breadcrumbs = [
@@ -42,30 +45,146 @@ export default function ServicesHubPage() {
   ];
 
   return (
-    <div className="w-full bg-background py-12 lg:py-16">
-      <Container>
-        {/* Header & Breadcrumbs */}
-        <div className="space-y-6 max-w-4xl mb-16">
-          <Breadcrumbs items={breadcrumbs} />
-          <SectionHeading
-            badge="Service Architecture"
-            title="Core International Cargo & Logistics Services"
-            subtitle="Reliable shipping options connecting exporters, businesses, and individuals across Pakistan with global destinations."
+    <div className="w-full bg-background">
+      {/* 1. Services Hero Header */}
+      <section className="relative w-full bg-brand-black text-white py-16 lg:py-24 border-b border-border-dark overflow-hidden">
+        <div className="absolute inset-0 z-0 bg-brand-black-deep">
+          <Image
+            src={IMAGE_SLOTS.heroBackground.src}
+            alt="International Cargo & Freight Services"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center opacity-40"
+          />
+          <div
+            className="absolute inset-0 z-10 pointer-events-none hidden md:block"
+            style={{
+              background: `linear-gradient(
+                90deg,
+                rgba(7,10,15,0.96) 0%,
+                rgba(7,10,15,0.88) 35%,
+                rgba(7,10,15,0.65) 65%,
+                rgba(7,10,15,0.30) 100%
+              )`,
+            }}
+          />
+          <div
+            className="absolute inset-0 z-10 pointer-events-none md:hidden"
+            style={{
+              background: `linear-gradient(
+                180deg,
+                rgba(7,10,15,0.88) 0%,
+                rgba(7,10,15,0.70) 50%,
+                rgba(7,10,15,0.85) 100%
+              )`,
+            }}
           />
         </div>
 
-        {/* Core Services Section */}
-        {coreServices.length > 0 && (
-          <div className="space-y-8 mb-16">
-            <div className="border-b border-border pb-3">
-              <h2 className="text-heading-md font-bold text-foreground flex items-center gap-2">
-                <Badge variant="accent">Core Freight Modes</Badge>
-                <span>Primary Cargo Services</span>
-              </h2>
-            </div>
+        <Container className="relative z-20">
+          <Breadcrumbs items={breadcrumbs} variantSurface="dark" className="mb-6" />
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {coreServices.map((service) => {
+          <div className="max-w-3xl space-y-6">
+            <Badge variant="outline-dark" size="md" className="text-slate-300 border-border-dark bg-brand-black/60 backdrop-blur-xs">
+              Verified Logistics Portfolio
+            </Badge>
+
+            <h1 className="text-display-xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.05]">
+              Core Cargo & Logistics Services
+            </h1>
+
+            <p className="text-body-lg sm:text-xl text-slate-300 leading-relaxed max-w-2xl font-normal">
+              Commercial air cargo forwarding, ocean sea freight, and doorstep collection connecting shippers across Pakistan with destination corridors worldwide.
+            </p>
+
+            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+              <Link href="/quote">
+                <Button
+                  variant="accent"
+                  size="lg"
+                  className="w-full sm:w-auto h-[46px]"
+                  rightIcon={<ArrowRight className="w-4 h-4 text-brand-black shrink-0" />}
+                >
+                  Get a Shipping Quote
+                </Button>
+              </Link>
+
+              <Link href="/track">
+                <Button
+                  variant="outline-dark"
+                  size="lg"
+                  className="w-full sm:w-auto h-[46px]"
+                  leftIcon={<Search className="w-4 h-4 text-slate-300 shrink-0" />}
+                >
+                  Track Shipment
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* 2. Featured Service + Secondary Core Modes (Asymmetric Editorial Section) */}
+      <section className="w-full bg-brand-navy py-20 lg:py-28 border-b border-border-dark text-white">
+        <Container>
+          <SectionHeading
+            badge="Primary Capabilities"
+            title="Core Commercial Freight Modes"
+            subtitle="Scheduled airline carrier capacity, ocean container shipping, and integrated door-to-door forwarding."
+            className="mb-14 [&_h2]:text-white [&_p]:text-slate-300"
+            badgeVariant="outline-dark"
+          />
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
+            {/* ONE Dominant Featured Service Card (Col-span-7) */}
+            {featuredService && (
+              <div className="lg:col-span-7 bg-brand-black-deep rounded-md border border-border-dark overflow-hidden p-8 lg:p-10 flex flex-col justify-between space-y-8 group hover:border-slate-700 transition-colors shadow-2xl">
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <Badge variant="accent">Featured Freight Mode</Badge>
+                    <Plane className="w-6 h-6 text-slate-400" />
+                  </div>
+
+                  <div className="space-y-3">
+                    <h2 className="text-display-sm font-bold text-white group-hover:text-accent transition-colors">
+                      {featuredService.h1}
+                    </h2>
+                    <p className="text-body-md text-slate-300 leading-relaxed max-w-xl">
+                      {featuredService.shortDescription} Scheduled carrier allocations optimized for high-value commercial goods, documents, and urgent export shipments.
+                    </p>
+                  </div>
+
+                  {/* Dominant Service Image Slot Anchor */}
+                  <div className="relative aspect-[16/9] rounded-md overflow-hidden bg-brand-black border border-border-dark mt-4">
+                    <Image
+                      src={IMAGE_SLOTS.serviceAir.src}
+                      alt={IMAGE_SLOTS.serviceAir.alt}
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 650px"
+                      className="object-cover object-center group-hover:scale-102 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-brand-black/90 via-transparent to-transparent" />
+                    <div className="absolute bottom-4 left-4 text-xs font-mono text-slate-300">
+                      Palletized Export Air Freight Desk
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-6 border-t border-border-dark flex items-center justify-between">
+                  <span className="text-xs font-mono text-slate-400">Airport-to-Airport & Doorstep</span>
+                  <Link href={`/services/${featuredService.slug}`}>
+                    <Button variant="accent" size="md" rightIcon={<ArrowRight className="w-4 h-4 text-brand-black" />}>
+                      Explore Air Freight
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {/* Secondary Core Services Rows (Col-span-5) */}
+            <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
+              {secondaryCoreServices.map((service) => {
                 const IconComponent = iconMap[service.iconName] || Package;
                 const quoteUrl = service.quoteCargoType
                   ? `/quote?cargo=${service.quoteCargoType}`
@@ -74,22 +193,91 @@ export default function ServicesHubPage() {
                 return (
                   <div
                     key={service.slug}
-                    className="bg-surface p-6 rounded-md border border-border flex flex-col justify-between space-y-6 shadow-2xs hover:border-border-strong transition-colors"
+                    className="bg-brand-black-deep rounded-md border border-border-dark p-8 space-y-6 flex-1 flex flex-col justify-between group hover:border-slate-700 transition-colors shadow-lg"
                   >
                     <div className="space-y-4">
-                      <div className="p-3 bg-surface-muted rounded-md inline-block">
-                        <IconComponent className="w-6 h-6 text-secondary" />
+                      <div className="flex items-center justify-between border-b border-border-dark pb-3">
+                        <span className="text-xs font-mono text-slate-400 uppercase tracking-wider">
+                          {service.category} Freight
+                        </span>
+                        <IconComponent className="w-5 h-5 text-slate-400" />
                       </div>
-                      <h3 className="text-heading-sm font-bold text-foreground">{service.name}</h3>
-                      <p className="text-body-sm text-muted-foreground leading-relaxed">
+                      <h3 className="text-heading-lg font-bold text-white group-hover:text-accent transition-colors">
+                        {service.name}
+                      </h3>
+                      <p className="text-body-sm text-slate-300 leading-relaxed">
                         {service.shortDescription}
                       </p>
                     </div>
 
-                    <div className="pt-4 border-t border-border-subtle flex items-center justify-between">
-                      <TextLink href={`/services/${service.slug}`} showIcon className="text-xs font-semibold">
-                        View Details
-                      </TextLink>
+                    <div className="pt-4 border-t border-border-dark flex items-center justify-between">
+                      <Link
+                        href={`/services/${service.slug}`}
+                        className="text-xs font-mono font-semibold text-slate-200 hover:text-accent flex items-center gap-1.5 transition-colors"
+                      >
+                        <span>View Service Details</span>
+                        <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-accent" />
+                      </Link>
+                      <Link href={quoteUrl}>
+                        <Button variant="outline-dark" size="sm">
+                          Quote
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* 3. Full Service Directory (Structured Row Dividers, Not Generic SaaS Cards) */}
+      {specializedServices.length > 0 && (
+        <section className="w-full bg-surface-subtle py-20 lg:py-28 border-b border-border text-brand-black">
+          <Container>
+            <SectionHeading
+              badge="Specialized Logistics"
+              title="Commercial Trade & Personal Cargo Solutions"
+              subtitle="End-to-end freight forwarding, customs clearance, excess baggage, and trade shipping services."
+              className="mb-14"
+            />
+
+            {/* Clean Structured Directory List with Row Dividers */}
+            <div className="bg-surface rounded-md border border-border divide-y divide-border shadow-xs overflow-hidden">
+              {specializedServices.map((service) => {
+                const IconComponent = iconMap[service.iconName] || Package;
+                const quoteUrl = service.quoteCargoType
+                  ? `/quote?cargo=${service.quoteCargoType}`
+                  : '/quote';
+
+                return (
+                  <div
+                    key={service.slug}
+                    className="p-6 lg:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:bg-surface-subtle/80 transition-colors group"
+                  >
+                    <div className="flex items-start gap-4 md:w-1/2">
+                      <div className="p-3 bg-surface-subtle rounded border border-border text-slate-700 shrink-0">
+                        <IconComponent className="w-5 h-5 text-brand-black" />
+                      </div>
+                      <div className="space-y-1">
+                        <h3 className="text-heading-md font-bold text-brand-black group-hover:text-accent transition-colors">
+                          <Link href={`/services/${service.slug}`}>{service.name}</Link>
+                        </h3>
+                        <p className="text-body-sm text-slate-600 leading-relaxed font-normal">
+                          {service.shortDescription}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-4 md:justify-end md:w-1/2">
+                      <Link
+                        href={`/services/${service.slug}`}
+                        className="text-xs font-mono font-semibold text-brand-black hover:text-accent flex items-center gap-1 transition-colors"
+                      >
+                        <span>Service Specification</span>
+                        <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-accent" />
+                      </Link>
                       <Link href={quoteUrl}>
                         <Button variant="outline" size="sm">
                           Quote
@@ -100,63 +288,37 @@ export default function ServicesHubPage() {
                 );
               })}
             </div>
-          </div>
-        )}
+          </Container>
+        </section>
+      )}
 
-        {/* Specialized Services Section */}
-        {specializedServices.length > 0 && (
-          <div className="space-y-8 mb-16">
-            <div className="border-b border-border pb-3">
-              <h2 className="text-heading-md font-bold text-foreground flex items-center gap-2">
-                <Badge variant="secondary">Specialized Logistics</Badge>
-                <span>Commercial & Personal Cargo Solutions</span>
-              </h2>
+      {/* 4. Selection Guidance Callout Section */}
+      <section className="w-full bg-brand-navy py-16 text-white border-b border-border-dark">
+        <Container>
+          <div className="bg-brand-black-deep border border-border-dark p-8 lg:p-12 rounded-md space-y-6 shadow-2xl flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+            <div className="space-y-3 max-w-2xl">
+              <div className="flex items-center gap-2 text-xs font-mono text-accent">
+                <ShieldCheck className="w-4 h-4" />
+                <span>Expert Shipping Consultation</span>
+              </div>
+              <h2 className="text-heading-xl font-bold text-white">Need Assistance Selecting a Shipping Mode?</h2>
+              <p className="text-body-md text-slate-300 leading-relaxed">
+                Air freight is optimal for high-priority urgent cargo, while ocean sea freight is cost-effective for large commercial container loads. Door-to-door shipping provides end-to-end collection and doorstep delivery.
+              </p>
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {specializedServices.map((service) => {
-                const IconComponent = iconMap[service.iconName] || Package;
-
-                return (
-                  <div
-                    key={service.slug}
-                    className="bg-surface p-5 rounded-md border border-border flex flex-col justify-between space-y-4 hover:border-border-strong transition-colors"
-                  >
-                    <div className="space-y-3">
-                      <div className="p-2.5 bg-surface-muted rounded-md inline-block">
-                        <IconComponent className="w-5 h-5 text-primary" />
-                      </div>
-                      <h3 className="text-heading-sm font-bold text-foreground">{service.name}</h3>
-                      <p className="text-body-sm text-muted-foreground leading-relaxed">
-                        {service.shortDescription}
-                      </p>
-                    </div>
-
-                    <TextLink href={`/services/${service.slug}`} showIcon className="text-xs font-semibold pt-2">
-                      Explore Service
-                    </TextLink>
-                  </div>
-                );
-              })}
+            <div className="shrink-0">
+              <Link href="/quote">
+                <Button variant="accent" size="lg" rightIcon={<ArrowRight className="w-4 h-4 text-brand-black" />}>
+                  Request Custom Quote
+                </Button>
+              </Link>
             </div>
           </div>
-        )}
+        </Container>
+      </section>
 
-        {/* Selection Guidance Callout */}
-        <div className="bg-surface-muted border border-border p-8 rounded-md space-y-4">
-          <h2 className="text-heading-sm font-bold text-foreground">Need Assistance Choosing a Shipping Mode?</h2>
-          <p className="text-body-sm text-muted-foreground leading-relaxed max-w-3xl">
-            Air freight is ideal for urgent, high-priority cargo, while sea cargo is cost-effective for large commercial ocean freight. Door-to-door shipping provides integrated pickup and destination doorstep delivery.
-          </p>
-          <div className="pt-2">
-            <Link href="/quote">
-              <Button variant="primary" size="md" rightIcon={<ArrowRight className="w-4 h-4" />}>
-                Request a Custom Shipping Quote
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </Container>
+      {/* 5. Final Conversion Panel */}
+      <FinalCtaSection />
     </div>
   );
 }

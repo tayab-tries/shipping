@@ -1,6 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { Container } from '@/components/ui/Container';
 import {
   getPublishedStaticArticles,
   getStaticArticleBySlug,
@@ -62,7 +63,7 @@ export default async function GuideArticleDetailPage({ params }: GuideArticlePag
   const { slug } = await params;
   const article = getStaticArticleBySlug(slug);
 
-  // Authoritative Publication & Verification Check
+  // Authoritative Publication Check
   if (!article) {
     notFound();
   }
@@ -95,8 +96,26 @@ export default async function GuideArticleDetailPage({ params }: GuideArticlePag
     mainEntityOfPage: `${siteConfig.domain}/guides/${article.slug}`,
   };
 
+  // Schema.org FAQPage JSON-LD if FAQs exist
+  const faqJsonLd =
+    article.faqs && article.faqs.length > 0
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: article.faqs.map((item) => ({
+            '@type': 'Question',
+            name: item.question,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: item.answer,
+            },
+          })),
+        }
+      : null;
+
   return (
-    <article className="w-full bg-background">
+    <article className="w-full bg-background text-brand-black">
+      {/* Schema.org Structured Data Injection */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
@@ -105,45 +124,54 @@ export default async function GuideArticleDetailPage({ params }: GuideArticlePag
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
 
-      {/* 1. Guide Hero Block */}
+      {/* 01 Guide Hero Block (Light) */}
       <GuideHero
         title={article.title}
+        excerpt={article.excerpt}
         category={article.category}
         authorName={article.authorName}
         publishedAt={article.publishedAt}
         readingTimeMinutes={article.readingTimeMinutes}
+        containsRegulatoryClaims={article.containsRegulatoryClaims}
         breadcrumbs={breadcrumbs}
       />
 
-      {/* 2. Executive Summary Takeaways Box */}
-      <ArticleSummaryCallout excerpt={article.excerpt} />
+      {/* 02 Article Main Reading Container (Max ~65–72ch) */}
+      <section className="w-full py-12 lg:py-16 bg-background border-b border-border">
+        <Container size="narrow">
+          {/* Executive Summary Callout */}
+          <ArticleSummaryCallout summaryText={article.excerpt} />
 
-      {/* 3. Sanitized Markdown Body */}
-      <ArticleBody contentMarkdown={article.contentMarkdown} />
+          {/* Sanitized Markdown Body */}
+          <ArticleBody contentMarkdown={article.contentMarkdown} />
 
-      {/* 4. Compliance Verification Considerations */}
-      <ArticleConsiderations
-        containsRegulatoryClaims={article.containsRegulatoryClaims}
-        verificationNotes={article.verificationNotes}
-      />
+          {/* Regulatory Considerations */}
+          <ArticleConsiderations
+            containsRegulatoryClaims={article.containsRegulatoryClaims}
+            verificationNotes={article.verificationNotes}
+          />
 
-      {/* 5. Publication-Aware Related Services Bar */}
-      <RelatedServicesBar supportedServices={article.supportedServices} />
+          {/* Publication-Aware Related Inter-Links */}
+          <RelatedServicesBar supportedServices={article.supportedServices} />
+          <RelatedDestinationsBar supportedDestinations={article.supportedDestinations} />
+          <RelatedLocationsBar supportedOrigins={article.supportedOrigins} />
 
-      {/* 6. Publication-Aware Related Destinations Bar */}
-      <RelatedDestinationsBar supportedDestinations={article.supportedDestinations} />
+          {/* Related Guides */}
+          <RelatedGuidesGrid currentSlug={article.slug} category={article.category} />
 
-      {/* 7. Publication-Aware Related Pakistan Locations Bar */}
-      <RelatedLocationsBar supportedOrigins={article.supportedOrigins} />
+          {/* Article FAQ */}
+          <ArticleFaq faqs={article.faqs} />
+        </Container>
+      </section>
 
-      {/* 8. Contextual Related Educational Guides */}
-      <RelatedGuidesGrid currentSlug={article.slug} />
-
-      {/* 9. Article FAQ Accordion */}
-      <ArticleFaq faqs={article.faqs} />
-
-      {/* 10. High-Impact Quote CTA */}
+      {/* 03 High-Impact Quote CTA (Dark Closing Section) */}
       <ArticleCta />
     </article>
   );

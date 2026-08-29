@@ -6,6 +6,7 @@ export interface NavSubItem {
 
 export interface NavItem {
   title: string;
+  label?: string;
   href: string;
   children?: NavSubItem[];
   viewAllHref?: string;
@@ -20,6 +21,7 @@ export interface FooterNavGroup {
 export const mainNavigation: NavItem[] = [
   {
     title: 'Services',
+    label: 'Services',
     href: '/services',
     viewAllHref: '/services',
     viewAllLabel: 'View all services',
@@ -43,6 +45,7 @@ export const mainNavigation: NavItem[] = [
   },
   {
     title: 'Destinations',
+    label: 'Destinations',
     href: '/destinations',
     viewAllHref: '/destinations',
     viewAllLabel: 'View all destinations',
@@ -56,6 +59,7 @@ export const mainNavigation: NavItem[] = [
   },
   {
     title: 'Locations',
+    label: 'Locations',
     href: '/locations',
     viewAllHref: '/locations',
     viewAllLabel: 'View all locations',
@@ -68,6 +72,7 @@ export const mainNavigation: NavItem[] = [
   },
   {
     title: 'Guides',
+    label: 'Guides',
     href: '/guides',
     viewAllHref: '/guides',
     viewAllLabel: 'View all guides',
@@ -79,9 +84,15 @@ export const mainNavigation: NavItem[] = [
   },
   {
     title: 'Track Shipment',
+    label: 'Tracking',
     href: '/track',
   },
 ];
+
+export const navConfig = mainNavigation.map(item => ({
+  ...item,
+  label: item.label || item.title
+}));
 
 export const primaryCta = {
   label: 'Get a Quote',

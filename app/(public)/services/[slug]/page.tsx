@@ -142,6 +142,7 @@ export default async function ServiceDetailPage({ params }: ServicePageProps) {
         quoteUrl={quoteUrl}
         category={service.category}
         breadcrumbs={breadcrumbs}
+        slug={service.slug}
       />
 
       {/* 2. Service Summary Panel */}
@@ -151,38 +152,41 @@ export default async function ServiceDetailPage({ params }: ServicePageProps) {
         keyConsiderations={frontmatter.keyConsiderations}
       />
 
-      {/* 3. Main Prose Content */}
-      <section className="w-full py-12 border-b border-border">
+      {/* 3. Main Specification / Prose Content */}
+      <section className="w-full py-16 border-b border-border bg-surface">
         <Container>
-          <div className="max-w-3xl prose prose-slate dark:prose-invert leading-relaxed space-y-6">
-            {/* Simple prose renderer for MDX paragraph content */}
+          <div className="max-w-3xl space-y-6 text-brand-black">
+            {/* Prose renderer for MDX content */}
             {content.split('\n\n').map((paragraph, index) => {
               if (paragraph.startsWith('# ')) {
                 return (
-                  <h2 key={index} className="text-heading-md font-bold text-foreground pt-4">
+                  <h2 key={index} className="text-heading-xl font-bold text-brand-black pt-6 pb-2 border-b border-border">
                     {paragraph.replace('# ', '')}
                   </h2>
                 );
               }
               if (paragraph.startsWith('## ')) {
                 return (
-                  <h2 key={index} className="text-heading-sm font-bold text-foreground pt-4">
+                  <h3 key={index} className="text-heading-lg font-bold text-brand-black pt-6 pb-2 border-b border-border">
                     {paragraph.replace('## ', '')}
-                  </h2>
+                  </h3>
                 );
               }
               if (paragraph.startsWith('- ')) {
                 const items = paragraph.split('\n- ').map((item) => item.replace('- ', ''));
                 return (
-                  <ul key={index} className="list-disc pl-5 space-y-1 text-body-sm text-muted-foreground">
+                  <ul key={index} className="space-y-2 py-2 text-body-md text-slate-700 font-normal">
                     {items.map((it, i) => (
-                      <li key={i}>{it}</li>
+                      <li key={i} className="flex items-start gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2 shrink-0" />
+                        <span>{it}</span>
+                      </li>
                     ))}
                   </ul>
                 );
               }
               return (
-                <p key={index} className="text-body-md text-muted-foreground leading-relaxed">
+                <p key={index} className="text-body-md text-slate-700 leading-relaxed font-normal">
                   {paragraph}
                 </p>
               );
@@ -191,24 +195,25 @@ export default async function ServiceDetailPage({ params }: ServicePageProps) {
         </Container>
       </section>
 
-      {/* 4. Process Steps Block */}
+      {/* 4. Logistics Process Workflow */}
       <ServiceProcess steps={frontmatter.processSteps} />
 
-      {/* 5. Publication-Aware Internal Link Components */}
+      {/* 5. Publication-Aware Trade Corridors & Origin Network Links */}
       <RelatedDestinationsBar destinationSlugs={service.relatedDestinations} />
       <RelatedLocationsBar locationSlugs={service.relatedLocations} />
       <RelatedServicesGrid relatedSlugs={service.relatedServices} />
 
       {/* 6. Visible FAQ Accordion */}
       {frontmatter.faq && frontmatter.faq.length > 0 && (
-        <section className="w-full bg-surface-subtle py-12 lg:py-16 border-b border-border">
+        <section className="w-full bg-surface-subtle py-16 lg:py-20 border-b border-border text-brand-black">
           <Container>
             <SectionHeading
               badge="FAQ"
               title="Frequently Asked Questions"
               subtitle={`Common questions regarding ${service.name.toLowerCase()} shipping.`}
+              className="mb-10"
             />
-            <div className="max-w-3xl mt-8 bg-surface p-6 rounded-md border border-border">
+            <div className="max-w-3xl bg-surface p-8 rounded-md border border-border shadow-xs">
               <Accordion
                 items={frontmatter.faq.map((item, idx) => ({
                   id: `faq-${idx}`,

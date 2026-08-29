@@ -1,66 +1,59 @@
 'use client';
 
 import React, { useState } from 'react';
-import { clsx } from 'clsx';
 import { ChevronDown } from 'lucide-react';
+import { cn } from './Button';
 
-export interface AccordionItemData {
+export interface AccordionItem {
   id: string;
   title: string;
-  content: React.ReactNode;
+  content: string;
 }
 
 export interface AccordionProps {
-  items: AccordionItemData[];
-  defaultOpenId?: string;
-  allowMultiple?: boolean;
+  items: AccordionItem[];
+  variantSurface?: 'light' | 'dark';
   className?: string;
 }
 
 export const Accordion: React.FC<AccordionProps> = ({
   items,
-  defaultOpenId,
-  allowMultiple = false,
+  variantSurface = 'light',
   className,
 }) => {
-  const [openIds, setOpenIds] = useState<string[]>(
-    defaultOpenId ? [defaultOpenId] : []
-  );
-
-  const toggleItem = (id: string) => {
-    if (allowMultiple) {
-      setOpenIds((prev) =>
-        prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-      );
-    } else {
-      setOpenIds((prev) => (prev.includes(id) ? [] : [id]));
-    }
-  };
+  const [openId, setOpenId] = useState<string | null>(items[0]?.id || null);
 
   return (
-    <div className={clsx('divide-y divide-border border-y border-border', className)}>
+    <div className={cn('space-y-3 divide-y divide-border', className)}>
       {items.map((item) => {
-        const isOpen = openIds.includes(item.id);
+        const isOpen = openId === item.id;
+
         return (
-          <div key={item.id} className="py-4">
+          <div key={item.id} className="pt-3">
             <button
-              type="button"
-              onClick={() => toggleItem(item.id)}
+              onClick={() => setOpenId(isOpen ? null : item.id)}
+              className={cn(
+                'w-full flex items-center justify-between text-left py-2 text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-xs',
+                variantSurface === 'dark' ? 'text-white hover:text-accent' : 'text-brand-black hover:text-accent'
+              )}
               aria-expanded={isOpen}
-              className="w-full flex items-center justify-between text-left font-semibold text-foreground text-heading-sm hover:text-secondary transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
             >
               <span>{item.title}</span>
               <ChevronDown
-                className={clsx(
-                  'w-5 h-5 text-muted-foreground shrink-0 transition-transform duration-200 ml-4',
-                  {
-                    'rotate-180 text-secondary': isOpen,
-                  }
+                className={cn(
+                  'w-4 h-4 text-accent shrink-0 transition-transform duration-200',
+                  isOpen && 'rotate-180'
                 )}
               />
             </button>
+
             {isOpen && (
-              <div className="mt-3 text-body-md text-muted-foreground leading-relaxed animate-in fade-in-50 duration-150">
+              <div
+                className={cn(
+                  'pt-2 pb-3 text-xs leading-relaxed max-w-prose animate-in fade-in duration-150',
+                  variantSurface === 'dark' ? 'text-slate-300' : 'text-slate-600'
+                )}
+              >
                 {item.content}
               </div>
             )}

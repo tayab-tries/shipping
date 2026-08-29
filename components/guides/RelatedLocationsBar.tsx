@@ -1,43 +1,46 @@
 import React from 'react';
-import { Container } from '@/components/ui/Container';
-import { SectionHeading } from '@/components/ui/SectionHeading';
-import { TextLink } from '@/components/ui/TextLink';
-import { isPublishedEntity } from '@/lib/content/publication-gate';
+import Link from 'next/link';
+import { ArrowRight, MapPin } from 'lucide-react';
+import { getPublishedStaticLocations } from '@/lib/locations/location-content';
 
 export interface RelatedLocationsBarProps {
-  supportedOrigins: string[];
+  supportedOrigins?: string[];
 }
 
-export const RelatedLocationsBar: React.FC<RelatedLocationsBarProps> = ({ supportedOrigins }) => {
-  const publishedOrigins = supportedOrigins.filter((slug) =>
-    isPublishedEntity('location', slug)
-  );
+export const RelatedLocationsBar: React.FC<RelatedLocationsBarProps> = ({
+  supportedOrigins = [],
+}) => {
+  const publishedLocations = getPublishedStaticLocations();
 
-  if (publishedOrigins.length === 0) return null;
+  const related = supportedOrigins.length > 0
+    ? publishedLocations.filter((l) => supportedOrigins.includes(l.slug))
+    : publishedLocations.slice(0, 3);
+
+  if (related.length === 0) return null;
 
   return (
-    <section className="w-full bg-background border-b border-border py-10 lg:py-12">
-      <Container>
-        <SectionHeading
-          badge="Origins Context"
-          title="Pakistan Origin Collection Hubs"
-          subtitle="Local collection cities in Pakistan serving international cargo."
-        />
+    <div className="py-8 border-t border-border space-y-4">
+      <div className="text-xs font-mono font-bold uppercase text-slate-500 tracking-wider">
+        Pakistan Pickup Origin Hubs
+      </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
-          {publishedOrigins.map((slug) => (
-            <div
-              key={slug}
-              className="bg-surface p-4 rounded-md border border-border flex flex-col justify-between space-y-3 hover:border-border-strong transition-colors min-w-0"
-            >
-              <h3 className="text-heading-sm font-bold text-foreground capitalize">{slug} Hub</h3>
-              <TextLink href={`/locations/${slug}`} showIcon className="text-xs">
-                City Shipping Info
-              </TextLink>
+      <div className="divide-y divide-border rounded border border-border bg-surface overflow-hidden">
+        {related.map((loc) => (
+          <Link
+            key={loc.slug}
+            href={`/locations/${loc.slug}`}
+            className="p-4 flex items-center justify-between hover:bg-surface-subtle transition-colors group"
+          >
+            <div className="flex items-center gap-3">
+              <MapPin className="w-4 h-4 text-slate-500 group-hover:text-accent transition-colors" />
+              <span className="text-body-sm font-bold text-brand-black group-hover:text-accent transition-colors">
+                Cargo Pickup in {loc.name} ({loc.province})
+              </span>
             </div>
-          ))}
-        </div>
-      </Container>
-    </section>
+            <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-accent transition-colors" />
+          </Link>
+        ))}
+      </div>
+    </div>
   );
 };

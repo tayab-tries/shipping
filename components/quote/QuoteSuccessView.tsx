@@ -1,64 +1,60 @@
 import React from 'react';
 import Link from 'next/link';
-import { CheckCircle2, MessageSquare } from 'lucide-react';
+import { CheckCircle2, ArrowLeft, Search } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 export interface QuoteSuccessViewProps {
   quoteReference: string;
-  senderName: string;
-  originCity: string;
-  destinationCountry: string;
+  onReset?: () => void;
 }
 
-export const QuoteSuccessView: React.FC<QuoteSuccessViewProps> = ({
-  quoteReference,
-  senderName,
-  originCity,
-  destinationCountry,
-}) => {
+export const QuoteSuccessView: React.FC<QuoteSuccessViewProps> = ({ quoteReference }) => {
   return (
-    <div className="bg-surface p-8 lg:p-12 rounded-md border border-border text-center space-y-6 max-w-2xl mx-auto shadow-xs">
-      <div className="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto">
-        <CheckCircle2 className="w-8 h-8" />
+    <div className="bg-surface p-8 lg:p-12 rounded-md border border-border text-center space-y-6 shadow-xs max-w-2xl mx-auto">
+      <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto border border-emerald-200">
+        <CheckCircle2 className="w-8 h-8 text-emerald-600" />
       </div>
 
       <div className="space-y-2">
-        <span className="text-xs font-mono font-bold text-secondary uppercase tracking-wider">
-          Submission Received
-        </span>
-        <h2 className="text-display-sm font-bold text-foreground">
-          Thank You, {senderName}!
+        <div className="text-xs font-mono font-bold uppercase text-emerald-600 tracking-wider">
+          Request Received
+        </div>
+        <h2 className="text-heading-xl font-extrabold text-brand-black tracking-tight">
+          Quote Request Submitted
         </h2>
-        <p className="text-body-md text-muted-foreground leading-relaxed">
-          Your international shipping quote request has been recorded. Our operations team is reviewing your route ({originCity} to {destinationCountry}).
+        <p className="text-body-md text-slate-600 max-w-md mx-auto leading-relaxed">
+          Your quote request has been received by our operations team. We are reviewing your cargo specifications and will issue your custom quotation.
         </p>
       </div>
 
-      <div className="bg-surface-subtle p-4 rounded-md border border-border font-mono text-sm space-y-1">
-        <p className="text-xs text-muted-foreground uppercase">Your Reference Number</p>
-        <p className="text-heading-sm font-extrabold text-primary select-all">
-          {quoteReference}
-        </p>
-      </div>
+      {quoteReference && (
+        <div className="p-4 bg-surface-subtle rounded-md border border-border inline-block space-y-1">
+          <span className="text-xs font-mono text-slate-500 uppercase block">Official Quote Reference</span>
+          <span className="text-lg font-mono font-bold text-brand-black select-all tracking-wider">
+            {quoteReference}
+          </span>
+        </div>
+      )}
 
-      <p className="text-xs text-muted-foreground leading-relaxed">
-        Please retain your reference number for future communication. Our team will get in touch using your preferred contact method.
-      </p>
-
-      <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+      <div className="pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-center gap-4">
         <Link href="/" className="w-full sm:w-auto">
-          <Button variant="outline" size="md" className="w-full sm:w-auto">
-            Return to Home
+          <Button
+            variant="accent"
+            size="lg"
+            className="w-full sm:w-auto"
+            leftIcon={<ArrowLeft className="w-4 h-4 text-brand-black shrink-0" />}
+          >
+            Back to Home
           </Button>
         </Link>
-        <Link href="/contact" className="w-full sm:w-auto">
+        <Link href="/track" className="w-full sm:w-auto">
           <Button
-            variant="primary"
-            size="md"
+            variant="outline"
+            size="lg"
             className="w-full sm:w-auto"
-            leftIcon={<MessageSquare className="w-4 h-4" />}
+            leftIcon={<Search className="w-4 h-4 text-slate-700 shrink-0" />}
           >
-            Contact Operations
+            Track Shipment
           </Button>
         </Link>
       </div>

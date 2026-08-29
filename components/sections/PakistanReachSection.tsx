@@ -1,73 +1,93 @@
 import React from 'react';
+import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin } from 'lucide-react';
+import { MapPin, ArrowRight } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
-import { TextLink } from '@/components/ui/TextLink';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
 
 export const PakistanReachSection: React.FC = () => {
-  const hubs = [
-    { city: 'Lahore', slug: 'lahore', region: 'Punjab' },
-    { city: 'Karachi', slug: 'karachi', region: 'Sindh' },
-    { city: 'Islamabad', slug: 'islamabad', region: 'Capital Territory' },
-    { city: 'Rawalpindi', slug: 'rawalpindi', region: 'Punjab' },
+  const verifiedCities = [
+    { name: 'Lahore', slug: 'lahore' },
+    { name: 'Karachi', slug: 'karachi' },
+    { name: 'Islamabad', slug: 'islamabad' },
+    { name: 'Rawalpindi', slug: 'rawalpindi' },
+    { name: 'Faisalabad', slug: 'faisalabad' },
+    { name: 'Sialkot', slug: 'sialkot' },
+    { name: 'Multan', slug: 'multan' },
+    { name: 'Peshawar', slug: 'peshawar' },
   ];
 
   return (
-    <section className="w-full bg-brand-black py-16 lg:py-24 border-b border-border-dark text-white">
+    <section className="w-full bg-brand-black py-20 lg:py-28 border-b border-border-dark text-white">
       <Container>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Left Column: Origin City List & Visual Anchor */}
+          {/* Left Column: Large Editorial Statement & Logistics Image (Col-span-6) */}
           <div className="lg:col-span-6 space-y-6">
             <SectionHeading
-              badge="Nationwide Service"
-              title="Serving Customers Across Pakistan"
-              subtitle="Cargo shipping operations serving origin locations throughout Pakistan for international dispatch."
+              badge="Pakistan Origin Coverage"
+              badgeVariant="outline-dark"
+              title="Origin Cargo Pickup Across Pakistan"
+              subtitle="Doorstep collection and export freight dispatch operating across primary commercial cities."
               className="[&_h2]:text-white [&_p]:text-slate-300"
             />
-            <p className="text-body-md text-slate-300 leading-relaxed">
-              Whether shipping personal items or commercial cargo, we facilitate collection and freight handling across major urban centers in Pakistan.
+            <p className="text-body-md text-slate-300 leading-relaxed font-normal">
+              We arrange scheduled cargo pickups from commercial hubs and addresses across Pakistan, consolidating shipments for export clearance at international airport and seaport terminals.
             </p>
 
-            {/* Freight Terminal Photo Slot Anchor */}
-            <div className="relative w-full aspect-[16/9] rounded-md overflow-hidden border border-border-dark bg-brand-navy/80 backdrop-blur-xs">
+            <div className="relative aspect-[16/9] rounded-md border border-border-dark overflow-hidden bg-brand-black-deep mt-6">
               <Image
                 src={IMAGE_SLOTS.pakistanHub.src}
                 alt={IMAGE_SLOTS.pakistanHub.alt}
                 fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 550px"
+                className="object-cover object-center"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-transparent to-transparent" />
-              <div className="absolute bottom-3 left-3 text-xs font-mono text-slate-300 font-semibold">
-                PAKISTAN EXPORT CARGO HUB
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-black/90 via-transparent to-transparent" />
+              <div className="absolute bottom-4 left-4 text-xs font-mono text-slate-300">
+                Pakistan Export Logistics & Consolidation Desk
               </div>
-            </div>
-
-            <div className="pt-2">
-              <TextLink href="/locations" showIcon className="font-semibold text-accent">
-                Explore Origin Hub Locations
-              </TextLink>
             </div>
           </div>
 
-          {/* Right Column: Origin Cities Grid */}
-          <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {hubs.map((hub) => (
-              <div
-                key={hub.slug}
-                className="bg-brand-navy/80 backdrop-blur-xs p-5 rounded-md border border-border-dark flex items-start gap-3.5 hover:border-slate-700 transition-colors"
-              >
-                <div className="p-2 bg-brand-black-deep rounded-md shrink-0 border border-border-dark">
-                  <MapPin className="w-5 h-5 text-accent" />
-                </div>
-                <div>
-                  <h3 className="text-heading-sm font-bold text-white">{hub.city}</h3>
-                  <p className="text-xs text-slate-400 mt-0.5 font-mono">{hub.region}</p>
-                </div>
-              </div>
-            ))}
+          {/* Right Column: Clean City List with Row Dividers (Col-span-6) */}
+          <div className="lg:col-span-6 bg-brand-navy/60 border border-border-dark rounded-md p-6 lg:p-8 space-y-6">
+            <div className="flex items-center justify-between border-b border-border-dark pb-4">
+              <span className="text-xs font-mono font-semibold uppercase text-slate-300 tracking-wider">
+                Available Pickup Cities
+              </span>
+              <span className="text-xs font-mono text-slate-400">Scheduled Dispatch</span>
+            </div>
+
+            {/* List with Dividers (Not heavy cards) */}
+            <div className="divide-y divide-border-dark">
+              {verifiedCities.map((city) => (
+                <Link
+                  key={city.slug}
+                  href={`/locations/${city.slug}`}
+                  className="py-3.5 px-2 flex items-center justify-between hover:bg-brand-black-deep/50 rounded transition-colors group"
+                >
+                  <div className="flex items-center gap-3">
+                    <MapPin className="w-4 h-4 text-slate-400 group-hover:text-accent transition-colors shrink-0" />
+                    <span className="text-sm font-semibold text-white group-hover:text-accent transition-colors">
+                      Cargo Collection in {city.name}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-mono text-slate-400 hidden sm:inline">Export Ready</span>
+                    <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-accent transition-colors shrink-0" />
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            <div className="pt-4 border-t border-border-dark flex items-center justify-between text-xs font-mono text-slate-400">
+              <span>Collection Services Active</span>
+              <Link href="/locations" className="text-accent hover:underline font-semibold flex items-center gap-1">
+                <span>View All Locations</span>
+                <ArrowRight className="w-3.5 h-3.5 text-accent" />
+              </Link>
+            </div>
           </div>
         </div>
       </Container>

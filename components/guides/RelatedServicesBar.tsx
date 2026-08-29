@@ -1,47 +1,46 @@
 import React from 'react';
-import { Container } from '@/components/ui/Container';
-import { SectionHeading } from '@/components/ui/SectionHeading';
-import { TextLink } from '@/components/ui/TextLink';
-import { servicesRegistry } from '@/config/services.config';
-import { isPublishedEntity } from '@/lib/content/publication-gate';
+import Link from 'next/link';
+import { ArrowRight, Package } from 'lucide-react';
+import { getEnabledServices } from '@/config/services.config';
 
 export interface RelatedServicesBarProps {
-  supportedServices: string[];
+  supportedServices?: string[];
 }
 
-export const RelatedServicesBar: React.FC<RelatedServicesBarProps> = ({ supportedServices }) => {
-  const publishedServices = servicesRegistry.filter(
-    (s) => supportedServices.includes(s.slug) && isPublishedEntity('service', s.slug)
-  );
+export const RelatedServicesBar: React.FC<RelatedServicesBarProps> = ({
+  supportedServices = [],
+}) => {
+  const allServices = getEnabledServices();
 
-  if (publishedServices.length === 0) return null;
+  const related = supportedServices.length > 0
+    ? allServices.filter((s) => supportedServices.includes(s.slug))
+    : allServices.slice(0, 3);
+
+  if (related.length === 0) return null;
 
   return (
-    <section className="w-full bg-background border-b border-border py-10 lg:py-12">
-      <Container>
-        <SectionHeading
-          badge="Services Context"
-          title="Related Shipping Services"
-          subtitle="Commercial freight options relevant to this guide."
-        />
+    <div className="py-8 border-t border-border space-y-4">
+      <div className="text-xs font-mono font-bold uppercase text-slate-500 tracking-wider">
+        Related Shipping Services
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-          {publishedServices.map((service) => (
-            <div
-              key={service.slug}
-              className="bg-surface p-5 rounded-md border border-border space-y-3 hover:border-border-strong transition-colors min-w-0"
-            >
-              <h3 className="text-heading-sm font-bold text-foreground">{service.name}</h3>
-              <p className="text-body-sm text-muted-foreground leading-relaxed line-clamp-2">
-                {service.shortDescription}
-              </p>
-              <TextLink href={`/services/${service.slug}`} showIcon className="text-xs font-semibold">
-                Service Overview
-              </TextLink>
+      <div className="divide-y divide-border rounded border border-border bg-surface overflow-hidden">
+        {related.map((service) => (
+          <Link
+            key={service.slug}
+            href={`/services/${service.slug}`}
+            className="p-4 flex items-center justify-between hover:bg-surface-subtle transition-colors group"
+          >
+            <div className="flex items-center gap-3">
+              <Package className="w-4 h-4 text-slate-500 group-hover:text-accent transition-colors" />
+              <span className="text-body-sm font-bold text-brand-black group-hover:text-accent transition-colors">
+                {service.name}
+              </span>
             </div>
-          ))}
-        </div>
-      </Container>
-    </section>
+            <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-accent transition-colors" />
+          </Link>
+        ))}
+      </div>
+    </div>
   );
 };

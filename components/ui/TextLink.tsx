@@ -1,72 +1,53 @@
 import React from 'react';
 import Link from 'next/link';
-import { clsx } from 'clsx';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import { cn } from './Button';
 
 export interface TextLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;
+  variant?: 'accent' | 'primary' | 'muted';
   external?: boolean;
   showIcon?: boolean;
-  variant?: 'primary' | 'muted' | 'underline';
 }
 
-export const TextLink = React.forwardRef<HTMLAnchorElement, TextLinkProps>(
-  (
-    {
-      className,
-      href,
-      external = false,
-      showIcon = false,
-      variant = 'primary',
-      children,
-      ...props
-    },
-    ref
-  ) => {
-    const isExternal = external || href.startsWith('http');
+export const TextLink: React.FC<TextLinkProps> = ({
+  children,
+  href,
+  variant = 'accent',
+  external = false,
+  showIcon = false,
+  className,
+  ...props
+}) => {
+  const variantStyles = {
+    accent: 'text-accent hover:underline font-semibold',
+    primary: 'text-brand-black hover:text-accent font-semibold',
+    muted: 'text-slate-400 hover:text-white font-normal',
+  }[variant];
 
-    const linkContent = (
-      <>
-        <span>{children}</span>
-        {(showIcon || isExternal) && (
-          <ArrowUpRight className="w-3.5 h-3.5 inline-block shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-        )}
-      </>
-    );
-
-    const baseClasses = clsx(
-      'inline-flex items-center gap-1 font-semibold transition-colors duration-150 group rounded-xs',
-      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-      {
-        'text-accent hover:text-accent-hover': variant === 'primary',
-        'text-muted-foreground hover:text-foreground': variant === 'muted',
-        'text-foreground underline underline-offset-4 decoration-border hover:decoration-accent':
-          variant === 'underline',
-      },
-      className
-    );
-
-    if (isExternal) {
-      return (
-        <a
-          ref={ref}
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={baseClasses}
-          {...props}
-        >
-          {linkContent}
-        </a>
-      );
-    }
-
+  if (external || href.startsWith('http')) {
     return (
-      <Link ref={ref} href={href} className={baseClasses} {...props}>
-        {linkContent}
-      </Link>
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={cn('inline-flex items-center gap-1 transition-colors', variantStyles, className)}
+        {...props}
+      >
+        <span>{children}</span>
+        {showIcon && <ArrowRight className="w-3.5 h-3.5 text-current shrink-0" />}
+      </a>
     );
   }
-);
 
-TextLink.displayName = 'TextLink';
+  return (
+    <Link
+      href={href}
+      className={cn('inline-flex items-center gap-1 transition-colors', variantStyles, className)}
+      {...props}
+    >
+      <span>{children}</span>
+      {showIcon && <ArrowRight className="w-3.5 h-3.5 text-current shrink-0" />}
+    </Link>
+  );
+};

@@ -10,9 +10,9 @@ import { cargoTypes } from '@/types/content';
 import { siteConfig } from '@/config/site.config';
 
 export const metadata: Metadata = {
-  title: `Request an International Cargo Quote | ${siteConfig.name}`,
+  title: `Request a Shipping Quote | ${siteConfig.name}`,
   description:
-    'Request a custom quotation for air freight, sea cargo, door-to-door shipping, or commercial freight originating in Pakistan.',
+    'Request a custom quotation for air freight, ocean sea cargo, door-to-door shipping, or commercial freight originating in Pakistan.',
   robots: {
     index: false,
     follow: true,
@@ -39,12 +39,12 @@ export default async function PublicQuotePage({ searchParams }: QuotePageProps) 
   // Validate prefill origin query param
   const validOrigin = publishedLocations.some((l) => l.slug === rawOrigin)
     ? rawOrigin
-    : '';
+    : undefined;
 
   // Validate prefill destination query param
   const validDestination = publishedDestinations.some((d) => d.slug === rawDestination)
     ? rawDestination
-    : '';
+    : undefined;
 
   // Safe Cargo Type prefill mapping
   const cargoSlugMap: Record<string, string> = {
@@ -59,7 +59,7 @@ export default async function PublicQuotePage({ searchParams }: QuotePageProps) 
 
   const validCargo = (cargoTypes as readonly string[]).includes(normalizedCargoKey || '')
     ? normalizedCargoKey
-    : 'air_freight';
+    : undefined;
 
   const breadcrumbs = [
     { label: 'Home', url: '/' },
@@ -67,26 +67,26 @@ export default async function PublicQuotePage({ searchParams }: QuotePageProps) 
   ];
 
   return (
-    <div className="w-full bg-background py-12 lg:py-16">
+    <div className="w-full bg-background py-12 lg:py-16 text-brand-black">
       <Container>
-        <div className="space-y-6 max-w-4xl mx-auto mb-10 text-center">
-          <Breadcrumbs items={breadcrumbs} className="justify-center" />
+        {/* Header & Breadcrumbs */}
+        <div className="space-y-4 max-w-3xl mb-10">
+          <Breadcrumbs items={breadcrumbs} />
           <SectionHeading
-            badge="Tailored Freight Quotation"
-            title="Request Your Shipping Quote"
-            subtitle="Fill out your shipment details below. Our operations team will evaluate your cargo specifications and issue an official quote."
+            badge="Export Rate Request"
+            title="Request a Shipping Quote"
+            subtitle="Complete the three-step quotation form below. Our operations team will evaluate your cargo specifications and issue an official quote."
           />
         </div>
 
-        <div className="max-w-3xl mx-auto">
-          <QuoteFormController
-            initialOrigin={validOrigin}
-            initialDestination={validDestination}
-            initialCargo={validCargo}
-            locations={publishedLocations.map((l) => ({ name: l.name, slug: l.slug }))}
-            destinations={publishedDestinations.map((d) => ({ name: d.name, slug: d.slug }))}
-          />
-        </div>
+        {/* 65/35 Quote Form Controller */}
+        <QuoteFormController
+          initialOrigin={validOrigin}
+          initialDestination={validDestination}
+          initialCargo={validCargo}
+          locations={publishedLocations.map((l) => ({ name: l.name, slug: l.slug }))}
+          destinations={publishedDestinations.map((d) => ({ name: d.name, slug: d.slug }))}
+        />
       </Container>
     </div>
   );

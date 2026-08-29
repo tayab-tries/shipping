@@ -29,14 +29,14 @@ export const Header: React.FC = () => {
             <DesktopNav />
           </div>
 
-          {/* Primary CTA & Mobile Hamburger Controller */}
+          {/* Primary CTA & Mobile Navigation Controller */}
           <div className="flex items-center gap-4">
             <div className="hidden sm:flex items-center gap-3">
               <Link href={primaryCta.href}>
                 <Button
-                  variant="primary"
+                  variant="accent"
                   size="md"
-                  rightIcon={<ArrowRight className="w-4 h-4 shrink-0" />}
+                  rightIcon={<ArrowRight className="w-4 h-4 shrink-0 text-brand-black" />}
                 >
                   {primaryCta.label}
                 </Button>

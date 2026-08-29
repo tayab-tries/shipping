@@ -1,6 +1,6 @@
 import React from 'react';
-import { Globe } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
+import { SectionHeading } from '@/components/ui/SectionHeading';
 
 export interface DestinationOverviewProps {
   countryName: string;
@@ -14,21 +14,21 @@ export const DestinationOverview: React.FC<DestinationOverviewProps> = ({
   if (!shippingOverview) return null;
 
   return (
-    <section className="w-full bg-surface-subtle border-b border-border py-10 lg:py-12">
+    <section className="w-full bg-background py-16 lg:py-20 border-b border-border text-brand-black">
       <Container>
-        <div className="bg-surface p-6 lg:p-8 rounded-md border border-border space-y-3 shadow-2xs max-w-4xl">
-          <div className="flex items-center gap-2 text-xs font-mono font-semibold text-secondary uppercase tracking-wider">
-            <Globe className="w-4 h-4" />
-            <span>Corridor Shipping Context</span>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+          <div className="lg:col-span-4">
+            <SectionHeading
+              badge="Trade Corridor Overview"
+              title={`Export Logistics to ${countryName}`}
+              className="[&_h2]:text-brand-black"
+            />
           </div>
-
-          <h2 className="text-heading-md font-bold text-foreground">
-            Shipping & Logistics Overview — {countryName}
-          </h2>
-
-          <p className="text-body-md text-muted-foreground leading-relaxed">
-            {shippingOverview}
-          </p>
+          <div className="lg:col-span-8 space-y-4">
+            <p className="text-body-lg text-slate-700 leading-relaxed font-normal max-w-prose">
+              {shippingOverview}
+            </p>
+          </div>
         </div>
       </Container>
     </section>

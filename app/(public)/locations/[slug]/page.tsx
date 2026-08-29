@@ -13,6 +13,7 @@ import { LocationServiceGrid } from '@/components/locations/LocationServiceGrid'
 import { LocationDestinationGrid } from '@/components/locations/LocationDestinationGrid';
 import { CoverageSection } from '@/components/locations/CoverageSection';
 import { LocationProcess } from '@/components/locations/LocationProcess';
+import { LocationGuides } from '@/components/locations/LocationGuides';
 import { LocationFaq } from '@/components/locations/LocationFaq';
 import { LocationCta } from '@/components/locations/LocationCta';
 
@@ -171,10 +172,13 @@ export default async function LocationDetailPage({ params }: LocationPageProps) 
       {/* 6. Origin Dispatch Process Workflow */}
       <LocationProcess cityName={location.name} />
 
-      {/* 7. City-Specific FAQ Accordion */}
+      {/* 7. Related Educational Guides */}
+      <LocationGuides cityName={location.name} />
+
+      {/* 8. City-Specific FAQ Accordion */}
       <LocationFaq cityName={location.name} faqs={location.faqs} />
 
-      {/* 8. Origin-Specific Quote Conversion CTA */}
+      {/* 9. Origin-Specific Quote Conversion CTA */}
       <LocationCta cityName={location.name} slug={location.slug} />
     </article>
   );

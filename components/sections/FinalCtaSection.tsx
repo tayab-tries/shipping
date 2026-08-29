@@ -6,25 +6,30 @@ import { Button } from '@/components/ui/Button';
 
 export const FinalCtaSection: React.FC = () => {
   return (
-    <section className="w-full bg-brand-black py-16 lg:py-24 border-t border-border-dark text-white">
-      <Container>
-        <div className="bg-brand-navy/80 backdrop-blur-xs p-8 lg:p-12 rounded-md border border-border-dark text-center space-y-6 max-w-4xl mx-auto shadow-md">
-          <h2 className="text-display-lg text-white font-extrabold tracking-tight">
-            Ready to Ship Your Cargo Internationally?
+    <section className="w-full bg-brand-navy py-20 lg:py-28 border-b border-border-dark text-white text-center">
+      <Container size="narrow">
+        <div className="bg-brand-black-deep rounded-md border border-border-dark p-8 lg:p-14 space-y-6 shadow-2xl">
+          <div className="text-xs font-mono text-slate-400 uppercase tracking-wider">
+            Logistics & Freight Services
+          </div>
+
+          <h2 className="text-display-lg font-bold text-white tracking-tight">
+            Ready to ship?
           </h2>
-          <p className="text-body-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Request a shipping quote based on your origin city in Pakistan, destination country, and cargo requirements.
+
+          <p className="text-body-lg text-slate-300 max-w-xl mx-auto leading-relaxed">
+            Connect with our shipping desk to calculate air cargo rates, ocean container schedules, and door-to-door forwarding options.
           </p>
 
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/quote" className="w-full sm:w-auto">
               <Button
-                variant="primary"
+                variant="accent"
                 size="lg"
                 className="w-full sm:w-auto"
-                rightIcon={<ArrowRight className="w-4 h-4 shrink-0" />}
+                rightIcon={<ArrowRight className="w-4 h-4 text-brand-black" />}
               >
-                Get a Shipping Quote
+                Get a Quote
               </Button>
             </Link>
             <Link href="/track" className="w-full sm:w-auto">
@@ -32,9 +37,9 @@ export const FinalCtaSection: React.FC = () => {
                 variant="outline-dark"
                 size="lg"
                 className="w-full sm:w-auto"
-                leftIcon={<Search className="w-4 h-4 shrink-0 text-accent" />}
+                leftIcon={<Search className="w-4 h-4 text-slate-300" />}
               >
-                Track Existing Cargo
+                Track Shipment
               </Button>
             </Link>
           </div>

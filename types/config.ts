@@ -10,6 +10,8 @@ export interface SiteConfig {
   legalName: string;
   domain: string;
   tagline: string;
+  phone?: string;
+  whatsapp?: string;
   contact: {
     phonePrimary: string;
     phoneSecondary: string;

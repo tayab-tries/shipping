@@ -1,41 +1,39 @@
 import React from 'react';
-import { clsx } from 'clsx';
+import { cn } from './Button';
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  variant?: 'default' | 'secondary' | 'accent' | 'outline' | 'success' | 'warning' | 'danger';
+  variant?: 'primary' | 'accent' | 'navy' | 'secondary' | 'outline' | 'outline-dark' | 'success' | 'warning' | 'default';
   size?: 'sm' | 'md';
 }
 
 export const Badge: React.FC<BadgeProps> = ({
-  className,
-  variant = 'default',
-  size = 'md',
   children,
+  variant = 'accent',
+  size = 'md',
+  className,
   ...props
 }) => {
+  const baseStyles = 'inline-flex items-center font-mono font-medium rounded-xs uppercase tracking-wider select-none';
+
+  const sizeStyles = {
+    sm: 'text-[10px] px-2 py-0.5',
+    md: 'text-xs px-2.5 py-1',
+  }[size];
+
+  const variantStyles = {
+    accent: 'bg-accent-soft text-brand-black border border-accent/40 font-semibold',
+    primary: 'bg-brand-black text-white border border-transparent',
+    secondary: 'bg-brand-navy text-white border border-border-dark',
+    default: 'bg-brand-navy text-white border border-border-dark',
+    navy: 'bg-brand-navy text-white border border-border-dark',
+    outline: 'bg-transparent text-brand-black border border-border',
+    'outline-dark': 'bg-transparent text-slate-300 border border-border-dark',
+    success: 'bg-emerald-950/60 text-emerald-300 border border-emerald-800/80',
+    warning: 'bg-amber-950/60 text-amber-300 border border-amber-800/80',
+  }[variant];
+
   return (
-    <span
-      className={clsx(
-        'inline-flex items-center font-mono font-semibold rounded-md transition-colors select-none uppercase tracking-wider',
-        {
-          // Size
-          'text-[0.6875rem] px-2 py-0.5 leading-none': size === 'sm',
-          'text-xs px-2.5 py-1 leading-tight': size === 'md',
-        },
-        {
-          // Variants
-          'bg-brand-black text-white': variant === 'default',
-          'bg-brand-navy text-slate-200 border border-border-dark': variant === 'secondary',
-          'bg-accent-muted text-accent border border-accent/30': variant === 'accent',
-          'bg-transparent text-foreground border border-border': variant === 'outline',
-          'bg-success-bg text-success border border-success-border': variant === 'success',
-          'bg-warning-bg text-warning border border-warning-border': variant === 'warning',
-          'bg-danger-bg text-danger border border-danger-border': variant === 'danger',
-        },
-        className
-      )}
-      {...props}
-    >
+    <span className={cn(baseStyles, sizeStyles, variantStyles, className)} {...props}>
       {children}
     </span>
   );

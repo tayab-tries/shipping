@@ -1,7 +1,7 @@
 /**
  * Centralized Media & Photography Registry
- * Authoritative single source of truth for photographic asset slots.
- * Component layouts reference these slots rather than hardcoding image paths.
+ * Single authoritative source of truth for configurable photographic image slots.
+ * Supports missing local assets safely with intentional layout fallback containers.
  */
 
 export interface ImageSlotDefinition {
@@ -17,6 +17,12 @@ export const IMAGE_SLOTS = {
     fallbackSrc: '/images/hero-freight.svg',
     alt: 'International ocean container freighter vessel sailing at sea',
     aspectRatio: 'aspect-[16/9]',
+  },
+  heroBackground: {
+    src: '/images/hero-freight.jpg',
+    fallbackSrc: '/images/hero-freight.svg',
+    alt: 'Cinematic international ocean container freighter ship at sea port',
+    aspectRatio: 'aspect-fill',
   },
   serviceAir: {
     src: '/images/service-air.jpg',
@@ -42,12 +48,30 @@ export const IMAGE_SLOTS = {
     alt: 'Pakistan export cargo freight terminal handling facility',
     aspectRatio: 'aspect-[16/9]',
   },
+  destination: {
+    src: '/images/destination-port.jpg',
+    fallbackSrc: '/images/destination-port.svg',
+    alt: 'International container port facility and freight logistics terminal',
+    aspectRatio: 'aspect-[16/9]',
+  },
   guideCover: {
     src: '/images/guide-cover.webp',
     fallbackSrc: '/images/guide-cover.svg',
     alt: 'Export customs documentation and international packaging guide',
     aspectRatio: 'aspect-[3/2]',
   },
+  tracking: {
+    src: '/images/tracking-cargo.jpg',
+    fallbackSrc: '/images/tracking-cargo.svg',
+    alt: 'Cargo container tracking and shipment logistics monitoring',
+    aspectRatio: 'aspect-[16/9]',
+  },
 } as const;
 
 export type ImageSlotKey = keyof typeof IMAGE_SLOTS;
+
+/** Safe image source resolver providing layout dimension fallbacks */
+export function getSafeImageSrc(slotKey: ImageSlotKey): string {
+  const slot = IMAGE_SLOTS[slotKey];
+  return slot ? slot.src : '/images/fallback-container.svg';
+}

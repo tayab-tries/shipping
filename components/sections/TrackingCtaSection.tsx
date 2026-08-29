@@ -1,38 +1,36 @@
 import React from 'react';
 import Link from 'next/link';
-import { Search, ShieldCheck } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 
 export const TrackingCtaSection: React.FC = () => {
   return (
-    <section className="w-full bg-brand-navy text-white py-16 lg:py-20 border-b border-border-dark">
+    <section className="w-full bg-brand-black py-16 border-b border-border-dark text-white">
       <Container>
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 bg-brand-black-deep/90 backdrop-blur-xs border border-border-dark p-8 rounded-md shadow-md">
-          <div className="space-y-3 max-w-2xl">
-            <div className="inline-flex items-center gap-2 text-xs font-mono font-semibold text-accent uppercase tracking-wider">
-              <ShieldCheck className="w-4 h-4 text-accent" />
-              <span>Sanitized Online Visibility</span>
+        <div className="bg-brand-navy border border-border-dark rounded-md p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-2 text-left">
+            <div className="text-xs font-mono font-semibold uppercase text-accent tracking-wider">
+              Public Shipment Visibility
             </div>
-            <h2 className="text-heading-xl text-white font-bold tracking-tight">
-              Have an Active Cargo Shipment?
-            </h2>
-            <p className="text-body-md text-slate-300 leading-relaxed">
-              Track your shipment milestone updates using your reference tracking number. Private customer details remain protected.
+            <h3 className="text-heading-lg font-bold text-white">
+              Track Your Active Cargo Shipment Status
+            </h3>
+            <p className="text-body-sm text-slate-300 max-w-xl">
+              Enter your tracking reference ID to view dispatch milestones, departure times, and destination arrival status.
             </p>
           </div>
 
-          <div className="shrink-0">
-            <Link href="/track">
-              <Button
-                variant="primary"
-                size="lg"
-                leftIcon={<Search className="w-4 h-4 shrink-0" />}
-              >
-                Track Cargo Status
-              </Button>
-            </Link>
-          </div>
+          <Link href="/track" className="shrink-0 w-full md:w-auto">
+            <Button
+              variant="accent"
+              size="lg"
+              className="w-full md:w-auto"
+              leftIcon={<Search className="w-4 h-4 text-brand-black" />}
+            >
+              Go to Tracking Page
+            </Button>
+          </Link>
         </div>
       </Container>
     </section>

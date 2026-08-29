@@ -1,6 +1,9 @@
 import React from 'react';
+import { Send, ArrowLeft, UserCheck } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { ArrowLeft, Send } from 'lucide-react';
+import { Input } from '@/components/ui/Input';
+import { Select } from '@/components/ui/Select';
+import { Textarea } from '@/components/ui/Textarea';
 
 export interface QuoteStep3Data {
   sender_name: string;
@@ -12,174 +15,149 @@ export interface QuoteStep3Data {
 }
 
 export interface QuoteStep3ContactProps {
-  data: QuoteStep3Data;
-  onChange: (field: keyof QuoteStep3Data, value: string | undefined) => void;
+  formData: QuoteStep3Data;
+  errors?: Record<string, string>;
+  isSubmitting?: boolean;
+  onChange: (field: keyof QuoteStep3Data, value: string) => void;
   onSubmit: (e: React.FormEvent) => void;
   onBack: () => void;
-  isSubmitting: boolean;
-  errors: Record<string, string>;
 }
 
 export const QuoteStep3Contact: React.FC<QuoteStep3ContactProps> = ({
-  data,
+  formData,
+  errors = {},
+  isSubmitting = false,
   onChange,
   onSubmit,
   onBack,
-  isSubmitting,
-  errors,
 }) => {
   return (
-    <form onSubmit={onSubmit} className="space-y-6">
-      <div className="space-y-1">
-        <h2 id="step-heading-3" tabIndex={-1} className="text-heading-md font-bold text-foreground focus:outline-none">
-          Step 3: Contact & Submission
-        </h2>
-        <p className="text-body-sm text-muted-foreground">
-          Provide your details so our operations team can send your custom quotation.
-        </p>
-      </div>
-
-      {/* Hidden Honeypot Field */}
+    <form onSubmit={onSubmit} className="space-y-6" id="quote-step-3-form">
+      {/* Hidden Anti-Spam Honeypot Field */}
       <input
         type="text"
         name="website_hp"
         tabIndex={-1}
         autoComplete="off"
-        value={data.website_hp || ''}
+        className="sr-only opacity-0 absolute pointer-events-none"
+        value={formData.website_hp || ''}
         onChange={(e) => onChange('website_hp', e.target.value)}
-        className="hidden opacity-0 w-0 h-0 pointer-events-none absolute"
       />
 
-      <div className="space-y-4">
-        {/* Sender Name */}
-        <div className="space-y-2">
-          <label htmlFor="sender_name" className="block text-xs font-mono font-semibold text-foreground">
-            Full Name <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="sender_name"
-            type="text"
-            required
-            value={data.sender_name}
-            onChange={(e) => onChange('sender_name', e.target.value)}
-            aria-describedby={errors.sender_name ? 'error-name' : undefined}
-            placeholder="e.g. Muhammad Ali"
-            className="w-full h-11 px-3 rounded-md border border-border bg-surface text-foreground text-sm focus:border-primary focus:ring-1 focus:ring-primary"
-          />
-          {errors.sender_name && (
-            <p id="error-name" className="text-xs font-semibold text-red-500">
-              {errors.sender_name}
-            </p>
-          )}
-        </div>
-
-        {/* Contact Preference */}
-        <div className="space-y-2">
-          <label className="block text-xs font-mono font-semibold text-foreground">
-            Preferred Contact Method <span className="text-red-500">*</span>
-          </label>
-          <div className="grid grid-cols-3 gap-3">
-            {(['whatsapp', 'phone', 'email'] as const).map((pref) => (
-              <button
-                key={pref}
-                type="button"
-                onClick={() => onChange('contact_preference', pref)}
-                className={`py-2.5 px-3 rounded-md border text-center text-xs font-semibold uppercase transition-colors ${
-                  data.contact_preference === pref
-                    ? 'border-primary bg-primary/10 text-primary font-bold'
-                    : 'border-border bg-surface text-foreground hover:border-border-strong'
-                }`}
-              >
-                {pref}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Phone / WhatsApp Number */}
-        <div className="space-y-2">
-          <label htmlFor="sender_phone" className="block text-xs font-mono font-semibold text-foreground">
-            Phone / WhatsApp Number{' '}
-            {data.contact_preference !== 'email' && <span className="text-red-500">*</span>}
-          </label>
-          <input
-            id="sender_phone"
-            type="tel"
-            value={data.sender_phone || ''}
-            onChange={(e) => onChange('sender_phone', e.target.value)}
-            aria-describedby={errors.sender_phone ? 'error-phone' : undefined}
-            placeholder="e.g. +92 300 1234567"
-            className="w-full h-11 px-3 rounded-md border border-border bg-surface text-foreground text-sm focus:border-primary focus:ring-1 focus:ring-primary"
-          />
-          {errors.sender_phone && (
-            <p id="error-phone" className="text-xs font-semibold text-red-500">
-              {errors.sender_phone}
-            </p>
-          )}
-        </div>
-
-        {/* Email Address */}
-        <div className="space-y-2">
-          <label htmlFor="sender_email" className="block text-xs font-mono font-semibold text-foreground">
-            Email Address{' '}
-            {data.contact_preference === 'email' ? (
-              <span className="text-red-500">*</span>
-            ) : (
-              <span className="text-muted-foreground font-normal">(Optional)</span>
-            )}
-          </label>
-          <input
-            id="sender_email"
-            type="email"
-            value={data.sender_email || ''}
-            onChange={(e) => onChange('sender_email', e.target.value)}
-            aria-describedby={errors.sender_email ? 'error-email' : undefined}
-            placeholder="e.g. name@example.com"
-            className="w-full h-11 px-3 rounded-md border border-border bg-surface text-foreground text-sm focus:border-primary focus:ring-1 focus:ring-primary"
-          />
-          {errors.sender_email && (
-            <p id="error-email" className="text-xs font-semibold text-red-500">
-              {errors.sender_email}
-            </p>
-          )}
-        </div>
-
-        {/* Additional Notes */}
-        <div className="space-y-2">
-          <label htmlFor="additional_notes" className="block text-xs font-mono font-semibold text-foreground">
-            Additional Instructions / Pickup Notes <span className="text-muted-foreground font-normal">(Optional)</span>
-          </label>
-          <textarea
-            id="additional_notes"
-            rows={3}
-            value={data.additional_notes || ''}
-            onChange={(e) => onChange('additional_notes', e.target.value)}
-            placeholder="Any specific delivery constraints or special handling requirements..."
-            className="w-full p-3 rounded-md border border-border bg-surface text-foreground text-sm focus:border-primary focus:ring-1 focus:ring-primary"
-          />
-        </div>
+      <div className="space-y-1 border-b border-border pb-4">
+        <h2 className="text-heading-lg font-bold text-brand-black flex items-center gap-2">
+          <UserCheck className="w-5 h-5 text-accent shrink-0" />
+          <span>Step 3: Contact & Submission</span>
+        </h2>
+        <p className="text-body-sm text-slate-600">
+          Enter your contact details so our operations team can deliver your custom quotation.
+        </p>
       </div>
 
-      {/* Action Bar */}
-      <div className="pt-4 flex items-center justify-between">
+      <Input
+        label="Full Name"
+        id="sender_name"
+        name="sender_name"
+        placeholder="e.g. Muhammad Ali"
+        value={formData.sender_name}
+        onChange={(e) => onChange('sender_name', e.target.value)}
+        error={errors.sender_name}
+        required
+        variantSurface="light"
+      />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <Select
+          label="Preferred Contact Method"
+          id="contact_preference"
+          name="contact_preference"
+          value={formData.contact_preference}
+          onChange={(e) => onChange('contact_preference', e.target.value as 'whatsapp' | 'phone' | 'email')}
+          error={errors.contact_preference}
+          required
+          variantSurface="light"
+        >
+          <option value="whatsapp">WhatsApp Message</option>
+          <option value="phone">Direct Phone Call</option>
+          <option value="email">Email Address</option>
+        </Select>
+
+        {(formData.contact_preference === 'whatsapp' || formData.contact_preference === 'phone') && (
+          <Input
+            label="Phone / WhatsApp Number"
+            id="sender_phone"
+            name="sender_phone"
+            placeholder="+92 300 1234567"
+            value={formData.sender_phone || ''}
+            onChange={(e) => onChange('sender_phone', e.target.value)}
+            error={errors.sender_phone}
+            required
+            variantSurface="light"
+          />
+        )}
+
+        {formData.contact_preference === 'email' && (
+          <Input
+            label="Email Address"
+            id="sender_email"
+            name="sender_email"
+            type="email"
+            placeholder="name@example.com"
+            value={formData.sender_email || ''}
+            onChange={(e) => onChange('sender_email', e.target.value)}
+            error={errors.sender_email}
+            required
+            variantSurface="light"
+          />
+        )}
+      </div>
+
+      {/* Optional Email field if WhatsApp or phone preselected */}
+      {formData.contact_preference !== 'email' && (
+        <Input
+          label="Email Address (Optional)"
+          id="sender_email"
+          name="sender_email"
+          type="email"
+          placeholder="name@example.com"
+          value={formData.sender_email || ''}
+          onChange={(e) => onChange('sender_email', e.target.value)}
+          error={errors.sender_email}
+          variantSurface="light"
+        />
+      )}
+
+      <Textarea
+        label="Additional Instructions or Special Notes (Optional)"
+        id="additional_notes"
+        name="additional_notes"
+        placeholder="Any specific delivery instructions, commercial invoice notes, or special handling requirements..."
+        value={formData.additional_notes || ''}
+        onChange={(e) => onChange('additional_notes', e.target.value)}
+        error={errors.additional_notes}
+        variantSurface="light"
+      />
+
+      <div className="pt-4 flex items-center justify-between gap-4">
         <Button
           type="button"
           variant="outline"
-          size="md"
+          size="lg"
           onClick={onBack}
-          disabled={isSubmitting}
-          leftIcon={<ArrowLeft className="w-4 h-4" />}
+          leftIcon={<ArrowLeft className="w-4 h-4 shrink-0" />}
         >
           Back
         </Button>
+
         <Button
           type="submit"
-          variant="primary"
-          size="md"
-          disabled={isSubmitting}
-          rightIcon={<Send className="w-4 h-4" />}
+          variant="accent"
+          size="lg"
+          isLoading={isSubmitting}
+          className="w-full sm:w-auto h-[46px]"
+          rightIcon={<Send className="w-4 h-4 text-brand-black shrink-0" />}
         >
-          {isSubmitting ? 'Submitting...' : 'Submit Quote Request'}
+          Submit Quote Request
         </Button>
       </div>
     </form>

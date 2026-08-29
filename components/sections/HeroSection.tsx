@@ -1,93 +1,147 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Search, Globe, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Search } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
-import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
 
 export const HeroSection: React.FC = () => {
   return (
-    <section className="relative w-full bg-brand-black text-white py-20 lg:py-32 overflow-hidden border-b border-border-dark min-h-[640px] flex items-center">
-      {/* 1. Full-Width Cinematic Freight Photography Background */}
-      <div className="absolute inset-0 z-0">
+    <section className="relative min-h-[680px] sm:min-h-[75vh] lg:min-h-[78vh] max-h-[90vh] w-full overflow-hidden bg-brand-black flex flex-col justify-center border-b border-border-dark">
+      {/* 1. Full-Bleed Background Image & Layout Fallback Container */}
+      <div className="absolute inset-0 z-0 bg-brand-black-deep">
         <Image
-          src={IMAGE_SLOTS.hero.src}
-          alt={IMAGE_SLOTS.hero.alt}
+          src={IMAGE_SLOTS.heroBackground.src}
+          alt={IMAGE_SLOTS.heroBackground.alt}
           fill
           priority
-          sizes="100vw"
-          className="object-cover object-center opacity-85"
+          sizes="(max-width: 768px) 100vw, 100vw"
+          className="object-cover object-[65%_center] lg:object-[center_right] opacity-80"
         />
-        {/* Dark Cinematic Gradient Overlay (Left-to-Right for High Headline Contrast) */}
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-black via-brand-black/90 to-brand-black/40 lg:to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-transparent to-brand-black/60" />
+
+        {/* 2. Directional Gradient Overlay — Desktop (90deg linear gradient) */}
+        <div
+          className="absolute inset-0 z-10 pointer-events-none hidden md:block"
+          style={{
+            background: `linear-gradient(
+              90deg,
+              rgba(7,10,15,0.96) 0%,
+              rgba(7,10,15,0.88) 24%,
+              rgba(7,10,15,0.62) 52%,
+              rgba(7,10,15,0.28) 78%,
+              rgba(7,10,15,0.18) 100%
+            )`,
+          }}
+        />
+
+        {/* 3. Directional Gradient Overlay — Mobile (180deg vertical gradient) */}
+        <div
+          className="absolute inset-0 z-10 pointer-events-none md:hidden"
+          style={{
+            background: `linear-gradient(
+              180deg,
+              rgba(7,10,15,0.78) 0%,
+              rgba(7,10,15,0.52) 45%,
+              rgba(7,10,15,0.72) 100%
+            )`,
+          }}
+        />
+
+        {/* 4. Dotted Route Line + Moving Cargo Aircraft (Motion-Path Animated, Rotated 91deg, Larger Scale 1.35) */}
+        <svg
+          className="absolute inset-0 w-full h-full text-accent pointer-events-none z-10 overflow-hidden"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 1440 900"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          {/* Dotted Background Route Path */}
+          <path
+            id="freight-hero-route"
+            d="M -100 650 C 300 600 600 250 1100 300 C 1300 320 1500 150 1600 100"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeDasharray="6 6"
+            className="opacity-15"
+          />
+
+          {/* Animated Freight Aircraft Silhouette (Rotated +45deg to 91deg total, scale 1.35) */}
+          <g className="motion-reduce:hidden opacity-85">
+            <g transform="translate(-12, -12) rotate(91) scale(1.35)">
+              <path
+                d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"
+                fill="currentColor"
+              />
+            </g>
+            <animateMotion
+              dur="20s"
+              repeatCount="indefinite"
+              rotate="auto"
+              calcMode="linear"
+            >
+              <mpath href="#freight-hero-route" />
+            </animateMotion>
+          </g>
+        </svg>
       </div>
 
-      {/* 2. Optional Minor Decorative Dotted Route Overlay */}
-      <svg
-        viewBox="0 0 1200 600"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="absolute inset-0 w-full h-full pointer-events-none opacity-30 z-0"
-        aria-hidden="true"
-      >
-        <path d="M 200 450 Q 600 150 1000 450" stroke="#F97316" strokeWidth="2" strokeDasharray="8 6" fill="none" />
-        <circle cx="200" cy="450" r="5" fill="#F8FAFC" />
-        <circle cx="1000" cy="450" r="5" fill="#F97316" />
-      </svg>
-
-      {/* 3. Hero Content Positioned Over Dark Overlay */}
-      <Container className="relative z-10">
-        <div className="max-w-3xl space-y-6">
-          <div>
-            <Badge variant="accent" size="md" className="mb-4 shadow-sm">
-              International Freight Services from Pakistan
-            </Badge>
-            {/* Single Unique H1 Heading with Orange Keyphrase Accent */}
-            <h1 className="text-display-xl text-white font-extrabold tracking-tight leading-tight">
-              International Cargo & <span className="text-accent">Shipping Services</span> from Pakistan
-            </h1>
+      {/* 5. Hero Content Stack Layered ABOVE Image & Route (relative z-20) */}
+      <Container className="relative z-20 py-16 lg:py-24">
+        <div className="w-full lg:w-[58%] max-w-[700px] space-y-6">
+          {/* Compact Eyebrow */}
+          <div className="flex items-center gap-2">
+            <span className="text-[12px] font-semibold uppercase tracking-[0.08em] px-3 py-1 bg-brand-navy/60 text-slate-300 border border-border-dark rounded-xs">
+              International Freight from Pakistan
+            </span>
           </div>
 
-          <p className="text-body-lg text-slate-200 max-w-2xl leading-relaxed drop-shadow-xs">
-            Reliable air freight, ocean sea cargo, and door-to-door shipping connecting shippers across Pakistan with destinations worldwide.
+          {/* Headline */}
+          <h1 className="text-[40px] sm:text-[56px] lg:text-[68px] font-extrabold tracking-tight text-white leading-[0.98] max-w-[700px]">
+            <span>GLOBAL FREIGHT.</span> <br />
+            <span className="text-accent">HANDLED RIGHT.</span>
+          </h1>
+
+          {/* Supporting Copy */}
+          <p className="text-[16px] sm:text-[18px] text-slate-300 leading-[1.6] font-normal max-w-[620px]">
+            Commercial air cargo forwarding, ocean sea freight, and doorstep collection connecting Pakistan with major international destination corridors.
           </p>
 
-          <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-            <Link href="/quote" className="w-full sm:w-auto">
+          {/* Dual CTAs */}
+          <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-[12px]">
+            <Link href="/quote">
               <Button
-                variant="primary"
+                variant="accent"
                 size="lg"
-                className="w-full sm:w-auto"
-                rightIcon={<ArrowRight className="w-4 h-4" />}
+                className="w-full sm:w-auto h-[46px] min-w-[200px]"
+                rightIcon={<ArrowRight className="w-4 h-4 text-brand-black shrink-0" />}
               >
                 Get a Shipping Quote
               </Button>
             </Link>
-            <Link href="/track" className="w-full sm:w-auto">
+
+            <Link href="/track">
               <Button
                 variant="outline-dark"
                 size="lg"
-                className="w-full sm:w-auto"
-                leftIcon={<Search className="w-4 h-4 text-accent" />}
+                className="w-full sm:w-auto h-[46px] min-w-[160px]"
+                leftIcon={<Search className="w-4 h-4 text-slate-300 shrink-0" />}
               >
                 Track Shipment
               </Button>
             </Link>
           </div>
 
-          {/* Neutral Capability Trust Indicators */}
-          <div className="pt-8 border-t border-slate-800/80 flex flex-wrap items-center gap-6 text-xs text-slate-300 font-mono">
-            <div className="flex items-center gap-2">
-              <Globe className="w-4 h-4 text-accent shrink-0" />
-              <span>Worldwide Destination Network</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-accent shrink-0" />
-              <span>Sanitized Public Tracking</span>
-            </div>
+          {/* Capability Micro Line */}
+          <div className="pt-6 mt-5 border-t border-border-dark/80 flex flex-wrap items-center gap-2 sm:gap-4 text-[12px] font-mono uppercase tracking-[0.08em] text-slate-400">
+            <span>AIR FREIGHT</span>
+            <span className="text-accent">•</span>
+            <span>SEA CARGO</span>
+            <span className="text-accent">•</span>
+            <span>DOOR-TO-DOOR</span>
+            <span className="text-accent">•</span>
+            <span>CUSTOMS CLEARANCE</span>
           </div>
         </div>
       </Container>

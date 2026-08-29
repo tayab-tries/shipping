@@ -1,11 +1,10 @@
 import React from 'react';
-import { Users, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 
 export interface ServiceSummaryPanelProps {
-  serviceOverview: string;
-  targetAudience: string[];
-  keyConsiderations: string[];
+  serviceOverview?: string;
+  targetAudience?: string | string[];
+  keyConsiderations?: string[];
 }
 
 export const ServiceSummaryPanel: React.FC<ServiceSummaryPanelProps> = ({
@@ -13,53 +12,53 @@ export const ServiceSummaryPanel: React.FC<ServiceSummaryPanelProps> = ({
   targetAudience,
   keyConsiderations,
 }) => {
+  if (!serviceOverview && !targetAudience && (!keyConsiderations || keyConsiderations.length === 0)) {
+    return null;
+  }
+
+  const audienceText = Array.isArray(targetAudience) ? targetAudience.join(', ') : targetAudience;
+
   return (
-    <section className="w-full bg-surface-subtle border-b border-border py-12">
+    <section className="w-full bg-brand-navy py-14 lg:py-20 border-b border-border-dark text-white">
       <Container>
-        <div className="bg-surface p-6 lg:p-8 rounded-md border border-border space-y-8 shadow-2xs">
-          {/* Overview text */}
-          <div className="space-y-2">
-            <h2 className="text-heading-sm font-bold text-foreground uppercase tracking-wider text-secondary">
-              Service Overview
-            </h2>
-            <p className="text-body-md text-foreground leading-relaxed">
-              {serviceOverview}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-border-subtle">
-            {/* Target Audience / Use Cases */}
+        <div className="bg-brand-black-deep p-8 lg:p-10 rounded-md border border-border-dark space-y-8 shadow-xl">
+          {serviceOverview && (
             <div className="space-y-3">
-              <div className="flex items-center gap-2 text-sm font-semibold text-primary">
-                <Users className="w-4 h-4 text-secondary" />
-                <span>Suitable Shipment Profiles</span>
+              <div className="text-xs font-mono font-semibold uppercase text-accent tracking-wider">
+                Service Overview & Capabilities
               </div>
-              <ul className="space-y-2">
-                {targetAudience.map((item, idx) => (
-                  <li key={idx} className="flex items-start gap-2 text-xs text-muted-foreground">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-secondary shrink-0 mt-0.5" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
+              <p className="text-body-lg text-slate-200 leading-relaxed max-w-3xl font-normal">
+                {serviceOverview}
+              </p>
             </div>
+          )}
 
-            {/* Key Considerations */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 text-sm font-semibold text-primary">
-                <AlertCircle className="w-4 h-4 text-accent" />
-                <span>Important Considerations</span>
+          {audienceText && (
+            <div className="space-y-3 pt-6 border-t border-border-dark">
+              <div className="text-xs font-mono font-semibold uppercase text-accent tracking-wider">
+                Target Shippers & Suitable Cargo
               </div>
-              <ul className="space-y-2">
+              <p className="text-body-md text-slate-300 leading-relaxed max-w-3xl">
+                {audienceText}
+              </p>
+            </div>
+          )}
+
+          {keyConsiderations && keyConsiderations.length > 0 && (
+            <div className="space-y-4 pt-6 border-t border-border-dark">
+              <div className="text-xs font-mono font-semibold uppercase text-accent tracking-wider">
+                Key Operational Considerations
+              </div>
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono text-slate-300">
                 {keyConsiderations.map((item, idx) => (
-                  <li key={idx} className="flex items-start gap-2 text-xs text-muted-foreground">
-                    <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0 mt-1.5" />
-                    <span>{item}</span>
+                  <li key={idx} className="flex items-start gap-3 bg-brand-navy/60 p-3.5 rounded border border-border-dark">
+                    <span className="w-2 h-2 rounded-full bg-accent mt-1 shrink-0" />
+                    <span className="leading-normal">{item}</span>
                   </li>
                 ))}
               </ul>
             </div>
-          </div>
+          )}
         </div>
       </Container>
     </section>

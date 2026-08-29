@@ -1,48 +1,49 @@
 @import "tailwindcss";
 
 :root {
-  /* Brand Core Tokens */
-  --brand-black: #0B0F17;
-  --brand-black-deep: #05080E;
+  /* Brand Core Tokens - Electric Cyan / Teal System */
+  --brand-black: #070A0F;
+  --brand-black-deep: #04070B;
 
-  --brand-navy: #0F172A;
-  --brand-navy-light: #1E293B;
-  --brand-navy-subtle: #334155;
+  --brand-navy: #0B1220;
+  --brand-navy-light: #12233A;
+  --brand-navy-subtle: #1C2D43;
 
-  --brand-orange: #F97316;
-  --brand-orange-hover: #EA580C;
-  --brand-orange-muted: #FFF7ED;
+  --brand-cyan: #22D3EE;
+  --brand-cyan-hover: #06B6D4;
+  --brand-cyan-soft: #ECFEFF;
 
   /* Semantic UI Maps */
-  --background: #FAFAFB;
-  --foreground: #0F172A;
+  --background: #F8FAFC;
+  --foreground: #070A0F;
 
   --surface: #FFFFFF;
   --surface-subtle: #F8FAFC;
   --surface-muted: #F1F5F9;
-  --surface-dark: #0B0F17;
-  --surface-navy: #0F172A;
+  --surface-dark: #070A0F;
+  --surface-navy: #0B1220;
 
   --border: #E2E8F0;
   --border-subtle: #F1F5F9;
   --border-strong: #94A3B8;
   --border-dark: #1E293B;
 
-  --primary: #0B0F17;
-  --primary-foreground: #FFFFFF;
-  --primary-hover: #1E293B;
+  --primary: #070A0F;
+  --primary-foreground: #F8FAFC;
+  --primary-hover: #12233A;
 
-  --secondary: #0F172A;
-  --secondary-foreground: #FFFFFF;
-  --secondary-hover: #1E293B;
+  --secondary: #0B1220;
+  --secondary-foreground: #F8FAFC;
+  --secondary-hover: #12233A;
 
-  --accent: #F97316;
-  --accent-hover: #EA580C;
-  --accent-muted: #FFF7ED;
-  --accent-foreground: #0B0F17; /* Compliant Black-on-Orange */
+  --accent: #22D3EE;
+  --accent-hover: #06B6D4;
+  --accent-soft: #ECFEFF;
+  --accent-muted: #ECFEFF;
+  --accent-foreground: #070A0F; /* High contrast Black-on-Cyan (11.8:1 AAA) */
 
   --muted: #64748B;
-  --muted-foreground: #475569;
+  --muted-foreground: #94A3B8;
 
   --success: #059669;
   --success-bg: #ECFDF5;
@@ -56,7 +57,7 @@
   --danger-bg: #FEF2F2;
   --danger-border: #FECACA;
 
-  --ring: #F97316;
+  --ring: #22D3EE;
 
   --radius-sm: 0.25rem;
   --radius-md: 0.375rem;
@@ -69,9 +70,9 @@
   --color-brand-navy: var(--brand-navy);
   --color-brand-navy-light: var(--brand-navy-light);
   --color-brand-navy-subtle: var(--brand-navy-subtle);
-  --color-brand-orange: var(--brand-orange);
-  --color-brand-orange-hover: var(--brand-orange-hover);
-  --color-brand-orange-muted: var(--brand-orange-muted);
+  --color-brand-cyan: var(--brand-cyan);
+  --color-brand-cyan-hover: var(--brand-cyan-hover);
+  --color-brand-cyan-soft: var(--brand-cyan-soft);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -96,6 +97,7 @@
 
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
   --color-accent-muted: var(--accent-muted);
   --color-accent-foreground: var(--accent-foreground);
 

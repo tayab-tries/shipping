@@ -1,12 +1,11 @@
 import React from 'react';
 import { HeroSection } from '@/components/sections/HeroSection';
 import { QuickQuoteTeaser } from '@/components/sections/QuickQuoteTeaser';
-import { TrustSection } from '@/components/sections/TrustSection';
 import { ServicesOverview } from '@/components/sections/ServicesOverview';
-import { DestinationShowcase } from '@/components/sections/DestinationShowcase';
 import { PakistanReachSection } from '@/components/sections/PakistanReachSection';
+import { DestinationShowcase } from '@/components/sections/DestinationShowcase';
 import { ProcessSection } from '@/components/sections/ProcessSection';
-import { TrackingCtaSection } from '@/components/sections/TrackingCtaSection';
+import { TrustSection } from '@/components/sections/TrustSection';
 import { GuidesPreviewSection } from '@/components/sections/GuidesPreviewSection';
 import { FaqSection } from '@/components/sections/FaqSection';
 import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
@@ -14,37 +13,34 @@ import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
 export default function HomePage() {
   return (
     <div className="w-full">
-      {/* 1. Hero Section (Single H1 & Dual CTAs) */}
+      {/* 01. HERO */}
       <HeroSection />
 
-      {/* 2. Quick Quote Teaser (Native HTML GET Form) */}
+      {/* 02. QUICK QUOTE / ENTRY ACTION */}
       <QuickQuoteTeaser />
 
-      {/* 3. Operational Trust / How We Work */}
-      <TrustSection />
-
-      {/* 4. Core Logistics Services */}
+      {/* 03. CORE SERVICES */}
       <ServicesOverview />
 
-      {/* 5. International Destination Corridors */}
-      <DestinationShowcase />
-
-      {/* 6. Coverage Across Pakistan */}
+      {/* 04. PAKISTAN NETWORK */}
       <PakistanReachSection />
 
-      {/* 7. Transparent Shipment Workflow */}
+      {/* 05. INTERNATIONAL DESTINATIONS */}
+      <DestinationShowcase />
+
+      {/* 06. PROCESS */}
       <ProcessSection />
 
-      {/* 8. Tracking Callout CTA */}
-      <TrackingCtaSection />
+      {/* 07. TRUST / CREDENTIALS */}
+      <TrustSection />
 
-      {/* 9. Guides & Resource Previews */}
+      {/* 08. GUIDES / RESOURCES */}
       <GuidesPreviewSection />
 
-      {/* 10. Frequently Asked Questions & FAQPage JSON-LD */}
+      {/* 09. FAQ */}
       <FaqSection />
 
-      {/* 11. Final Conversion Quote CTA */}
+      {/* 10. FINAL CTA */}
       <FinalCtaSection />
     </div>
   );

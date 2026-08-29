@@ -1,47 +1,45 @@
 import React from 'react';
-import { clsx } from 'clsx';
+import { cn } from './Button';
 import { Badge } from './Badge';
 
-export interface SectionHeadingProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface SectionHeadingProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
   badge?: string;
-  title: string;
-  subtitle?: string;
-  align?: 'left' | 'center' | 'right';
-  titleAs?: 'h1' | 'h2' | 'h3';
+  title: React.ReactNode;
+  subtitle?: React.ReactNode;
+  align?: 'left' | 'center';
+  badgeVariant?: 'accent' | 'primary' | 'navy' | 'outline' | 'outline-dark';
 }
 
 export const SectionHeading: React.FC<SectionHeadingProps> = ({
-  className,
   badge,
   title,
   subtitle,
   align = 'left',
-  titleAs: HeadingTag = 'h2',
+  badgeVariant = 'accent',
+  className,
   ...props
 }) => {
   return (
     <div
-      className={clsx(
-        'max-w-3xl',
-        {
-          'text-left': align === 'left',
-          'text-center mx-auto': align === 'center',
-          'text-right ml-auto': align === 'right',
-        },
+      className={cn(
+        'space-y-3 max-w-3xl',
+        align === 'center' ? 'mx-auto text-center' : 'text-left',
         className
       )}
       {...props}
     >
       {badge && (
-        <div className="mb-3">
-          <Badge variant="accent">{badge}</Badge>
+        <div className={align === 'center' ? 'flex justify-center' : ''}>
+          <Badge variant={badgeVariant} size="md">
+            {badge}
+          </Badge>
         </div>
       )}
-      <HeadingTag className="text-display-lg text-foreground font-bold tracking-tight">
+      <h2 className="text-heading-xl font-bold tracking-tight text-current leading-snug">
         {title}
-      </HeadingTag>
+      </h2>
       {subtitle && (
-        <p className="mt-3 text-body-lg text-muted-foreground leading-relaxed">
+        <p className="text-body-md text-slate-400 font-normal leading-relaxed">
           {subtitle}
         </p>
       )}

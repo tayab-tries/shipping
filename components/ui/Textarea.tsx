@@ -1,43 +1,64 @@
 import React from 'react';
-import { clsx } from 'clsx';
-import { FormLabel, FormHint, FormError } from './FormControls';
+import { cn } from './Button';
 
 export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
-  hint?: string;
   error?: string;
+  helperText?: string;
+  variantSurface?: 'light' | 'dark';
 }
 
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, label, hint, error, id, required, disabled, rows = 4, ...props }, ref) => {
+  (
+    {
+      className,
+      label,
+      error,
+      helperText,
+      variantSurface = 'light',
+      id,
+      rows = 4,
+      ...props
+    },
+    ref
+  ) => {
     const textareaId = id || (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined);
 
+    const surfaceStyles = {
+      light: 'bg-surface text-brand-black border-border placeholder:text-slate-400 focus:border-accent focus:ring-accent/30',
+      dark: 'bg-brand-navy text-white border-border-dark placeholder:text-slate-500 focus:border-accent focus:ring-accent/30',
+    }[variantSurface];
+
     return (
-      <div className="w-full">
+      <div className="w-full space-y-1.5">
         {label && (
-          <FormLabel htmlFor={textareaId} required={required}>
+          <label
+            htmlFor={textareaId}
+            className={cn(
+              'block text-xs font-mono font-semibold uppercase tracking-wider',
+              variantSurface === 'dark' ? 'text-slate-300' : 'text-slate-700'
+            )}
+          >
             {label}
-          </FormLabel>
+          </label>
         )}
         <textarea
           ref={ref}
           id={textareaId}
-          required={required}
-          disabled={disabled}
           rows={rows}
-          aria-invalid={Boolean(error)}
-          className={clsx(
-            'w-full bg-surface text-foreground placeholder:text-muted-foreground text-sm font-normal rounded-md border border-border px-3.5 py-2.5 transition-colors duration-150',
-            'focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent',
-            'disabled:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-60 resize-y',
-            {
-              'border-danger focus:ring-danger': Boolean(error),
-            },
+          className={cn(
+            'w-full p-3.5 text-sm rounded-md border transition-colors outline-none focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed',
+            error && 'border-danger focus:border-danger focus:ring-danger/30',
+            surfaceStyles,
             className
           )}
           {...props}
         />
-        {error ? <FormError>{error}</FormError> : hint ? <FormHint>{hint}</FormHint> : null}
+        {error ? (
+          <p className="text-xs text-danger font-medium mt-1">{error}</p>
+        ) : helperText ? (
+          <p className="text-xs text-slate-400 mt-1">{helperText}</p>
+        ) : null}
       </div>
     );
   }

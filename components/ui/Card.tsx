@@ -1,84 +1,34 @@
 import React from 'react';
-import { clsx } from 'clsx';
+import { cn } from './Button';
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: 'default' | 'bordered' | 'elevated' | 'interactive';
+  variant?: 'light' | 'dark' | 'navy' | 'ghost';
+  hoverable?: boolean;
 }
 
-export const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, variant = 'default', children, ...props }, ref) => {
-    return (
-      <div
-        ref={ref}
-        className={clsx(
-          'rounded-md bg-surface transition-all duration-150',
-          {
-            // Default (Clean subtle border)
-            'border border-border shadow-2xs': variant === 'default',
-            // Bordered (Stronger industrial border)
-            'border border-border-strong': variant === 'bordered',
-            // Elevated (Subtle corporate depth)
-            'border border-border shadow-xs': variant === 'elevated',
-            // Interactive (Hover elevation for clickable cards)
-            'border border-border shadow-2xs hover:border-border-strong hover:shadow-xs cursor-pointer':
-              variant === 'interactive',
-          },
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </div>
-    );
-  }
-);
+export const Card: React.FC<CardProps> = ({
+  children,
+  variant = 'light',
+  hoverable = false,
+  className,
+  ...props
+}) => {
+  const baseStyles = 'rounded-md transition-all duration-200 overflow-hidden';
 
-Card.displayName = 'Card';
+  const variantStyles = {
+    light: 'bg-surface text-brand-black border border-border shadow-xs',
+    dark: 'bg-brand-black text-white border border-border-dark shadow-md',
+    navy: 'bg-brand-navy text-white border border-border-dark shadow-md',
+    ghost: 'bg-transparent text-current border border-transparent',
+  }[variant];
 
-export const CardHeader = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div ref={ref} className={clsx('p-6 pb-4', className)} {...props} />
-));
-CardHeader.displayName = 'CardHeader';
+  const hoverStyles = hoverable
+    ? 'hover:-translate-y-0.5 hover:shadow-md hover:border-accent/40'
+    : '';
 
-export const CardTitle = React.forwardRef<
-  HTMLHeadingElement,
-  React.HTMLAttributes<HTMLHeadingElement>
->(({ className, ...props }, ref) => (
-  <h3
-    ref={ref}
-    className={clsx('text-heading-md text-foreground font-semibold tracking-tight', className)}
-    {...props}
-  />
-));
-CardTitle.displayName = 'CardTitle';
-
-export const CardDescription = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => (
-  <p ref={ref} className={clsx('text-body-sm text-muted-foreground mt-1', className)} {...props} />
-));
-CardDescription.displayName = 'CardDescription';
-
-export const CardContent = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div ref={ref} className={clsx('p-6 pt-0', className)} {...props} />
-));
-CardContent.displayName = 'CardContent';
-
-export const CardFooter = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={clsx('p-6 pt-0 flex items-center justify-between border-t border-border-subtle mt-4', className)}
-    {...props}
-  />
-));
-CardFooter.displayName = 'CardFooter';
+  return (
+    <div className={cn(baseStyles, variantStyles, hoverStyles, className)} {...props}>
+      {children}
+    </div>
+  );
+};

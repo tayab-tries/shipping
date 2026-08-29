@@ -1,45 +1,46 @@
 import React from 'react';
-import { Container } from '@/components/ui/Container';
-import { SectionHeading } from '@/components/ui/SectionHeading';
-import { TextLink } from '@/components/ui/TextLink';
-import { isPublishedEntity } from '@/lib/content/publication-gate';
+import Link from 'next/link';
+import { ArrowRight, Globe } from 'lucide-react';
+import { getPublishedStaticDestinations } from '@/lib/destinations/destination-content';
 
 export interface RelatedDestinationsBarProps {
-  supportedDestinations: string[];
+  supportedDestinations?: string[];
 }
 
 export const RelatedDestinationsBar: React.FC<RelatedDestinationsBarProps> = ({
-  supportedDestinations,
+  supportedDestinations = [],
 }) => {
-  const publishedDestinations = supportedDestinations.filter((slug) =>
-    isPublishedEntity('destination', slug)
-  );
+  const publishedDestinations = getPublishedStaticDestinations();
 
-  if (publishedDestinations.length === 0) return null;
+  const related = supportedDestinations.length > 0
+    ? publishedDestinations.filter((d) => supportedDestinations.includes(d.slug))
+    : publishedDestinations.slice(0, 3);
+
+  if (related.length === 0) return null;
 
   return (
-    <section className="w-full bg-surface-subtle border-b border-border py-10 lg:py-12">
-      <Container>
-        <SectionHeading
-          badge="Destinations Context"
-          title="Related Destination Corridors"
-          subtitle="International destinations connected with this guide."
-        />
+    <div className="py-8 border-t border-border space-y-4">
+      <div className="text-xs font-mono font-bold uppercase text-slate-500 tracking-wider">
+        Related Destination Corridors
+      </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
-          {publishedDestinations.map((slug) => (
-            <div
-              key={slug}
-              className="bg-surface p-4 rounded-md border border-border flex flex-col justify-between space-y-3 hover:border-border-strong transition-colors min-w-0"
-            >
-              <h3 className="text-heading-sm font-bold text-foreground uppercase">{slug}</h3>
-              <TextLink href={`/destinations/${slug}`} showIcon className="text-xs">
-                View Destination Info
-              </TextLink>
+      <div className="divide-y divide-border rounded border border-border bg-surface overflow-hidden">
+        {related.map((dest) => (
+          <Link
+            key={dest.slug}
+            href={`/destinations/${dest.slug}`}
+            className="p-4 flex items-center justify-between hover:bg-surface-subtle transition-colors group"
+          >
+            <div className="flex items-center gap-3">
+              <Globe className="w-4 h-4 text-slate-500 group-hover:text-accent transition-colors" />
+              <span className="text-body-sm font-bold text-brand-black group-hover:text-accent transition-colors">
+                Cargo to {dest.name} ({dest.region})
+              </span>
             </div>
-          ))}
-        </div>
-      </Container>
-    </section>
+            <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-accent transition-colors" />
+          </Link>
+        ))}
+      </div>
+    </div>
   );
 };

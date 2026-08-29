@@ -6,45 +6,48 @@ import { Button } from '@/components/ui/Button';
 
 export interface DestinationCtaProps {
   countryName: string;
-  slug: string;
+  countrySlug: string;
 }
 
-export const DestinationCta: React.FC<DestinationCtaProps> = ({ countryName, slug }) => {
-  return (
-    <section className="w-full bg-background py-12 lg:py-16">
-      <Container>
-        <div className="bg-primary text-primary-foreground p-8 lg:p-12 rounded-md border border-slate-800 text-center space-y-6 max-w-4xl mx-auto shadow-md">
-          <h2 className="text-display-lg text-white font-extrabold tracking-tight">
-            Ready to Ship International Cargo to {countryName}?
-          </h2>
-          <p className="text-body-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Request a custom shipping quote for cargo heading from Pakistan to {countryName}. Specify your cargo weight, shipping mode, and origin city for detailed freight pricing.
-          </p>
-
-          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href={`/quote?destination=${slug}`} className="w-full sm:w-auto">
-              <Button
-                variant="secondary"
-                size="lg"
-                className="w-full sm:w-auto"
-                rightIcon={<ArrowRight className="w-4 h-4 shrink-0" />}
-              >
-                Get a Quote for {countryName} Cargo
-              </Button>
-            </Link>
-            <Link href="/track" className="w-full sm:w-auto">
-              <Button
-                variant="outline"
-                size="lg"
-                className="w-full sm:w-auto text-white border-slate-700 hover:bg-slate-800"
-                leftIcon={<Search className="w-4 h-4 shrink-0" />}
-              >
-                Track Shipment Status
-              </Button>
-            </Link>
-          </div>
+export const DestinationCta: React.FC<DestinationCtaProps> = ({ countryName, countrySlug }) => (
+  <section className="w-full bg-brand-navy py-20 lg:py-28 border-b border-border-dark text-white text-center">
+    <Container size="narrow">
+      <div className="bg-brand-black-deep rounded-md border border-border-dark p-8 lg:p-14 space-y-6 shadow-2xl">
+        <div className="text-xs font-mono text-slate-400 uppercase tracking-wider">
+          Corridor Rates & Schedules
         </div>
-      </Container>
-    </section>
-  );
-};
+
+        <h2 className="text-display-lg font-bold text-white tracking-tight">
+          Ship Cargo to {countryName} from Pakistan
+        </h2>
+
+        <p className="text-body-lg text-slate-300 max-w-xl mx-auto leading-relaxed">
+          Get transparent air cargo rates, ocean container schedules, and customs guidance for your export shipment heading to {countryName}.
+        </p>
+
+        <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Link href={`/quote?destination=${countrySlug}`} className="w-full sm:w-auto">
+            <Button
+              variant="accent"
+              size="lg"
+              className="w-full sm:w-auto"
+              rightIcon={<ArrowRight className="w-4 h-4 text-brand-black shrink-0" />}
+            >
+              Get Quote to {countryName}
+            </Button>
+          </Link>
+          <Link href="/track" className="w-full sm:w-auto">
+            <Button
+              variant="outline-dark"
+              size="lg"
+              className="w-full sm:w-auto"
+              leftIcon={<Search className="w-4 h-4 text-slate-300 shrink-0" />}
+            >
+              Track Shipment
+            </Button>
+          </Link>
+        </div>
+      </div>
+    </Container>
+  </section>
+);

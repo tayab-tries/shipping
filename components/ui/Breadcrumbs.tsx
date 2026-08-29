@@ -1,63 +1,55 @@
 import React from 'react';
 import Link from 'next/link';
-import { clsx } from 'clsx';
 import { ChevronRight, Home } from 'lucide-react';
-import { BreadcrumbItem } from '@/types/content';
-import { getBreadcrumbJsonLd } from '@/lib/seo/jsonld.service';
+import { cn } from './Button';
+
+export interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
 
 export interface BreadcrumbsProps {
   items: BreadcrumbItem[];
-  showHome?: boolean;
+  variantSurface?: 'light' | 'dark';
   className?: string;
 }
 
 export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
   items,
-  showHome = true,
+  variantSurface = 'dark',
   className,
 }) => {
-  const allItems: BreadcrumbItem[] = showHome
-    ? [{ label: 'Home', url: '/' }, ...items]
-    : items;
-
-  const jsonLd = getBreadcrumbJsonLd(allItems);
+  const textStyles = variantSurface === 'dark' ? 'text-slate-400' : 'text-slate-500';
+  const activeStyles = variantSurface === 'dark' ? 'text-slate-200' : 'text-slate-800';
 
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <nav
-        aria-label="Breadcrumb"
-        className={clsx('flex items-center text-xs text-muted-foreground', className)}
-      >
-        <ol className="flex items-center flex-wrap gap-1.5">
-          {allItems.map((item, index) => {
-            const isLast = index === allItems.length - 1;
-            const isFirstHome = showHome && index === 0;
+    <nav aria-label="Breadcrumb" className={cn('flex items-center text-xs font-mono py-2', className)}>
+      <ol className="flex items-center space-x-2">
+        <li>
+          <Link href="/" className={cn('flex items-center hover:underline', textStyles)}>
+            <Home className="w-3.5 h-3.5 mr-1" />
+            <span>Home</span>
+          </Link>
+        </li>
 
-            return (
-              <li key={item.url} className="flex items-center gap-1.5">
-                {index > 0 && <ChevronRight className="w-3.5 h-3.5 text-border-strong shrink-0" />}
-                {isLast ? (
-                  <span className="font-semibold text-foreground" aria-current="page">
-                    {item.label}
-                  </span>
-                ) : (
-                  <Link
-                    href={item.url}
-                    className="hover:text-foreground transition-colors flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xs"
-                  >
-                    {isFirstHome && <Home className="w-3.5 h-3.5 shrink-0" />}
-                    <span>{item.label}</span>
-                  </Link>
-                )}
-              </li>
-            );
-          })}
-        </ol>
-      </nav>
-    </>
+        {items.map((item, idx) => {
+          const isLast = idx === items.length - 1;
+          return (
+            <li key={idx} className="flex items-center space-x-2">
+              <ChevronRight className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+              {isLast || !item.href ? (
+                <span className={cn('font-semibold truncate max-w-[200px]', activeStyles)} aria-current="page">
+                  {item.label}
+                </span>
+              ) : (
+                <Link href={item.href} className={cn('hover:underline truncate max-w-[200px]', textStyles)}>
+                  {item.label}
+                </Link>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
   );
 };

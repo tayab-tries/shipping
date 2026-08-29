@@ -1,73 +1,81 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
+import { ChevronDown } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
-import { Accordion } from '@/components/ui/Accordion';
 
-export const FaqSection: React.FC = () => {
-  const faqData = [
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
+
+interface FaqSectionProps {
+  faqs?: FaqItem[];
+}
+
+export const FaqSection: React.FC<FaqSectionProps> = ({ faqs }) => {
+  const defaultFaqs: FaqItem[] = [
     {
-      id: 'faq-1',
-      question: 'How do I request an international shipping quote?',
-      answer:
-        'Select your origin city in Pakistan, destination country, and cargo type on our Quick Quote bar or quote request form. Enter your cargo weight and contact details to receive a quote response.',
+      question: 'How is volumetric weight calculated for air freight shipments?',
+      answer: 'Air freight volumetric weight is calculated using the standard formula: (Length × Width × Height in cm) / 5000. Shippers are billed on whichever value is higher: actual scale weight or volumetric weight.',
     },
     {
-      id: 'faq-2',
-      question: 'What is the difference between air freight and sea cargo?',
-      answer:
-        'Air freight is suited for time-sensitive cargo and smaller shipments. Sea cargo provides ocean shipping suitable for heavy, bulk, or larger containerized shipments.',
+      question: 'Do you arrange doorstep cargo pickups across cities in Pakistan?',
+      answer: 'Yes, scheduled doorstep collection services are available across Lahore, Karachi, Islamabad, Rawalpindi, Faisalabad, Sialkot, Multan, and Peshawar.',
     },
     {
-      id: 'faq-3',
-      question: 'How is volumetric weight calculated for air cargo?',
-      answer:
-        'Volumetric weight is computed using the cargo dimensions: (Length x Width x Height in centimeters) divided by 6000. Shippers are billed on whichever is greater: actual weight or volumetric weight.',
+      question: 'What documentation is required for commercial export shipments?',
+      answer: 'Standard commercial export documentation requires a Commercial Invoice, Packing List, Certificate of Origin (where applicable), and sender identification.',
     },
     {
-      id: 'faq-4',
-      question: 'How can I track my active cargo shipment online?',
-      answer:
-        'Enter your reference tracking number on our tracking lookup page to view public milestone updates from collection through final destination delivery.',
+      question: 'How does public shipment tracking work?',
+      answer: 'Enter your valid tracking reference ID on the tracking page to view current milestone progress, dispatch timestamps, and destination arrival stages.',
     },
   ];
 
-  // Compliant FAQPage JSON-LD Schema
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqData.map((item) => ({
-      '@type': 'Question',
-      name: item.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: item.answer,
-      },
-    })),
-  };
+  const items = faqs && faqs.length > 0 ? faqs : defaultFaqs;
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section className="w-full bg-surface-subtle py-16 lg:py-24 border-b border-border">
-      {/* FAQPage JSON-LD Structured Data */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <Container>
+    <section className="w-full bg-surface py-20 lg:py-28 border-b border-border text-brand-black">
+      <Container size="narrow">
         <SectionHeading
-          badge="Inquiries"
-          title="Frequently Asked Questions"
-          subtitle="Common questions regarding international cargo shipping from Pakistan."
+          badge="Frequently Asked Questions"
+          title="Common Questions About International Cargo"
+          subtitle="Answers regarding cargo pickup, volumetric weight billing, and commercial customs documentation."
+          className="mb-14 text-center mx-auto"
+          align="center"
         />
 
-        <div className="max-w-3xl mt-12 bg-surface p-6 lg:p-8 rounded-md border border-border">
-          <Accordion
-            items={faqData.map((f) => ({
-              id: f.id,
-              title: f.question,
-              content: f.answer,
-            }))}
-            defaultOpenId="faq-1"
-          />
+        {/* Clean Editorial List with Horizontal Dividers (Not separate rounded cards) */}
+        <div className="border-t border-border divide-y divide-border">
+          {items.map((faq, idx) => {
+            const isOpen = openIndex === idx;
+
+            return (
+              <div key={idx} className="py-5">
+                <button
+                  onClick={() => setOpenIndex(isOpen ? null : idx)}
+                  className="w-full flex items-center justify-between text-left text-heading-sm font-bold text-brand-black hover:text-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-xs"
+                  aria-expanded={isOpen}
+                >
+                  <span className="pr-4">{faq.question}</span>
+                  <ChevronDown
+                    className={`w-5 h-5 text-slate-400 shrink-0 transition-transform duration-200 ${
+                      isOpen ? 'rotate-180 text-brand-black' : ''
+                    }`}
+                  />
+                </button>
+
+                {isOpen && (
+                  <div className="pt-3 pb-2 text-body-md text-slate-600 leading-relaxed max-w-prose animate-in fade-in duration-150 font-normal">
+                    {faq.answer}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </Container>
     </section>
