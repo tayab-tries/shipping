@@ -24,6 +24,18 @@ export default function AdminLoginForm() {
         setLoading(false);
       }
     } catch (err: unknown) {
+      // Next.js redirect() throws an internal NEXT_REDIRECT exception for navigation control flow.
+      const isNextRedirect =
+        err instanceof Error &&
+        (err.message === 'NEXT_REDIRECT' ||
+          err.message.includes('NEXT_REDIRECT') ||
+          (err as { digest?: string }).digest?.startsWith('NEXT_REDIRECT'));
+
+      if (isNextRedirect) {
+        // Do not handle Next.js control flow redirect as a user-facing login error
+        return;
+      }
+
       setError(err instanceof Error ? err.message : 'An error occurred during authentication.');
       setLoading(false);
     }

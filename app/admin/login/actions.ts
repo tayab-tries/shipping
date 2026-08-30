@@ -13,8 +13,8 @@ export interface AdminLoginResult {
  * Runs exclusively on the Cloudflare Worker server process where Cloudflare Runtime Variables
  * (NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY) are accessible at runtime.
  * 
- * Sets session HTTP cookies via Supabase SSR client + Next.js cookies(), then executes server-side
- * redirect('/admin') to send Set-Cookie and navigation headers in a single HTTP response.
+ * Executes signInWithPassword, writes auth cookies to cookieStore, then calls redirect('/admin')
+ * OUTSIDE any try/catch block so Next.js handles navigation natively.
  */
 export async function adminLoginAction(formData: {
   email?: string;
@@ -30,29 +30,20 @@ export async function adminLoginAction(formData: {
     };
   }
 
-  try {
-    const supabase = await createClient();
+  const supabase = await createClient();
 
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+  const { error: signInError } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
 
-    if (signInError) {
-      return {
-        success: false,
-        error: signInError.message,
-      };
-    }
-  } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : 'Server authentication failed.';
-    console.error('adminLoginAction error:', msg);
+  if (signInError) {
     return {
       success: false,
-      error: msg,
+      error: signInError.message,
     };
   }
 
-  // Next.js redirect MUST occur outside try/catch to ensure Set-Cookie and X-Nextjs-Redirect are emitted together
+  // Next.js redirect MUST be called outside any try/catch block
   redirect('/admin');
 }
