@@ -24,36 +24,48 @@ export interface AdminUserAuth {
  * 3. Permitted role check ('admin' | 'editor').
  * 4. Optional strict 'admin'-only role check.
  * 
- * Throws server-side redirect('/admin/login') on failure.
+ * Executes server-side redirect('/admin/login') on authentication failure.
  */
 export async function requireAdminAuth(requiredRole?: 'admin'): Promise<AdminUserAuth> {
-  const supabase = await createClient();
+  let user: { id: string; email?: string } | null = null;
+  let profile: { id: string; email: string; full_name: string; role: string; is_active: boolean } | null = null;
 
-  // 1. Check Supabase Auth session user
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
+  try {
+    const supabase = await createClient();
 
-  if (userError || !user) {
+    // 1. Check Supabase Auth session user
+    const { data, error: userError } = await supabase.auth.getUser();
+    if (!userError && data?.user) {
+      user = {
+        id: data.user.id,
+        email: data.user.email,
+      };
+
+      // 2. Query admin_profiles table for active account
+      const { data: profileData, error: profileError } = await supabase
+        .from('admin_profiles')
+        .select('id, email, full_name, role, is_active')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      if (!profileError && profileData && profileData.is_active) {
+        profile = profileData;
+      } else if (profileError) {
+        console.error('admin_profiles query error in requireAdminAuth:', profileError.message);
+      }
+    }
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Unknown exception during auth check';
+    console.error('requireAdminAuth safe catch:', msg);
+  }
+
+  // 3. Perform server-side redirect OUTSIDE try/catch to ensure Next.js handles redirect natively
+  if (!user || !profile) {
     redirect('/admin/login');
   }
 
-  // 2. Query admin_profiles table for active account
-  const { data: profile, error: profileError } = await supabase
-    .from('admin_profiles')
-    .select('id, email, full_name, role, is_active')
-    .eq('id', user.id)
-    .single();
-
-  if (profileError || !profile || !profile.is_active) {
-    // Un-authorized user or inactive admin profile
-    redirect('/admin/login');
-  }
-
-  // 3. Strict role check
+  // 4. Strict role check
   if (requiredRole === 'admin' && profile.role !== 'admin') {
-    // Editor attempting admin-only function
     redirect('/admin?error=unauthorized_role');
   }
 
