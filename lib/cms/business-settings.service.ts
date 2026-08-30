@@ -27,7 +27,7 @@ export async function getPublishedBusinessSettings(): Promise<PublishedBusinessS
         .maybeSingle();
 
       if (data) {
-        const result = {
+        return {
           brandName: data.brand_name || siteConfig.name,
           legalName: data.legal_name || siteConfig.name,
           phonePrimary: data.phone_primary || defaultPhone,
@@ -35,15 +35,12 @@ export async function getPublishedBusinessSettings(): Promise<PublishedBusinessS
           emailInfo: data.email_info || defaultEmail,
           operatingHours: data.operating_hours || 'Mon - Sat: 09:00 - 18:00 (PKT)',
         };
-        console.log(`[ISR_TEST] getPublishedBusinessSettings fetched phonePrimary: ${result.phonePrimary} at ${new Date().toISOString()}`);
-        return result;
       }
     } catch (err: unknown) {
       console.error('getPublishedBusinessSettings fetch error:', err);
     }
   }
 
-  console.log(`[ISR_TEST] getPublishedBusinessSettings returning defaultPhone: ${defaultPhone} at ${new Date().toISOString()}`);
   return {
     brandName: siteConfig.name,
     legalName: siteConfig.name,

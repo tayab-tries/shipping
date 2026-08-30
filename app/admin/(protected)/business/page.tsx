@@ -48,11 +48,19 @@ export default function AdminBusinessPage() {
       });
 
       if (res.success) {
-        const pathsStr = res.revalidatedPaths?.join(', ') || 'public routes';
-        setStatusMessage({
-          type: 'success',
-          text: `Business settings published! Target routes revalidated via On-Demand ISR (${pathsStr}).`,
-        });
+        if (res.warning) {
+          setStatusMessage({
+            type: 'warning',
+            text: res.warning,
+          });
+        } else {
+          setStatusMessage({
+            type: 'success',
+            text: res.deployHookTriggered
+              ? 'Business settings published! Cloudflare production build triggered successfully.'
+              : 'Business settings saved and snapshot recorded in database.',
+          });
+        }
       } else {
         setStatusMessage({
           type: 'error',
