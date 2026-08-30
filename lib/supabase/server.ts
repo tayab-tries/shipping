@@ -3,11 +3,12 @@ import { cookies } from 'next/headers';
 
 export async function createClient() {
   const cookieStore = await cookies();
-  const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-  const rawKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || '';
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+  const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || '';
 
-  const supabaseUrl = rawUrl.startsWith('http') ? rawUrl : 'https://placeholder.supabase.co';
-  const publishableKey = rawKey || 'placeholder-key';
+  if (!supabaseUrl || !publishableKey) {
+    throw new Error('Supabase environment variables (NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY) are missing in the server runtime.');
+  }
 
   return createServerClient(supabaseUrl, publishableKey, {
     cookies: {
@@ -21,7 +22,7 @@ export async function createClient() {
           );
         } catch {
           // The `setAll` method was called from a Server Component.
-          // This can be ignored if you have middleware refreshing user sessions.
+          // Ignored when called during Server Component render if middleware refreshes sessions.
         }
       },
     },

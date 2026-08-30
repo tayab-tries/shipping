@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ShieldCheck, Lock, Mail, AlertCircle } from 'lucide-react';
-import { createBrowserClient } from '@supabase/ssr';
 import { siteConfig } from '@/config/site.config';
+import { adminLoginAction } from './actions';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -18,24 +18,11 @@ export default function AdminLoginPage() {
     setLoading(true);
     setError(null);
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || '';
-
-    if (!supabaseUrl || !supabaseKey) {
-      setError('Supabase environment variables are missing.');
-      setLoading(false);
-      return;
-    }
-
     try {
-      const supabase = createBrowserClient(supabaseUrl, supabaseKey);
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      const res = await adminLoginAction({ email, password });
 
-      if (signInError) {
-        setError(signInError.message);
+      if (!res.success) {
+        setError(res.error || 'Authentication failed.');
         setLoading(false);
         return;
       }
