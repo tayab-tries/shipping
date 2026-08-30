@@ -13,8 +13,10 @@ export interface AdminLoginResult {
  * Runs exclusively on the Cloudflare Worker server process where Cloudflare Runtime Variables
  * (NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY) are accessible at runtime.
  * 
- * Executes signInWithPassword, writes auth cookies to cookieStore, then calls redirect('/admin')
- * OUTSIDE any try/catch block so Next.js handles navigation natively.
+ * 1. Authenticates email/password via Supabase Auth.
+ * 2. Verifies active admin_profiles record for the authenticated user.
+ * 3. Writes auth cookies to cookieStore.
+ * 4. Executes redirect('/admin') OUTSIDE try/catch to navigate to dashboard.
  */
 export async function adminLoginAction(formData: {
   email?: string;
@@ -32,18 +34,35 @@ export async function adminLoginAction(formData: {
 
   const supabase = await createClient();
 
-  const { error: signInError } = await supabase.auth.signInWithPassword({
+  // 1. Authenticate with Supabase Auth
+  const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
-  if (signInError) {
+  if (signInError || !signInData?.user) {
     return {
       success: false,
-      error: signInError.message,
+      error: signInError?.message || 'Authentication failed. Please check your credentials.',
     };
   }
 
-  // Next.js redirect MUST be called outside any try/catch block
+  // 2. Validate active admin profile in admin_profiles table
+  const { data: profileData, error: profileError } = await supabase
+    .from('admin_profiles')
+    .select('id, role, is_active')
+    .eq('id', signInData.user.id)
+    .maybeSingle();
+
+  if (profileError || !profileData || !profileData.is_active) {
+    // Revoke session if user lacks an active admin profile record
+    await supabase.auth.signOut();
+    return {
+      success: false,
+      error: 'Account authenticated, but no active admin profile was found for this user.',
+    };
+  }
+
+  // 3. Execute server-side redirect to /admin
   redirect('/admin');
 }
