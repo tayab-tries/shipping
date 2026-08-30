@@ -11,6 +11,7 @@ import { FaqSection } from '@/components/sections/FaqSection';
 import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
 
 export default function HomePage() {
+  console.log(`[ISR_TEST] rendering homepage component at ${new Date().toISOString()}`);
   return (
     <div className="w-full">
       {/* 01. HERO */}
