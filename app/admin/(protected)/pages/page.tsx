@@ -1,78 +1,83 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Plus, Edit, CheckCircle2, FileCheck, ShieldCheck, Trash2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Plus, Edit, CheckCircle2, FileCheck, Save, AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
-
-interface CmsPageItem {
-  id: string;
-  title: string;
-  slug: string;
-  status: 'draft' | 'review' | 'published' | 'archived';
-  isVerified: boolean;
-  seoTitle: string;
-  seoDescription: string;
-  updatedAt: string;
-}
-
-const initialPages: CmsPageItem[] = [
-  {
-    id: 'page-1',
-    title: 'Commercial Air Freight Compliance Overview',
-    slug: 'air-compliance-overview',
-    status: 'published',
-    isVerified: true,
-    seoTitle: 'Commercial Air Freight Compliance | Air Cargo Export Guide',
-    seoDescription: 'Verified compliance documentation guidelines for commercial cargo departing Pakistan international airports.',
-    updatedAt: '2026-08-25',
-  },
-  {
-    id: 'page-2',
-    title: 'Ocean Sea Container Packing Standards',
-    slug: 'sea-packing-standards',
-    status: 'draft',
-    isVerified: false,
-    seoTitle: 'Sea Container Packing Standards Pakistan',
-    seoDescription: 'Packaging guidelines for ocean FCL and LCL container loading.',
-    updatedAt: '2026-08-28',
-  },
-];
+import { getCmsPagesListAction, saveAndPublishCmsPageAction, CmsPageItemInput } from './actions';
 
 export default function AdminPagesManager() {
-  const [pages, setPages] = useState<CmsPageItem[]>(initialPages);
-  const [editingPageId, setEditingPageId] = useState<string | null>(null);
-  const [editFormData, setEditFormData] = useState<Partial<CmsPageItem>>({});
-  const [saveSuccess, setSaveSuccess] = useState<boolean>(false);
+  const [pages, setPages] = useState<CmsPageItemInput[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [editingPage, setEditingPage] = useState<CmsPageItemInput | null>(null);
+  const [statusMessage, setStatusMessage] = useState<{
+    type: 'success' | 'warning' | 'error';
+    text: string;
+  } | null>(null);
+
+  useEffect(() => {
+    async function loadPages() {
+      try {
+        const res = await getCmsPagesListAction();
+        if (res.success && res.data) {
+          setPages(res.data as CmsPageItemInput[]);
+        }
+      } catch (err: unknown) {
+        console.error('Failed to load CMS pages:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadPages();
+  }, []);
 
   const handleCreatePage = () => {
-    const newPage: CmsPageItem = {
-      id: `page-${Date.now()}`,
-      title: 'Untitled CMS Page',
+    setEditingPage({
+      title: 'New Dynamic Page',
       slug: `page-${Date.now()}`,
-      status: 'draft',
-      isVerified: false,
-      seoTitle: 'Untitled Page SEO Title',
-      seoDescription: 'Page description for search engines...',
-      updatedAt: new Date().toISOString().split('T')[0],
-    };
-    setPages([newPage, ...pages]);
-    setEditingPageId(newPage.id);
-    setEditFormData(newPage);
+      meta_title: 'New Page | Cargo Shipping',
+      meta_description: 'Description for search engines.',
+      content_markdown: '# Page Title\n\nPage markdown content here.',
+      is_published: true,
+    });
   };
 
-  const handleSavePage = (id: string) => {
-    setPages(pages.map((p: CmsPageItem) => (p.id === id ? ({ ...p, ...editFormData } as CmsPageItem) : p)));
-    setEditingPageId(null);
-    setSaveSuccess(true);
-    setTimeout(() => setSaveSuccess(false), 3000);
-  };
+  const handlePublish = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingPage) return;
+    setSaving(true);
+    setStatusMessage(null);
 
-  const handleDeletePage = (id: string) => {
-    setPages(pages.filter((p: CmsPageItem) => p.id !== id));
+    try {
+      const res = await saveAndPublishCmsPageAction(editingPage);
+      if (res.success) {
+        if (res.warning) {
+          setStatusMessage({ type: 'warning', text: res.warning });
+        } else {
+          setStatusMessage({
+            type: 'success',
+            text: res.deployHookTriggered
+              ? 'CMS page published! Cloudflare production build triggered successfully.'
+              : 'CMS page saved and snapshot recorded in database.',
+          });
+        }
+        const refresh = await getCmsPagesListAction();
+        if (refresh.success && refresh.data) {
+          setPages(refresh.data as CmsPageItemInput[]);
+        }
+        setEditingPage(null);
+      } else {
+        setStatusMessage({ type: 'error', text: res.error || 'Failed to save CMS page.' });
+      }
+    } catch (err: unknown) {
+      setStatusMessage({ type: 'error', text: err instanceof Error ? err.message : 'Error publishing CMS page.' });
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -99,108 +104,132 @@ export default function AdminPagesManager() {
         </Button>
       </div>
 
-      {saveSuccess && (
-        <div className="p-4 bg-emerald-50 text-emerald-800 rounded border border-emerald-200 text-sm font-semibold flex items-center gap-2">
-          <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-          <span>CMS Page configuration updated successfully!</span>
+      {statusMessage && (
+        <div
+          className={`p-4 rounded border text-sm font-semibold flex items-center gap-2 ${
+            statusMessage.type === 'success'
+              ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+              : statusMessage.type === 'warning'
+              ? 'bg-amber-50 text-amber-800 border-amber-200'
+              : 'bg-rose-50 text-rose-800 border-rose-200'
+          }`}
+        >
+          {statusMessage.type === 'success' ? (
+            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+          ) : (
+            <AlertCircle className="w-5 h-5 text-amber-600 shrink-0" />
+          )}
+          <span>{statusMessage.text}</span>
         </div>
       )}
 
-      {/* Pages List */}
-      <div className="space-y-4">
-        {pages.map((page: CmsPageItem) => {
-          const isEditing = editingPageId === page.id;
+      {editingPage ? (
+        <Card variant="light" className="p-6 space-y-6">
+          <div className="flex items-center justify-between border-b border-border pb-4">
+            <h3 className="text-heading-sm font-bold text-brand-black uppercase font-mono">
+              {editingPage.id ? `Edit Page: ${editingPage.title}` : 'Create New CMS Page'}
+            </h3>
+            <Button variant="outline" size="sm" onClick={() => setEditingPage(null)}>
+              Cancel
+            </Button>
+          </div>
 
-          return (
-            <Card key={page.id} variant="light" className="p-6 space-y-4">
-              <div className="flex flex-wrap items-center justify-between gap-4">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-3">
-                    <h3 className="text-heading-sm font-bold text-brand-black">{page.title}</h3>
-                    <Badge variant={page.status === 'published' ? 'accent' : 'outline'}>
-                      {page.status.toUpperCase()}
-                    </Badge>
-                    {page.isVerified && (
-                      <span className="text-xs font-mono text-emerald-600 flex items-center gap-1">
-                        <ShieldCheck className="w-3.5 h-3.5" /> Verified
-                      </span>
-                    )}
+          <form onSubmit={handlePublish} className="space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <Input
+                label="Page Title"
+                value={editingPage.title}
+                onChange={(e) => setEditingPage({ ...editingPage, title: e.target.value })}
+                variantSurface="light"
+              />
+              <Input
+                label="URL Slug"
+                value={editingPage.slug}
+                onChange={(e) => setEditingPage({ ...editingPage, slug: e.target.value })}
+                variantSurface="light"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <Input
+                label="SEO Meta Title"
+                value={editingPage.meta_title}
+                onChange={(e) => setEditingPage({ ...editingPage, meta_title: e.target.value })}
+                variantSurface="light"
+              />
+              <Textarea
+                label="SEO Meta Description"
+                value={editingPage.meta_description}
+                onChange={(e) => setEditingPage({ ...editingPage, meta_description: e.target.value })}
+                variantSurface="light"
+              />
+            </div>
+
+            <Textarea
+              label="Page Content (Markdown)"
+              value={editingPage.content_markdown}
+              onChange={(e) => setEditingPage({ ...editingPage, content_markdown: e.target.value })}
+              variantSurface="light"
+            />
+
+            <div className="pt-4 flex justify-end gap-3">
+              <Button variant="outline" size="md" onClick={() => setEditingPage(null)}>
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                variant="accent"
+                size="md"
+                disabled={saving}
+                leftIcon={saving ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4 text-brand-black" />}
+              >
+                {saving ? 'Publishing...' : 'Save & Publish Page'}
+              </Button>
+            </div>
+          </form>
+        </Card>
+      ) : (
+        <div className="space-y-4">
+          {loading ? (
+            <div className="p-8 text-center text-slate-500 font-mono text-xs">
+              Loading CMS pages from Supabase...
+            </div>
+          ) : pages.length === 0 ? (
+            <div className="p-8 text-center text-slate-500 font-mono text-xs">
+              No CMS pages created in Supabase database yet.
+            </div>
+          ) : (
+            pages.map((page) => (
+              <Card key={page.id || page.slug} variant="light" className="p-6 space-y-4">
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-3">
+                      <h3 className="text-heading-sm font-bold text-brand-black">{page.title}</h3>
+                      <Badge variant={page.is_published ? 'accent' : 'outline'}>
+                        {page.is_published ? 'Published' : 'Draft'}
+                      </Badge>
+                    </div>
+                    <span className="text-xs font-mono text-slate-500 block">
+                      Path: <code className="text-brand-black font-semibold">/{page.slug}</code>
+                    </span>
                   </div>
-                  <span className="text-xs font-mono text-slate-500 block">
-                    Path: <code className="text-brand-black font-semibold">/{page.slug}</code>
-                  </span>
-                </div>
 
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setEditingPageId(isEditing ? null : page.id)}
-                    leftIcon={<Edit className="w-3.5 h-3.5" />}
-                  >
-                    {isEditing ? 'Close' : 'Edit Page'}
-                  </Button>
-
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    isIconOnly
-                    onClick={() => handleDeletePage(page.id)}
-                    aria-label="Delete page"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-
-              {/* Inline Page Edit Form */}
-              {isEditing && (
-                <div className="pt-4 border-t border-border space-y-4 bg-surface-subtle p-6 rounded-md">
-                  <h4 className="text-xs font-mono font-bold uppercase text-slate-700">
-                    Page & SEO Metadata Settings
-                  </h4>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <Input
-                      label="Page Title"
-                      value={editFormData.title ?? page.title}
-                      onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })}
-                      variantSurface="light"
-                    />
-                    <Input
-                      label="URL Slug"
-                      value={editFormData.slug ?? page.slug}
-                      onChange={(e) => setEditFormData({ ...editFormData, slug: e.target.value })}
-                      variantSurface="light"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <Input
-                      label="SEO Title Tag"
-                      value={editFormData.seoTitle ?? page.seoTitle}
-                      onChange={(e) => setEditFormData({ ...editFormData, seoTitle: e.target.value })}
-                      variantSurface="light"
-                    />
-                    <Textarea
-                      label="SEO Meta Description"
-                      value={editFormData.seoDescription ?? page.seoDescription}
-                      onChange={(e) => setEditFormData({ ...editFormData, seoDescription: e.target.value })}
-                      variantSurface="light"
-                    />
-                  </div>
-
-                  <div className="pt-2 flex justify-end gap-3">
-                    <Button variant="accent" size="sm" onClick={() => handleSavePage(page.id)}>
-                      Save Page Settings
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setEditingPage(page)}
+                      leftIcon={<Edit className="w-3.5 h-3.5" />}
+                    >
+                      Edit Page
                     </Button>
                   </div>
                 </div>
-              )}
-            </Card>
-          );
-        })}
-      </div>
+              </Card>
+            ))
+          )}
+        </div>
+      )}
     </div>
   );
 }
