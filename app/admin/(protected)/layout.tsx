@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import { headers } from 'next/headers';
 import {
   LayoutDashboard,
   Home,
@@ -20,22 +19,9 @@ import {
 import { siteConfig } from '@/config/site.config';
 import { requireAdminAuth } from '@/lib/supabase/auth-guard';
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const headerList = await headers();
-  const pathname = headerList.get('x-pathname') || '';
-
-  // 1. Enforce Server-Side Auth Guard (Skip ONLY for /admin/login)
-  const isLoginPage = pathname.startsWith('/admin/login');
-  let authUser = null;
-
-  if (!isLoginPage) {
-    authUser = await requireAdminAuth();
-  }
-
-  // 2. If rendering login page, render child component directly without admin layout frame
-  if (isLoginPage) {
-    return <>{children}</>;
-  }
+export default async function ProtectedAdminLayout({ children }: { children: React.ReactNode }) {
+  // 1. Enforce Server-Side Auth Guard for all protected admin routes
+  const authUser = await requireAdminAuth();
 
   const navItems = [
     { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
