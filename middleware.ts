@@ -5,29 +5,21 @@ import { getStaticRedirectManifest } from '@/lib/cms/redirect-exporter';
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // 1. Static 301 Redirect Manifest (0 DB queries)
+  // 1. Static 301 Redirect Manifest
   const redirects = getStaticRedirectManifest();
   const matchedRedirect = redirects.find((r) => r.source_path === pathname);
   if (matchedRedirect) {
     return NextResponse.redirect(new URL(matchedRedirect.target_path, request.url), matchedRedirect.status_code);
   }
 
-  // 2. EXEMPT /admin/login explicitly from any middleware redirect or session touch
+  // 2. EXEMPT /admin/login explicitly - return plain NextResponse.next() immediately
   if (pathname.startsWith('/admin/login')) {
     return NextResponse.next();
   }
 
-  // 3. Prepare Request Headers for Protected Admin Routes
-  const requestHeaders = new Headers(request.headers);
-  requestHeaders.set('x-pathname', pathname);
+  const response = NextResponse.next();
 
-  const response = NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
-
-  // 4. Refresh Supabase Session Cookies ONLY for protected /admin routes
+  // 3. Refresh Supabase Session Cookies ONLY for protected /admin routes
   if (pathname.startsWith('/admin')) {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || '';
@@ -45,7 +37,6 @@ export async function middleware(request: NextRequest) {
         },
       });
 
-      // Touch auth session to refresh token cookies
       await supabase.auth.getUser();
     }
   }
