@@ -1,12 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Save, CheckCircle2, Building2, ShieldCheck } from 'lucide-react';
+import { Save, CheckCircle2, Building2, ShieldCheck, AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { siteConfig } from '@/config/site.config';
+import { saveAndPublishBusinessSettingsAction } from './actions';
 
 export default function AdminBusinessPage() {
   const [formData, setFormData] = useState({
@@ -21,20 +22,63 @@ export default function AdminBusinessPage() {
     footerCopyright: `© ${new Date().getFullYear()} ${siteConfig.name}. All rights reserved.`,
   });
 
-  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [statusMessage, setStatusMessage] = useState<{
+    type: 'success' | 'warning' | 'error';
+    text: string;
+  } | null>(null);
 
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handlePublish = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSaveSuccess(true);
-    setTimeout(() => setSaveSuccess(false), 3000);
+    setSaving(true);
+    setStatusMessage(null);
+
+    try {
+      const res = await saveAndPublishBusinessSettingsAction({
+        brandName: formData.brandName,
+        legalName: formData.legalName,
+        phonePrimary: formData.phonePrimary,
+        whatsappNumber: formData.whatsappNumber,
+        emailInfo: formData.emailInfo,
+        operatingHours: formData.operatingHours,
+      });
+
+      if (res.success) {
+        if (res.warning) {
+          setStatusMessage({
+            type: 'warning',
+            text: res.warning,
+          });
+        } else {
+          setStatusMessage({
+            type: 'success',
+            text: res.deployHookTriggered
+              ? 'Business settings published! Production site build triggered on Cloudflare Edge.'
+              : 'Business settings saved and snapshot recorded in database.',
+          });
+        }
+      } else {
+        setStatusMessage({
+          type: 'error',
+          text: res.error || 'Failed to publish business settings.',
+        });
+      }
+    } catch (err: unknown) {
+      setStatusMessage({
+        type: 'error',
+        text: err instanceof Error ? err.message : 'An error occurred while publishing.',
+      });
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
-    <form onSubmit={handleSave} className="space-y-8 max-w-4xl">
+    <form onSubmit={handlePublish} className="space-y-8 max-w-4xl">
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-6">
         <div>
           <div className="flex items-center gap-2 text-xs font-mono text-slate-500">
@@ -51,16 +95,29 @@ export default function AdminBusinessPage() {
           type="submit"
           variant="accent"
           size="md"
-          leftIcon={<Save className="w-4 h-4 text-brand-black" />}
+          disabled={saving}
+          leftIcon={saving ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4 text-brand-black" />}
         >
-          Save Settings
+          {saving ? 'Publishing...' : 'Save & Publish Settings'}
         </Button>
       </div>
 
-      {saveSuccess && (
-        <div className="p-4 bg-emerald-50 text-emerald-800 rounded border border-emerald-200 text-sm font-semibold flex items-center gap-2">
-          <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-          <span>Business configuration updated and snapshot saved!</span>
+      {statusMessage && (
+        <div
+          className={`p-4 rounded border text-sm font-semibold flex items-center gap-2 ${
+            statusMessage.type === 'success'
+              ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+              : statusMessage.type === 'warning'
+              ? 'bg-amber-50 text-amber-800 border-amber-200'
+              : 'bg-rose-50 text-rose-800 border-rose-200'
+          }`}
+        >
+          {statusMessage.type === 'success' ? (
+            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+          ) : (
+            <AlertCircle className="w-5 h-5 text-amber-600 shrink-0" />
+          )}
+          <span>{statusMessage.text}</span>
         </div>
       )}
 
@@ -159,9 +216,10 @@ export default function AdminBusinessPage() {
           type="submit"
           variant="accent"
           size="lg"
-          leftIcon={<Save className="w-4 h-4 text-brand-black" />}
+          disabled={saving}
+          leftIcon={saving ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4 text-brand-black" />}
         >
-          Save All Business Settings
+          {saving ? 'Publishing...' : 'Save & Publish All Settings'}
         </Button>
       </div>
     </form>

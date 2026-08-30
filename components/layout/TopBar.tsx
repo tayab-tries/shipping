@@ -3,9 +3,11 @@ import Link from 'next/link';
 import { Phone, Search, ShieldCheck } from 'lucide-react';
 import { siteConfig } from '@/config/site.config';
 import { Container } from '@/components/ui/Container';
+import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
 
-export const TopBar: React.FC = () => {
-  const phone = siteConfig.phone || '+92 300 1234567';
+export const TopBar = async () => {
+  const business = await getPublishedBusinessSettings();
+  const phone = business.phonePrimary || siteConfig.phone || '+92 300 1234567';
 
   return (
     <div className="w-full bg-brand-black-deep text-slate-400 text-xs font-mono py-2.5 border-b border-border-dark hidden sm:block">

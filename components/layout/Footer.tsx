@@ -3,9 +3,13 @@ import Link from 'next/link';
 import { Package, ShieldCheck, MapPin, Phone, Mail } from 'lucide-react';
 import { siteConfig } from '@/config/site.config';
 import { Container } from '@/components/ui/Container';
+import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
 
-export const Footer: React.FC = () => {
-  const phone = siteConfig.phone || '+92 300 1234567';
+export const Footer = async () => {
+  const business = await getPublishedBusinessSettings();
+  const phone = business.phonePrimary || siteConfig.phone || '+92 300 1234567';
+  const email = business.emailInfo || siteConfig.contact?.emailInfo || 'info@cargo-shipping.pk';
+  const brandName = business.brandName || siteConfig.name;
 
   return (
     <footer className="w-full bg-brand-black border-t border-border-dark text-slate-300 py-16">
@@ -15,7 +19,7 @@ export const Footer: React.FC = () => {
           <div className="space-y-4">
             <Link href="/" className="flex items-center gap-2.5 font-bold text-xl text-white">
               <Package className="w-6 h-6 text-accent shrink-0" />
-              <span>{siteConfig.name}</span>
+              <span>{brandName}</span>
             </Link>
             <p className="text-body-sm text-slate-400 leading-relaxed">
               International freight forwarder providing reliable air cargo, ocean sea freight, and door-to-door shipping services connecting Pakistan worldwide.
@@ -29,8 +33,8 @@ export const Footer: React.FC = () => {
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-accent shrink-0" />
-                <a href={`mailto:${siteConfig.contact.emailInfo}`} className="hover:text-white transition-colors">
-                  {siteConfig.contact.emailInfo}
+                <a href={`mailto:${email}`} className="hover:text-white transition-colors">
+                  {email}
                 </a>
               </div>
             </div>
@@ -175,7 +179,7 @@ export const Footer: React.FC = () => {
         {/* Bottom Legal Row */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-slate-500">
           <div>
-            © {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
+            © {new Date().getFullYear()} {brandName}. All rights reserved.
           </div>
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-accent" />

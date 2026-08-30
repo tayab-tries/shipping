@@ -4,8 +4,19 @@ export interface PublishResult {
   success: boolean;
   error?: string;
   revisionId?: string;
+  deployHookTriggered?: boolean;
+  warning?: string;
 }
 
+/**
+ * Central CMS Publisher Service
+ * 
+ * 1. Validates Admin role authorization.
+ * 2. Computes sequential content revision version numbers.
+ * 3. Records a content revision snapshot in Supabase DB.
+ * 4. Logs action in audit_logs.
+ * 5. Triggers Cloudflare Workers Deploy Hook via process.env.CLOUDFLARE_DEPLOY_HOOK_URL.
+ */
 export async function publishCmsEntity(
   entityType: 'homepage' | 'navigation' | 'page' | 'article' | 'location' | 'destination' | 'credential' | 'business',
   entityId: string,
@@ -25,7 +36,7 @@ export async function publishCmsEntity(
     if (!profile || !profile.is_active || profile.role !== 'admin') {
       return {
         success: false,
-        error: 'Unauthorized: Only active Admin role users may publish content.',
+        error: 'Unauthorized: Only active Admin role users may publish content and trigger deployment.',
       };
     }
 
@@ -72,9 +83,41 @@ export async function publishCmsEntity(
       },
     });
 
+    // 5. Trigger Cloudflare Workers Deploy Hook if configured
+    const deployHookUrl = process.env.CLOUDFLARE_DEPLOY_HOOK_URL;
+    let deployHookTriggered = false;
+    let warning: string | undefined = undefined;
+
+    if (deployHookUrl && deployHookUrl.startsWith('http')) {
+      try {
+        const res = await fetch(deployHookUrl, {
+          method: 'POST',
+          headers: {
+            'User-Agent': 'CargoCMS-Publisher/1.0',
+          },
+        });
+
+        if (res.ok) {
+          deployHookTriggered = true;
+        } else {
+          console.error(`Cloudflare Deploy Hook failed with status ${res.status}: ${res.statusText}`);
+          warning = 'Published to CMS DB, but site rebuild trigger failed (Cloudflare returned error status).';
+        }
+      } catch (deployErr: unknown) {
+        const msg = deployErr instanceof Error ? deployErr.message : 'Network error';
+        console.error('Cloudflare Deploy Hook request exception:', msg);
+        warning = 'Published to CMS DB, but site rebuild trigger failed (Network error connecting to Cloudflare).';
+      }
+    } else {
+      console.warn('CLOUDFLARE_DEPLOY_HOOK_URL environment variable is not configured in server runtime.');
+      warning = 'Published to CMS DB. Note: CLOUDFLARE_DEPLOY_HOOK_URL is not configured.';
+    }
+
     return {
       success: true,
       revisionId: revision?.id,
+      deployHookTriggered,
+      warning,
     };
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : 'Unknown exception publishing entity';
@@ -100,7 +143,7 @@ export async function restoreCmsRevision(
       return { success: false, error: 'Revision record not found.' };
     }
 
-    // Restoring creates a NEW version snapshot
+    // Restoring creates a NEW version snapshot and triggers publish
     return publishCmsEntity(
       revision.entity_type as 'homepage' | 'navigation' | 'page' | 'article' | 'location' | 'destination' | 'credential' | 'business',
       revision.entity_id,
