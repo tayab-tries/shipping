@@ -12,6 +12,34 @@ export interface BusinessSettingsInput {
   operatingHours?: string;
 }
 
+export async function getBusinessSettingsAction() {
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from('business_settings')
+      .select('*')
+      .limit(1)
+      .maybeSingle();
+
+    if (data) {
+      return {
+        success: true,
+        data: {
+          brandName: data.brand_name || '',
+          legalName: data.legal_name || '',
+          phonePrimary: data.phone_primary || '',
+          whatsappNumber: data.whatsapp_number || '',
+          emailInfo: data.email_info || '',
+          operatingHours: data.operating_hours || '',
+        },
+      };
+    }
+  } catch (err: unknown) {
+    console.error('getBusinessSettingsAction error:', err);
+  }
+  return { success: false };
+}
+
 export async function saveAndPublishBusinessSettingsAction(
   input: BusinessSettingsInput
 ): Promise<PublishResult> {

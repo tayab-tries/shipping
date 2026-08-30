@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Save, CheckCircle2, Building2, ShieldCheck, AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { siteConfig } from '@/config/site.config';
-import { saveAndPublishBusinessSettingsAction } from './actions';
+import { saveAndPublishBusinessSettingsAction, getBusinessSettingsAction } from './actions';
 
 export default function AdminBusinessPage() {
   const [formData, setFormData] = useState({
@@ -22,11 +22,36 @@ export default function AdminBusinessPage() {
     footerCopyright: `© ${new Date().getFullYear()} ${siteConfig.name}. All rights reserved.`,
   });
 
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [statusMessage, setStatusMessage] = useState<{
     type: 'success' | 'warning' | 'error';
     text: string;
   } | null>(null);
+
+  useEffect(() => {
+    async function loadSettings() {
+      try {
+        const res = await getBusinessSettingsAction();
+        if (res.success && res.data) {
+          setFormData((prev) => ({
+            ...prev,
+            brandName: res.data.brandName || prev.brandName,
+            legalName: res.data.legalName || prev.legalName,
+            phonePrimary: res.data.phonePrimary || prev.phonePrimary,
+            whatsappNumber: res.data.whatsappNumber || prev.whatsappNumber,
+            emailInfo: res.data.emailInfo || prev.emailInfo,
+            operatingHours: res.data.operatingHours || prev.operatingHours,
+          }));
+        }
+      } catch (err: unknown) {
+        console.error('Failed to load business settings:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadSettings();
+  }, []);
 
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -95,7 +120,7 @@ export default function AdminBusinessPage() {
           type="submit"
           variant="accent"
           size="md"
-          disabled={saving}
+          disabled={saving || loading}
           leftIcon={saving ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4 text-brand-black" />}
         >
           {saving ? 'Publishing...' : 'Save & Publish Settings'}
@@ -216,7 +241,7 @@ export default function AdminBusinessPage() {
           type="submit"
           variant="accent"
           size="lg"
-          disabled={saving}
+          disabled={saving || loading}
           leftIcon={saving ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4 text-brand-black" />}
         >
           {saving ? 'Publishing...' : 'Save & Publish All Settings'}
