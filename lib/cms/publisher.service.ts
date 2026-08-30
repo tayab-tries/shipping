@@ -1,11 +1,11 @@
 import { createClient } from '@/lib/supabase/server';
+import { revalidateCmsEntity } from './revalidation.service';
 
 export interface PublishResult {
   success: boolean;
   error?: string;
   revisionId?: string;
-  deployHookTriggered?: boolean;
-  warning?: string;
+  revalidatedPaths?: string[];
 }
 
 /**
@@ -15,7 +15,7 @@ export interface PublishResult {
  * 2. Computes sequential content revision version numbers.
  * 3. Records a content revision snapshot in Supabase DB.
  * 4. Logs action in audit_logs.
- * 5. Triggers Cloudflare Workers Deploy Hook via process.env.CLOUDFLARE_DEPLOY_HOOK_URL.
+ * 5. Executes targeted On-Demand ISR revalidation via revalidatePath() for affected public routes.
  */
 export async function publishCmsEntity(
   entityType: 'homepage' | 'navigation' | 'page' | 'article' | 'location' | 'destination' | 'credential' | 'business',
@@ -36,7 +36,7 @@ export async function publishCmsEntity(
     if (!profile || !profile.is_active || profile.role !== 'admin') {
       return {
         success: false,
-        error: 'Unauthorized: Only active Admin role users may publish content and trigger deployment.',
+        error: 'Unauthorized: Only active Admin role users may publish content and revalidate public routes.',
       };
     }
 
@@ -83,41 +83,20 @@ export async function publishCmsEntity(
       },
     });
 
-    // 5. Trigger Cloudflare Workers Deploy Hook if configured
-    const deployHookUrl = process.env.CLOUDFLARE_DEPLOY_HOOK_URL;
-    let deployHookTriggered = false;
-    let warning: string | undefined = undefined;
-
-    if (deployHookUrl && deployHookUrl.startsWith('http')) {
-      try {
-        const res = await fetch(deployHookUrl, {
-          method: 'POST',
-          headers: {
-            'User-Agent': 'CargoCMS-Publisher/1.0',
-          },
-        });
-
-        if (res.ok) {
-          deployHookTriggered = true;
-        } else {
-          console.error(`Cloudflare Deploy Hook failed with status ${res.status}: ${res.statusText}`);
-          warning = 'Published to CMS DB, but site rebuild trigger failed (Cloudflare returned error status).';
-        }
-      } catch (deployErr: unknown) {
-        const msg = deployErr instanceof Error ? deployErr.message : 'Network error';
-        console.error('Cloudflare Deploy Hook request exception:', msg);
-        warning = 'Published to CMS DB, but site rebuild trigger failed (Network error connecting to Cloudflare).';
-      }
-    } else {
-      console.warn('CLOUDFLARE_DEPLOY_HOOK_URL environment variable is not configured in server runtime.');
-      warning = 'Published to CMS DB. Note: CLOUDFLARE_DEPLOY_HOOK_URL is not configured.';
+    // 5. Execute Targeted On-Demand ISR Route Revalidation
+    let revalidatedPaths: string[] = [];
+    try {
+      const revalResult = await revalidateCmsEntity(entityType, entityId, snapshotData);
+      revalidatedPaths = revalResult.revalidatedPaths;
+    } catch (revalErr: unknown) {
+      const msg = revalErr instanceof Error ? revalErr.message : 'Revalidation exception';
+      console.error('On-Demand ISR Revalidation error:', msg);
     }
 
     return {
       success: true,
       revisionId: revision?.id,
-      deployHookTriggered,
-      warning,
+      revalidatedPaths,
     };
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : 'Unknown exception publishing entity';
@@ -143,7 +122,7 @@ export async function restoreCmsRevision(
       return { success: false, error: 'Revision record not found.' };
     }
 
-    // Restoring creates a NEW version snapshot and triggers publish
+    // Restoring creates a NEW version snapshot and triggers publication & revalidation
     return publishCmsEntity(
       revision.entity_type as 'homepage' | 'navigation' | 'page' | 'article' | 'location' | 'destination' | 'credential' | 'business',
       revision.entity_id,
