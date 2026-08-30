@@ -1,51 +1,55 @@
 -- ============================================================================
--- CARGO & SHIPPING PLATFORM - COMPLETE UNIFIED SUPABASE SCHEMA
--- ============================================================================
--- Execute this script in the Supabase SQL Editor to provision all tables,
--- functions, constraints, indexes, triggers, and RLS security policies.
+-- CARGO LOGISTICS & SHIPPING - UNIFIED COMPREHENSIVE PRODUCTION SCHEMA
+-- Complete database schema for Supabase deployment
 -- ============================================================================
 
+-- Enable required extensions
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 -- ----------------------------------------------------------------------------
--- 1. ADMIN PROFILES & AUTHORIZATION TABLE
+-- 1. SECURITY DEFINER HELPER FUNCTIONS
+-- ----------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS BOOLEAN
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT EXISTS (
+    SELECT 1 
+    FROM public.admin_profiles 
+    WHERE id = auth.uid() 
+      AND role IN ('admin', 'editor')
+  );
+$$;
+
+CREATE OR REPLACE FUNCTION public.is_active_admin()
+RETURNS BOOLEAN
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT EXISTS (
+    SELECT 1 
+    FROM public.admin_profiles 
+    WHERE id = auth.uid() 
+      AND is_active = true
+      AND role IN ('admin', 'editor')
+  );
+$$;
+
+-- ----------------------------------------------------------------------------
+-- 2. ADMIN PROFILES & USER ROLES
 -- ----------------------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS admin_profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-  email TEXT NOT NULL UNIQUE,
-  full_name TEXT NOT NULL,
-  role TEXT NOT NULL DEFAULT 'editor', -- 'admin' | 'editor'
+  role TEXT NOT NULL CHECK (role IN ('admin', 'editor', 'viewer')),
   is_active BOOLEAN NOT NULL DEFAULT true,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
-
--- ----------------------------------------------------------------------------
--- 2. SECURITY DEFINER HELPER FUNCTIONS (Non-recursive admin checks)
--- ----------------------------------------------------------------------------
-
-CREATE OR REPLACE FUNCTION is_active_admin()
-RETURNS BOOLEAN
-LANGUAGE sql
-SECURITY DEFINER
-SET search_path = public
-AS $$
-  SELECT EXISTS (
-    SELECT 1 FROM admin_profiles
-    WHERE id = auth.uid() AND is_active = true
-  );
-$$;
-
-CREATE OR REPLACE FUNCTION is_admin()
-RETURNS BOOLEAN
-LANGUAGE sql
-SECURITY DEFINER
-SET search_path = public
-AS $$
-  SELECT EXISTS (
-    SELECT 1 FROM admin_profiles
-    WHERE id = auth.uid() AND role = 'admin' AND is_active = true
-  );
-$$;
 
 -- ----------------------------------------------------------------------------
 -- 3. GLOBAL BUSINESS SETTINGS
@@ -73,39 +77,36 @@ CREATE TABLE IF NOT EXISTS locations (
   slug TEXT NOT NULL UNIQUE,
   province TEXT NOT NULL,
   h1 TEXT NOT NULL,
-  seo_title TEXT NOT NULL,
-  seo_description TEXT NOT NULL,
-  introduction TEXT NOT NULL,
-  has_physical_branch BOOLEAN NOT NULL DEFAULT false,
-  branch_address TEXT,
-  local_coverage_text TEXT,
-  status TEXT NOT NULL DEFAULT 'draft', -- 'draft' | 'review' | 'published' | 'archived'
-  is_verified BOOLEAN NOT NULL DEFAULT false,
-  is_indexable BOOLEAN NOT NULL DEFAULT true,
-  published_at TIMESTAMPTZ,
+  meta_title TEXT NOT NULL,
+  meta_description TEXT NOT NULL,
+  hub_address TEXT,
+  phone_local TEXT,
+  email_local TEXT,
+  is_active BOOLEAN NOT NULL DEFAULT true,
+  services_offered JSONB DEFAULT '[]'::jsonb,
+  verified_branches JSONB DEFAULT '[]'::jsonb,
+  content_blocks JSONB DEFAULT '[]'::jsonb,
+  faqs JSONB DEFAULT '[]'::jsonb,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- ----------------------------------------------------------------------------
--- 5. DESTINATION COUNTRIES & CITIES
+-- 5. INTERNATIONAL DESTINATION COUNTRIES & CITIES
 -- ----------------------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS destination_countries (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
   slug TEXT NOT NULL UNIQUE,
-  region TEXT NOT NULL,
+  iso_code TEXT NOT NULL UNIQUE,
   h1 TEXT NOT NULL,
-  seo_title TEXT NOT NULL,
-  seo_description TEXT NOT NULL,
-  introduction TEXT NOT NULL,
-  shipping_overview TEXT,
-  customs_guidance TEXT,
-  status TEXT NOT NULL DEFAULT 'draft',
-  is_verified BOOLEAN NOT NULL DEFAULT false,
-  is_indexable BOOLEAN NOT NULL DEFAULT true,
-  published_at TIMESTAMPTZ,
+  meta_title TEXT NOT NULL,
+  meta_description TEXT NOT NULL,
+  customs_summary TEXT,
+  prohibited_items JSONB DEFAULT '[]'::jsonb,
+  required_docs JSONB DEFAULT '[]'::jsonb,
+  is_active BOOLEAN NOT NULL DEFAULT true,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -116,283 +117,207 @@ CREATE TABLE IF NOT EXISTS destination_cities (
   name TEXT NOT NULL,
   slug TEXT NOT NULL,
   h1 TEXT NOT NULL,
-  seo_title TEXT NOT NULL,
-  seo_description TEXT NOT NULL,
-  introduction TEXT,
-  overview TEXT,
-  preparation_considerations TEXT,
-  delivery_coverage_notes TEXT,
-  status TEXT NOT NULL DEFAULT 'draft',
-  is_verified BOOLEAN NOT NULL DEFAULT false,
-  is_indexable BOOLEAN NOT NULL DEFAULT true,
-  published_at TIMESTAMPTZ,
+  meta_title TEXT NOT NULL,
+  meta_description TEXT NOT NULL,
+  transit_time_air TEXT,
+  transit_time_sea TEXT,
+  is_active BOOLEAN NOT NULL DEFAULT true,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  CONSTRAINT unique_country_city_slug UNIQUE (country_id, slug)
+  UNIQUE(country_id, slug)
 );
 
 -- ----------------------------------------------------------------------------
--- 6. ARTICLES & EDUCATIONAL GUIDES
+-- 6. CMS ARTICLES & GUIDES
 -- ----------------------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS articles (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title TEXT NOT NULL,
   slug TEXT NOT NULL UNIQUE,
-  excerpt TEXT NOT NULL,
+  meta_title TEXT NOT NULL,
+  meta_description TEXT NOT NULL,
+  excerpt TEXT,
   content_markdown TEXT NOT NULL,
-  cover_image_url TEXT,
-  cover_image_alt TEXT,
   category TEXT NOT NULL,
-  author_name TEXT NOT NULL DEFAULT 'Logistics Editorial Team',
-  seo_title TEXT NOT NULL,
-  seo_description TEXT NOT NULL,
-  canonical_url TEXT,
-  status TEXT NOT NULL DEFAULT 'draft',
-  is_verified BOOLEAN NOT NULL DEFAULT false,
-  is_indexable BOOLEAN NOT NULL DEFAULT true,
-  is_featured BOOLEAN NOT NULL DEFAULT false,
-  contains_regulatory_claims BOOLEAN NOT NULL DEFAULT false,
-  search_intent TEXT NOT NULL DEFAULT 'informational', -- 'informational' | 'commercial-investigation' | 'transactional-support'
-  primary_topic TEXT,
-  target_entity_slug TEXT,
-  reading_time_minutes INT NOT NULL DEFAULT 5,
-  verification_notes TEXT,
-  reference_urls TEXT,
+  reading_time_minutes INT DEFAULT 5,
+  is_published BOOLEAN NOT NULL DEFAULT false,
   published_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- ----------------------------------------------------------------------------
--- 7. NORMALIZED ENTITY RELATIONSHIP JOIN TABLES
--- ----------------------------------------------------------------------------
-
-CREATE TABLE IF NOT EXISTS location_services (
-  location_id UUID REFERENCES locations(id) ON DELETE CASCADE,
-  service_slug TEXT NOT NULL,
-  PRIMARY KEY (location_id, service_slug)
-);
-
-CREATE TABLE IF NOT EXISTS location_destinations (
-  location_id UUID REFERENCES locations(id) ON DELETE CASCADE,
-  destination_country_id UUID REFERENCES destination_countries(id) ON DELETE CASCADE,
-  PRIMARY KEY (location_id, destination_country_id)
-);
-
-CREATE TABLE IF NOT EXISTS destination_services (
-  destination_country_id UUID REFERENCES destination_countries(id) ON DELETE CASCADE,
-  service_slug TEXT NOT NULL,
-  PRIMARY KEY (destination_country_id, service_slug)
-);
-
-CREATE TABLE IF NOT EXISTS destination_locations (
-  destination_country_id UUID REFERENCES destination_countries(id) ON DELETE CASCADE,
-  location_id UUID REFERENCES locations(id) ON DELETE CASCADE,
-  PRIMARY KEY (destination_country_id, location_id)
-);
-
-CREATE TABLE IF NOT EXISTS article_services (
-  article_id UUID REFERENCES articles(id) ON DELETE CASCADE,
-  service_slug TEXT NOT NULL,
-  PRIMARY KEY (article_id, service_slug)
-);
-
-CREATE TABLE IF NOT EXISTS article_locations (
-  article_id UUID REFERENCES articles(id) ON DELETE CASCADE,
-  location_id UUID REFERENCES locations(id) ON DELETE CASCADE,
-  PRIMARY KEY (article_id, location_id)
-);
-
-CREATE TABLE IF NOT EXISTS article_destinations (
-  article_id UUID REFERENCES articles(id) ON DELETE CASCADE,
-  destination_country_id UUID REFERENCES destination_countries(id) ON DELETE CASCADE,
-  PRIMARY KEY (article_id, destination_country_id)
-);
-
--- ----------------------------------------------------------------------------
--- 8. FAQS & 301 REDIRECTS
+-- 7. FREQUENTLY ASKED QUESTIONS (FAQS)
 -- ----------------------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS faqs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   question TEXT NOT NULL,
   answer TEXT NOT NULL,
-  entity_type TEXT NOT NULL DEFAULT 'general',
-  entity_slug TEXT,
-  sort_order INT NOT NULL DEFAULT 0,
-  status TEXT NOT NULL DEFAULT 'published',
-  is_verified BOOLEAN NOT NULL DEFAULT false,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  category TEXT NOT NULL DEFAULT 'general',
+  display_order INT DEFAULT 0,
+  is_published BOOLEAN NOT NULL DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- ----------------------------------------------------------------------------
+-- 8. CMS REDIRECTS (301 PERMANENT REDIRECTS)
+-- ----------------------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS redirects (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   source_path TEXT NOT NULL UNIQUE,
   target_path TEXT NOT NULL,
-  status_code INT NOT NULL DEFAULT 301,
+  status_code INT NOT NULL DEFAULT 301 CHECK (status_code IN (301, 302, 307, 308)),
+  is_active BOOLEAN NOT NULL DEFAULT true,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- ----------------------------------------------------------------------------
--- 9. MEDIA ASSET LIBRARY
+-- 9. MEDIA & ASSET LIBRARY
 -- ----------------------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS media (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   file_name TEXT NOT NULL,
   file_path TEXT NOT NULL UNIQUE,
-  public_url TEXT NOT NULL,
+  file_size INT NOT NULL,
   mime_type TEXT NOT NULL,
-  size_bytes INT NOT NULL,
-  alt_text TEXT NOT NULL,
+  alt_text TEXT,
+  created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- ----------------------------------------------------------------------------
--- 10. CONTENT REVISIONS & AUDIT LOGS
+-- 10. CONTENT REVISIONS & HISTORICAL SNAPSHOTS
 -- ----------------------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS content_revisions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   entity_type TEXT NOT NULL,
-  entity_id UUID NOT NULL,
+  entity_id TEXT NOT NULL,
   version_number INT NOT NULL,
   snapshot_data JSONB NOT NULL,
-  created_by UUID REFERENCES auth.users(id),
-  published_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  created_by UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  published_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE(entity_type, entity_id, version_number)
 );
+
+-- ----------------------------------------------------------------------------
+-- 11. AUDIT LOGS
+-- ----------------------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS audit_logs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  admin_user_id UUID REFERENCES auth.users(id),
+  admin_user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
   action TEXT NOT NULL,
-  entity_type TEXT NOT NULL,
-  entity_id TEXT NOT NULL,
+  entity_type TEXT,
+  entity_id TEXT,
   metadata JSONB DEFAULT '{}'::jsonb,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- ----------------------------------------------------------------------------
--- 11. QUOTE REQUEST TOOL & TRACKING ENGINE
+-- 12. SHIPMENT QUOTE REQUESTS
 -- ----------------------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS quotes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  quote_reference TEXT NOT NULL UNIQUE,
-  sender_name TEXT NOT NULL,
-  sender_phone TEXT,
-  sender_email TEXT,
   origin_city TEXT NOT NULL,
   destination_country TEXT NOT NULL,
   destination_city TEXT,
+  service_type TEXT NOT NULL,
+  weight_kg NUMERIC NOT NULL,
+  volume_cbm NUMERIC,
   cargo_type TEXT NOT NULL,
-  estimated_weight_kg NUMERIC NOT NULL,
-  package_count INT DEFAULT 1,
-  length_cm INT,
-  width_cm INT,
-  height_cm INT,
-  cargo_description TEXT NOT NULL,
-  contact_preference TEXT DEFAULT 'whatsapp',
-  additional_notes TEXT,
-  status TEXT NOT NULL DEFAULT 'new', -- 'new' | 'in_review' | 'quoted' | 'accepted' | 'rejected' | 'archived'
-  source_page TEXT,
-  utm_source TEXT,
-  utm_medium TEXT,
-  utm_campaign TEXT,
-  internal_notes TEXT,
-  assigned_admin_id UUID REFERENCES auth.users(id),
-  admin_notification_status TEXT DEFAULT 'pending',
-  customer_notification_status TEXT DEFAULT 'pending',
-  email_attempt_count INT DEFAULT 0,
-  email_error_metadata JSONB DEFAULT '{}'::jsonb,
+  pickup_required BOOLEAN NOT NULL DEFAULT false,
+  sender_name TEXT NOT NULL,
+  sender_email TEXT NOT NULL,
+  sender_phone TEXT,
+  contact_preference TEXT NOT NULL DEFAULT 'email',
+  notes TEXT,
+  status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'processing', 'quoted', 'archived')),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- ----------------------------------------------------------------------------
--- 12. NO-CODE CMS EXPANSION TABLES
+-- 13. NO-CODE HOMEPAGE DYNAMIC BLOCKS
 -- ----------------------------------------------------------------------------
 
--- Homepage Controlled Blocks
 CREATE TABLE IF NOT EXISTS homepage_blocks (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  block_type TEXT NOT NULL, -- 'hero' | 'quick_quote' | 'services' | 'locations' | 'destinations' | 'process' | 'trust' | 'guides' | 'faq' | 'cta'
-  sort_order INT NOT NULL DEFAULT 0,
-  enabled BOOLEAN NOT NULL DEFAULT true,
-  content_data JSONB NOT NULL DEFAULT '{}'::jsonb,
+  block_key TEXT NOT NULL UNIQUE,
+  block_title TEXT NOT NULL,
+  block_subtitle TEXT,
+  content JSONB NOT NULL DEFAULT '{}'::jsonb,
+  display_order INT NOT NULL DEFAULT 0,
+  is_enabled BOOLEAN NOT NULL DEFAULT true,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Site Navigation Manager
+-- ----------------------------------------------------------------------------
+-- 14. NO-CODE SITE NAVIGATION MENUS
+-- ----------------------------------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS site_navigation (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  label TEXT NOT NULL,
-  href TEXT NOT NULL,
-  nav_location TEXT NOT NULL DEFAULT 'header', -- 'header' | 'footer' | 'topbar'
-  sort_order INT NOT NULL DEFAULT 0,
-  enabled BOOLEAN NOT NULL DEFAULT true,
-  parent_id UUID REFERENCES site_navigation(id) ON DELETE CASCADE,
-  open_in_new_tab BOOLEAN NOT NULL DEFAULT false,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  menu_location TEXT NOT NULL CHECK (menu_location IN ('header', 'footer', 'topbar')),
+  items JSONB NOT NULL DEFAULT '[]'::jsonb,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE(menu_location)
 );
 
--- Controlled Custom Pages
+-- ----------------------------------------------------------------------------
+-- 15. NO-CODE DYNAMIC CMS PAGES
+-- ----------------------------------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS cms_pages (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title TEXT NOT NULL,
   slug TEXT NOT NULL UNIQUE,
-  status TEXT NOT NULL DEFAULT 'draft', -- 'draft' | 'review' | 'published' | 'archived'
-  is_verified BOOLEAN NOT NULL DEFAULT false,
-  is_indexable BOOLEAN NOT NULL DEFAULT true,
-  seo_title TEXT NOT NULL,
-  seo_description TEXT NOT NULL,
-  canonical_url TEXT,
-  blocks JSONB NOT NULL DEFAULT '[]'::jsonb,
+  meta_title TEXT NOT NULL,
+  meta_description TEXT NOT NULL,
+  content_markdown TEXT NOT NULL,
+  sections JSONB DEFAULT '[]'::jsonb,
+  is_published BOOLEAN NOT NULL DEFAULT false,
   published_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Verified Business Credentials & Certifications
+-- ----------------------------------------------------------------------------
+-- 16. COMPANY CREDENTIALS & CERTIFICATIONS
+-- ----------------------------------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS credentials (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  name TEXT NOT NULL,
-  credential_type TEXT NOT NULL DEFAULT 'certification', -- 'registration' | 'certification' | 'association' | 'membership' | 'carrier_network' | 'other'
-  logo_url TEXT,
-  description TEXT,
+  title TEXT NOT NULL,
+  issuing_authority TEXT NOT NULL,
+  license_number TEXT,
   verification_url TEXT,
-  is_verified BOOLEAN NOT NULL DEFAULT false,
-  is_active BOOLEAN NOT NULL DEFAULT true,
-  sort_order INT NOT NULL DEFAULT 0,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  badge_image_url TEXT,
+  display_order INT DEFAULT 0,
+  is_verified BOOLEAN NOT NULL DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- ----------------------------------------------------------------------------
--- 13. PERFORMANCE INDEXES
+-- INDEXES FOR FAST SEARCH & PERFORMANCE
 -- ----------------------------------------------------------------------------
 
-CREATE INDEX IF NOT EXISTS idx_destination_countries_pub 
-  ON destination_countries (status, is_verified, is_indexable);
-
-CREATE INDEX IF NOT EXISTS idx_destination_cities_pub 
-  ON destination_cities (country_id, status, is_verified, is_indexable);
-
-CREATE INDEX IF NOT EXISTS idx_articles_pub_export 
-  ON articles (status, is_verified, is_indexable, published_at DESC);
-
-CREATE INDEX IF NOT EXISTS idx_quotes_status 
-  ON quotes (status, created_at DESC);
-
-CREATE INDEX IF NOT EXISTS idx_quotes_ref 
-  ON quotes (quote_reference);
+CREATE INDEX IF NOT EXISTS idx_locations_slug ON locations(slug);
+CREATE INDEX IF NOT EXISTS idx_destination_countries_slug ON destination_countries(slug);
+CREATE INDEX IF NOT EXISTS idx_destination_cities_slug ON destination_cities(slug);
+CREATE INDEX IF NOT EXISTS idx_articles_slug ON articles(slug);
+CREATE INDEX IF NOT EXISTS idx_cms_pages_slug ON cms_pages(slug);
+CREATE INDEX IF NOT EXISTS idx_content_revisions_lookup ON content_revisions(entity_type, entity_id);
+CREATE INDEX IF NOT EXISTS idx_quotes_created_at ON quotes(created_at DESC);
 
 -- ----------------------------------------------------------------------------
--- 14. ROW LEVEL SECURITY (RLS) SECURITY POLICIES
+-- ROW LEVEL SECURITY (RLS) POLICIES
 -- ----------------------------------------------------------------------------
 
 ALTER TABLE admin_profiles ENABLE ROW LEVEL SECURITY;
@@ -430,6 +355,17 @@ DROP POLICY IF EXISTS "Admin All Access site_navigation" ON site_navigation;
 DROP POLICY IF EXISTS "Admin All Access cms_pages" ON cms_pages;
 DROP POLICY IF EXISTS "Admin All Access credentials" ON credentials;
 
+DROP POLICY IF EXISTS "Public Read business_settings" ON business_settings;
+DROP POLICY IF EXISTS "Public Read locations" ON locations;
+DROP POLICY IF EXISTS "Public Read destination_countries" ON destination_countries;
+DROP POLICY IF EXISTS "Public Read destination_cities" ON destination_cities;
+DROP POLICY IF EXISTS "Public Read articles" ON articles;
+DROP POLICY IF EXISTS "Public Read faqs" ON faqs;
+DROP POLICY IF EXISTS "Public Read homepage_blocks" ON homepage_blocks;
+DROP POLICY IF EXISTS "Public Read site_navigation" ON site_navigation;
+DROP POLICY IF EXISTS "Public Read cms_pages" ON cms_pages;
+DROP POLICY IF EXISTS "Public Read credentials" ON credentials;
+
 -- Active Admin access policies
 CREATE POLICY "Admin All Access admin_profiles" ON admin_profiles FOR ALL USING (is_active_admin());
 CREATE POLICY "Admin All Access business_settings" ON business_settings FOR ALL USING (is_active_admin());
@@ -447,3 +383,15 @@ CREATE POLICY "Admin All Access homepage_blocks" ON homepage_blocks FOR ALL USIN
 CREATE POLICY "Admin All Access site_navigation" ON site_navigation FOR ALL USING (is_active_admin());
 CREATE POLICY "Admin All Access cms_pages" ON cms_pages FOR ALL USING (is_active_admin());
 CREATE POLICY "Admin All Access credentials" ON credentials FOR ALL USING (is_active_admin());
+
+-- Public Read Access Policies (allows static build page generation & public visitors to read published CMS content)
+CREATE POLICY "Public Read business_settings" ON business_settings FOR SELECT USING (true);
+CREATE POLICY "Public Read locations" ON locations FOR SELECT USING (true);
+CREATE POLICY "Public Read destination_countries" ON destination_countries FOR SELECT USING (true);
+CREATE POLICY "Public Read destination_cities" ON destination_cities FOR SELECT USING (true);
+CREATE POLICY "Public Read articles" ON articles FOR SELECT USING (true);
+CREATE POLICY "Public Read faqs" ON faqs FOR SELECT USING (true);
+CREATE POLICY "Public Read homepage_blocks" ON homepage_blocks FOR SELECT USING (true);
+CREATE POLICY "Public Read site_navigation" ON site_navigation FOR SELECT USING (true);
+CREATE POLICY "Public Read cms_pages" ON cms_pages FOR SELECT USING (true);
+CREATE POLICY "Public Read credentials" ON credentials FOR SELECT USING (true);
