@@ -1,13 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { ShieldCheck, Lock, Mail, AlertCircle } from 'lucide-react';
 import { siteConfig } from '@/config/site.config';
 import { adminLoginAction } from './actions';
 
 export default function AdminLoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -21,14 +19,10 @@ export default function AdminLoginPage() {
     try {
       const res = await adminLoginAction({ email, password });
 
-      if (!res.success) {
+      if (res && !res.success) {
         setError(res.error || 'Authentication failed.');
         setLoading(false);
-        return;
       }
-
-      router.push('/admin');
-      router.refresh();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'An error occurred during authentication.');
       setLoading(false);
