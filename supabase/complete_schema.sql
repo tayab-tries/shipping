@@ -6,7 +6,21 @@
 -- ============================================================================
 
 -- ----------------------------------------------------------------------------
--- 1. SECURITY DEFINER HELPER FUNCTIONS (Non-recursive admin checks)
+-- 1. ADMIN PROFILES & AUTHORIZATION TABLE
+-- ----------------------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS admin_profiles (
+  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  email TEXT NOT NULL UNIQUE,
+  full_name TEXT NOT NULL,
+  role TEXT NOT NULL DEFAULT 'editor', -- 'admin' | 'editor'
+  is_active BOOLEAN NOT NULL DEFAULT true,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- ----------------------------------------------------------------------------
+-- 2. SECURITY DEFINER HELPER FUNCTIONS (Non-recursive admin checks)
 -- ----------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION is_active_admin()
@@ -32,20 +46,6 @@ AS $$
     WHERE id = auth.uid() AND role = 'admin' AND is_active = true
   );
 $$;
-
--- ----------------------------------------------------------------------------
--- 2. ADMIN PROFILES & AUTHORIZATION
--- ----------------------------------------------------------------------------
-
-CREATE TABLE IF NOT EXISTS admin_profiles (
-  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-  email TEXT NOT NULL UNIQUE,
-  full_name TEXT NOT NULL,
-  role TEXT NOT NULL DEFAULT 'editor', -- 'admin' | 'editor'
-  is_active BOOLEAN NOT NULL DEFAULT true,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
 
 -- ----------------------------------------------------------------------------
 -- 3. GLOBAL BUSINESS SETTINGS
