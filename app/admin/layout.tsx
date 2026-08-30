@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { headers } from 'next/headers';
 import {
   LayoutDashboard,
   Home,
@@ -17,8 +18,25 @@ import {
   LogOut,
 } from 'lucide-react';
 import { siteConfig } from '@/config/site.config';
+import { requireAdminAuth } from '@/lib/supabase/auth-guard';
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const headerList = await headers();
+  const pathname = headerList.get('x-pathname') || '';
+
+  // 1. Enforce Server-Side Auth Guard (Skip ONLY for /admin/login)
+  const isLoginPage = pathname.startsWith('/admin/login');
+  let authUser = null;
+
+  if (!isLoginPage) {
+    authUser = await requireAdminAuth();
+  }
+
+  // 2. If rendering login page, render child component directly without admin layout frame
+  if (isLoginPage) {
+    return <>{children}</>;
+  }
+
   const navItems = [
     { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
     { label: 'Homepage Blocks', href: '/admin/homepage', icon: Home },
@@ -62,7 +80,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           })}
         </nav>
 
-        <div className="p-4 border-t border-border">
+        <div className="p-4 border-t border-border space-y-2">
+          {authUser && (
+            <div className="px-3 py-2 bg-surface-subtle rounded border border-border text-[11px] font-mono space-y-0.5">
+              <span className="text-slate-400 block uppercase font-bold">Logged In User</span>
+              <span className="text-brand-black font-semibold truncate block">{authUser.profile.full_name}</span>
+              <span className="text-emerald-700 capitalize font-bold">Role: {authUser.profile.role}</span>
+            </div>
+          )}
           <Link
             href="/"
             className="flex items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:text-foreground transition-colors"
@@ -81,7 +106,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
           <div className="flex items-center gap-4 text-xs font-mono">
             <span className="px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded text-[11px] font-semibold">
-              Edge SSG Active (0 Public Queries)
+              Authenticated Server Session
             </span>
           </div>
         </header>

@@ -5,43 +5,50 @@ import { getStaticRedirectManifest } from '@/lib/cms/redirect-exporter';
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // 1. Check static 301 redirect manifest (0 DB queries)
+  // 1. Static 301 Redirect Manifest (0 DB queries)
   const redirects = getStaticRedirectManifest();
   const matchedRedirect = redirects.find((r) => r.source_path === pathname);
   if (matchedRedirect) {
     return NextResponse.redirect(new URL(matchedRedirect.target_path, request.url), matchedRedirect.status_code);
   }
 
-  // 2. Admin Route Protection (/admin)
-  if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
-    let response = NextResponse.next({ request });
+  // 2. Prepare Request Headers with x-pathname for Server Component Layouts
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-pathname', pathname);
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || '';
+  let response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 
-    if (supabaseUrl && supabaseKey) {
-      const supabase = createServerClient(supabaseUrl, supabaseKey, {
-        cookies: {
-          getAll() {
-            return request.cookies.getAll();
-          },
-          setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-            response = NextResponse.next({ request });
-            cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
-          },
+  // 3. Refresh Supabase Session Cookies for Edge Runtime
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || '';
+
+  if (supabaseUrl && supabaseKey && !supabaseUrl.includes('your-supabase-project')) {
+    const supabase = createServerClient(supabaseUrl, supabaseKey, {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
         },
-      });
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+          response = NextResponse.next({
+            request: {
+              headers: requestHeaders,
+            },
+          });
+          cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
+        },
+      },
+    });
 
-      const { data: { user } } = await supabase.auth.getUser();
-
-      if (!user) {
-        return NextResponse.redirect(new URL('/admin/login', request.url));
-      }
-    }
+    // Touch auth session to refresh token cookies
+    await supabase.auth.getUser();
   }
 
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {
