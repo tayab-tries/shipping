@@ -79,10 +79,10 @@ export const MobileNav: React.FC<MobileNavProps> = ({ brandName: propBrand, phon
         <div className="flex items-center justify-between border-b border-border-dark pb-4">
           <Link href="/" onClick={closeMenu} className="flex items-center">
             <Image
-              src="/images/brand/logo-white.png"
+              src="/images/brand/logo-white.svg"
               alt={`${brandName} Logo`}
               width={180}
-              height={54}
+              height={104}
               className="h-10 sm:h-12 w-auto object-contain max-h-[48px]"
             />
           </Link>

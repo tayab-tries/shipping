@@ -20,7 +20,7 @@ export const Header = async () => {
       <TopBar />
       <Container>
         <div className="flex items-center justify-between h-20 sm:h-24 lg:h-26 gap-4 sm:gap-6">
-          {/* Prominent High-Visibility Raahi International Logo */}
+          {/* Prominent High-Visibility Vector SVG Logo */}
           <div className="flex items-center gap-6 lg:gap-8">
             <Link
               href="/"
@@ -28,12 +28,12 @@ export const Header = async () => {
               aria-label={`${brandName} Homepage`}
             >
               <Image
-                src="/images/brand/logo-white.png"
+                src="/images/brand/logo-white.svg"
                 alt={`${brandName} Logo`}
                 width={240}
-                height={80}
+                height={140}
                 priority
-                className="h-12 sm:h-16 lg:h-18 w-auto object-contain max-h-[72px]"
+                className="h-12 sm:h-16 lg:h-18 w-auto object-contain max-h-[76px]"
               />
             </Link>
 
