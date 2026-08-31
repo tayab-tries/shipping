@@ -75,18 +75,16 @@ export const MobileNav: React.FC<MobileNavProps> = ({ brandName: propBrand, phon
         aria-modal="true"
         aria-label="Mobile Navigation"
       >
-        {/* Drawer Header with Logo & Close Button */}
+        {/* Drawer Header with Prominent Logo & Close Button */}
         <div className="flex items-center justify-between border-b border-border-dark pb-4">
-          <Link href="/" onClick={closeMenu} className="flex items-center gap-2">
-            <div className="bg-white/95 px-2 py-0.5 rounded flex items-center justify-center border border-white/20">
-              <Image
-                src="/images/logo.png"
-                alt={`${brandName} Logo`}
-                width={120}
-                height={32}
-                className="h-7 w-auto object-contain"
-              />
-            </div>
+          <Link href="/" onClick={closeMenu} className="flex items-center">
+            <Image
+              src="/images/logo.png"
+              alt={`${brandName} Logo`}
+              width={180}
+              height={54}
+              className="h-12 w-auto object-contain"
+            />
           </Link>
           <button
             onClick={closeMenu}

@@ -19,24 +19,22 @@ export const Header = async () => {
     <header className="w-full bg-brand-black/95 backdrop-blur-md border-b border-border-dark sticky top-0 z-40">
       <TopBar />
       <Container>
-        <div className="flex items-center justify-between h-20 gap-6">
-          {/* Logo */}
+        <div className="flex items-center justify-between h-24 lg:h-28 gap-6">
+          {/* Prominent Large Logo */}
           <div className="flex items-center gap-8">
             <Link
               href="/"
-              className="flex items-center hover:opacity-95 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-xs"
+              className="flex items-center hover:opacity-95 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-xs shrink-0 py-1"
               aria-label={`${brandName} Homepage`}
             >
-              <div className="bg-white/95 px-3 py-1.5 rounded flex items-center justify-center border border-white/20 shadow-xs shrink-0">
-                <Image
-                  src="/images/logo.png"
-                  alt={`${brandName} Logo`}
-                  width={150}
-                  height={42}
-                  priority
-                  className="h-9 w-auto object-contain"
-                />
-              </div>
+              <Image
+                src="/images/logo.png"
+                alt={`${brandName} Logo`}
+                width={260}
+                height={90}
+                priority
+                className="h-16 sm:h-20 lg:h-22 w-auto object-contain max-h-[85px]"
+              />
             </Link>
 
             {/* Desktop Navigation */}

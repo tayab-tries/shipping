@@ -18,16 +18,14 @@ export const Footer = async () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-border-dark">
           {/* Column 1: Company / Brand */}
           <div className="space-y-4">
-            <Link href="/" className="flex items-center gap-2.5 font-bold text-xl text-white">
-              <div className="bg-white/95 px-2.5 py-1 rounded flex items-center justify-center border border-white/20 shrink-0">
-                <Image
-                  src="/images/logo.png"
-                  alt={`${brandName} Logo`}
-                  width={130}
-                  height={36}
-                  className="h-7 w-auto object-contain"
-                />
-              </div>
+            <Link href="/" className="flex items-center">
+              <Image
+                src="/images/logo.png"
+                alt={`${brandName} Logo`}
+                width={220}
+                height={66}
+                className="h-14 w-auto object-contain"
+              />
             </Link>
             <p className="text-body-sm text-slate-400 leading-relaxed">
               International cargo delivery provider providing reliable air cargo, ocean sea cargo, and door-to-door shipping services connecting Pakistan worldwide.
