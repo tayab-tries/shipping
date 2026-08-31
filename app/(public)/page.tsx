@@ -1,6 +1,7 @@
 import React from 'react';
 import { HeroSection } from '@/components/sections/HeroSection';
 import { QuickQuoteTeaser } from '@/components/sections/QuickQuoteTeaser';
+import { UseCasesSection } from '@/components/sections/UseCasesSection';
 import { ServicesOverview } from '@/components/sections/ServicesOverview';
 import { PakistanReachSection } from '@/components/sections/PakistanReachSection';
 import { DestinationShowcase } from '@/components/sections/DestinationShowcase';
@@ -22,28 +23,31 @@ export default async function HomePage() {
       {/* 02. QUICK QUOTE / ENTRY ACTION */}
       {blocks.quick_quote?.enabled && <QuickQuoteTeaser blockData={blocks.quick_quote.contentData} />}
 
-      {/* 03. CORE SERVICES */}
+      {/* 03. CUSTOMER USE CASES */}
+      {blocks.use_cases?.enabled !== false && <UseCasesSection blockData={blocks.use_cases?.contentData} />}
+
+      {/* 04. CORE SERVICES */}
       {blocks.services?.enabled && <ServicesOverview blockData={blocks.services.contentData} />}
 
-      {/* 04. PAKISTAN NETWORK */}
+      {/* 05. PAKISTAN COVERAGE */}
       {blocks.locations?.enabled && <PakistanReachSection blockData={blocks.locations.contentData} />}
 
-      {/* 05. INTERNATIONAL DESTINATIONS */}
+      {/* 06. POPULAR DESTINATIONS */}
       {blocks.destinations?.enabled && <DestinationShowcase blockData={blocks.destinations.contentData} />}
 
-      {/* 06. PROCESS */}
+      {/* 07. PROCESS */}
       {blocks.process?.enabled && <ProcessSection blockData={blocks.process.contentData} />}
 
-      {/* 07. TRUST / CREDENTIALS */}
+      {/* 08. TRUST / RELIABILITY */}
       {blocks.trust?.enabled && <TrustSection blockData={blocks.trust.contentData} />}
 
-      {/* 08. GUIDES / RESOURCES */}
+      {/* 09. GUIDES / RESOURCES */}
       {blocks.guides?.enabled && <GuidesPreviewSection blockData={blocks.guides.contentData} />}
 
-      {/* 09. FAQ */}
+      {/* 10. FAQ */}
       {blocks.faq?.enabled && <FaqSection blockData={blocks.faq.contentData} />}
 
-      {/* 10. FINAL CTA */}
+      {/* 11. FINAL CTA */}
       {blocks.cta?.enabled && <FinalCtaSection blockData={blocks.cta.contentData} />}
     </div>
   );

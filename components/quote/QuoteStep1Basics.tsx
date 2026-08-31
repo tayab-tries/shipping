@@ -1,8 +1,9 @@
 import React from 'react';
-import { ArrowRight, MapPin } from 'lucide-react';
+import { ArrowRight, MapPin, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
 import { Input } from '@/components/ui/Input';
+import { siteConfig } from '@/config/site.config';
 
 export interface QuoteStep1Data {
   origin_city: string;
@@ -33,21 +34,25 @@ export const QuoteStep1Basics: React.FC<QuoteStep1BasicsProps> = ({
     onNext();
   };
 
+  const whatsappNumber = (siteConfig.contact?.whatsappNumber || '923001234567').replace(/[^0-9]/g, '');
+  const whatsappMessage = encodeURIComponent('Assalam o Alaikum, I want to send cargo from Pakistan. Please guide me with a quote.');
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6" id="quote-step-1-form">
       <div className="space-y-1 border-b border-border pb-4">
         <h2 className="text-heading-lg font-bold text-brand-black flex items-center gap-2">
           <MapPin className="w-5 h-5 text-accent shrink-0" />
-          <span>Step 1: Shipment Basics</span>
+          <span>Step 1: Cargo Route & Type</span>
         </h2>
         <p className="text-body-sm text-slate-600">
-          Specify your cargo origin hub in Pakistan, target destination market, and cargo type.
+          Select your pickup city in Pakistan, destination country, and what you are sending.
         </p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <Select
-          label="Origin City (Pakistan)"
+          label="From (Pickup City in Pakistan)"
           id="origin_city"
           name="origin_city"
           value={formData.origin_city}
@@ -61,11 +66,11 @@ export const QuoteStep1Basics: React.FC<QuoteStep1BasicsProps> = ({
               {loc.name}
             </option>
           ))}
-          <option value="other">Other Pakistan City</option>
+          <option value="other">Other City in Pakistan</option>
         </Select>
 
         <Select
-          label="Destination Country"
+          label="To (Destination Country)"
           id="destination_country"
           name="destination_country"
           value={formData.destination_country}
@@ -79,7 +84,7 @@ export const QuoteStep1Basics: React.FC<QuoteStep1BasicsProps> = ({
               {dest.name}
             </option>
           ))}
-          <option value="other">Other International Destination</option>
+          <option value="other">Other Destination Country</option>
         </Select>
       </div>
 
@@ -96,7 +101,7 @@ export const QuoteStep1Basics: React.FC<QuoteStep1BasicsProps> = ({
         />
 
         <Select
-          label="Cargo Type"
+          label="What are you sending?"
           id="cargo_type"
           name="cargo_type"
           value={formData.cargo_type}
@@ -105,23 +110,39 @@ export const QuoteStep1Basics: React.FC<QuoteStep1BasicsProps> = ({
           required
           variantSurface="light"
         >
-          <option value="air_freight">Air Cargo Express</option>
-          <option value="sea_cargo">Ocean Sea Cargo (FCL / LCL)</option>
-          <option value="door_to_door">Door-to-Door Delivery</option>
-          <option value="commercial_freight">Commercial Trade Cargo</option>
-          <option value="excess_baggage">Excess Baggage & Personal Belongings</option>
+          <option value="personal_belongings">Personal Cargo (Clothes, Gifts, Household Items)</option>
+          <option value="excess_baggage">Excess Baggage & Travel Luggage</option>
+          <option value="commercial_cargo">Commercial Goods & Export Cargo</option>
+          <option value="air_freight">Air Cargo</option>
+          <option value="sea_cargo">Sea Cargo</option>
         </Select>
       </div>
 
-      <div className="pt-4 flex justify-end">
+      {/* Guidance Banner for WhatsApp */}
+      <div className="p-4 bg-emerald-50 rounded border border-emerald-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+        <div className="text-emerald-900 font-medium">
+          <span className="font-bold">Not sure about the weight or dimensions?</span> WhatsApp us and we&apos;ll guide you.
+        </div>
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded transition-colors shrink-0"
+        >
+          <MessageSquare className="w-3.5 h-3.5" />
+          <span>WhatsApp Us</span>
+        </a>
+      </div>
+
+      <div className="pt-2 flex justify-end">
         <Button
           type="submit"
           variant="accent"
           size="lg"
-          className="w-full sm:w-auto h-[46px]"
+          className="w-full sm:w-auto h-[46px] text-base font-bold"
           rightIcon={<ArrowRight className="w-4 h-4 text-brand-black shrink-0" />}
         >
-          Continue to Cargo Specifications
+          Continue to Weight & Details
         </Button>
       </div>
     </form>

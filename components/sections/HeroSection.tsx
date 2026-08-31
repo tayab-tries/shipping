@@ -1,27 +1,32 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Search } from 'lucide-react';
+import { ArrowRight, MessageSquare } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
+import { siteConfig } from '@/config/site.config';
 
 export interface HeroSectionProps {
   blockData?: Record<string, unknown>;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ blockData }) => {
-  const eyebrow = (blockData?.eyebrow as string) || 'AIR & SEA CARGO DELIVERY';
-  const headline = (blockData?.headline as string) || 'SEND CARGO. WE HANDLE THE REST.';
+  const whatsappNumber = (siteConfig.contact?.whatsappNumber || '923001234567').replace(/[^0-9]/g, '');
+  const whatsappMessage = encodeURIComponent('Assalam o Alaikum, I want to send cargo from Pakistan. Please give me a quote.');
+  const defaultWhatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+
+  const eyebrow = (blockData?.eyebrow as string) || 'DOOR-TO-DOOR CARGO SHIPPING FROM PAKISTAN';
+  const headline = (blockData?.headline as string) || 'SEND CARGO FROM PAKISTAN.\nWE\'LL HANDLE THE REST.';
   const supportingCopy =
     (blockData?.supporting_copy as string) ||
-    'Door-to-door cargo delivery by air and sea, from Pakistan to destinations around the world.';
-  const primaryCtaLabel = (blockData?.primary_cta_label as string) || 'Get a Shipping Quote';
+    'Door-to-door cargo delivery by air and sea. We pick up from Pakistan and deliver to destinations worldwide.';
+  const primaryCtaLabel = (blockData?.primary_cta_label as string) || 'GET A QUOTE';
   const primaryCtaHref = (blockData?.primary_cta_href as string) || '/quote';
-  const secondaryCtaLabel = (blockData?.secondary_cta_label as string) || 'Track Shipment';
-  const secondaryCtaHref = (blockData?.secondary_cta_href as string) || '/track';
+  const secondaryCtaLabel = (blockData?.secondary_cta_label as string) || 'WHATSAPP US';
+  const secondaryCtaHref = (blockData?.secondary_cta_href as string) || defaultWhatsappUrl;
   const capabilityLine =
-    (blockData?.capability_line as string) || 'AIR CARGO • SEA CARGO • DOOR-TO-DOOR • CUSTOMS CLEARANCE';
+    (blockData?.capability_line as string) || 'HOME PICKUP • AIR CARGO • SEA CARGO • DOOR-TO-DOOR';
   const bgImage = (blockData?.background_image as string) || IMAGE_SLOTS.heroBackground.src;
   const imageAlt = (blockData?.image_alt_text as string) || IMAGE_SLOTS.heroBackground.alt;
 
@@ -31,8 +36,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ blockData }) => {
     .map((s) => s.trim())
     .filter(Boolean);
 
+  const isWhatsapp = secondaryCtaHref.includes('wa.me') || secondaryCtaHref.includes('whatsapp');
+
   return (
-    <section className="relative min-h-[680px] sm:min-h-[75vh] lg:min-h-[78vh] max-h-[90vh] w-full overflow-hidden bg-brand-black flex flex-col justify-center border-b border-border-dark">
+    <section className="relative min-h-[640px] sm:min-h-[72vh] lg:min-h-[76vh] max-h-[90vh] w-full overflow-hidden bg-brand-black flex flex-col justify-center border-b border-border-dark">
       {/* 1. Full-Bleed Background Image */}
       <div className="absolute inset-0 z-0 bg-brand-black-deep">
         <Image
@@ -51,8 +58,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ blockData }) => {
             background: `linear-gradient(
               90deg,
               rgba(7,10,15,0.96) 0%,
-              rgba(7,10,15,0.88) 24%,
-              rgba(7,10,15,0.62) 52%,
+              rgba(7,10,15,0.88) 26%,
+              rgba(7,10,15,0.64) 52%,
               rgba(7,10,15,0.28) 78%,
               rgba(7,10,15,0.18) 100%
             )`,
@@ -65,9 +72,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ blockData }) => {
           style={{
             background: `linear-gradient(
               180deg,
-              rgba(7,10,15,0.78) 0%,
-              rgba(7,10,15,0.52) 45%,
-              rgba(7,10,15,0.72) 100%
+              rgba(7,10,15,0.82) 0%,
+              rgba(7,10,15,0.56) 45%,
+              rgba(7,10,15,0.76) 100%
             )`,
           }}
         />
@@ -106,17 +113,22 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ blockData }) => {
 
       {/* 5. Hero Content Stack Layered ABOVE Image */}
       <Container className="relative z-20 py-16 lg:py-24">
-        <div className="w-full lg:w-[58%] max-w-[700px] space-y-6">
+        <div className="w-full lg:w-[60%] max-w-[720px] space-y-6">
           {/* Eyebrow */}
           <div className="flex items-center gap-2">
-            <span className="text-[12px] font-semibold uppercase tracking-[0.08em] px-3 py-1 bg-brand-navy/80 text-slate-200 border border-border-dark rounded-xs">
+            <span className="text-[11px] sm:text-[12px] font-semibold uppercase tracking-[0.08em] px-3 py-1 bg-brand-navy/80 text-slate-200 border border-border-dark rounded-xs">
               {eyebrow}
             </span>
           </div>
 
           {/* Headline */}
-          <h1 className="text-[40px] sm:text-[56px] lg:text-[68px] font-extrabold tracking-tight text-white leading-[0.98] max-w-[700px]">
-            {headline.includes('.') ? (
+          <h1 className="text-[36px] sm:text-[52px] lg:text-[64px] font-extrabold tracking-tight text-white leading-[1.05] max-w-[720px]">
+            {headline.includes('\n') ? (
+              <>
+                <span>{headline.split('\n')[0]}</span> <br />
+                <span className="text-accent">{headline.split('\n')[1]}</span>
+              </>
+            ) : headline.includes('.') ? (
               <>
                 <span>{headline.split('.')[0]}.</span> <br />
                 <span className="text-accent">{headline.split('.').slice(1).join('.').trim()}</span>
@@ -127,41 +139,45 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ blockData }) => {
           </h1>
 
           {/* Supporting Copy */}
-          <p className="text-[16px] sm:text-[18px] text-slate-300 leading-[1.6] font-normal max-w-[620px]">
+          <p className="text-[16px] sm:text-[18px] text-slate-300 leading-[1.6] font-normal max-w-[640px]">
             {supportingCopy}
           </p>
 
-          {/* Dual CTAs */}
+          {/* Dual CTAs: GET A QUOTE & WHATSAPP US */}
           <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-[12px]">
             <Link href={primaryCtaHref}>
               <Button
                 variant="accent"
                 size="lg"
-                className="w-full sm:w-auto h-[46px] min-w-[200px]"
+                className="w-full sm:w-auto h-[48px] min-w-[200px] text-base font-bold"
                 rightIcon={<ArrowRight className="w-4 h-4 text-brand-black shrink-0" />}
               >
                 {primaryCtaLabel}
               </Button>
             </Link>
 
-            <Link href={secondaryCtaHref}>
+            <a
+              href={secondaryCtaHref}
+              target={isWhatsapp ? '_blank' : '_self'}
+              rel={isWhatsapp ? 'noopener noreferrer' : undefined}
+            >
               <Button
                 variant="outline-dark"
                 size="lg"
-                className="w-full sm:w-auto h-[46px] min-w-[160px]"
-                leftIcon={<Search className="w-4 h-4 text-slate-300 shrink-0" />}
+                className="w-full sm:w-auto h-[48px] min-w-[180px] border-emerald-500/50 text-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-300 font-bold"
+                leftIcon={<MessageSquare className="w-4 h-4 text-emerald-400 shrink-0" />}
               >
                 {secondaryCtaLabel}
               </Button>
-            </Link>
+            </a>
           </div>
 
-          {/* Capability Bullets */}
-          <div className="pt-6 mt-5 border-t border-border-dark/80 flex flex-wrap items-center gap-2 sm:gap-4 text-[12px] font-mono uppercase tracking-[0.08em] text-slate-400">
+          {/* Capability Row */}
+          <div className="pt-6 mt-5 border-t border-border-dark/80 flex flex-wrap items-center gap-2 sm:gap-4 text-[12px] font-mono uppercase tracking-[0.08em] text-slate-300">
             {capabilities.map((item, idx) => (
               <React.Fragment key={idx}>
                 {idx > 0 && <span className="text-accent">•</span>}
-                <span>{item}</span>
+                <span className="font-semibold">{item}</span>
               </React.Fragment>
             ))}
           </div>

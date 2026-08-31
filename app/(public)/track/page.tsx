@@ -7,9 +7,9 @@ import { TrackingViewController } from '@/components/tracking/TrackingViewContro
 import { siteConfig } from '@/config/site.config';
 
 export const metadata: Metadata = {
-  title: `Track Your Cargo Shipment | ${siteConfig.name}`,
+  title: `Track Your Cargo | ${siteConfig.name}`,
   description:
-    'Track international cargo shipments, air freight dispatches, and ocean sea cargo originating in Pakistan.',
+    'Track international cargo shipments, air cargo dispatches, and sea cargo originating in Pakistan.',
   robots: {
     index: false,
     follow: true,
@@ -28,7 +28,7 @@ export default async function PublicTrackingPage({ searchParams }: TrackPageProp
 
   const breadcrumbs = [
     { label: 'Home', url: '/' },
-    { label: 'Track Shipment', url: '/track' },
+    { label: 'Track Your Cargo', url: '/track' },
   ];
 
   return (
@@ -38,9 +38,9 @@ export default async function PublicTrackingPage({ searchParams }: TrackPageProp
         <div className="space-y-4 max-w-3xl mx-auto mb-10 text-center">
           <Breadcrumbs items={breadcrumbs} className="justify-center text-slate-400" />
           <SectionHeading
-            badge="Freight Tracking Utility"
-            title="Track Your Shipment"
-            subtitle="Enter your shipment reference to check the latest available status and dispatch event log."
+            badge="CARGO TRACKING"
+            title="TRACK YOUR CARGO"
+            subtitle="Enter your tracking number to check the latest status and delivery updates."
             className="[&_h2]:text-white [&_p]:text-slate-300"
             align="center"
             badgeVariant="outline-dark"
@@ -52,4 +52,4 @@ export default async function PublicTrackingPage({ searchParams }: TrackPageProp
       </Container>
     </div>
   );
-}
+};

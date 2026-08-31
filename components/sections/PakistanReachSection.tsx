@@ -11,11 +11,11 @@ export interface PakistanReachSectionProps {
 }
 
 export const PakistanReachSection: React.FC<PakistanReachSectionProps> = ({ blockData }) => {
-  const badge = (blockData?.badge as string) || 'Pakistan Origin Coverage';
-  const title = (blockData?.title as string) || 'Origin Cargo Pickup Across Pakistan';
+  const badge = (blockData?.badge as string) || 'Home Pickup';
+  const title = (blockData?.title as string) || 'WE PICK UP CARGO ACROSS PAKISTAN';
   const subtitle =
     (blockData?.subtitle as string) ||
-    'Doorstep collection and export cargo dispatch operating across primary commercial cities.';
+    'Doorstep collection available across major commercial cities in Pakistan.';
 
   const verifiedCities = [
     { name: 'Lahore', slug: 'lahore' },
@@ -29,11 +29,11 @@ export const PakistanReachSection: React.FC<PakistanReachSectionProps> = ({ bloc
   ];
 
   return (
-    <section className="w-full bg-brand-black py-20 lg:py-28 border-b border-border-dark text-white">
+    <section className="w-full bg-brand-black py-16 lg:py-24 border-b border-border-dark text-white">
       <Container>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Left Column: Editorial Statement & Image */}
-          <div className="lg:col-span-6 space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          {/* Left Column: Customer Copy & Image */}
+          <div className="lg:col-span-6 space-y-5">
             <SectionHeading
               badge={badge}
               badgeVariant="outline-dark"
@@ -42,31 +42,31 @@ export const PakistanReachSection: React.FC<PakistanReachSectionProps> = ({ bloc
               className="[&_h2]:text-white [&_p]:text-slate-300"
             />
             <p className="text-body-md text-slate-300 leading-relaxed font-normal">
-              We arrange scheduled cargo pickups from commercial hubs and addresses across Pakistan, consolidating shipments for export clearance at international airport and seaport terminals.
+              We arrange scheduled doorstep cargo pickup directly from your home or business address across Pakistan, handling customs declaration and international shipping to your destination.
             </p>
 
-            <div className="relative aspect-[16/9] rounded-md border border-border-dark overflow-hidden bg-brand-black-deep mt-6">
+            <div className="relative aspect-[16/9] rounded-md border border-border-dark overflow-hidden bg-brand-black-deep mt-4">
               <Image
                 src={IMAGE_SLOTS.pakistanHub.src}
-                alt={IMAGE_SLOTS.pakistanHub.alt}
+                alt="Pakistan Export Cargo Pickup Operations"
                 fill
                 sizes="(max-width: 1024px) 100vw, 550px"
                 className="object-cover object-center"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-brand-black/90 via-transparent to-transparent" />
-              <div className="absolute bottom-4 left-4 text-xs font-mono text-slate-300">
-                Pakistan Export Cargo & Consolidation Desk
+              <div className="absolute bottom-3 left-3 text-xs font-mono text-slate-300 font-semibold">
+                Home Cargo Pickup Operations Across Pakistan
               </div>
             </div>
           </div>
 
           {/* Right Column: Clean City List */}
-          <div className="lg:col-span-6 bg-brand-navy/60 border border-border-dark rounded-md p-6 lg:p-8 space-y-6">
-            <div className="flex items-center justify-between border-b border-border-dark pb-4">
+          <div className="lg:col-span-6 bg-brand-navy/60 border border-border-dark rounded-md p-6 lg:p-8 space-y-5">
+            <div className="flex items-center justify-between border-b border-border-dark pb-3">
               <span className="text-xs font-mono font-semibold uppercase text-slate-300 tracking-wider">
                 Available Pickup Cities
               </span>
-              <span className="text-xs font-mono text-slate-400">Scheduled Dispatch</span>
+              <span className="text-xs font-mono text-accent font-semibold">Doorstep Pickup</span>
             </div>
 
             <div className="divide-y divide-border-dark">
@@ -74,24 +74,24 @@ export const PakistanReachSection: React.FC<PakistanReachSectionProps> = ({ bloc
                 <Link
                   key={city.slug}
                   href={`/locations/${city.slug}`}
-                  className="py-3.5 px-2 flex items-center justify-between hover:bg-brand-black-deep/50 rounded transition-colors group"
+                  className="py-3 px-2 flex items-center justify-between hover:bg-brand-black-deep/60 rounded transition-colors group"
                 >
                   <div className="flex items-center gap-3">
-                    <MapPin className="w-4 h-4 text-slate-400 group-hover:text-accent transition-colors shrink-0" />
+                    <MapPin className="w-4 h-4 text-accent shrink-0" />
                     <span className="text-sm font-semibold text-white group-hover:text-accent transition-colors">
-                      Cargo Collection in {city.name}
+                      Cargo Pickup in {city.name}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono text-slate-400 hidden sm:inline">Export Ready</span>
+                    <span className="text-xs font-mono text-slate-400 hidden sm:inline">Doorstep Available</span>
                     <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-accent transition-colors shrink-0" />
                   </div>
                 </Link>
               ))}
             </div>
 
-            <div className="pt-4 border-t border-border-dark flex items-center justify-between text-xs font-mono text-slate-400">
-              <span>Collection Services Active</span>
+            <div className="pt-3 border-t border-border-dark flex items-center justify-between text-xs font-mono text-slate-400">
+              <span>Coverage Active</span>
               <Link href="/locations" className="text-accent hover:underline font-semibold flex items-center gap-1">
                 <span>View All Locations</span>
                 <ArrowRight className="w-3.5 h-3.5 text-accent" />

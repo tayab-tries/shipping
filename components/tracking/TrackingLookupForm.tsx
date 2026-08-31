@@ -25,7 +25,7 @@ export const TrackingLookupForm: React.FC<TrackingLookupFormProps> = ({
         htmlFor="trackingNumber"
         className="block text-xs font-mono font-semibold uppercase text-slate-300 tracking-wider"
       >
-        Shipment / Tracking Reference
+        Tracking Number
       </label>
 
       <div className="flex flex-col sm:flex-row items-stretch gap-3">
@@ -36,7 +36,7 @@ export const TrackingLookupForm: React.FC<TrackingLookupFormProps> = ({
             name="trackingNumber"
             required
             autoComplete="off"
-            placeholder="Enter your tracking reference e.g. TRK-1002"
+            placeholder="Enter your tracking number (e.g. TRK-1002)"
             value={value}
             onChange={(e) => onChange(e.target.value)}
             aria-describedby={error ? 'tracking-error' : undefined}
@@ -49,10 +49,10 @@ export const TrackingLookupForm: React.FC<TrackingLookupFormProps> = ({
           variant="accent"
           size="lg"
           isLoading={isLoading}
-          className="h-[50px] px-8 shrink-0 w-full sm:w-auto"
+          className="h-[50px] px-8 shrink-0 w-full sm:w-auto font-bold"
           leftIcon={<Search className="w-4 h-4 text-brand-black shrink-0" />}
         >
-          Track Shipment
+          Track Cargo
         </Button>
       </div>
 

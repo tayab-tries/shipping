@@ -9,24 +9,24 @@ export interface DestinationShowcaseProps {
 }
 
 export const DestinationShowcase: React.FC<DestinationShowcaseProps> = ({ blockData }) => {
-  const badge = (blockData?.badge as string) || 'Trade Corridors';
-  const title = (blockData?.title as string) || 'Direct International Cargo Routes';
+  const badge = (blockData?.badge as string) || 'Global Routes';
+  const title = (blockData?.title as string) || 'POPULAR DESTINATIONS FROM PAKISTAN';
   const subtitle =
     (blockData?.subtitle as string) ||
-    'Cargo delivery routes connecting Pakistan export hubs with destination markets worldwide.';
+    'Direct cargo delivery connecting Pakistan to major international destination countries.';
 
   const corridors = [
-    { country: 'United Kingdom', code: 'uk', hub: 'London (LHR / LGW)', mode: 'Air & Sea Cargo' },
-    { country: 'United Arab Emirates', code: 'uae', hub: 'Dubai (DXB / DWC)', mode: 'Express & Door-to-Door' },
-    { country: 'United States', code: 'usa', hub: 'New York (JFK) & Major Ports', mode: 'Air & Sea Cargo' },
-    { country: 'Canada', code: 'canada', hub: 'Toronto (YYZ)', mode: 'Air & Ocean Cargo' },
-    { country: 'Saudi Arabia', code: 'ksa', hub: 'Riyadh (RUH) & Jeddah (JED)', mode: 'Direct Air & Doorstep' },
+    { country: 'UK', code: 'uk', hub: 'London & UK Nationwide', mode: 'Air & Sea Cargo' },
+    { country: 'UAE', code: 'uae', hub: 'Dubai & UAE Nationwide', mode: 'Express & Door-to-Door' },
+    { country: 'Saudi Arabia', code: 'ksa', hub: 'Riyadh, Jeddah & KSA', mode: 'Air & Sea Cargo' },
+    { country: 'Canada', code: 'canada', hub: 'Toronto & Canada Nationwide', mode: 'Air & Sea Cargo' },
+    { country: 'USA', code: 'usa', hub: 'New York & USA Nationwide', mode: 'Air & Sea Cargo' },
   ];
 
   return (
-    <section className="w-full bg-surface-subtle py-20 lg:py-28 border-b border-border text-brand-black">
+    <section className="w-full bg-surface-subtle py-16 lg:py-24 border-b border-border text-brand-black">
       <Container>
-        <SectionHeading badge={badge} title={title} subtitle={subtitle} className="mb-14" />
+        <SectionHeading badge={badge} title={title} subtitle={subtitle} className="mb-12" />
 
         {/* Trade Corridor Route Rows */}
         <div className="bg-surface rounded-md border border-border divide-y divide-border shadow-xs overflow-hidden">
@@ -51,31 +51,31 @@ export const DestinationShowcase: React.FC<DestinationShowcaseProps> = ({ blockD
               {/* Hub & Transit Mode Metadata */}
               <div className="flex flex-wrap md:flex-nowrap items-center gap-6 text-xs font-mono text-slate-600 md:w-1/2">
                 <div className="space-y-0.5">
-                  <span className="text-slate-400 block">Destination Hubs</span>
+                  <span className="text-slate-400 block">Coverage Area</span>
                   <span className="font-medium text-slate-800">{item.hub}</span>
                 </div>
                 <div className="space-y-0.5">
-                  <span className="text-slate-400 block">Available Service</span>
+                  <span className="text-slate-400 block">Delivery Service</span>
                   <span className="font-medium text-slate-800">{item.mode}</span>
                 </div>
               </div>
 
               {/* Action Link Indicator */}
               <div className="flex items-center gap-2 text-xs font-mono font-semibold text-brand-black group-hover:text-accent transition-colors shrink-0">
-                <span>View Route</span>
+                <span>View Country Details</span>
                 <ArrowRight className="w-4 h-4 text-brand-black group-hover:text-accent transition-colors" />
               </div>
             </Link>
           ))}
         </div>
 
-        <div className="mt-10 text-center">
+        <div className="mt-8 text-center">
           <Link
             href="/destinations"
             className="inline-flex items-center gap-2 text-xs font-mono font-semibold text-brand-black hover:text-accent transition-colors"
           >
             <Globe className="w-4 h-4 text-slate-500" />
-            <span>Explore All International Destination Corridors →</span>
+            <span>Explore All Destinations From Pakistan →</span>
           </Link>
         </div>
       </Container>

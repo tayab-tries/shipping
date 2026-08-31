@@ -13,50 +13,50 @@ export interface ServicesOverviewProps {
 }
 
 export const ServicesOverview: React.FC<ServicesOverviewProps> = ({ blockData }) => {
-  const badge = (blockData?.badge as string) || 'Core Services';
-  const title = (blockData?.title as string) || 'Air & Sea Cargo Delivery';
+  const badge = (blockData?.badge as string) || 'Our Services';
+  const title = (blockData?.title as string) || 'Air & Sea Cargo Services';
   const subtitle =
     (blockData?.subtitle as string) ||
-    'Fast air cargo and economical ocean sea cargo delivery with complete door-to-door options from Pakistan.';
+    'Fast air cargo and economical sea cargo with complete door-to-door delivery from Pakistan.';
 
   const airTitle = (blockData?.air_cargo_title as string) || 'AIR CARGO';
   const airDesc =
     (blockData?.air_cargo_description as string) ||
-    'Cargo shipping by air with door-to-door delivery options. Time-critical air dispatches for commercial shipments, boxes, and urgent international cargo.';
+    'Air cargo shipping with door-to-door delivery. Fast air dispatches for boxes, gifts, excess baggage, and urgent shipments.';
   const airImage = (blockData?.air_cargo_image as string) || IMAGE_SLOTS.serviceAir.src;
 
   const seaTitle = (blockData?.sea_cargo_title as string) || 'SEA CARGO';
   const seaDesc =
     (blockData?.sea_cargo_description as string) ||
-    'Cargo shipping by sea with door-to-door delivery from pickup to destination. Economical ocean container shipping (FCL/LCL) for heavy and large goods.';
+    'Sea cargo shipping with door-to-door delivery. Economical ocean container shipping for heavy goods and large household shipments.';
   const seaImage = (blockData?.sea_cargo_image as string) || IMAGE_SLOTS.serviceSea.src;
 
   return (
-    <section className="w-full bg-brand-navy py-20 lg:py-28 border-b border-border-dark text-white">
+    <section className="w-full bg-brand-navy py-16 lg:py-24 border-b border-border-dark text-white">
       <Container>
         <SectionHeading
           badge={badge}
           title={title}
           subtitle={subtitle}
-          className="mb-14 [&_h2]:text-white [&_p]:text-slate-300"
+          className="mb-12 [&_h2]:text-white [&_p]:text-slate-300"
           badgeVariant="outline-dark"
         />
 
         {/* Balanced 2-Column Grid: AIR CARGO & SEA CARGO */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 items-stretch">
           {/* Service 1: AIR CARGO */}
-          <div className="bg-brand-black-deep rounded-md border border-border-dark overflow-hidden p-8 lg:p-10 flex flex-col justify-between space-y-8 group hover:border-slate-700 transition-colors">
-            <div className="space-y-6">
+          <div className="bg-brand-black-deep rounded-md border border-border-dark overflow-hidden p-6 lg:p-8 flex flex-col justify-between space-y-6 group hover:border-slate-700 transition-colors shadow-lg">
+            <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <Badge variant="accent">Express Air Shipping</Badge>
+                <Badge variant="accent">Air Shipping</Badge>
                 <Plane className="w-6 h-6 text-accent shrink-0" />
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <h3 className="text-display-sm font-bold text-white group-hover:text-accent transition-colors">
                   {airTitle}
                 </h3>
-                <p className="text-body-md text-slate-300 leading-relaxed">{airDesc}</p>
+                <p className="text-body-md text-slate-300 leading-relaxed font-normal">{airDesc}</p>
               </div>
 
               {/* Service Photo Anchor */}
@@ -69,15 +69,15 @@ export const ServicesOverview: React.FC<ServicesOverviewProps> = ({ blockData })
                   className="object-cover object-center group-hover:scale-102 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-black/90 via-transparent to-transparent" />
-                <div className="absolute bottom-4 left-4 text-xs font-mono text-slate-300 flex items-center gap-2">
+                <div className="absolute bottom-3 left-3 text-xs font-mono text-slate-200 flex items-center gap-2 font-semibold">
                   <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-                  <span>Door-to-door delivery available</span>
+                  <span>Door-to-door delivery included</span>
                 </div>
               </div>
             </div>
 
-            <div className="pt-6 border-t border-border-dark flex items-center justify-between">
-              <span className="text-xs font-mono text-slate-400">Scheduled Air Routes</span>
+            <div className="pt-5 border-t border-border-dark flex items-center justify-between">
+              <span className="text-xs font-mono text-slate-400">Fast Air Shipping</span>
               <Link href="/services/air-freight">
                 <Button variant="accent" size="md" rightIcon={<ArrowRight className="w-4 h-4 text-brand-black" />}>
                   Air Cargo Details
@@ -87,18 +87,18 @@ export const ServicesOverview: React.FC<ServicesOverviewProps> = ({ blockData })
           </div>
 
           {/* Service 2: SEA CARGO */}
-          <div className="bg-brand-black-deep rounded-md border border-border-dark overflow-hidden p-8 lg:p-10 flex flex-col justify-between space-y-8 group hover:border-slate-700 transition-colors">
-            <div className="space-y-6">
+          <div className="bg-brand-black-deep rounded-md border border-border-dark overflow-hidden p-6 lg:p-8 flex flex-col justify-between space-y-6 group hover:border-slate-700 transition-colors shadow-lg">
+            <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <Badge variant="outline-dark">Ocean Shipping</Badge>
+                <Badge variant="outline-dark">Sea Shipping</Badge>
                 <Ship className="w-6 h-6 text-accent shrink-0" />
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <h3 className="text-display-sm font-bold text-white group-hover:text-accent transition-colors">
                   {seaTitle}
                 </h3>
-                <p className="text-body-md text-slate-300 leading-relaxed">{seaDesc}</p>
+                <p className="text-body-md text-slate-300 leading-relaxed font-normal">{seaDesc}</p>
               </div>
 
               {/* Service Photo Anchor */}
@@ -111,15 +111,15 @@ export const ServicesOverview: React.FC<ServicesOverviewProps> = ({ blockData })
                   className="object-cover object-center group-hover:scale-102 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-black/90 via-transparent to-transparent" />
-                <div className="absolute bottom-4 left-4 text-xs font-mono text-slate-300 flex items-center gap-2">
+                <div className="absolute bottom-3 left-3 text-xs font-mono text-slate-200 flex items-center gap-2 font-semibold">
                   <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-                  <span>Door-to-door delivery available</span>
+                  <span>Door-to-door delivery included</span>
                 </div>
               </div>
             </div>
 
-            <div className="pt-6 border-t border-border-dark flex items-center justify-between">
-              <span className="text-xs font-mono text-slate-400">Ocean Seaport Shipping</span>
+            <div className="pt-5 border-t border-border-dark flex items-center justify-between">
+              <span className="text-xs font-mono text-slate-400">Ocean Container Cargo</span>
               <Link href="/services/sea-cargo">
                 <Button variant="accent" size="md" rightIcon={<ArrowRight className="w-4 h-4 text-brand-black" />}>
                   Sea Cargo Details

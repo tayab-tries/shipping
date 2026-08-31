@@ -7,45 +7,45 @@ export interface TrustSectionProps {
 }
 
 export const TrustSection: React.FC<TrustSectionProps> = ({ blockData }) => {
-  const badge = (blockData?.badge as string) || 'Operational Standards';
-  const title = (blockData?.title as string) || 'Verified Cargo Standards & Compliance';
+  const badge = (blockData?.badge as string) || 'Reliability';
+  const title = (blockData?.title as string) || 'RELIABLE CARGO DELIVERY FROM PAKISTAN';
   const subtitle =
     (blockData?.subtitle as string) ||
-    'Operational capabilities for international air and sea cargo export shipments.';
+    'Factual operational capabilities for international air and sea cargo export shipments.';
 
   const credentials = [
     {
-      category: 'CUSTOMS & DECLARATION',
-      title: 'Commercial Export Customs Declaration',
-      description: 'Standardized customs filing and documentation processing for air cargo and ocean container shipments originating in Pakistan.',
+      category: 'HOME PICKUP & PACKAGING',
+      title: 'Doorstep Collection Across Pakistan',
+      description: 'Scheduled cargo collection directly from homes and commercial addresses across major Pakistani cities with export packaging inspection.',
     },
     {
-      category: 'LINEHAUL ALLOCATIONS',
-      title: 'Scheduled Airline Cargo Capacity',
-      description: 'Direct booking allocations on international scheduled air carriers operating from Pakistan airport cargo terminals.',
+      category: 'AIR & SEA DISPATCH',
+      title: 'International Air & Ocean Freight Allocations',
+      description: 'Air cargo dispatches departing major airport terminals and ocean container shipping connecting Pakistan export gateways.',
     },
     {
-      category: 'PUBLIC VISIBILITY',
-      title: 'Milestone Progress Tracking',
-      description: 'Public tracking reference system displaying origin pickup, airport export clearance, linehaul dispatch, and destination arrival timestamps.',
+      category: 'CARGO VISIBILITY',
+      title: 'Online Tracking Reference System',
+      description: 'Enter your tracking number online to check current milestone progress, export clearance, international dispatch, and final delivery status.',
     },
   ];
 
   return (
-    <section className="w-full bg-surface-subtle py-20 lg:py-28 border-b border-border text-brand-black">
+    <section className="w-full bg-surface-subtle py-16 lg:py-24 border-b border-border text-brand-black">
       <Container>
-        <SectionHeading badge={badge} title={title} subtitle={subtitle} className="mb-14" />
+        <SectionHeading badge={badge} title={title} subtitle={subtitle} className="mb-12" />
 
         {/* Evidence List */}
         <div className="bg-surface rounded-md border border-border divide-y divide-border shadow-xs overflow-hidden">
           {credentials.map((item, idx) => (
-            <div key={idx} className="p-8 flex flex-col md:flex-row md:items-start justify-between gap-6">
+            <div key={idx} className="p-6 lg:p-8 flex flex-col md:flex-row md:items-start justify-between gap-6">
               <div className="md:w-1/4 space-y-1">
                 <span className="text-[10px] font-mono font-semibold uppercase text-slate-400 tracking-wider">
                   {item.category}
                 </span>
                 <div className="text-xs font-mono text-emerald-600 font-semibold flex items-center gap-1.5">
-                  <span>✓ Verified Standard</span>
+                  <span>✓ Verified Capability</span>
                 </div>
               </div>
 

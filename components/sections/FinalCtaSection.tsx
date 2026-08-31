@@ -1,57 +1,69 @@
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, Search } from 'lucide-react';
+import { ArrowRight, MessageSquare } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
+import { siteConfig } from '@/config/site.config';
 
 export interface FinalCtaSectionProps {
   blockData?: Record<string, unknown>;
 }
 
 export const FinalCtaSection: React.FC<FinalCtaSectionProps> = ({ blockData }) => {
-  const eyebrow = (blockData?.eyebrow as string) || (blockData?.badge as string) || 'Air & Sea Cargo Delivery';
-  const headline = (blockData?.headline as string) || (blockData?.title as string) || 'Ready to send cargo?';
+  const whatsappNumber = (siteConfig.contact?.whatsappNumber || '923001234567').replace(/[^0-9]/g, '');
+  const whatsappMessage = encodeURIComponent('Assalam o Alaikum, I want to send cargo from Pakistan. Please give me a quote.');
+  const defaultWhatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+
+  const eyebrow = (blockData?.eyebrow as string) || (blockData?.badge as string) || 'Door-to-Door Delivery';
+  const headline = (blockData?.headline as string) || (blockData?.title as string) || 'Ready to send cargo from Pakistan?';
   const supportingCopy =
     (blockData?.supporting_copy as string) ||
     (blockData?.subtitle as string) ||
-    'Connect with our team to calculate air cargo rates, ocean container schedules, and door-to-door delivery options.';
+    'Get an instant quote online or message us on WhatsApp to discuss your cargo shipping requirements.';
   const primaryCtaLabel =
-    (blockData?.primary_cta_label as string) || (blockData?.button_text as string) || 'Get a Shipping Quote';
+    (blockData?.primary_cta_label as string) || (blockData?.button_text as string) || 'GET A QUOTE';
   const primaryCtaHref = (blockData?.primary_cta_href as string) || (blockData?.button_href as string) || '/quote';
-  const secondaryCtaLabel = (blockData?.secondary_cta_label as string) || 'Track Shipment';
-  const secondaryCtaHref = (blockData?.secondary_cta_href as string) || '/track';
+  const secondaryCtaLabel = (blockData?.secondary_cta_label as string) || 'WHATSAPP US';
+  const secondaryCtaHref = (blockData?.secondary_cta_href as string) || defaultWhatsappUrl;
+
+  const isWhatsapp = secondaryCtaHref.includes('wa.me') || secondaryCtaHref.includes('whatsapp');
 
   return (
-    <section className="w-full bg-brand-navy py-20 lg:py-28 border-b border-border-dark text-white text-center">
+    <section className="w-full bg-brand-navy py-16 lg:py-24 border-b border-border-dark text-white text-center">
       <Container size="narrow">
-        <div className="bg-brand-black-deep rounded-md border border-border-dark p-8 lg:p-14 space-y-6 shadow-2xl">
+        <div className="bg-brand-black-deep rounded-md border border-border-dark p-8 lg:p-12 space-y-6 shadow-2xl">
           <div className="text-xs font-mono text-slate-400 uppercase tracking-wider">{eyebrow}</div>
 
           <h2 className="text-display-lg font-bold text-white tracking-tight">{headline}</h2>
 
           <p className="text-body-lg text-slate-300 max-w-xl mx-auto leading-relaxed">{supportingCopy}</p>
 
-          <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href={primaryCtaHref} className="w-full sm:w-auto">
               <Button
                 variant="accent"
                 size="lg"
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto min-w-[200px] h-[48px] text-base font-bold"
                 rightIcon={<ArrowRight className="w-4 h-4 text-brand-black" />}
               >
                 {primaryCtaLabel}
               </Button>
             </Link>
-            <Link href={secondaryCtaHref} className="w-full sm:w-auto">
+            <a
+              href={secondaryCtaHref}
+              target={isWhatsapp ? '_blank' : '_self'}
+              rel={isWhatsapp ? 'noopener noreferrer' : undefined}
+              className="w-full sm:w-auto"
+            >
               <Button
                 variant="outline-dark"
                 size="lg"
-                className="w-full sm:w-auto"
-                leftIcon={<Search className="w-4 h-4 text-slate-300" />}
+                className="w-full sm:w-auto min-w-[180px] h-[48px] border-emerald-500/50 text-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-300 font-bold"
+                leftIcon={<MessageSquare className="w-4 h-4 text-emerald-400 shrink-0" />}
               >
                 {secondaryCtaLabel}
               </Button>
-            </Link>
+            </a>
           </div>
         </div>
       </Container>
