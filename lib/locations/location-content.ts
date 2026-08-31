@@ -137,6 +137,35 @@ export const staticLocations: LocationData[] = [
       },
     ],
   },
+  {
+    id: 'loc-multan',
+    name: 'Multan',
+    slug: 'multan',
+    province: 'Punjab',
+    h1: 'International Cargo & Shipping Services in Multan',
+    seoTitle: 'International Cargo Services Multan | Air & Sea Cargo',
+    seoDescription: 'Reliable air and sea cargo services for customers in Multan, Pakistan. Scheduled doorstep pickup and international door-to-door delivery.',
+    introduction: 'Multan serves as a key commercial cargo collection center in southern Punjab. We provide door-to-door air freight and ocean sea cargo shipping for commercial goods, personal luggage, and gifts.',
+    serviceAvailable: true,
+    collectionAvailable: true,
+    hasPhysicalBranch: false,
+    localCoverageText: 'Cargo receiving and scheduled doorstep collection services operate across major commercial areas in Multan including Bosan Road, Gulgasht Colony, Vehari Road, and Cantt.',
+    supportedServices: ['international-cargo', 'air-freight', 'sea-cargo', 'door-to-door', 'excess-baggage'],
+    supportedDestinations: ['uk', 'uae', 'usa', 'canada', 'ksa'],
+    status: 'published',
+    isVerified: true,
+    isIndexable: true,
+    faqs: [
+      {
+        question: 'Can you pick up cargo from my address in Multan?',
+        answer: 'Yes! We arrange scheduled doorstep cargo collection directly from your home or business address in Multan.',
+      },
+      {
+        question: 'What types of cargo can be sent from Multan?',
+        answer: 'You can send personal belongings, clothes, excess travel luggage, commercial goods, and gifts from Multan to international destinations worldwide.',
+      },
+    ],
+  },
 ];
 
 export function getPublishedStaticLocations(): LocationData[] {

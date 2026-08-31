@@ -9,8 +9,11 @@ export interface LocationItemInput {
   slug: string;
   province: string;
   h1: string;
-  meta_title: string;
-  meta_description: string;
+  seo_title?: string;
+  seo_description?: string;
+  meta_title?: string;
+  meta_description?: string;
+  introduction?: string;
   hub_address?: string;
   phone_local?: string;
   email_local?: string;
@@ -59,18 +62,28 @@ export async function saveAndPublishLocationAction(
       return { success: false, error: 'Unauthorized: Only active Admin role users may publish locations.' };
     }
 
-    // 3. Upsert into locations table
-    const payload = {
+    // 3. Build comprehensive payload compatible with both initial & patched schemas
+    const titleValue = input.meta_title || input.seo_title || `Cargo Forwarding in ${input.name} | Cargo Shipping`;
+    const descValue = input.meta_description || input.seo_description || `Reliable cargo and freight forwarding services in ${input.name}, Pakistan.`;
+    const introValue = input.introduction || `Cargo receiving and pickup dispatch services operate across ${input.name}, Pakistan.`;
+
+    const payload: Record<string, unknown> = {
       name: input.name,
       slug: input.slug,
       province: input.province || 'Punjab',
       h1: input.h1 || `Cargo Forwarding Services in ${input.name}`,
-      meta_title: input.meta_title || `Cargo Forwarding in ${input.name} | Cargo Shipping`,
-      meta_description: input.meta_description || `Reliable cargo and freight forwarding services in ${input.name}, Pakistan.`,
+      meta_title: titleValue,
+      meta_description: descValue,
+      seo_title: titleValue,
+      seo_description: descValue,
+      introduction: introValue,
       hub_address: input.hub_address || '',
       phone_local: input.phone_local || '',
       email_local: input.email_local || '',
       is_active: input.is_active ?? true,
+      status: 'published',
+      is_verified: true,
+      is_indexable: true,
       services_offered: input.services_offered || [],
       verified_branches: input.verified_branches || [],
       content_blocks: input.content_blocks || [],
@@ -78,39 +91,63 @@ export async function saveAndPublishLocationAction(
       updated_at: new Date().toISOString(),
     };
 
+    // 4. Resilient Upsert with schema fallback (prunes missing un-migrated columns dynamically)
+    const currentPayload = { ...payload };
     let locationId = input.id;
+    let success = false;
+    let lastErrorMessage = '';
 
-    if (locationId) {
-      const { error: updateError } = await supabase
-        .from('locations')
-        .update(payload)
-        .eq('id', locationId);
+    for (let attempt = 0; attempt < 5; attempt++) {
+      if (locationId) {
+        const { error: updateError } = await supabase
+          .from('locations')
+          .update(currentPayload)
+          .eq('id', locationId);
 
-      if (updateError) {
-        return { success: false, error: updateError.message };
+        if (!updateError) {
+          success = true;
+          break;
+        }
+
+        lastErrorMessage = updateError.message;
+        const match = updateError.message.match(/Could not find the '(.*?)' column/i);
+        if (match && match[1] && currentPayload[match[1]] !== undefined) {
+          delete currentPayload[match[1]];
+          continue;
+        }
+        break;
+      } else {
+        const { data: newLoc, error: insertError } = await supabase
+          .from('locations')
+          .insert(currentPayload)
+          .select('id')
+          .single();
+
+        if (!insertError && newLoc) {
+          locationId = newLoc.id;
+          success = true;
+          break;
+        }
+
+        lastErrorMessage = insertError?.message || 'Failed to insert location.';
+        const match = lastErrorMessage.match(/Could not find the '(.*?)' column/i);
+        if (match && match[1] && currentPayload[match[1]] !== undefined) {
+          delete currentPayload[match[1]];
+          continue;
+        }
+        break;
       }
-    } else {
-      const { data: newLoc, error: insertError } = await supabase
-        .from('locations')
-        .insert(payload)
-        .select('id')
-        .single();
-
-      if (insertError || !newLoc) {
-        return { success: false, error: insertError?.message || 'Failed to insert location.' };
-      }
-      locationId = newLoc.id;
     }
 
-    if (!locationId) {
-      return { success: false, error: 'Failed to resolve location ID.' };
+    if (!success || !locationId) {
+      return { success: false, error: lastErrorMessage || 'Failed to save location.' };
     }
 
-    // 4. Trigger publish entity revision & Cloudflare Deploy Hook
+    // 5. Trigger publish entity revision & Cloudflare Deploy Hook
     return await publishCmsEntity(
       'location',
       locationId,
-      payload as unknown as Record<string, unknown>,
+      currentPayload,
       profile.id
     );
   } catch (err: unknown) {
