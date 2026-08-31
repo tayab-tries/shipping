@@ -11,12 +11,12 @@ export const TrustSection: React.FC = () => {
     },
     {
       category: 'LINEHAUL ALLOCATIONS',
-      title: 'Scheduled Airline Carrier Freight Capacity',
+      title: 'Scheduled Airline Cargo Capacity',
       description: 'Direct booking allocations on international scheduled air carriers operating from Pakistan airport cargo terminals.',
     },
     {
       category: 'PUBLIC VISIBILITY',
-      title: 'Sanitized Milestone Progress Tracking',
+      title: 'Milestone Progress Tracking',
       description: 'Public tracking reference system displaying origin pickup, airport export clearance, linehaul dispatch, and destination arrival timestamps.',
     },
   ];
@@ -26,12 +26,12 @@ export const TrustSection: React.FC = () => {
       <Container>
         <SectionHeading
           badge="Operational Standards"
-          title="Verified Logistics Standards & Compliance"
-          subtitle="Data-backed operational capabilities for international commercial freight and export shipments."
+          title="Verified Cargo Standards & Compliance"
+          subtitle="Operational capabilities for international air and sea cargo export shipments."
           className="mb-14"
         />
 
-        {/* Evidence List with Clean Dividers (Not heavy cards, not a logo wall) */}
+        {/* Evidence List */}
         <div className="bg-surface rounded-md border border-border divide-y divide-border shadow-xs overflow-hidden">
           {credentials.map((item, idx) => (
             <div key={idx} className="p-8 flex flex-col md:flex-row md:items-start justify-between gap-6">

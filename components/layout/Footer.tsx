@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
-import { Package, ShieldCheck, MapPin, Phone, Mail } from 'lucide-react';
+import Image from 'next/image';
+import { ShieldCheck, MapPin, Phone, Mail } from 'lucide-react';
 import { siteConfig } from '@/config/site.config';
 import { Container } from '@/components/ui/Container';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
@@ -8,7 +9,7 @@ import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.servic
 export const Footer = async () => {
   const business = await getPublishedBusinessSettings();
   const phone = business.phonePrimary || siteConfig.phone || '+92 300 1234567';
-  const email = business.emailInfo || siteConfig.contact?.emailInfo || 'info@cargo-shipping.pk';
+  const email = business.emailInfo || siteConfig.contact?.emailInfo || 'info@raahiinternational.pk';
   const brandName = business.brandName || siteConfig.name;
 
   return (
@@ -18,11 +19,18 @@ export const Footer = async () => {
           {/* Column 1: Company / Brand */}
           <div className="space-y-4">
             <Link href="/" className="flex items-center gap-2.5 font-bold text-xl text-white">
-              <Package className="w-6 h-6 text-accent shrink-0" />
-              <span>{brandName}</span>
+              <div className="bg-white/95 px-2.5 py-1 rounded flex items-center justify-center border border-white/20 shrink-0">
+                <Image
+                  src="/images/logo.png"
+                  alt={`${brandName} Logo`}
+                  width={130}
+                  height={36}
+                  className="h-7 w-auto object-contain"
+                />
+              </div>
             </Link>
             <p className="text-body-sm text-slate-400 leading-relaxed">
-              International freight forwarder providing reliable air cargo, ocean sea freight, and door-to-door shipping services connecting Pakistan worldwide.
+              International cargo delivery provider providing reliable air cargo, ocean sea cargo, and door-to-door shipping services connecting Pakistan worldwide.
             </p>
             <div className="space-y-2 pt-2 text-xs font-mono text-slate-400">
               <div className="flex items-center gap-2">
@@ -48,7 +56,7 @@ export const Footer = async () => {
             <ul className="space-y-2 text-sm font-medium">
               <li>
                 <Link href="/services/air-freight" className="hover:text-white transition-colors">
-                  Air Freight Services
+                  Air Cargo Services
                 </Link>
               </li>
               <li>
@@ -62,7 +70,7 @@ export const Footer = async () => {
                 </Link>
               </li>
               <li>
-                <Link href="/services/international-cargo" className="hover:text-white transition-colors">
+                <Link href="/services/commercial-cargo" className="hover:text-white transition-colors">
                   Commercial Cargo
                 </Link>
               </li>
@@ -167,11 +175,6 @@ export const Footer = async () => {
                   Educational Guides
                 </Link>
               </li>
-              <li>
-                <Link href="/dev/design-system" className="hover:text-white transition-colors text-xs font-mono">
-                  Design System QA
-                </Link>
-              </li>
             </ul>
           </div>
         </div>
@@ -183,7 +186,7 @@ export const Footer = async () => {
           </div>
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-accent" />
-            <span>Verified Commercial Freight Forwarding</span>
+            <span>Verified Air & Sea Cargo Delivery</span>
           </div>
         </div>
       </Container>

@@ -84,7 +84,7 @@ export const LocationHero: React.FC<LocationHeroProps> = ({
         />
       </div>
 
-      {/* Content Stack Layered ABOVE Image (relative z-20) */}
+      {/* Content Stack Layered ABOVE Image */}
       <Container className="relative z-20">
         {formattedBreadcrumbs.length > 0 && (
           <Breadcrumbs items={formattedBreadcrumbs} variantSurface="dark" className="mb-6" />
@@ -93,7 +93,7 @@ export const LocationHero: React.FC<LocationHeroProps> = ({
         <div className="max-w-2xl space-y-6">
           <div className="flex items-center gap-2">
             <span className="text-[12px] font-semibold uppercase tracking-[0.08em] px-3 py-1 bg-brand-navy/60 text-slate-300 border border-border-dark rounded-xs">
-              INTERNATIONAL FREIGHT FROM {name.toUpperCase()}
+              INTERNATIONAL CARGO FROM {name.toUpperCase()}
             </span>
             <Badge variant="outline-dark" className="text-slate-400 border-border-dark">
               {displayProvince}

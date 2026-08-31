@@ -37,14 +37,14 @@ export const servicesRegistry: ServiceConfigItem[] = [
     relatedLocations: ['lahore', 'karachi', 'islamabad', 'rawalpindi'],
     seo: {
       title: 'International Cargo & Shipping Services Pakistan',
-      description: 'International cargo shipping solutions from Pakistan connecting businesses and individuals with global freight delivery.',
+      description: 'International cargo shipping solutions from Pakistan connecting businesses and individuals with global delivery.',
     },
   },
   {
     slug: 'air-freight',
-    name: 'Air Freight',
-    h1: 'Air Freight Cargo Shipping Services',
-    shortDescription: 'Air cargo shipping services for international freight shipments.',
+    name: 'Air Cargo',
+    h1: 'Air Cargo Shipping & Delivery Services',
+    shortDescription: 'Air cargo shipping with door-to-door delivery options for international shipments.',
     enabled: true,
     isVerified: true,
     quoteCargoType: 'air_freight',   // Direct enum match -> Navigates to /quote?cargo=air_freight
@@ -55,15 +55,15 @@ export const servicesRegistry: ServiceConfigItem[] = [
     relatedDestinations: ['uk', 'uae', 'usa', 'canada', 'ksa'],
     relatedLocations: ['lahore', 'karachi', 'islamabad', 'rawalpindi'],
     seo: {
-      title: 'Air Freight Services Pakistan | International Air Cargo',
-      description: 'Air freight shipping services originating from Pakistan export hubs to international destination airports.',
+      title: 'Air Cargo Services Pakistan | International Air Delivery',
+      description: 'Air cargo shipping services originating from Pakistan export hubs to international destination airports.',
     },
   },
   {
     slug: 'sea-cargo',
-    name: 'Sea Cargo / Ocean Freight',
-    h1: 'Sea Cargo & Ocean Freight Services',
-    shortDescription: 'Ocean freight shipping services for ocean cargo requirements originating in Pakistan.',
+    name: 'Sea Cargo',
+    h1: 'Sea Cargo & Container Shipping Services',
+    shortDescription: 'Sea cargo shipping with door-to-door delivery from pickup to destination.',
     enabled: true,
     isVerified: true,
     quoteCargoType: 'sea_cargo',     // Direct enum match -> Navigates to /quote?cargo=sea_cargo
@@ -74,13 +74,13 @@ export const servicesRegistry: ServiceConfigItem[] = [
     relatedDestinations: ['uk', 'uae', 'usa', 'canada', 'ksa'],
     relatedLocations: ['karachi', 'lahore'],
     seo: {
-      title: 'Sea Cargo & Ocean Freight Services Pakistan',
-      description: 'Ocean freight shipping services from Pakistan for ocean cargo requirements.',
+      title: 'Sea Cargo & Shipping Services Pakistan',
+      description: 'Sea cargo shipping services from Pakistan for ocean shipping requirements.',
     },
   },
   {
     slug: 'door-to-door',
-    name: 'Door-to-Door Shipping',
+    name: 'Door-to-Door Delivery',
     h1: 'Door-to-Door Cargo Shipping Services',
     shortDescription: 'Coordinated international cargo shipping services from collection through destination delivery.',
     enabled: true,
@@ -99,8 +99,8 @@ export const servicesRegistry: ServiceConfigItem[] = [
   },
   {
     slug: 'freight-forwarding',
-    name: 'Freight Forwarding',
-    h1: 'Freight Forwarding & Shipping Coordination',
+    name: 'Cargo Shipping',
+    h1: 'Cargo Shipping & Shipping Coordination',
     shortDescription: 'Logistics coordination and shipping documentation services for export cargo.',
     enabled: true,
     isVerified: true,
@@ -112,8 +112,8 @@ export const servicesRegistry: ServiceConfigItem[] = [
     relatedDestinations: ['uk', 'uae', 'usa'],
     relatedLocations: ['karachi', 'lahore'],
     seo: {
-      title: 'Freight Forwarding Services Pakistan',
-      description: 'Freight forwarding and shipping coordination services for international export cargo from Pakistan.',
+      title: 'Cargo Shipping Services Pakistan',
+      description: 'Cargo shipping and coordination services for international export cargo from Pakistan.',
     },
   },
   {
@@ -131,7 +131,7 @@ export const servicesRegistry: ServiceConfigItem[] = [
     relatedDestinations: ['uk', 'uae', 'usa', 'canada', 'ksa'],
     relatedLocations: ['lahore', 'karachi', 'sialkot', 'faisalabad'],
     seo: {
-      title: 'Commercial Cargo & B2B Freight Shipping Pakistan',
+      title: 'Commercial Cargo & B2B Shipping Pakistan',
       description: 'Commercial cargo shipping for exporters and trade shipments from Pakistan to international markets.',
     },
   },

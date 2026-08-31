@@ -27,19 +27,19 @@ export const mainNavigation: NavItem[] = [
     viewAllLabel: 'View all services',
     children: [
       {
-        title: 'Air Freight',
+        title: 'Air Cargo',
         href: '/services/air-freight',
-        description: 'Direct airport and door express air cargo dispatch.',
+        description: 'Express air cargo shipping with door-to-door delivery.',
       },
       {
         title: 'Sea Cargo',
         href: '/services/sea-cargo',
-        description: 'Economical containerized shipping (FCL/LCL).',
+        description: 'Economical sea cargo shipping (FCL/LCL) with door delivery.',
       },
       {
-        title: 'Door-to-Door',
+        title: 'Door-to-Door Delivery',
         href: '/services/door-to-door',
-        description: 'End-to-end pickup and international delivery.',
+        description: 'End-to-end pickup and international doorstep delivery.',
       },
     ],
   },
@@ -103,11 +103,11 @@ export const footerNavigation: FooterNavGroup[] = [
   {
     title: 'Services',
     items: [
-      { label: 'Air Freight', href: '/services/air-freight' },
+      { label: 'Air Cargo', href: '/services/air-freight' },
       { label: 'Sea Cargo', href: '/services/sea-cargo' },
-      { label: 'Door-to-Door', href: '/services/door-to-door' },
+      { label: 'Door-to-Door Delivery', href: '/services/door-to-door' },
       { label: 'Excess Baggage', href: '/services/excess-baggage' },
-      { label: 'Commercial Freight', href: '/services/commercial-freight' },
+      { label: 'Commercial Cargo', href: '/services/commercial-cargo' },
     ],
   },
   {

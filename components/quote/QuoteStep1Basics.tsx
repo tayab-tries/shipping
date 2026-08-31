@@ -105,10 +105,10 @@ export const QuoteStep1Basics: React.FC<QuoteStep1BasicsProps> = ({
           required
           variantSurface="light"
         >
-          <option value="air_freight">Air Freight Express</option>
+          <option value="air_freight">Air Cargo Express</option>
           <option value="sea_cargo">Ocean Sea Cargo (FCL / LCL)</option>
           <option value="door_to_door">Door-to-Door Delivery</option>
-          <option value="commercial_freight">Commercial Trade Freight</option>
+          <option value="commercial_freight">Commercial Trade Cargo</option>
           <option value="excess_baggage">Excess Baggage & Personal Belongings</option>
         </Select>
       </div>

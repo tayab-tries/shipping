@@ -11,7 +11,7 @@ export const GuidesPreviewSection: React.FC = () => {
   const guides = [
     {
       slug: 'air-vs-sea-cargo',
-      title: 'Air Freight vs Sea Cargo: Choosing the Right Transit Mode',
+      title: 'Air Cargo vs Sea Cargo: Choosing the Right Transit Mode',
       category: 'Shipping Guide',
       readTime: '6 min read',
       excerpt: 'Comprehensive comparison of volumetric weight calculations, transit speeds, and cost structures for commercial exports.',
@@ -43,12 +43,12 @@ export const GuidesPreviewSection: React.FC = () => {
       <Container>
         <SectionHeading
           badge="Resources & Knowledge"
-          title="Freight & Export Educational Guides"
+          title="Cargo & Export Educational Guides"
           subtitle="Practical guidance on packaging standards, export documentation rules, and transit mode selection."
           className="mb-14"
         />
 
-        {/* 1 Dominant Featured Article + 2 Editorial Supporting Rows (Not 3 identical cards) */}
+        {/* 1 Dominant Featured Article + 2 Editorial Supporting Rows */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
           {/* Dominant Featured Article (Col-span-7) */}
           {featured && (

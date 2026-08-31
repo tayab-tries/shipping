@@ -10,10 +10,10 @@ export interface LocationDestinationGridProps {
 }
 
 const destinationMap: Record<string, { country: string; hub: string; mode: string }> = {
-  uk: { country: 'United Kingdom', hub: 'London Heathrow (LHR) & Regional Hubs', mode: 'Direct Air & Ocean Freight' },
+  uk: { country: 'United Kingdom', hub: 'London Heathrow (LHR) & Regional Hubs', mode: 'Direct Air & Sea Cargo' },
   uae: { country: 'United Arab Emirates', hub: 'Dubai (DXB / DWC) & Port Rashid', mode: 'Express Air & Doorstep Delivery' },
   usa: { country: 'United States', hub: 'New York (JFK) & Major Ports', mode: 'Commercial Air & Container Shipping' },
-  canada: { country: 'Canada', hub: 'Toronto Pearson (YYZ)', mode: 'Air Freight & Consolidated Ocean' },
+  canada: { country: 'Canada', hub: 'Toronto Pearson (YYZ)', mode: 'Air Cargo & Consolidated Ocean' },
   ksa: { country: 'Saudi Arabia', hub: 'Riyadh (RUH) & Jeddah Port', mode: 'Direct Air Cargo & Doorstep Delivery' },
 };
 
@@ -37,7 +37,7 @@ export const LocationDestinationGrid: React.FC<LocationDestinationGridProps> = (
           className="mb-14"
         />
 
-        {/* Clean Trade Route Rows (Not heavy cards) */}
+        {/* Clean Trade Route Rows */}
         <div className="bg-surface-subtle rounded-md border border-border divide-y divide-border shadow-xs overflow-hidden">
           {activeDestinations.map((item) => (
             <Link

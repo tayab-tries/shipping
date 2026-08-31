@@ -22,7 +22,7 @@ export const LocationStatus: React.FC<LocationStatusProps> = ({ location }) => {
             </li>
             <li className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-accent" />
-              <span>Export Air Freight: {location.service_available ? 'Active' : 'Limited'}</span>
+              <span>Export Air Cargo: {location.service_available ? 'Active' : 'Limited'}</span>
             </li>
             <li className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-accent" />

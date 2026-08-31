@@ -28,7 +28,7 @@ export const PakistanReachSection: React.FC = () => {
               badge="Pakistan Origin Coverage"
               badgeVariant="outline-dark"
               title="Origin Cargo Pickup Across Pakistan"
-              subtitle="Doorstep collection and export freight dispatch operating across primary commercial cities."
+              subtitle="Doorstep collection and export cargo dispatch operating across primary commercial cities."
               className="[&_h2]:text-white [&_p]:text-slate-300"
             />
             <p className="text-body-md text-slate-300 leading-relaxed font-normal">
@@ -45,7 +45,7 @@ export const PakistanReachSection: React.FC = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-brand-black/90 via-transparent to-transparent" />
               <div className="absolute bottom-4 left-4 text-xs font-mono text-slate-300">
-                Pakistan Export Logistics & Consolidation Desk
+                Pakistan Export Cargo & Consolidation Desk
               </div>
             </div>
           </div>

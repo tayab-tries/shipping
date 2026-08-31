@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
-import { Package, ArrowRight } from 'lucide-react';
+import Image from 'next/image';
+import { ArrowRight } from 'lucide-react';
 import { siteConfig } from '@/config/site.config';
 import { primaryCta } from '@/config/nav.config';
 import { Container } from '@/components/ui/Container';
@@ -23,10 +24,22 @@ export const Header = async () => {
           <div className="flex items-center gap-8">
             <Link
               href="/"
-              className="flex items-center gap-2.5 font-bold text-xl tracking-tight text-white hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-xs"
+              className="flex items-center gap-3 hover:opacity-95 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-xs"
+              aria-label="Raahi International Homepage"
             >
-              <Package className="w-6 h-6 text-accent shrink-0" />
-              <span>{brandName}</span>
+              <div className="bg-white/95 px-2.5 py-1 rounded flex items-center justify-center border border-white/20 shadow-xs shrink-0">
+                <Image
+                  src="/images/logo.png"
+                  alt="Raahi International Logo"
+                  width={140}
+                  height={40}
+                  priority
+                  className="h-8 w-auto object-contain"
+                />
+              </div>
+              <span className="font-bold text-lg tracking-tight text-white hidden xl:inline-block font-heading">
+                {brandName}
+              </span>
             </Link>
 
             {/* Desktop Navigation */}

@@ -8,8 +8,8 @@ export const DestinationShowcase: React.FC = () => {
   const corridors = [
     { country: 'United Kingdom', code: 'uk', hub: 'London (LHR / LGW)', mode: 'Air & Sea Cargo' },
     { country: 'United Arab Emirates', code: 'uae', hub: 'Dubai (DXB / DWC)', mode: 'Express & Door-to-Door' },
-    { country: 'United States', code: 'usa', hub: 'New York (JFK) & Major Ports', mode: 'Commercial Air & Ocean' },
-    { country: 'Canada', code: 'canada', hub: 'Toronto (YYZ)', mode: 'Air & Consolidated Ocean' },
+    { country: 'United States', code: 'usa', hub: 'New York (JFK) & Major Ports', mode: 'Air & Sea Cargo' },
+    { country: 'Canada', code: 'canada', hub: 'Toronto (YYZ)', mode: 'Air & Ocean Cargo' },
     { country: 'Saudi Arabia', code: 'ksa', hub: 'Riyadh (RUH) & Jeddah (JED)', mode: 'Direct Air & Doorstep' },
   ];
 
@@ -18,12 +18,12 @@ export const DestinationShowcase: React.FC = () => {
       <Container>
         <SectionHeading
           badge="Trade Corridors"
-          title="Direct International Freight Routes"
-          subtitle="Scheduled commercial freight routes connecting Pakistan export hubs with destination markets."
+          title="Direct International Cargo Routes"
+          subtitle="Cargo delivery routes connecting Pakistan export hubs with destination markets worldwide."
           className="mb-14"
         />
 
-        {/* Trade Corridor Route Rows (Clean Editorial Separators, Not Heavy Cards) */}
+        {/* Trade Corridor Route Rows */}
         <div className="bg-surface rounded-md border border-border divide-y divide-border shadow-xs overflow-hidden">
           {corridors.map((item) => (
             <Link

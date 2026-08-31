@@ -66,13 +66,13 @@ export const QuickQuoteTeaser: React.FC = () => {
             </Select>
 
             <Select
-              label="Freight Mode"
+              label="Cargo Mode"
               value={cargo}
               onChange={(e) => setCargo(e.target.value)}
               variantSurface="dark"
             >
-              <option value="air_freight">Air Freight Express</option>
-              <option value="sea_cargo">Sea Freight (FCL/LCL)</option>
+              <option value="air_freight">Air Cargo Express</option>
+              <option value="sea_cargo">Sea Cargo (FCL/LCL)</option>
               <option value="door_to_door">Door-to-Door Delivery</option>
             </Select>
 

@@ -48,7 +48,7 @@ export const HeroSection: React.FC = () => {
           }}
         />
 
-        {/* 4. Dotted Route Line + Moving Cargo Aircraft (Motion-Path Animated, Rotated 91deg, Larger Scale 1.35) */}
+        {/* 4. Dotted Route Line + Moving Cargo Aircraft */}
         <svg
           className="absolute inset-0 w-full h-full text-accent pointer-events-none z-10 overflow-hidden"
           xmlns="http://www.w3.org/2000/svg"
@@ -57,7 +57,6 @@ export const HeroSection: React.FC = () => {
           preserveAspectRatio="none"
           aria-hidden="true"
         >
-          {/* Dotted Background Route Path */}
           <path
             id="freight-hero-route"
             d="M -100 650 C 300 600 600 250 1100 300 C 1300 320 1500 150 1600 100"
@@ -67,7 +66,6 @@ export const HeroSection: React.FC = () => {
             className="opacity-15"
           />
 
-          {/* Animated Freight Aircraft Silhouette (Rotated +45deg to 91deg total, scale 1.35) */}
           <g className="motion-reduce:hidden opacity-85">
             <g transform="translate(-12, -12) rotate(91) scale(1.35)">
               <path
@@ -92,20 +90,20 @@ export const HeroSection: React.FC = () => {
         <div className="w-full lg:w-[58%] max-w-[700px] space-y-6">
           {/* Compact Eyebrow */}
           <div className="flex items-center gap-2">
-            <span className="text-[12px] font-semibold uppercase tracking-[0.08em] px-3 py-1 bg-brand-navy/60 text-slate-300 border border-border-dark rounded-xs">
-              International Freight from Pakistan
+            <span className="text-[12px] font-semibold uppercase tracking-[0.08em] px-3 py-1 bg-brand-navy/80 text-slate-200 border border-border-dark rounded-xs">
+              AIR & SEA CARGO DELIVERY
             </span>
           </div>
 
           {/* Headline */}
           <h1 className="text-[40px] sm:text-[56px] lg:text-[68px] font-extrabold tracking-tight text-white leading-[0.98] max-w-[700px]">
-            <span>GLOBAL FREIGHT.</span> <br />
-            <span className="text-accent">HANDLED RIGHT.</span>
+            <span>SEND CARGO.</span> <br />
+            <span className="text-accent">WE HANDLE THE REST.</span>
           </h1>
 
           {/* Supporting Copy */}
           <p className="text-[16px] sm:text-[18px] text-slate-300 leading-[1.6] font-normal max-w-[620px]">
-            Commercial air cargo forwarding, ocean sea freight, and doorstep collection connecting Pakistan with major international destination corridors.
+            Door-to-door cargo delivery by air and sea, from Pakistan to destinations around the world.
           </p>
 
           {/* Dual CTAs */}
@@ -135,7 +133,7 @@ export const HeroSection: React.FC = () => {
 
           {/* Capability Micro Line */}
           <div className="pt-6 mt-5 border-t border-border-dark/80 flex flex-wrap items-center gap-2 sm:gap-4 text-[12px] font-mono uppercase tracking-[0.08em] text-slate-400">
-            <span>AIR FREIGHT</span>
+            <span>AIR CARGO</span>
             <span className="text-accent">•</span>
             <span>SEA CARGO</span>
             <span className="text-accent">•</span>
