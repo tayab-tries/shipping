@@ -9,8 +9,10 @@ export interface DestinationCountryInput {
   slug: string;
   iso_code: string;
   h1: string;
-  meta_title: string;
-  meta_description: string;
+  seo_title?: string;
+  seo_description?: string;
+  meta_title?: string;
+  meta_description?: string;
   customs_summary?: string;
   is_active?: boolean;
   prohibited_items?: unknown[];
@@ -55,54 +57,88 @@ export async function saveAndPublishDestinationCountryAction(
       return { success: false, error: 'Unauthorized: Only active Admin role users may publish destination countries.' };
     }
 
-    // 3. Upsert into destination_countries table
-    const payload = {
+    // 3. Dual schema payload
+    const titleVal = input.meta_title || input.seo_title || `Cargo to ${input.name} from Pakistan | Cargo Shipping`;
+    const descVal = input.meta_description || input.seo_description || `Fast air freight and ocean sea cargo shipping services connecting Pakistan to ${input.name}.`;
+
+    const payload: Record<string, unknown> = {
       name: input.name,
       slug: input.slug,
+      region: 'Global',
       iso_code: input.iso_code || input.slug.toUpperCase(),
       h1: input.h1 || `Cargo & Freight Services to ${input.name}`,
-      meta_title: input.meta_title || `Cargo to ${input.name} from Pakistan | Cargo Shipping`,
-      meta_description: input.meta_description || `Fast air freight and ocean sea cargo shipping services connecting Pakistan to ${input.name}.`,
+      meta_title: titleVal,
+      meta_description: descVal,
+      seo_title: titleVal,
+      seo_description: descVal,
+      introduction: descVal,
       customs_summary: input.customs_summary || '',
       is_active: input.is_active ?? true,
+      status: 'published',
+      is_verified: true,
+      is_indexable: true,
       prohibited_items: input.prohibited_items || [],
       required_docs: input.required_docs || [],
       updated_at: new Date().toISOString(),
     };
 
+    // 4. Resilient Upsert with column fallback
+    const currentPayload = { ...payload };
     let countryId = input.id;
+    let success = false;
+    let lastErrorMessage = '';
 
-    if (countryId) {
-      const { error: updateError } = await supabase
-        .from('destination_countries')
-        .update(payload)
-        .eq('id', countryId);
+    for (let attempt = 0; attempt < 5; attempt++) {
+      if (countryId) {
+        const { error: updateError } = await supabase
+          .from('destination_countries')
+          .update(currentPayload)
+          .eq('id', countryId);
 
-      if (updateError) {
-        return { success: false, error: updateError.message };
+        if (!updateError) {
+          success = true;
+          break;
+        }
+
+        lastErrorMessage = updateError.message;
+        const match = updateError.message.match(/Could not find the '(.*?)' column/i);
+        if (match && match[1] && currentPayload[match[1]] !== undefined) {
+          delete currentPayload[match[1]];
+          continue;
+        }
+        break;
+      } else {
+        const { data: newCountry, error: insertError } = await supabase
+          .from('destination_countries')
+          .insert(currentPayload)
+          .select('id')
+          .single();
+
+        if (!insertError && newCountry) {
+          countryId = newCountry.id;
+          success = true;
+          break;
+        }
+
+        lastErrorMessage = insertError?.message || 'Failed to insert destination country.';
+        const match = lastErrorMessage.match(/Could not find the '(.*?)' column/i);
+        if (match && match[1] && currentPayload[match[1]] !== undefined) {
+          delete currentPayload[match[1]];
+          continue;
+        }
+        break;
       }
-    } else {
-      const { data: newCountry, error: insertError } = await supabase
-        .from('destination_countries')
-        .insert(payload)
-        .select('id')
-        .single();
-
-      if (insertError || !newCountry) {
-        return { success: false, error: insertError?.message || 'Failed to insert destination country.' };
-      }
-      countryId = newCountry.id;
     }
 
-    if (!countryId) {
-      return { success: false, error: 'Failed to resolve destination country ID.' };
+    if (!success || !countryId) {
+      return { success: false, error: lastErrorMessage || 'Failed to save destination country.' };
     }
 
-    // 4. Trigger publish entity revision & Cloudflare Deploy Hook
+    // 5. Trigger publish entity revision & Cloudflare Deploy Hook
     return await publishCmsEntity(
       'destination',
       countryId,
-      payload as unknown as Record<string, unknown>,
+      currentPayload,
       profile.id
     );
   } catch (err: unknown) {

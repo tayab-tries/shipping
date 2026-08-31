@@ -18,7 +18,7 @@ export async function getFaqsListAction() {
     const { data } = await supabase
       .from('faqs')
       .select('*')
-      .order('display_order', { ascending: true });
+      .order('created_at', { ascending: true });
 
     return { success: true, data: data || [] };
   } catch (err: unknown) {
@@ -50,48 +50,76 @@ export async function saveAndPublishFaqAction(
       return { success: false, error: 'Unauthorized: Only active Admin role users may publish FAQs.' };
     }
 
-    // 3. Upsert into faqs table
-    const payload = {
+    // 3. Dual schema payload
+    const payload: Record<string, unknown> = {
       question: input.question,
       answer: input.answer,
       category: input.category || 'general',
+      entity_type: input.category || 'general',
       display_order: input.display_order ?? 0,
+      sort_order: input.display_order ?? 0,
       is_published: input.is_published ?? true,
+      status: input.is_published ? 'published' : 'draft',
+      updated_at: new Date().toISOString(),
     };
 
+    // 4. Resilient Upsert with column fallback
+    const currentPayload = { ...payload };
     let faqId = input.id;
+    let success = false;
+    let lastErrorMessage = '';
 
-    if (faqId) {
-      const { error: updateError } = await supabase
-        .from('faqs')
-        .update(payload)
-        .eq('id', faqId);
+    for (let attempt = 0; attempt < 5; attempt++) {
+      if (faqId) {
+        const { error: updateError } = await supabase
+          .from('faqs')
+          .update(currentPayload)
+          .eq('id', faqId);
 
-      if (updateError) {
-        return { success: false, error: updateError.message };
+        if (!updateError) {
+          success = true;
+          break;
+        }
+
+        lastErrorMessage = updateError.message;
+        const match = updateError.message.match(/Could not find the '(.*?)' column/i);
+        if (match && match[1] && currentPayload[match[1]] !== undefined) {
+          delete currentPayload[match[1]];
+          continue;
+        }
+        break;
+      } else {
+        const { data: newFaq, error: insertError } = await supabase
+          .from('faqs')
+          .insert(currentPayload)
+          .select('id')
+          .single();
+
+        if (!insertError && newFaq) {
+          faqId = newFaq.id;
+          success = true;
+          break;
+        }
+
+        lastErrorMessage = insertError?.message || 'Failed to insert FAQ.';
+        const match = lastErrorMessage.match(/Could not find the '(.*?)' column/i);
+        if (match && match[1] && currentPayload[match[1]] !== undefined) {
+          delete currentPayload[match[1]];
+          continue;
+        }
+        break;
       }
-    } else {
-      const { data: newFaq, error: insertError } = await supabase
-        .from('faqs')
-        .insert(payload)
-        .select('id')
-        .single();
-
-      if (insertError || !newFaq) {
-        return { success: false, error: insertError?.message || 'Failed to insert FAQ.' };
-      }
-      faqId = newFaq.id;
     }
 
-    if (!faqId) {
-      return { success: false, error: 'Failed to resolve FAQ ID.' };
+    if (!success || !faqId) {
+      return { success: false, error: lastErrorMessage || 'Failed to save FAQ.' };
     }
 
-    // 4. Trigger publish entity revision & Cloudflare Deploy Hook
+    // 5. Trigger publish entity revision & Cloudflare Deploy Hook
     return await publishCmsEntity(
       'page',
       faqId,
-      payload as unknown as Record<string, unknown>,
+      currentPayload,
       profile.id
     );
   } catch (err: unknown) {

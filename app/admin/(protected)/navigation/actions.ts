@@ -24,8 +24,8 @@ export async function getSiteNavigationAction(): Promise<{ success: boolean; dat
     const { data } = await supabase.from('site_navigation').select('*');
 
     if (data && data.length > 0) {
-      const headerItem = data.find((d) => d.menu_location === 'header');
-      const footerItem = data.find((d) => d.menu_location === 'footer');
+      const headerItem = data.find((d) => d.menu_location === 'header' || d.nav_location === 'header');
+      const footerItem = data.find((d) => d.menu_location === 'footer' || d.nav_location === 'footer');
 
       return {
         success: true,
@@ -71,24 +71,42 @@ export async function saveAndPublishSiteNavigationAction(
       return { success: false, error: 'Unauthorized: Only active Admin role users may publish navigation.' };
     }
 
-    // 3. Upsert header and footer navigation menus
-    await supabase.from('site_navigation').upsert(
-      {
-        menu_location: 'header',
-        items: navData.header,
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: 'menu_location' }
-    );
+    // 3. Upsert header and footer navigation menus with resilient fallback
+    const headerPayload: Record<string, unknown> = {
+      menu_location: 'header',
+      nav_location: 'header',
+      label: 'Header Navigation',
+      href: '/',
+      items: navData.header,
+      updated_at: new Date().toISOString(),
+    };
 
-    await supabase.from('site_navigation').upsert(
-      {
-        menu_location: 'footer',
-        items: navData.footer,
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: 'menu_location' }
-    );
+    const footerPayload: Record<string, unknown> = {
+      menu_location: 'footer',
+      nav_location: 'footer',
+      label: 'Footer Navigation',
+      href: '/',
+      items: navData.footer,
+      updated_at: new Date().toISOString(),
+    };
+
+    for (const payload of [headerPayload, footerPayload]) {
+      const currentPayload = { ...payload };
+      for (let attempt = 0; attempt < 5; attempt++) {
+        const { error: upsertError } = await supabase
+          .from('site_navigation')
+          .upsert(currentPayload);
+
+        if (!upsertError) break;
+
+        const match = upsertError.message.match(/Could not find the '(.*?)' column/i);
+        if (match && match[1] && currentPayload[match[1]] !== undefined) {
+          delete currentPayload[match[1]];
+          continue;
+        }
+        break;
+      }
+    }
 
     // 4. Trigger publish entity revision & Cloudflare Deploy Hook
     return await publishCmsEntity(

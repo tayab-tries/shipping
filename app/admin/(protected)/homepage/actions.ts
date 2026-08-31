@@ -31,18 +31,18 @@ export async function getHomepageBlocksAction() {
     const supabase = await createClient();
     const { data } = await supabase
       .from('homepage_blocks')
-      .select('*')
-      .order('display_order', { ascending: true });
+      .select('*');
 
     if (data && data.length > 0) {
       const formatted: HomepageBlockInput[] = data.map((b) => ({
         id: b.id,
-        type: b.block_key as BlockType,
-        label: b.block_title,
-        enabled: b.is_enabled,
-        sortOrder: b.display_order,
-        contentData: (b.content as Record<string, unknown>) || {},
+        type: (b.block_key || b.block_type) as BlockType,
+        label: b.block_title || BLOCK_DEFINITIONS[(b.block_type || b.block_key) as BlockType]?.label || b.block_type || 'Block',
+        enabled: b.is_enabled ?? b.enabled ?? true,
+        sortOrder: b.display_order ?? b.sort_order ?? 0,
+        contentData: (b.content || b.content_data || {}) as Record<string, unknown>,
       }));
+      formatted.sort((a, b) => a.sortOrder - b.sortOrder);
       return { success: true, data: formatted };
     }
   } catch (err: unknown) {
@@ -74,19 +74,36 @@ export async function saveAndPublishHomepageBlocksAction(
       return { success: false, error: 'Unauthorized: Only active Admin role users may publish homepage blocks.' };
     }
 
-    // 3. Upsert blocks into homepage_blocks table
+    // 3. Upsert blocks into homepage_blocks with dual schema compatibility
     for (const b of blocks) {
-      await supabase.from('homepage_blocks').upsert(
-        {
-          block_key: b.type,
-          block_title: b.label,
-          display_order: b.sortOrder,
-          is_enabled: b.enabled,
-          content: b.contentData,
-          updated_at: new Date().toISOString(),
-        },
-        { onConflict: 'block_key' }
-      );
+      const payload: Record<string, unknown> = {
+        block_type: b.type,
+        block_key: b.type,
+        block_title: b.label,
+        sort_order: b.sortOrder,
+        display_order: b.sortOrder,
+        enabled: b.enabled,
+        is_enabled: b.enabled,
+        content_data: b.contentData,
+        content: b.contentData,
+        updated_at: new Date().toISOString(),
+      };
+
+      const currentPayload = { ...payload };
+      for (let attempt = 0; attempt < 5; attempt++) {
+        const { error: upsertError } = await supabase
+          .from('homepage_blocks')
+          .upsert(currentPayload);
+
+        if (!upsertError) break;
+
+        const match = upsertError.message.match(/Could not find the '(.*?)' column/i);
+        if (match && match[1] && currentPayload[match[1]] !== undefined) {
+          delete currentPayload[match[1]];
+          continue;
+        }
+        break;
+      }
     }
 
     // 4. Trigger publish entity revision & Cloudflare Deploy Hook
