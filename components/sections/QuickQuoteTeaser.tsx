@@ -7,11 +7,19 @@ import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
 
-export const QuickQuoteTeaser: React.FC = () => {
+export interface QuickQuoteTeaserProps {
+  blockData?: Record<string, unknown>;
+}
+
+export const QuickQuoteTeaser: React.FC<QuickQuoteTeaserProps> = ({ blockData }) => {
   const router = useRouter();
   const [origin, setOrigin] = useState('lahore');
   const [destination, setDestination] = useState('uk');
   const [cargo, setCargo] = useState('air_freight');
+
+  const title = (blockData?.section_title as string) || (blockData?.title as string) || 'Quick Rate & Route Inquiry';
+  const subtitle =
+    (blockData?.subtitle as string) || 'Select shipment parameters to initiate a quote request';
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,8 +36,8 @@ export const QuickQuoteTeaser: React.FC = () => {
                 <Calculator className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-heading-sm font-bold text-white">Quick Rate & Route Inquiry</h2>
-                <p className="text-xs text-slate-400 font-mono">Select shipment parameters to initiate a quote request</p>
+                <h2 className="text-heading-sm font-bold text-white">{title}</h2>
+                <p className="text-xs text-slate-400 font-mono">{subtitle}</p>
               </div>
             </div>
             <span className="text-xs font-mono text-slate-400">Direct Route Entry</span>

@@ -8,14 +8,36 @@ import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
 
-export const ServicesOverview: React.FC = () => {
+export interface ServicesOverviewProps {
+  blockData?: Record<string, unknown>;
+}
+
+export const ServicesOverview: React.FC<ServicesOverviewProps> = ({ blockData }) => {
+  const badge = (blockData?.badge as string) || 'Core Services';
+  const title = (blockData?.title as string) || 'Air & Sea Cargo Delivery';
+  const subtitle =
+    (blockData?.subtitle as string) ||
+    'Fast air cargo and economical ocean sea cargo delivery with complete door-to-door options from Pakistan.';
+
+  const airTitle = (blockData?.air_cargo_title as string) || 'AIR CARGO';
+  const airDesc =
+    (blockData?.air_cargo_description as string) ||
+    'Cargo shipping by air with door-to-door delivery options. Time-critical air dispatches for commercial shipments, boxes, and urgent international cargo.';
+  const airImage = (blockData?.air_cargo_image as string) || IMAGE_SLOTS.serviceAir.src;
+
+  const seaTitle = (blockData?.sea_cargo_title as string) || 'SEA CARGO';
+  const seaDesc =
+    (blockData?.sea_cargo_description as string) ||
+    'Cargo shipping by sea with door-to-door delivery from pickup to destination. Economical ocean container shipping (FCL/LCL) for heavy and large goods.';
+  const seaImage = (blockData?.sea_cargo_image as string) || IMAGE_SLOTS.serviceSea.src;
+
   return (
     <section className="w-full bg-brand-navy py-20 lg:py-28 border-b border-border-dark text-white">
       <Container>
         <SectionHeading
-          badge="Core Services"
-          title="Air & Sea Cargo Delivery"
-          subtitle="Fast air cargo and economical ocean sea cargo delivery with complete door-to-door options from Pakistan."
+          badge={badge}
+          title={title}
+          subtitle={subtitle}
           className="mb-14 [&_h2]:text-white [&_p]:text-slate-300"
           badgeVariant="outline-dark"
         />
@@ -32,18 +54,16 @@ export const ServicesOverview: React.FC = () => {
 
               <div className="space-y-3">
                 <h3 className="text-display-sm font-bold text-white group-hover:text-accent transition-colors">
-                  AIR CARGO
+                  {airTitle}
                 </h3>
-                <p className="text-body-md text-slate-300 leading-relaxed">
-                  Cargo shipping by air with door-to-door delivery options. Time-critical air dispatches for commercial shipments, boxes, and urgent international cargo.
-                </p>
+                <p className="text-body-md text-slate-300 leading-relaxed">{airDesc}</p>
               </div>
 
               {/* Service Photo Anchor */}
               <div className="relative aspect-[16/9] rounded-md overflow-hidden bg-brand-black border border-border-dark mt-4">
                 <Image
-                  src={IMAGE_SLOTS.serviceAir.src}
-                  alt="Air Cargo Delivery Services"
+                  src={airImage}
+                  alt={`${airTitle} Delivery Services`}
                   fill
                   sizes="(max-width: 768px) 100vw, 600px"
                   className="object-cover object-center group-hover:scale-102 transition-transform duration-500"
@@ -76,18 +96,16 @@ export const ServicesOverview: React.FC = () => {
 
               <div className="space-y-3">
                 <h3 className="text-display-sm font-bold text-white group-hover:text-accent transition-colors">
-                  SEA CARGO
+                  {seaTitle}
                 </h3>
-                <p className="text-body-md text-slate-300 leading-relaxed">
-                  Cargo shipping by sea with door-to-door delivery from pickup to destination. Economical ocean container shipping (FCL/LCL) for heavy and large goods.
-                </p>
+                <p className="text-body-md text-slate-300 leading-relaxed">{seaDesc}</p>
               </div>
 
               {/* Service Photo Anchor */}
               <div className="relative aspect-[16/9] rounded-md overflow-hidden bg-brand-black border border-border-dark mt-4">
                 <Image
-                  src={IMAGE_SLOTS.serviceSea.src}
-                  alt="Sea Cargo Delivery Services"
+                  src={seaImage}
+                  alt={`${seaTitle} Delivery Services`}
                   fill
                   sizes="(max-width: 768px) 100vw, 600px"
                   className="object-cover object-center group-hover:scale-102 transition-transform duration-500"

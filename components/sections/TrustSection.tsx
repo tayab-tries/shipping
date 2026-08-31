@@ -2,7 +2,17 @@ import React from 'react';
 import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 
-export const TrustSection: React.FC = () => {
+export interface TrustSectionProps {
+  blockData?: Record<string, unknown>;
+}
+
+export const TrustSection: React.FC<TrustSectionProps> = ({ blockData }) => {
+  const badge = (blockData?.badge as string) || 'Operational Standards';
+  const title = (blockData?.title as string) || 'Verified Cargo Standards & Compliance';
+  const subtitle =
+    (blockData?.subtitle as string) ||
+    'Operational capabilities for international air and sea cargo export shipments.';
+
   const credentials = [
     {
       category: 'CUSTOMS & DECLARATION',
@@ -24,12 +34,7 @@ export const TrustSection: React.FC = () => {
   return (
     <section className="w-full bg-surface-subtle py-20 lg:py-28 border-b border-border text-brand-black">
       <Container>
-        <SectionHeading
-          badge="Operational Standards"
-          title="Verified Cargo Standards & Compliance"
-          subtitle="Operational capabilities for international air and sea cargo export shipments."
-          className="mb-14"
-        />
+        <SectionHeading badge={badge} title={title} subtitle={subtitle} className="mb-14" />
 
         {/* Evidence List */}
         <div className="bg-surface rounded-md border border-border divide-y divide-border shadow-xs overflow-hidden">

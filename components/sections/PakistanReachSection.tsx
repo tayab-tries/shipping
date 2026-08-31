@@ -6,7 +6,17 @@ import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
 
-export const PakistanReachSection: React.FC = () => {
+export interface PakistanReachSectionProps {
+  blockData?: Record<string, unknown>;
+}
+
+export const PakistanReachSection: React.FC<PakistanReachSectionProps> = ({ blockData }) => {
+  const badge = (blockData?.badge as string) || 'Pakistan Origin Coverage';
+  const title = (blockData?.title as string) || 'Origin Cargo Pickup Across Pakistan';
+  const subtitle =
+    (blockData?.subtitle as string) ||
+    'Doorstep collection and export cargo dispatch operating across primary commercial cities.';
+
   const verifiedCities = [
     { name: 'Lahore', slug: 'lahore' },
     { name: 'Karachi', slug: 'karachi' },
@@ -22,13 +32,13 @@ export const PakistanReachSection: React.FC = () => {
     <section className="w-full bg-brand-black py-20 lg:py-28 border-b border-border-dark text-white">
       <Container>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Left Column: Large Editorial Statement & Logistics Image (Col-span-6) */}
+          {/* Left Column: Editorial Statement & Image */}
           <div className="lg:col-span-6 space-y-6">
             <SectionHeading
-              badge="Pakistan Origin Coverage"
+              badge={badge}
               badgeVariant="outline-dark"
-              title="Origin Cargo Pickup Across Pakistan"
-              subtitle="Doorstep collection and export cargo dispatch operating across primary commercial cities."
+              title={title}
+              subtitle={subtitle}
               className="[&_h2]:text-white [&_p]:text-slate-300"
             />
             <p className="text-body-md text-slate-300 leading-relaxed font-normal">
@@ -50,7 +60,7 @@ export const PakistanReachSection: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column: Clean City List with Row Dividers (Col-span-6) */}
+          {/* Right Column: Clean City List */}
           <div className="lg:col-span-6 bg-brand-navy/60 border border-border-dark rounded-md p-6 lg:p-8 space-y-6">
             <div className="flex items-center justify-between border-b border-border-dark pb-4">
               <span className="text-xs font-mono font-semibold uppercase text-slate-300 tracking-wider">
@@ -59,7 +69,6 @@ export const PakistanReachSection: React.FC = () => {
               <span className="text-xs font-mono text-slate-400">Scheduled Dispatch</span>
             </div>
 
-            {/* List with Dividers (Not heavy cards) */}
             <div className="divide-y divide-border-dark">
               {verifiedCities.map((city) => (
                 <Link

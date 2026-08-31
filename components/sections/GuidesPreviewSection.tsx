@@ -7,7 +7,17 @@ import { SectionHeading } from '@/components/ui/SectionHeading';
 import { Badge } from '@/components/ui/Badge';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
 
-export const GuidesPreviewSection: React.FC = () => {
+export interface GuidesPreviewSectionProps {
+  blockData?: Record<string, unknown>;
+}
+
+export const GuidesPreviewSection: React.FC<GuidesPreviewSectionProps> = ({ blockData }) => {
+  const badge = (blockData?.badge as string) || 'Resources & Knowledge';
+  const title = (blockData?.title as string) || 'Cargo & Export Educational Guides';
+  const subtitle =
+    (blockData?.subtitle as string) ||
+    'Practical guidance on packaging standards, export documentation rules, and transit mode selection.';
+
   const guides = [
     {
       slug: 'air-vs-sea-cargo',
@@ -41,16 +51,11 @@ export const GuidesPreviewSection: React.FC = () => {
   return (
     <section className="w-full bg-surface-subtle py-20 lg:py-28 border-b border-border text-brand-black">
       <Container>
-        <SectionHeading
-          badge="Resources & Knowledge"
-          title="Cargo & Export Educational Guides"
-          subtitle="Practical guidance on packaging standards, export documentation rules, and transit mode selection."
-          className="mb-14"
-        />
+        <SectionHeading badge={badge} title={title} subtitle={subtitle} className="mb-14" />
 
         {/* 1 Dominant Featured Article + 2 Editorial Supporting Rows */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
-          {/* Dominant Featured Article (Col-span-7) */}
+          {/* Dominant Featured Article */}
           {featured && (
             <div className="lg:col-span-7 bg-surface rounded-md border border-border overflow-hidden p-8 flex flex-col justify-between space-y-6 group hover:border-accent transition-colors shadow-xs">
               <div className="space-y-4">
@@ -66,9 +71,7 @@ export const GuidesPreviewSection: React.FC = () => {
                   <Link href={`/guides/${featured.slug}`}>{featured.title}</Link>
                 </h3>
 
-                <p className="text-body-md text-slate-600 leading-relaxed font-normal">
-                  {featured.excerpt}
-                </p>
+                <p className="text-body-md text-slate-600 leading-relaxed font-normal">{featured.excerpt}</p>
 
                 {/* Featured Photo Slot */}
                 <div className="relative aspect-[16/9] rounded-md overflow-hidden bg-brand-black-deep mt-4 border border-border">
@@ -95,7 +98,7 @@ export const GuidesPreviewSection: React.FC = () => {
             </div>
           )}
 
-          {/* Supporting Articles as Clean Rows with Dividers (Col-span-5) */}
+          {/* Supporting Articles */}
           <div className="lg:col-span-5 bg-surface rounded-md border border-border p-8 flex flex-col justify-between divide-y divide-border shadow-xs">
             <div className="text-xs font-mono font-semibold uppercase text-slate-400 tracking-wider pb-4">
               Supporting Guides & Documentation
@@ -115,9 +118,7 @@ export const GuidesPreviewSection: React.FC = () => {
                   <Link href={`/guides/${guide.slug}`}>{guide.title}</Link>
                 </h3>
 
-                <p className="text-body-sm text-slate-600 leading-relaxed line-clamp-2">
-                  {guide.excerpt}
-                </p>
+                <p className="text-body-sm text-slate-600 leading-relaxed line-clamp-2">{guide.excerpt}</p>
 
                 <div className="pt-1">
                   <Link

@@ -9,39 +9,42 @@ import { TrustSection } from '@/components/sections/TrustSection';
 import { GuidesPreviewSection } from '@/components/sections/GuidesPreviewSection';
 import { FaqSection } from '@/components/sections/FaqSection';
 import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
+import { getPublishedHomepageBlocks } from '@/lib/cms/homepage.service';
 
-export default function HomePage() {
+export default async function HomePage() {
+  const blocks = await getPublishedHomepageBlocks();
+
   return (
     <div className="w-full">
       {/* 01. HERO */}
-      <HeroSection />
+      {blocks.hero?.enabled && <HeroSection blockData={blocks.hero.contentData} />}
 
       {/* 02. QUICK QUOTE / ENTRY ACTION */}
-      <QuickQuoteTeaser />
+      {blocks.quick_quote?.enabled && <QuickQuoteTeaser blockData={blocks.quick_quote.contentData} />}
 
       {/* 03. CORE SERVICES */}
-      <ServicesOverview />
+      {blocks.services?.enabled && <ServicesOverview blockData={blocks.services.contentData} />}
 
       {/* 04. PAKISTAN NETWORK */}
-      <PakistanReachSection />
+      {blocks.locations?.enabled && <PakistanReachSection blockData={blocks.locations.contentData} />}
 
       {/* 05. INTERNATIONAL DESTINATIONS */}
-      <DestinationShowcase />
+      {blocks.destinations?.enabled && <DestinationShowcase blockData={blocks.destinations.contentData} />}
 
       {/* 06. PROCESS */}
-      <ProcessSection />
+      {blocks.process?.enabled && <ProcessSection blockData={blocks.process.contentData} />}
 
       {/* 07. TRUST / CREDENTIALS */}
-      <TrustSection />
+      {blocks.trust?.enabled && <TrustSection blockData={blocks.trust.contentData} />}
 
       {/* 08. GUIDES / RESOURCES */}
-      <GuidesPreviewSection />
+      {blocks.guides?.enabled && <GuidesPreviewSection blockData={blocks.guides.contentData} />}
 
       {/* 09. FAQ */}
-      <FaqSection />
+      {blocks.faq?.enabled && <FaqSection blockData={blocks.faq.contentData} />}
 
       {/* 10. FINAL CTA */}
-      <FinalCtaSection />
+      {blocks.cta?.enabled && <FinalCtaSection blockData={blocks.cta.contentData} />}
     </div>
   );
 }

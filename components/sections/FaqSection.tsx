@@ -12,9 +12,16 @@ export interface FaqItem {
 
 interface FaqSectionProps {
   faqs?: FaqItem[];
+  blockData?: Record<string, unknown>;
 }
 
-export const FaqSection: React.FC<FaqSectionProps> = ({ faqs }) => {
+export const FaqSection: React.FC<FaqSectionProps> = ({ faqs, blockData }) => {
+  const badge = (blockData?.badge as string) || 'Frequently Asked Questions';
+  const title = (blockData?.title as string) || 'Common Questions About International Cargo';
+  const subtitle =
+    (blockData?.subtitle as string) ||
+    'Answers regarding cargo pickup, volumetric weight billing, and commercial customs documentation.';
+
   const defaultFaqs: FaqItem[] = [
     {
       question: 'How is volumetric weight calculated for air freight shipments?',
@@ -41,14 +48,13 @@ export const FaqSection: React.FC<FaqSectionProps> = ({ faqs }) => {
     <section className="w-full bg-surface py-20 lg:py-28 border-b border-border text-brand-black">
       <Container size="narrow">
         <SectionHeading
-          badge="Frequently Asked Questions"
-          title="Common Questions About International Cargo"
-          subtitle="Answers regarding cargo pickup, volumetric weight billing, and commercial customs documentation."
+          badge={badge}
+          title={title}
+          subtitle={subtitle}
           className="mb-14 text-center mx-auto"
           align="center"
         />
 
-        {/* Clean Editorial List with Horizontal Dividers (Not separate rounded cards) */}
         <div className="border-t border-border divide-y divide-border">
           {items.map((faq, idx) => {
             const isOpen = openIndex === idx;

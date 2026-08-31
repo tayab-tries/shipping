@@ -4,7 +4,17 @@ import { ArrowRight, Globe } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 
-export const DestinationShowcase: React.FC = () => {
+export interface DestinationShowcaseProps {
+  blockData?: Record<string, unknown>;
+}
+
+export const DestinationShowcase: React.FC<DestinationShowcaseProps> = ({ blockData }) => {
+  const badge = (blockData?.badge as string) || 'Trade Corridors';
+  const title = (blockData?.title as string) || 'Direct International Cargo Routes';
+  const subtitle =
+    (blockData?.subtitle as string) ||
+    'Cargo delivery routes connecting Pakistan export hubs with destination markets worldwide.';
+
   const corridors = [
     { country: 'United Kingdom', code: 'uk', hub: 'London (LHR / LGW)', mode: 'Air & Sea Cargo' },
     { country: 'United Arab Emirates', code: 'uae', hub: 'Dubai (DXB / DWC)', mode: 'Express & Door-to-Door' },
@@ -16,12 +26,7 @@ export const DestinationShowcase: React.FC = () => {
   return (
     <section className="w-full bg-surface-subtle py-20 lg:py-28 border-b border-border text-brand-black">
       <Container>
-        <SectionHeading
-          badge="Trade Corridors"
-          title="Direct International Cargo Routes"
-          subtitle="Cargo delivery routes connecting Pakistan export hubs with destination markets worldwide."
-          className="mb-14"
-        />
+        <SectionHeading badge={badge} title={title} subtitle={subtitle} className="mb-14" />
 
         {/* Trade Corridor Route Rows */}
         <div className="bg-surface rounded-md border border-border divide-y divide-border shadow-xs overflow-hidden">

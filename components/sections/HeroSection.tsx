@@ -6,21 +6,45 @@ import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
 
-export const HeroSection: React.FC = () => {
+export interface HeroSectionProps {
+  blockData?: Record<string, unknown>;
+}
+
+export const HeroSection: React.FC<HeroSectionProps> = ({ blockData }) => {
+  const eyebrow = (blockData?.eyebrow as string) || 'AIR & SEA CARGO DELIVERY';
+  const headline = (blockData?.headline as string) || 'SEND CARGO. WE HANDLE THE REST.';
+  const supportingCopy =
+    (blockData?.supporting_copy as string) ||
+    'Door-to-door cargo delivery by air and sea, from Pakistan to destinations around the world.';
+  const primaryCtaLabel = (blockData?.primary_cta_label as string) || 'Get a Shipping Quote';
+  const primaryCtaHref = (blockData?.primary_cta_href as string) || '/quote';
+  const secondaryCtaLabel = (blockData?.secondary_cta_label as string) || 'Track Shipment';
+  const secondaryCtaHref = (blockData?.secondary_cta_href as string) || '/track';
+  const capabilityLine =
+    (blockData?.capability_line as string) || 'AIR CARGO • SEA CARGO • DOOR-TO-DOOR • CUSTOMS CLEARANCE';
+  const bgImage = (blockData?.background_image as string) || IMAGE_SLOTS.heroBackground.src;
+  const imageAlt = (blockData?.image_alt_text as string) || IMAGE_SLOTS.heroBackground.alt;
+
+  // Split capability line items cleanly by bullet or pipe
+  const capabilities = capabilityLine
+    .split(/•|\|/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+
   return (
     <section className="relative min-h-[680px] sm:min-h-[75vh] lg:min-h-[78vh] max-h-[90vh] w-full overflow-hidden bg-brand-black flex flex-col justify-center border-b border-border-dark">
-      {/* 1. Full-Bleed Background Image & Layout Fallback Container */}
+      {/* 1. Full-Bleed Background Image */}
       <div className="absolute inset-0 z-0 bg-brand-black-deep">
         <Image
-          src={IMAGE_SLOTS.heroBackground.src}
-          alt={IMAGE_SLOTS.heroBackground.alt}
+          src={bgImage}
+          alt={imageAlt}
           fill
           priority
           sizes="(max-width: 768px) 100vw, 100vw"
           className="object-cover object-[65%_center] lg:object-[center_right] opacity-80"
         />
 
-        {/* 2. Directional Gradient Overlay — Desktop (90deg linear gradient) */}
+        {/* 2. Directional Gradient Overlay — Desktop */}
         <div
           className="absolute inset-0 z-10 pointer-events-none hidden md:block"
           style={{
@@ -35,7 +59,7 @@ export const HeroSection: React.FC = () => {
           }}
         />
 
-        {/* 3. Directional Gradient Overlay — Mobile (180deg vertical gradient) */}
+        {/* 3. Directional Gradient Overlay — Mobile */}
         <div
           className="absolute inset-0 z-10 pointer-events-none md:hidden"
           style={{
@@ -48,7 +72,7 @@ export const HeroSection: React.FC = () => {
           }}
         />
 
-        {/* 4. Dotted Route Line + Moving Cargo Aircraft */}
+        {/* 4. Dotted Route Line + Moving Cargo Aircraft (Technical Animated SVG) */}
         <svg
           className="absolute inset-0 w-full h-full text-accent pointer-events-none z-10 overflow-hidden"
           xmlns="http://www.w3.org/2000/svg"
@@ -73,73 +97,73 @@ export const HeroSection: React.FC = () => {
                 fill="currentColor"
               />
             </g>
-            <animateMotion
-              dur="20s"
-              repeatCount="indefinite"
-              rotate="auto"
-              calcMode="linear"
-            >
+            <animateMotion dur="20s" repeatCount="indefinite" rotate="auto" calcMode="linear">
               <mpath href="#freight-hero-route" />
             </animateMotion>
           </g>
         </svg>
       </div>
 
-      {/* 5. Hero Content Stack Layered ABOVE Image & Route (relative z-20) */}
+      {/* 5. Hero Content Stack Layered ABOVE Image */}
       <Container className="relative z-20 py-16 lg:py-24">
         <div className="w-full lg:w-[58%] max-w-[700px] space-y-6">
-          {/* Compact Eyebrow */}
+          {/* Eyebrow */}
           <div className="flex items-center gap-2">
             <span className="text-[12px] font-semibold uppercase tracking-[0.08em] px-3 py-1 bg-brand-navy/80 text-slate-200 border border-border-dark rounded-xs">
-              AIR & SEA CARGO DELIVERY
+              {eyebrow}
             </span>
           </div>
 
           {/* Headline */}
           <h1 className="text-[40px] sm:text-[56px] lg:text-[68px] font-extrabold tracking-tight text-white leading-[0.98] max-w-[700px]">
-            <span>SEND CARGO.</span> <br />
-            <span className="text-accent">WE HANDLE THE REST.</span>
+            {headline.includes('.') ? (
+              <>
+                <span>{headline.split('.')[0]}.</span> <br />
+                <span className="text-accent">{headline.split('.').slice(1).join('.').trim()}</span>
+              </>
+            ) : (
+              <span>{headline}</span>
+            )}
           </h1>
 
           {/* Supporting Copy */}
           <p className="text-[16px] sm:text-[18px] text-slate-300 leading-[1.6] font-normal max-w-[620px]">
-            Door-to-door cargo delivery by air and sea, from Pakistan to destinations around the world.
+            {supportingCopy}
           </p>
 
           {/* Dual CTAs */}
           <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-[12px]">
-            <Link href="/quote">
+            <Link href={primaryCtaHref}>
               <Button
                 variant="accent"
                 size="lg"
                 className="w-full sm:w-auto h-[46px] min-w-[200px]"
                 rightIcon={<ArrowRight className="w-4 h-4 text-brand-black shrink-0" />}
               >
-                Get a Shipping Quote
+                {primaryCtaLabel}
               </Button>
             </Link>
 
-            <Link href="/track">
+            <Link href={secondaryCtaHref}>
               <Button
                 variant="outline-dark"
                 size="lg"
                 className="w-full sm:w-auto h-[46px] min-w-[160px]"
                 leftIcon={<Search className="w-4 h-4 text-slate-300 shrink-0" />}
               >
-                Track Shipment
+                {secondaryCtaLabel}
               </Button>
             </Link>
           </div>
 
-          {/* Capability Micro Line */}
+          {/* Capability Bullets */}
           <div className="pt-6 mt-5 border-t border-border-dark/80 flex flex-wrap items-center gap-2 sm:gap-4 text-[12px] font-mono uppercase tracking-[0.08em] text-slate-400">
-            <span>AIR CARGO</span>
-            <span className="text-accent">•</span>
-            <span>SEA CARGO</span>
-            <span className="text-accent">•</span>
-            <span>DOOR-TO-DOOR</span>
-            <span className="text-accent">•</span>
-            <span>CUSTOMS CLEARANCE</span>
+            {capabilities.map((item, idx) => (
+              <React.Fragment key={idx}>
+                {idx > 0 && <span className="text-accent">•</span>}
+                <span>{item}</span>
+              </React.Fragment>
+            ))}
           </div>
         </div>
       </Container>
