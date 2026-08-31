@@ -8,10 +8,16 @@ import { navConfig, primaryCta } from '@/config/nav.config';
 import { siteConfig } from '@/config/site.config';
 import { Button } from '@/components/ui/Button';
 
-export const MobileNav: React.FC = () => {
+interface MobileNavProps {
+  brandName?: string;
+  phone?: string;
+}
+
+export const MobileNav: React.FC<MobileNavProps> = ({ brandName: propBrand, phone: propPhone }) => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
-  const phone = siteConfig.phone || '+92 300 1234567';
+  const brandName = propBrand || siteConfig.name;
+  const phone = propPhone || siteConfig.phone || '+92 300 1234567';
 
   const closeMenu = () => setIsOpen(false);
 
@@ -44,7 +50,7 @@ export const MobileNav: React.FC = () => {
           <div className="flex items-center justify-between border-b border-border-dark pb-4">
             <Link href="/" onClick={closeMenu} className="flex items-center gap-2 font-bold text-lg text-white">
               <Package className="w-5 h-5 text-accent" />
-              <span>{siteConfig.name}</span>
+              <span>{brandName}</span>
             </Link>
             <Button
               variant="ghost-dark"

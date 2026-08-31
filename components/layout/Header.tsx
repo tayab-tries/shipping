@@ -8,8 +8,12 @@ import { Button } from '@/components/ui/Button';
 import { TopBar } from './TopBar';
 import { DesktopNav } from './DesktopNav';
 import { MobileNav } from './MobileNav';
+import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
 
-export const Header: React.FC = () => {
+export const Header = async () => {
+  const business = await getPublishedBusinessSettings();
+  const brandName = business.brandName || siteConfig.name;
+
   return (
     <header className="w-full bg-brand-black/95 backdrop-blur-md border-b border-border-dark sticky top-0 z-40">
       <TopBar />
@@ -22,7 +26,7 @@ export const Header: React.FC = () => {
               className="flex items-center gap-2.5 font-bold text-xl tracking-tight text-white hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-xs"
             >
               <Package className="w-6 h-6 text-accent shrink-0" />
-              <span>{siteConfig.name}</span>
+              <span>{brandName}</span>
             </Link>
 
             {/* Desktop Navigation */}
@@ -42,7 +46,7 @@ export const Header: React.FC = () => {
                 </Button>
               </Link>
             </div>
-            <MobileNav />
+            <MobileNav brandName={brandName} phone={business.phonePrimary} />
           </div>
         </div>
       </Container>
