@@ -22,6 +22,14 @@ export function constructMetadata({
   return {
     title: fullTitle,
     description,
+    icons: {
+      icon: [
+        { url: '/favicon.ico' },
+        { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+        { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      ],
+      apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
+    },
     alternates: {
       canonical: canonicalUrl,
     },
@@ -43,8 +51,6 @@ export function constructMetadata({
       description,
       images: [ogImage.startsWith('http') ? ogImage : `${siteConfig.domain}${ogImage}`],
     },
-    robots: noindex
-      ? { index: false, follow: false }
-      : { index: true, follow: true },
+    robots: noindex ? { index: false, follow: false } : { index: true, follow: true },
   };
 }

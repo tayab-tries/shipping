@@ -19,21 +19,21 @@ export const Header = async () => {
     <header className="w-full bg-brand-black/95 backdrop-blur-md border-b border-border-dark sticky top-0 z-40">
       <TopBar />
       <Container>
-        <div className="flex items-center justify-between h-24 lg:h-28 gap-6">
-          {/* Prominent Large Logo */}
-          <div className="flex items-center gap-8">
+        <div className="flex items-center justify-between h-20 sm:h-24 lg:h-26 gap-4 sm:gap-6">
+          {/* Prominent High-Visibility Raahi International Logo */}
+          <div className="flex items-center gap-6 lg:gap-8">
             <Link
               href="/"
               className="flex items-center hover:opacity-95 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-xs shrink-0 py-1"
               aria-label={`${brandName} Homepage`}
             >
               <Image
-                src="/images/logo.png"
+                src="/images/brand/logo-white.png"
                 alt={`${brandName} Logo`}
-                width={260}
-                height={90}
+                width={240}
+                height={80}
                 priority
-                className="h-16 sm:h-20 lg:h-22 w-auto object-contain max-h-[85px]"
+                className="h-12 sm:h-16 lg:h-18 w-auto object-contain max-h-[72px]"
               />
             </Link>
 
@@ -42,7 +42,7 @@ export const Header = async () => {
           </div>
 
           {/* Primary CTA & Mobile Navigation Controller */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
             <div className="hidden sm:flex items-center gap-3">
               <Link href={primaryCta.href}>
                 <Button

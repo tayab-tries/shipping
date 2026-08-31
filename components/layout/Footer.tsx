@@ -20,11 +20,11 @@ export const Footer = async () => {
           <div className="space-y-4">
             <Link href="/" className="flex items-center">
               <Image
-                src="/images/logo.png"
+                src="/images/brand/logo-white.png"
                 alt={`${brandName} Logo`}
                 width={220}
                 height={66}
-                className="h-14 w-auto object-contain"
+                className="h-12 sm:h-14 w-auto object-contain max-h-[56px]"
               />
             </Link>
             <p className="text-body-sm text-slate-400 leading-relaxed">
