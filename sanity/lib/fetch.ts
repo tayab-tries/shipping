@@ -281,36 +281,36 @@ async function isDraftEnabled(): Promise<boolean> {
   }
 }
 
-export async function getSanitySiteSettingsData(): Promise<SanitySiteSettings | null> {
+export async function getSanitySiteSettingsData(options?: { stega?: boolean }): Promise<SanitySiteSettings | null> {
   if (!isSanityConfigured) return null;
   try {
     const isDraft = await isDraftEnabled();
     const fetchClient = isDraft && readToken ? client.withConfig({ token: readToken }) : client;
-    return await fetchClient.fetch(SITE_SETTINGS_QUERY, {}, { stega: false });
+    return await fetchClient.fetch(SITE_SETTINGS_QUERY, {}, { stega: options?.stega ?? isDraft });
   } catch (error) {
     console.warn('[Sanity] getSanitySiteSettingsData fetch error, using fallbacks:', error);
     return null;
   }
 }
 
-export async function getSanityHomepageData(): Promise<SanityHomepageData | null> {
+export async function getSanityHomepageData(options?: { stega?: boolean }): Promise<SanityHomepageData | null> {
   if (!isSanityConfigured) return null;
   try {
     const isDraft = await isDraftEnabled();
     const fetchClient = isDraft && readToken ? client.withConfig({ token: readToken }) : client;
-    return await fetchClient.fetch(HOMEPAGE_FULL_QUERY, {}, { stega: isDraft });
+    return await fetchClient.fetch(HOMEPAGE_FULL_QUERY, {}, { stega: options?.stega ?? isDraft });
   } catch (error) {
     console.warn('[Sanity] getSanityHomepageData fetch error, using fallbacks:', error);
     return null;
   }
 }
 
-export async function getSanityServicesList(): Promise<SanityServiceDocument[]> {
+export async function getSanityServicesList(options?: { stega?: boolean }): Promise<SanityServiceDocument[]> {
   if (!isSanityConfigured) return [];
   try {
     const isDraft = await isDraftEnabled();
     const fetchClient = isDraft && readToken ? client.withConfig({ token: readToken }) : client;
-    const data = await fetchClient.fetch<SanityServiceDocument[]>(SERVICES_LIST_QUERY, {}, { stega: false });
+    const data = await fetchClient.fetch<SanityServiceDocument[]>(SERVICES_LIST_QUERY, {}, { stega: options?.stega ?? isDraft });
     return data || [];
   } catch (error) {
     console.warn('[Sanity] getSanityServicesList fetch error, using fallbacks:', error);
@@ -330,12 +330,12 @@ export async function getSanityServiceBySlug(slug: string, options?: { stega?: b
   }
 }
 
-export async function getSanityLocationsList(): Promise<SanityLocationDocument[]> {
+export async function getSanityLocationsList(options?: { stega?: boolean }): Promise<SanityLocationDocument[]> {
   if (!isSanityConfigured) return [];
   try {
     const isDraft = await isDraftEnabled();
     const fetchClient = isDraft && readToken ? client.withConfig({ token: readToken }) : client;
-    const data = await fetchClient.fetch<SanityLocationDocument[]>(LOCATIONS_LIST_QUERY, {}, { stega: false });
+    const data = await fetchClient.fetch<SanityLocationDocument[]>(LOCATIONS_LIST_QUERY, {}, { stega: options?.stega ?? isDraft });
     return data || [];
   } catch (error) {
     console.warn('[Sanity] getSanityLocationsList fetch error, using fallbacks:', error);
@@ -355,12 +355,12 @@ export async function getSanityLocationBySlug(slug: string, options?: { stega?: 
   }
 }
 
-export async function getSanityDestinationsList(): Promise<SanityDestinationCountryDocument[]> {
+export async function getSanityDestinationsList(options?: { stega?: boolean }): Promise<SanityDestinationCountryDocument[]> {
   if (!isSanityConfigured) return [];
   try {
     const isDraft = await isDraftEnabled();
     const fetchClient = isDraft && readToken ? client.withConfig({ token: readToken }) : client;
-    const data = await fetchClient.fetch<SanityDestinationCountryDocument[]>(DESTINATIONS_LIST_QUERY, {}, { stega: false });
+    const data = await fetchClient.fetch<SanityDestinationCountryDocument[]>(DESTINATIONS_LIST_QUERY, {}, { stega: options?.stega ?? isDraft });
     return data || [];
   } catch (error) {
     console.warn('[Sanity] getSanityDestinationsList fetch error, using fallbacks:', error);
@@ -400,12 +400,12 @@ export async function getSanityDestinationCityBySlugs(
   }
 }
 
-export async function getSanityGuidesList(): Promise<SanityGuideDocument[]> {
+export async function getSanityGuidesList(options?: { stega?: boolean }): Promise<SanityGuideDocument[]> {
   if (!isSanityConfigured) return [];
   try {
     const isDraft = await isDraftEnabled();
     const fetchClient = isDraft && readToken ? client.withConfig({ token: readToken }) : client;
-    const data = await fetchClient.fetch<SanityGuideDocument[]>(GUIDES_LIST_QUERY, {}, { stega: false });
+    const data = await fetchClient.fetch<SanityGuideDocument[]>(GUIDES_LIST_QUERY, {}, { stega: options?.stega ?? isDraft });
     return data || [];
   } catch (error) {
     console.warn('[Sanity] getSanityGuidesList fetch error, using fallbacks:', error);

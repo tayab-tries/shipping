@@ -20,8 +20,8 @@ import { getSanityHomepageData, getSanitySiteSettingsData } from '@/sanity/lib/f
 
 export async function generateMetadata(): Promise<Metadata> {
   const [sanityHomepage, sanitySiteSettings] = await Promise.all([
-    getSanityHomepageData(),
-    getSanitySiteSettingsData(),
+    getSanityHomepageData({ stega: false }),
+    getSanitySiteSettingsData({ stega: false }),
   ]);
 
   const title =
