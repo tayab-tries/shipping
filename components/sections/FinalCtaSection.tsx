@@ -3,16 +3,18 @@ import Link from 'next/link';
 import { ArrowRight, MessageSquare } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
-import { siteConfig } from '@/config/site.config';
+import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
 
 export interface FinalCtaSectionProps {
   blockData?: Record<string, unknown>;
+  whatsappNumber?: string;
 }
 
-export const FinalCtaSection: React.FC<FinalCtaSectionProps> = ({ blockData }) => {
-  const whatsappNumber = (siteConfig.contact?.whatsappNumber || '923001234567').replace(/[^0-9]/g, '');
-  const whatsappMessage = encodeURIComponent('Assalam o Alaikum, I want to send cargo from Pakistan. Please give me a quote.');
-  const defaultWhatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+export const FinalCtaSection: React.FC<FinalCtaSectionProps> = ({ blockData, whatsappNumber }) => {
+  const defaultWhatsappUrl = buildWhatsappUrl(
+    whatsappNumber,
+    'Assalam o Alaikum, I want to send cargo from Pakistan. Please give me a quote.'
+  );
 
   const eyebrow = (blockData?.eyebrow as string) || (blockData?.badge as string) || 'Door-to-Door Delivery';
   const headline = (blockData?.headline as string) || (blockData?.title as string) || 'Ready to send cargo from Pakistan?';
@@ -24,9 +26,15 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = ({ blockData }) =
     (blockData?.primary_cta_label as string) || (blockData?.button_text as string) || 'GET A QUOTE';
   const primaryCtaHref = (blockData?.primary_cta_href as string) || (blockData?.button_href as string) || '/quote';
   const secondaryCtaLabel = (blockData?.secondary_cta_label as string) || 'WHATSAPP US';
-  const secondaryCtaHref = (blockData?.secondary_cta_href as string) || defaultWhatsappUrl;
 
-  const isWhatsapp = secondaryCtaHref.includes('wa.me') || secondaryCtaHref.includes('whatsapp');
+  let rawSecondaryHref = (blockData?.secondary_cta_href as string) || defaultWhatsappUrl;
+  if (rawSecondaryHref.includes('wa.me') || rawSecondaryHref.includes('whatsapp')) {
+    const messageMatch = rawSecondaryHref.match(/text=([^&]*)/);
+    const customMsg = messageMatch ? decodeURIComponent(messageMatch[1]) : undefined;
+    rawSecondaryHref = buildWhatsappUrl(whatsappNumber, customMsg);
+  }
+
+  const isWhatsapp = rawSecondaryHref.includes('wa.me') || rawSecondaryHref.includes('whatsapp');
 
   return (
     <section className="w-full bg-brand-navy py-16 lg:py-24 border-b border-border-dark text-white text-center">
@@ -50,7 +58,7 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = ({ blockData }) =
               </Button>
             </Link>
             <a
-              href={secondaryCtaHref}
+              href={rawSecondaryHref}
               target={isWhatsapp ? '_blank' : '_self'}
               rel={isWhatsapp ? 'noopener noreferrer' : undefined}
               className="w-full sm:w-auto"

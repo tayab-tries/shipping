@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { ChevronDown, MessageSquare } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
-import { siteConfig } from '@/config/site.config';
+import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
 
 export interface FaqItem {
   question: string;
@@ -14,9 +14,10 @@ export interface FaqItem {
 interface FaqSectionProps {
   faqs?: FaqItem[];
   blockData?: Record<string, unknown>;
+  whatsappNumber?: string;
 }
 
-export const FaqSection: React.FC<FaqSectionProps> = ({ faqs, blockData }) => {
+export const FaqSection: React.FC<FaqSectionProps> = ({ faqs, blockData, whatsappNumber }) => {
   const badge = (blockData?.badge as string) || 'FAQ';
   const title = (blockData?.title as string) || 'Frequently Asked Questions';
   const subtitle =
@@ -69,9 +70,10 @@ export const FaqSection: React.FC<FaqSectionProps> = ({ faqs, blockData }) => {
   const items = faqs && faqs.length > 0 ? faqs : defaultFaqs;
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
-  const whatsappNumber = (siteConfig.contact?.whatsappNumber || '923001234567').replace(/[^0-9]/g, '');
-  const whatsappMessage = encodeURIComponent('Assalam o Alaikum, I want to send cargo from Pakistan. Please give me a quote.');
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+  const whatsappUrl = buildWhatsappUrl(
+    whatsappNumber,
+    'Assalam o Alaikum, I want to send cargo from Pakistan. Please give me a quote.'
+  );
 
   return (
     <section className="w-full bg-surface py-16 lg:py-24 border-b border-border text-brand-black">

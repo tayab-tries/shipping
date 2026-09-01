@@ -54,7 +54,11 @@ export const Header = async () => {
                 </Button>
               </Link>
             </div>
-            <MobileNav brandName={brandName} phone={business.phonePrimary} />
+            <MobileNav
+              brandName={brandName}
+              phone={business.phonePrimary}
+              whatsappNumber={business.whatsappNumber}
+            />
           </div>
         </div>
       </Container>

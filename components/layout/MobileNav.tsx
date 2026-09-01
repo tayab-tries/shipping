@@ -5,23 +5,27 @@ import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Menu, X, ArrowRight, Search, Phone } from 'lucide-react';
+import { Menu, X, ArrowRight, Search, Phone, MessageSquare } from 'lucide-react';
 import { navConfig, primaryCta } from '@/config/nav.config';
 import { siteConfig } from '@/config/site.config';
 import { Button } from '@/components/ui/Button';
+import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
 
 interface MobileNavProps {
   brandName?: string;
   phone?: string;
+  whatsappNumber?: string;
 }
 
 const emptySubscribe = () => () => {};
 
-export const MobileNav: React.FC<MobileNavProps> = ({ brandName: propBrand, phone: propPhone }) => {
+export const MobileNav: React.FC<MobileNavProps> = ({ brandName: propBrand, phone: propPhone, whatsappNumber: propWhatsapp }) => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const brandName = propBrand || siteConfig.name;
   const phone = propPhone || siteConfig.phone || '+92 300 1234567';
+  const whatsappNumber = propWhatsapp || phone;
+  const whatsappUrl = buildWhatsappUrl(whatsappNumber);
 
   // React 19 hydration safe mount check without setState in useEffect
   const isHydrated = useSyncExternalStore(
@@ -111,7 +115,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({ brandName: propBrand, phon
         </div>
 
         {/* Full-Screen Drawer Footer Actions */}
-        <div className="p-6 border-t border-border-dark space-y-4 shrink-0 bg-brand-navy/30">
+        <div className="p-6 border-t border-border-dark space-y-3 shrink-0 bg-brand-navy/30">
           <Link href={primaryCta.href} onClick={closeMenu} className="block w-full">
             <Button
               variant="accent"
@@ -122,6 +126,22 @@ export const MobileNav: React.FC<MobileNavProps> = ({ brandName: propBrand, phon
               {primaryCta.label}
             </Button>
           </Link>
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={closeMenu}
+            className="block w-full"
+          >
+            <Button
+              variant="outline-dark"
+              size="lg"
+              className="w-full min-h-[48px] text-base font-bold border-emerald-500/50 text-emerald-400 hover:bg-emerald-500/10"
+              leftIcon={<MessageSquare className="w-5 h-5 text-emerald-400 shrink-0 fill-current" />}
+            >
+              WHATSAPP US
+            </Button>
+          </a>
           <Link href="/track" onClick={closeMenu} className="block w-full">
             <Button
               variant="outline-dark"

@@ -14,6 +14,7 @@ export interface QuoteFormControllerProps {
   initialCargo?: string;
   locations?: Array<{ name: string; slug: string }>;
   destinations?: Array<{ name: string; slug: string }>;
+  whatsappNumber?: string;
 }
 
 export const QuoteFormController: React.FC<QuoteFormControllerProps> = ({
@@ -22,6 +23,7 @@ export const QuoteFormController: React.FC<QuoteFormControllerProps> = ({
   initialCargo,
   locations = [],
   destinations = [],
+  whatsappNumber,
 }) => {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -62,30 +64,21 @@ export const QuoteFormController: React.FC<QuoteFormControllerProps> = ({
     }
   };
 
-  const focusFirstInvalidField = (errors: Record<string, string>) => {
-    const firstKey = Object.keys(errors)[0];
-    if (firstKey) {
-      const el = document.getElementById(firstKey);
-      if (el) el.focus();
-    }
-  };
-
   const scrollAndFocusTop = () => {
     if (formContainerRef.current) {
       formContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
-  // Step 1 Validation & Transition
+  // Step 1 Navigation Validation
   const handleStep1Next = () => {
     const errors: Record<string, string> = {};
-    if (!formData.origin_city) errors.origin_city = 'Origin city is required.';
+    if (!formData.origin_city) errors.origin_city = 'Origin city in Pakistan is required.';
     if (!formData.destination_country) errors.destination_country = 'Destination country is required.';
     if (!formData.cargo_type) errors.cargo_type = 'Cargo type is required.';
 
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
-      focusFirstInvalidField(errors);
       return;
     }
 
@@ -95,25 +88,19 @@ export const QuoteFormController: React.FC<QuoteFormControllerProps> = ({
     scrollAndFocusTop();
   };
 
-  // Step 2 Validation & Transition
+  // Step 2 Navigation Validation
   const handleStep2Next = () => {
     const errors: Record<string, string> = {};
     const weightNum = parseFloat(formData.estimated_weight_kg);
-    const countNum = parseInt(formData.package_count, 10);
-
-    if (!formData.estimated_weight_kg || isNaN(weightNum) || weightNum < 0.5) {
-      errors.estimated_weight_kg = 'Estimated weight must be at least 0.5 kg.';
-    }
-    if (!formData.package_count || isNaN(countNum) || countNum < 1) {
-      errors.package_count = 'Package count must be at least 1.';
+    if (isNaN(weightNum) || weightNum <= 0) {
+      errors.estimated_weight_kg = 'Valid cargo weight in kg is required (must be greater than 0).';
     }
     if (!formData.cargo_description || formData.cargo_description.trim().length < 5) {
-      errors.cargo_description = 'Cargo description must be at least 5 characters.';
+      errors.cargo_description = 'Cargo item description must be at least 5 characters.';
     }
 
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
-      focusFirstInvalidField(errors);
       return;
     }
 
@@ -149,23 +136,21 @@ export const QuoteFormController: React.FC<QuoteFormControllerProps> = ({
       source_page: typeof window !== 'undefined' ? window.location.pathname : undefined,
     };
 
-    // Client-side Zod validation pass
-    const parseResult = quoteSubmissionSchema.safeParse(payload);
-    if (!parseResult.success) {
+    // Client-side Zod validation
+    const valResult = quoteSubmissionSchema.safeParse(payload);
+    if (!valResult.success) {
       const formattedErrors: Record<string, string> = {};
-      const fieldErrors = parseResult.error.flatten().fieldErrors;
-      Object.entries(fieldErrors).forEach(([key, messages]) => {
-        if (messages && messages[0]) {
-          formattedErrors[key] = messages[0];
-        }
+      valResult.error.issues.forEach((issue) => {
+        const fieldName = issue.path[0]?.toString() || 'general';
+        formattedErrors[fieldName] = issue.message;
       });
-
       setFieldErrors(formattedErrors);
-      focusFirstInvalidField(formattedErrors);
+      setGlobalError('Please fix the highlighted errors before submitting your quote request.');
       return;
     }
 
     setIsSubmitting(true);
+    setFieldErrors({});
 
     try {
       const res = await fetch('/api/quote', {
@@ -177,15 +162,19 @@ export const QuoteFormController: React.FC<QuoteFormControllerProps> = ({
       const data = await res.json();
 
       if (!res.ok || !data.success) {
-        throw new Error(data.error || 'Failed to submit quote request. Please try again.');
+        if (data.fieldErrors) {
+          setFieldErrors(data.fieldErrors);
+        }
+        setGlobalError(data.error || 'Failed to submit quote request. Please try again.');
+        setIsSubmitting(false);
+        return;
       }
 
-      setQuoteReference(data.quoteReference || 'QTE-REQUEST-RECEIVED');
+      setQuoteReference(data.data.quoteReference);
       setIsSubmitted(true);
       scrollAndFocusTop();
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'An error occurred submitting your quote.';
-      setGlobalError(msg);
+    } catch {
+      setGlobalError('Network communication error. Please check your connection and try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -196,57 +185,49 @@ export const QuoteFormController: React.FC<QuoteFormControllerProps> = ({
   }
 
   return (
-    <div ref={formContainerRef} className="w-full">
-      {/* 65 / 35 Desktop Split (Form vs Supporting Panel) */}
+    <div ref={formContainerRef} className="w-full space-y-8" id="quote-form-container">
+      {/* STEP PROGRESS BAR */}
+      <div className="bg-surface p-4 rounded-md border border-border flex items-center justify-between shadow-2xs">
+        <div className="flex items-center gap-3 text-xs font-mono">
+          <span
+            className={`px-2.5 py-1 rounded font-bold transition-colors ${
+              step === 1 ? 'bg-accent text-brand-black' : 'bg-surface-subtle text-slate-600'
+            }`}
+          >
+            Step 1: Route & Type
+          </span>
+          <span className="text-slate-400">→</span>
+          <span
+            className={`px-2.5 py-1 rounded font-bold transition-colors ${
+              step === 2 ? 'bg-accent text-brand-black' : 'bg-surface-subtle text-slate-600'
+            }`}
+          >
+            Step 2: Cargo Specs
+          </span>
+          <span className="text-slate-400">→</span>
+          <span
+            className={`px-2.5 py-1 rounded font-bold transition-colors ${
+              step === 3 ? 'bg-accent text-brand-black' : 'bg-surface-subtle text-slate-600'
+            }`}
+          >
+            Step 3: Contact Info
+          </span>
+        </div>
+
+        <div className="hidden md:flex items-center gap-1.5 text-xs font-mono text-emerald-600 font-semibold">
+          <ShieldCheck className="w-4 h-4 text-emerald-600" />
+          <span>No Payment Required</span>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
-        {/* MAIN QUOTE FORM CONTAINER (65% = 8 Cols) */}
-        <div className="lg:col-span-8 bg-surface rounded-md border border-border p-6 lg:p-10 shadow-xs">
-          
-          {/* STEP PROGRESS INDICATOR */}
-          <div className="mb-8 border-b border-border pb-6">
-            <div className="grid grid-cols-3 gap-2 text-center text-xs font-mono font-semibold">
-              <div
-                className={`py-2.5 px-3 rounded border transition-colors ${
-                  step === 1
-                    ? 'bg-accent text-brand-black border-accent font-bold'
-                    : step > 1
-                    ? 'bg-surface-subtle text-brand-black border-border'
-                    : 'bg-surface-subtle text-slate-400 border-border'
-                }`}
-              >
-                <span className="block text-[10px] uppercase opacity-70">Step 01</span>
-                <span className="truncate block">Shipment Basics</span>
-              </div>
-
-              <div
-                className={`py-2.5 px-3 rounded border transition-colors ${
-                  step === 2
-                    ? 'bg-accent text-brand-black border-accent font-bold'
-                    : step > 2
-                    ? 'bg-surface-subtle text-brand-black border-border'
-                    : 'bg-surface-subtle text-slate-400 border-border'
-                }`}
-              >
-                <span className="block text-[10px] uppercase opacity-70">Step 02</span>
-                <span className="truncate block">Specifications</span>
-              </div>
-
-              <div
-                className={`py-2.5 px-3 rounded border transition-colors ${
-                  step === 3
-                    ? 'bg-accent text-brand-black border-accent font-bold'
-                    : 'bg-surface-subtle text-slate-400 border-border'
-                }`}
-              >
-                <span className="block text-[10px] uppercase opacity-70">Step 03</span>
-                <span className="truncate block">Contact & Send</span>
-              </div>
-            </div>
-          </div>
-
+        {/* MAIN FORM PANEL (65% = 8 Cols) */}
+        <div className="lg:col-span-8 bg-surface rounded-md border border-border p-6 lg:p-8 shadow-xs space-y-6">
           {globalError && (
-            <div className="mb-6 p-4 bg-red-50 text-red-800 rounded border border-red-200 text-sm font-medium">
+            <div
+              className="p-4 bg-rose-50 border border-rose-200 rounded text-rose-800 text-xs font-mono font-semibold"
+              role="alert"
+            >
               {globalError}
             </div>
           )}
@@ -263,6 +244,7 @@ export const QuoteFormController: React.FC<QuoteFormControllerProps> = ({
               locations={locations}
               destinations={destinations}
               errors={fieldErrors}
+              whatsappNumber={whatsappNumber}
               onChange={(field, val) => handleFieldChange(field, val)}
               onNext={handleStep1Next}
             />
@@ -349,13 +331,7 @@ export const QuoteFormController: React.FC<QuoteFormControllerProps> = ({
               </li>
             </ol>
           </div>
-
-          <div className="pt-6 border-t border-border flex items-center gap-2 text-xs font-mono text-slate-500">
-            <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-            <span>Verified Freight Forwarding & Export Rate Dispatch</span>
-          </div>
         </div>
-
       </div>
     </div>
   );

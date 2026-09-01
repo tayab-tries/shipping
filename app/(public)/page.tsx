@@ -11,14 +11,20 @@ import { GuidesPreviewSection } from '@/components/sections/GuidesPreviewSection
 import { FaqSection } from '@/components/sections/FaqSection';
 import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
 import { getPublishedHomepageBlocks } from '@/lib/cms/homepage.service';
+import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
 
 export default async function HomePage() {
-  const blocks = await getPublishedHomepageBlocks();
+  const [blocks, business] = await Promise.all([
+    getPublishedHomepageBlocks(),
+    getPublishedBusinessSettings(),
+  ]);
 
   return (
     <div className="w-full">
       {/* 01. HERO */}
-      {blocks.hero?.enabled && <HeroSection blockData={blocks.hero.contentData} />}
+      {blocks.hero?.enabled && (
+        <HeroSection blockData={blocks.hero.contentData} whatsappNumber={business.whatsappNumber} />
+      )}
 
       {/* 02. QUICK QUOTE / ENTRY ACTION */}
       {blocks.quick_quote?.enabled && <QuickQuoteTeaser blockData={blocks.quick_quote.contentData} />}
@@ -45,10 +51,14 @@ export default async function HomePage() {
       {blocks.guides?.enabled && <GuidesPreviewSection blockData={blocks.guides.contentData} />}
 
       {/* 10. FAQ */}
-      {blocks.faq?.enabled && <FaqSection blockData={blocks.faq.contentData} />}
+      {blocks.faq?.enabled && (
+        <FaqSection blockData={blocks.faq.contentData} whatsappNumber={business.whatsappNumber} />
+      )}
 
       {/* 11. FINAL CTA */}
-      {blocks.cta?.enabled && <FinalCtaSection blockData={blocks.cta.contentData} />}
+      {blocks.cta?.enabled && (
+        <FinalCtaSection blockData={blocks.cta.contentData} whatsappNumber={business.whatsappNumber} />
+      )}
     </div>
   );
 }

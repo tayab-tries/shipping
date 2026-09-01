@@ -6,6 +6,7 @@ import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { QuoteFormController } from '@/components/quote/QuoteFormController';
 import { getPublishedStaticLocations } from '@/lib/locations/location-content';
 import { getPublishedStaticDestinations } from '@/lib/destinations/destination-content';
+import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
 import { cargoTypes } from '@/types/content';
 import { siteConfig } from '@/config/site.config';
 
@@ -33,8 +34,11 @@ interface QuotePageProps {
 export default async function PublicQuotePage({ searchParams }: QuotePageProps) {
   const { origin: rawOrigin, destination: rawDestination, cargo: rawCargo } = await searchParams;
 
-  const publishedLocations = getPublishedStaticLocations();
-  const publishedDestinations = getPublishedStaticDestinations();
+  const [publishedLocations, publishedDestinations, business] = await Promise.all([
+    getPublishedStaticLocations(),
+    getPublishedStaticDestinations(),
+    getPublishedBusinessSettings(),
+  ]);
 
   // Validate prefill origin query param
   const validOrigin = publishedLocations.some((l) => l.slug === rawOrigin)
@@ -86,6 +90,7 @@ export default async function PublicQuotePage({ searchParams }: QuotePageProps) 
           initialCargo={validCargo}
           locations={publishedLocations.map((l) => ({ name: l.name, slug: l.slug }))}
           destinations={publishedDestinations.map((d) => ({ name: d.name, slug: d.slug }))}
+          whatsappNumber={business.whatsappNumber}
         />
       </Container>
     </div>

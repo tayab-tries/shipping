@@ -11,7 +11,8 @@ export interface PublishedBusinessSettings {
 }
 
 const defaultPhone = siteConfig.phone || '+92 300 1234567';
-const defaultEmail = siteConfig.contact?.emailInfo || 'info@cargo-shipping.pk';
+const defaultWhatsapp = siteConfig.contact?.whatsappNumber || siteConfig.whatsapp || defaultPhone;
+const defaultEmail = siteConfig.contact?.emailInfo || 'info@raahiinternational.pk';
 
 export async function getPublishedBusinessSettings(): Promise<PublishedBusinessSettings> {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -31,7 +32,7 @@ export async function getPublishedBusinessSettings(): Promise<PublishedBusinessS
           brandName: data.brand_name || siteConfig.name,
           legalName: data.legal_name || siteConfig.name,
           phonePrimary: data.phone_primary || defaultPhone,
-          whatsappNumber: data.whatsapp_number || defaultPhone,
+          whatsappNumber: data.whatsapp_number || defaultWhatsapp,
           emailInfo: data.email_info || defaultEmail,
           operatingHours: data.operating_hours || 'Mon - Sat: 09:00 - 18:00 (PKT)',
         };
@@ -45,7 +46,7 @@ export async function getPublishedBusinessSettings(): Promise<PublishedBusinessS
     brandName: siteConfig.name,
     legalName: siteConfig.name,
     phonePrimary: defaultPhone,
-    whatsappNumber: defaultPhone,
+    whatsappNumber: defaultWhatsapp,
     emailInfo: defaultEmail,
     operatingHours: 'Mon - Sat: 09:00 - 18:00 (PKT)',
   };

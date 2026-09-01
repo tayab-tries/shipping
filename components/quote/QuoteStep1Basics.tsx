@@ -3,7 +3,7 @@ import { ArrowRight, MapPin, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
 import { Input } from '@/components/ui/Input';
-import { siteConfig } from '@/config/site.config';
+import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
 
 export interface QuoteStep1Data {
   origin_city: string;
@@ -17,6 +17,7 @@ export interface QuoteStep1BasicsProps {
   locations: Array<{ name: string; slug: string }>;
   destinations: Array<{ name: string; slug: string }>;
   errors?: Record<string, string>;
+  whatsappNumber?: string;
   onChange: (field: keyof QuoteStep1Data, value: string) => void;
   onNext: () => void;
 }
@@ -26,6 +27,7 @@ export const QuoteStep1Basics: React.FC<QuoteStep1BasicsProps> = ({
   locations = [],
   destinations = [],
   errors = {},
+  whatsappNumber,
   onChange,
   onNext,
 }) => {
@@ -34,9 +36,10 @@ export const QuoteStep1Basics: React.FC<QuoteStep1BasicsProps> = ({
     onNext();
   };
 
-  const whatsappNumber = (siteConfig.contact?.whatsappNumber || '923001234567').replace(/[^0-9]/g, '');
-  const whatsappMessage = encodeURIComponent('Assalam o Alaikum, I want to send cargo from Pakistan. Please guide me with a quote.');
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+  const whatsappUrl = buildWhatsappUrl(
+    whatsappNumber,
+    'Assalam o Alaikum, I want to send cargo from Pakistan. Please guide me with a quote.'
+  );
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6" id="quote-step-1-form">

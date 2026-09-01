@@ -1,11 +1,16 @@
 import React from 'react';
 import { MessageSquare } from 'lucide-react';
-import { siteConfig } from '@/config/site.config';
+import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
 
-export const FloatingWhatsApp: React.FC = () => {
-  const phone = (siteConfig.contact?.whatsappNumber || siteConfig.whatsapp || '923001234567').replace(/[^0-9]/g, '');
-  const message = encodeURIComponent('Assalam o Alaikum, I want to send cargo from Pakistan. Please give me a quote.');
-  const whatsappUrl = `https://wa.me/${phone}?text=${message}`;
+interface FloatingWhatsAppProps {
+  whatsappNumber?: string;
+}
+
+export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ whatsappNumber }) => {
+  const whatsappUrl = buildWhatsappUrl(
+    whatsappNumber,
+    'Assalam o Alaikum, I want to send cargo from Pakistan. Please give me a quote.'
+  );
 
   return (
     <a

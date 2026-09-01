@@ -1,14 +1,17 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShieldCheck, MapPin, Phone, Mail } from 'lucide-react';
+import { ShieldCheck, MapPin, Phone, Mail, MessageSquare } from 'lucide-react';
 import { siteConfig } from '@/config/site.config';
 import { Container } from '@/components/ui/Container';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
+import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
 
 export const Footer = async () => {
   const business = await getPublishedBusinessSettings();
   const phone = business.phonePrimary || siteConfig.phone || '+92 300 1234567';
+  const whatsappNumber = business.whatsappNumber || siteConfig.contact?.whatsappNumber || phone;
+  const whatsappUrl = buildWhatsappUrl(whatsappNumber);
   const email = business.emailInfo || siteConfig.contact?.emailInfo || 'info@raahiinternational.pk';
   const brandName = business.brandName || siteConfig.name;
 
@@ -35,6 +38,12 @@ export const Footer = async () => {
                 <Phone className="w-3.5 h-3.5 text-accent shrink-0" />
                 <a href={`tel:${phone.replace(/\s+/g, '')}`} className="hover:text-white transition-colors">
                   {phone}
+                </a>
+              </div>
+              <div className="flex items-center gap-2">
+                <MessageSquare className="w-3.5 h-3.5 text-emerald-400 shrink-0 fill-current" />
+                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 transition-colors font-semibold">
+                  WhatsApp: {whatsappNumber}
                 </a>
               </div>
               <div className="flex items-center gap-2">

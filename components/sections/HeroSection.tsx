@@ -5,16 +5,19 @@ import { ArrowRight, MessageSquare } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
-import { siteConfig } from '@/config/site.config';
+import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
 
 export interface HeroSectionProps {
   blockData?: Record<string, unknown>;
+  whatsappNumber?: string;
 }
 
-export const HeroSection: React.FC<HeroSectionProps> = ({ blockData }) => {
-  const whatsappNumber = (siteConfig.contact?.whatsappNumber || '923001234567').replace(/[^0-9]/g, '');
-  const whatsappMessage = encodeURIComponent('Assalam o Alaikum, I want to send cargo from Pakistan. Please give me a quote.');
-  const defaultWhatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+export const HeroSection: React.FC<HeroSectionProps> = ({ blockData, whatsappNumber: propWhatsapp }) => {
+  const activeWhatsapp = (blockData?.whatsapp_number as string) || propWhatsapp;
+  const defaultWhatsappUrl = buildWhatsappUrl(
+    activeWhatsapp,
+    'Assalam o Alaikum, I want to send cargo from Pakistan. Please give me a quote.'
+  );
 
   const eyebrow = (blockData?.eyebrow as string) || 'DOOR-TO-DOOR CARGO SHIPPING FROM PAKISTAN';
   const headline = (blockData?.headline as string) || 'SEND CARGO FROM PAKISTAN.\nWE\'LL HANDLE THE REST.';
@@ -24,7 +27,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ blockData }) => {
   const primaryCtaLabel = (blockData?.primary_cta_label as string) || 'GET A QUOTE';
   const primaryCtaHref = (blockData?.primary_cta_href as string) || '/quote';
   const secondaryCtaLabel = (blockData?.secondary_cta_label as string) || 'WHATSAPP US';
-  const secondaryCtaHref = (blockData?.secondary_cta_href as string) || defaultWhatsappUrl;
+
+  let rawSecondaryHref = (blockData?.secondary_cta_href as string) || defaultWhatsappUrl;
+  // If secondary CTA is a WhatsApp link, dynamically enforce active admin WhatsApp number
+  if (rawSecondaryHref.includes('wa.me') || rawSecondaryHref.includes('whatsapp')) {
+    const messageMatch = rawSecondaryHref.match(/text=([^&]*)/);
+    const customMsg = messageMatch ? decodeURIComponent(messageMatch[1]) : undefined;
+    rawSecondaryHref = buildWhatsappUrl(activeWhatsapp, customMsg);
+  }
+
   const capabilityLine =
     (blockData?.capability_line as string) || 'HOME PICKUP • AIR CARGO • SEA CARGO • DOOR-TO-DOOR';
   const bgImage = (blockData?.background_image as string) || IMAGE_SLOTS.heroBackground.src;
@@ -36,7 +47,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ blockData }) => {
     .map((s) => s.trim())
     .filter(Boolean);
 
-  const isWhatsapp = secondaryCtaHref.includes('wa.me') || secondaryCtaHref.includes('whatsapp');
+  const isWhatsapp = rawSecondaryHref.includes('wa.me') || rawSecondaryHref.includes('whatsapp');
 
   return (
     <section className="relative min-h-[640px] sm:min-h-[72vh] lg:min-h-[76vh] max-h-[90vh] w-full overflow-hidden bg-brand-black flex flex-col justify-center border-b border-border-dark">
@@ -157,7 +168,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ blockData }) => {
             </Link>
 
             <a
-              href={secondaryCtaHref}
+              href={rawSecondaryHref}
               target={isWhatsapp ? '_blank' : '_self'}
               rel={isWhatsapp ? 'noopener noreferrer' : undefined}
             >
