@@ -6,29 +6,66 @@ import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
+import type { SanityHeroData } from '@/sanity/lib/fetch';
 
 export interface HeroSectionProps {
   blockData?: Record<string, unknown>;
+  sanityHeroData?: SanityHeroData | null;
   whatsappNumber?: string;
 }
 
-export const HeroSection: React.FC<HeroSectionProps> = ({ blockData, whatsappNumber: propWhatsapp }) => {
+export const HeroSection: React.FC<HeroSectionProps> = ({
+  blockData,
+  sanityHeroData,
+  whatsappNumber: propWhatsapp,
+}) => {
   const activeWhatsapp = (blockData?.whatsapp_number as string) || propWhatsapp;
   const defaultWhatsappUrl = buildWhatsappUrl(
     activeWhatsapp,
     'Assalam o Alaikum, I want to send cargo from Pakistan. Please give me a quote.'
   );
 
-  const eyebrow = (blockData?.eyebrow as string) || 'DOOR-TO-DOOR CARGO SHIPPING FROM PAKISTAN';
-  const headline = (blockData?.headline as string) || 'SEND CARGO FROM PAKISTAN.\nWE\'LL HANDLE THE REST.';
+  const eyebrow =
+    sanityHeroData?.eyebrow ||
+    (blockData?.eyebrow as string) ||
+    'DOOR-TO-DOOR CARGO SHIPPING FROM PAKISTAN';
+
+  let headline = (blockData?.headline as string) || '';
+  if (sanityHeroData?.headline) {
+    if (sanityHeroData.highlightedHeadline) {
+      headline = `${sanityHeroData.headline}\n${sanityHeroData.highlightedHeadline}`;
+    } else {
+      headline = sanityHeroData.headline;
+    }
+  } else if (!headline) {
+    headline = "SEND CARGO FROM PAKISTAN.\nWE'LL HANDLE THE REST.";
+  }
+
   const supportingCopy =
+    sanityHeroData?.description ||
     (blockData?.supporting_copy as string) ||
     'Door-to-door cargo delivery by air and sea. We pick up from Pakistan and deliver to destinations worldwide.';
-  const primaryCtaLabel = (blockData?.primary_cta_label as string) || 'GET A QUOTE';
-  const primaryCtaHref = (blockData?.primary_cta_href as string) || '/quote';
-  const secondaryCtaLabel = (blockData?.secondary_cta_label as string) || 'WHATSAPP US';
 
-  let rawSecondaryHref = (blockData?.secondary_cta_href as string) || defaultWhatsappUrl;
+  const primaryCtaLabel =
+    sanityHeroData?.primaryCtaLabel ||
+    (blockData?.primary_cta_label as string) ||
+    'GET A QUOTE';
+
+  const primaryCtaHref =
+    sanityHeroData?.primaryCtaHref ||
+    (blockData?.primary_cta_href as string) ||
+    '/quote';
+
+  const secondaryCtaLabel =
+    sanityHeroData?.secondaryCtaLabel ||
+    (blockData?.secondary_cta_label as string) ||
+    'WHATSAPP US';
+
+  let rawSecondaryHref =
+    sanityHeroData?.secondaryCtaHref ||
+    (blockData?.secondary_cta_href as string) ||
+    defaultWhatsappUrl;
+
   // If secondary CTA is a WhatsApp link, dynamically enforce active admin WhatsApp number
   if (rawSecondaryHref.includes('wa.me') || rawSecondaryHref.includes('whatsapp')) {
     const messageMatch = rawSecondaryHref.match(/text=([^&]*)/);
@@ -38,8 +75,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ blockData, whatsappNum
 
   const capabilityLine =
     (blockData?.capability_line as string) || 'HOME PICKUP • AIR CARGO • SEA CARGO • DOOR-TO-DOOR';
-  const bgImage = (blockData?.background_image as string) || IMAGE_SLOTS.heroBackground.src;
-  const imageAlt = (blockData?.image_alt_text as string) || IMAGE_SLOTS.heroBackground.alt;
+
+  const bgImage =
+    sanityHeroData?.backgroundImageUrl ||
+    (blockData?.background_image as string) ||
+    IMAGE_SLOTS.heroBackground.src;
+
+  const imageAlt =
+    sanityHeroData?.backgroundImageAlt ||
+    (blockData?.image_alt_text as string) ||
+    IMAGE_SLOTS.heroBackground.alt;
 
   // Split capability line items cleanly by bullet or pipe
   const capabilities = capabilityLine

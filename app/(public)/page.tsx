@@ -14,18 +14,24 @@ import { FaqSection } from '@/components/sections/FaqSection';
 import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
 import { getPublishedHomepageBlocks } from '@/lib/cms/homepage.service';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
+import { getSanityHomepageHero } from '@/sanity/lib/fetch';
 
 export default async function HomePage() {
-  const [blocks, business] = await Promise.all([
+  const [blocks, business, sanityHero] = await Promise.all([
     getPublishedHomepageBlocks(),
     getPublishedBusinessSettings(),
+    getSanityHomepageHero(),
   ]);
 
   return (
     <div className="w-full">
       {/* 01. HERO */}
       {blocks.hero?.enabled && (
-        <HeroSection blockData={blocks.hero.contentData} whatsappNumber={business.whatsappNumber} />
+        <HeroSection
+          blockData={blocks.hero.contentData}
+          sanityHeroData={sanityHero}
+          whatsappNumber={business.whatsappNumber}
+        />
       )}
 
       {/* 02. QUICK QUOTE / ENTRY ACTION */}
