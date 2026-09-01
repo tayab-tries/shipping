@@ -1,30 +1,34 @@
-import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
-import { constructMetadata } from "@/lib/seo/metadata.service";
-import "./globals.css";
+import type { Metadata } from 'next';
+import { Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google';
+import { draftMode } from 'next/headers';
+import { constructMetadata } from '@/lib/seo/metadata.service';
+import { SanityVisualEditing } from '@/components/SanityVisualEditing';
+import './globals.css';
 
 const sansFont = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  display: "swap",
+  subsets: ['latin'],
+  variable: '--font-sans',
+  display: 'swap',
 });
 
 const monoFont = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-  display: "swap",
+  subsets: ['latin'],
+  variable: '--font-mono',
+  display: 'swap',
 });
 
 export const metadata: Metadata = constructMetadata({
-  title: "International Cargo & Logistics Services",
-  description: "Production-grade international shipping, air freight, sea cargo, and logistics services from Pakistan.",
+  title: 'International Cargo & Logistics Services',
+  description: 'Production-grade international shipping, air freight, sea cargo, and logistics services from Pakistan.',
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const isDraft = (await draftMode()).isEnabled;
+
   return (
     <html
       lang="en"
@@ -32,6 +36,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col font-sans bg-background text-foreground selection:bg-slate-800 selection:text-white">
         {children}
+        {isDraft && <SanityVisualEditing />}
       </body>
     </html>
   );
