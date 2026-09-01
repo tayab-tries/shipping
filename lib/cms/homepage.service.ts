@@ -1,5 +1,17 @@
-import { createClient } from '@supabase/supabase-js';
-import { BLOCK_DEFINITIONS, BlockType } from './block-registry';
+export type BlockType =
+  | 'hero'
+  | 'quick_quote'
+  | 'use_cases'
+  | 'services'
+  | 'registrations_associations'
+  | 'trusted_market'
+  | 'locations'
+  | 'destinations'
+  | 'process'
+  | 'trust'
+  | 'testimonials'
+  | 'faq'
+  | 'cta';
 
 export interface HomepageBlockData {
   id: string;
@@ -10,57 +22,35 @@ export interface HomepageBlockData {
   contentData: Record<string, unknown>;
 }
 
+const DEFAULT_BLOCK_TYPES: BlockType[] = [
+  'hero',
+  'quick_quote',
+  'use_cases',
+  'services',
+  'registrations_associations',
+  'trusted_market',
+  'locations',
+  'destinations',
+  'process',
+  'trust',
+  'testimonials',
+  'faq',
+  'cta',
+];
+
 export async function getPublishedHomepageBlocks(): Promise<Record<BlockType, HomepageBlockData>> {
   const result: Record<string, HomepageBlockData> = {};
 
-  // 1. Initialize all block types with safe defaults
-  Object.keys(BLOCK_DEFINITIONS).forEach((key) => {
-    const blockKey = key as BlockType;
-    const def = BLOCK_DEFINITIONS[blockKey];
+  DEFAULT_BLOCK_TYPES.forEach((blockKey, idx) => {
     result[blockKey] = {
       id: `blk-${blockKey}`,
       type: blockKey,
-      label: def.label,
+      label: blockKey,
       enabled: true,
-      sortOrder: 1,
-      contentData: { ...def.defaultData },
+      sortOrder: idx + 1,
+      contentData: {},
     };
   });
-
-  // 2. Fetch published block content from Supabase via public client
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-  const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || '';
-
-  if (supabaseUrl && publishableKey && !supabaseUrl.includes('your-supabase-project')) {
-    try {
-      const supabase = createClient(supabaseUrl, publishableKey);
-      const { data } = await supabase
-        .from('homepage_blocks')
-        .select('*')
-        .order('display_order', { ascending: true });
-
-      if (data && data.length > 0) {
-        data.forEach((row) => {
-          const blockKey = row.block_key as BlockType;
-          if (BLOCK_DEFINITIONS[blockKey]) {
-            result[blockKey] = {
-              id: row.id,
-              type: blockKey,
-              label: row.block_title || BLOCK_DEFINITIONS[blockKey].label,
-              enabled: row.is_enabled ?? true,
-              sortOrder: row.display_order ?? 1,
-              contentData: {
-                ...BLOCK_DEFINITIONS[blockKey].defaultData,
-                ...((row.content as Record<string, unknown>) || {}),
-              },
-            };
-          }
-        });
-      }
-    } catch (err: unknown) {
-      console.error('getPublishedHomepageBlocks error (using fallback defaults):', err);
-    }
-  }
 
   return result as Record<BlockType, HomepageBlockData>;
 }

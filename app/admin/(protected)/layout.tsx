@@ -1,41 +1,21 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-  LayoutDashboard,
-  Home,
-  Navigation,
-  FileCheck,
-  Award,
-  MapPin,
-  Globe,
   FileText,
-  HelpCircle,
-  Building2,
-  ArrowLeftRight,
-  Image as ImageIcon,
   ShieldCheck,
   LogOut,
+  ExternalLink,
 } from 'lucide-react';
 import { siteConfig } from '@/config/site.config';
 import { requireAdminAuth } from '@/lib/supabase/auth-guard';
 
 export default async function ProtectedAdminLayout({ children }: { children: React.ReactNode }) {
-  // 1. Enforce Server-Side Auth Guard for all protected admin routes
+  // Enforce Server-Side Auth Guard for all protected operational admin routes
   const authUser = await requireAdminAuth();
 
   const navItems = [
-    { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-    { label: 'Homepage Blocks', href: '/admin/homepage', icon: Home },
-    { label: 'Site Navigation', href: '/admin/navigation', icon: Navigation },
-    { label: 'CMS Pages', href: '/admin/pages', icon: FileCheck },
-    { label: 'Credentials', href: '/admin/credentials', icon: Award },
-    { label: 'Locations', href: '/admin/locations', icon: MapPin },
-    { label: 'Destinations', href: '/admin/destinations', icon: Globe },
-    { label: 'Articles', href: '/admin/articles', icon: FileText },
-    { label: 'FAQs', href: '/admin/faqs', icon: HelpCircle },
-    { label: 'Business Settings', href: '/admin/business', icon: Building2 },
-    { label: '301 Redirects', href: '/admin/redirects', icon: ArrowLeftRight },
-    { label: 'Media Library', href: '/admin/media', icon: ImageIcon },
+    { label: 'Quotes & Bookings', href: '/admin/quotes', icon: FileText },
+    { label: 'Sanity CMS Studio', href: '/studio', icon: ExternalLink },
   ];
 
   return (
@@ -45,7 +25,7 @@ export default async function ProtectedAdminLayout({ children }: { children: Rea
         <div className="p-5 border-b border-border flex items-center gap-2">
           <ShieldCheck className="w-6 h-6 text-accent shrink-0" />
           <div>
-            <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 block">No-Code CMS</span>
+            <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 block">Operational Admin</span>
             <span className="text-sm font-bold text-foreground">{siteConfig.name}</span>
           </div>
         </div>
@@ -88,7 +68,7 @@ export default async function ProtectedAdminLayout({ children }: { children: Rea
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         <header className="h-14 bg-surface border-b border-border px-6 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono text-slate-500">No-Code Content Management System</span>
+            <span className="text-xs font-mono text-slate-500">Raahi International — Operational Portal</span>
           </div>
           <div className="flex items-center gap-4 text-xs font-mono">
             <span className="px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded text-[11px] font-semibold">
