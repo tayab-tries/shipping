@@ -9,9 +9,10 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
-import { getEnabledServices } from '@/config/services.config';
+import { getEnabledServices, ServiceConfigItem } from '@/config/services.config';
 import { siteConfig } from '@/config/site.config';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
+import { getSanityServicesList, SanityServiceDocument } from '@/sanity/lib/fetch';
 
 export const metadata: Metadata = {
   title: `Core Cargo & Logistics Services | ${siteConfig.name}`,
@@ -22,18 +23,48 @@ export const metadata: Metadata = {
   },
 };
 
-const iconMap = {
-  Package: Package,
-  Plane: Plane,
-  Ship: Ship,
-  Truck: Truck,
-  FileText: FileText,
-  Building2: Building2,
-  Luggage: Luggage,
+const iconMap: Record<string, React.ElementType> = {
+  Package,
+  Plane,
+  Ship,
+  Truck,
+  FileText,
+  Building2,
+  Luggage,
 };
 
-export default function ServicesHubPage() {
-  const services = getEnabledServices();
+export default async function ServicesHubPage() {
+  const [sanityServices, fallbackServices] = await Promise.all([
+    getSanityServicesList(),
+    Promise.resolve(getEnabledServices()),
+  ]);
+
+  // Combine Sanity data with fallbacks if Sanity records exist
+  const services: ServiceConfigItem[] =
+    sanityServices.length > 0
+      ? sanityServices.map((doc: SanityServiceDocument) => {
+          const fallback = fallbackServices.find((f) => f.slug === doc.slug);
+          return {
+            slug: doc.slug,
+            name: doc.name || fallback?.name || doc.title,
+            h1: doc.title || fallback?.h1 || '',
+            shortDescription: doc.shortDescription || fallback?.shortDescription || '',
+            enabled: true,
+            isVerified: true,
+            quoteCargoType: (doc.quoteCargoType as ServiceConfigItem['quoteCargoType']) || fallback?.quoteCargoType,
+            contentPath: fallback?.contentPath || '',
+            iconName: (doc.iconName as ServiceConfigItem['iconName']) || fallback?.iconName || 'Package',
+            category: doc.category || fallback?.category || 'core',
+            relatedServices: fallback?.relatedServices || [],
+            relatedDestinations: fallback?.relatedDestinations || [],
+            relatedLocations: fallback?.relatedLocations || [],
+            seo: {
+              title: doc.seo?.metaTitle || fallback?.seo.title || '',
+              description: doc.seo?.metaDescription || fallback?.seo.description || '',
+            },
+          };
+        })
+      : fallbackServices;
 
   const featuredService = services.find((s) => s.slug === 'air-freight') || services[0];
   const secondaryCoreServices = services.filter((s) => s.category === 'core' && s.slug !== featuredService?.slug);

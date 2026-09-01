@@ -8,7 +8,8 @@ export interface ServiceProcessProps {
     description?: string;
     number?: string;
     details?: string;
-    stepNumber?: number;
+    stepNumber?: number | string;
+    subtitle?: string;
   }>;
 }
 

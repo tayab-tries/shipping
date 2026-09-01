@@ -1,6 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
+import { PortableText, PortableTextComponents } from 'next-sanity';
 import { servicesRegistry, getEnabledServices } from '@/config/services.config';
 import { siteConfig } from '@/config/site.config';
 import { getServiceMdxContent } from '@/lib/content/mdx.service';
@@ -16,15 +17,70 @@ import { Accordion } from '@/components/ui/Accordion';
 import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
+import { getSanityServiceBySlug, getSanityServicesList, SanityServiceDocument } from '@/sanity/lib/fetch';
 
 interface ServicePageProps {
   params: Promise<{ slug: string }>;
 }
 
+const portableTextComponents: PortableTextComponents = {
+  block: {
+    h1: ({ children }) => (
+      <h1 className="text-display-lg font-bold text-brand-black pt-6 pb-2 border-b border-border">
+        {children}
+      </h1>
+    ),
+    h2: ({ children }) => (
+      <h2 className="text-heading-xl font-bold text-brand-black pt-6 pb-2 border-b border-border">
+        {children}
+      </h2>
+    ),
+    h3: ({ children }) => (
+      <h3 className="text-heading-lg font-bold text-brand-black pt-6 pb-2 border-b border-border">
+        {children}
+      </h3>
+    ),
+    normal: ({ children }) => (
+      <p className="text-body-md text-slate-700 leading-relaxed font-normal py-2">
+        {children}
+      </p>
+    ),
+  },
+  list: {
+    bullet: ({ children }) => (
+      <ul className="space-y-2 py-2 text-body-md text-slate-700 font-normal">
+        {children}
+      </ul>
+    ),
+    number: ({ children }) => (
+      <ol className="space-y-2 py-2 text-body-md text-slate-700 font-normal list-decimal list-inside">
+        {children}
+      </ol>
+    ),
+  },
+  listItem: {
+    bullet: ({ children }) => (
+      <li className="flex items-start gap-2">
+        <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2 shrink-0" />
+        <span>{children}</span>
+      </li>
+    ),
+    number: ({ children }) => (
+      <li className="pl-1">
+        <span>{children}</span>
+      </li>
+    ),
+  },
+};
+
 /**
- * Pre-render static params for enabled and verified services.
+ * Pre-render static params for services.
  */
 export async function generateStaticParams() {
+  const sanityServices = await getSanityServicesList();
+  if (sanityServices && sanityServices.length > 0) {
+    return sanityServices.map((s) => ({ slug: s.slug }));
+  }
   const enabledServices = getEnabledServices();
   return enabledServices.map((service) => ({
     slug: service.slug,
@@ -43,27 +99,38 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
     };
   }
 
-  const service = servicesRegistry.find((s) => s.slug === slug);
+  const sanityService = await getSanityServiceBySlug(slug, { stega: false });
+  const fallbackService = servicesRegistry.find((s) => s.slug === slug);
 
-  if (!service || !service.enabled || !service.isVerified) {
+  if (!sanityService && (!fallbackService || !fallbackService.enabled || !fallbackService.isVerified)) {
     return {
       title: `Service Not Found | ${siteConfig.name}`,
     };
   }
 
-  const canonicalUrl = `${siteConfig.domain}/services/${service.slug}`;
+  const title =
+    sanityService?.seo?.metaTitle ||
+    (fallbackService ? `${fallbackService.seo.title} | ${siteConfig.name}` : `Cargo Services | ${siteConfig.name}`);
+
+  const description =
+    sanityService?.seo?.metaDescription ||
+    fallbackService?.seo.description ||
+    'International cargo shipping services originating from Pakistan.';
+
+  const canonicalUrl = `${siteConfig.domain}/services/${slug}`;
 
   return {
-    title: `${service.seo.title} | ${siteConfig.name}`,
-    description: service.seo.description,
+    title,
+    description,
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: `${service.seo.title} | ${siteConfig.name}`,
-      description: service.seo.description,
+      title,
+      description,
       url: canonicalUrl,
       type: 'website',
+      images: sanityService?.seo?.socialImage ? [{ url: sanityService.seo.socialImage }] : [],
     },
   };
 }
@@ -76,50 +143,62 @@ export default async function ServiceDetailPage({ params }: ServicePageProps) {
     redirect('/services');
   }
 
-  const service = servicesRegistry.find((s) => s.slug === slug);
+  const sanityService: SanityServiceDocument | null = await getSanityServiceBySlug(slug);
+  const fallbackService = servicesRegistry.find((s) => s.slug === slug);
 
-  // 1. Authoritative Registry Verification Check
-  if (!service || !service.enabled || !service.isVerified) {
+  // Authoritative fallback check
+  if (!sanityService && (!fallbackService || !fallbackService.enabled || !fallbackService.isVerified)) {
     notFound();
   }
 
-  // 2. Load MDX Content & Frontmatter
+  // Load MDX fallback content if Sanity document or body is not populated
   let mdxData;
-  try {
-    mdxData = await getServiceMdxContent(service.contentPath);
-  } catch {
-    notFound();
+  if (fallbackService) {
+    try {
+      mdxData = await getServiceMdxContent(fallbackService.contentPath);
+      if (mdxData) {
+        const quality = validateServiceQuality(mdxData.frontmatter, mdxData.content);
+        if (!quality.passed && !sanityService) {
+          notFound();
+        }
+      }
+    } catch {
+      if (!sanityService) notFound();
+    }
   }
 
-  const { frontmatter, content } = mdxData;
+  const name = sanityService?.name || fallbackService?.name || 'Cargo Service';
+  const h1Title = sanityService?.title || fallbackService?.h1 || 'International Cargo Services';
+  const category = sanityService?.category || fallbackService?.category || 'core';
+  const quoteCargoType = sanityService?.quoteCargoType || fallbackService?.quoteCargoType;
+  const description =
+    sanityService?.seo?.metaDescription ||
+    fallbackService?.seo.description ||
+    'International cargo shipping services from Pakistan.';
 
-  // 3. Structural Quality Gate Check
-  const quality = validateServiceQuality(frontmatter, content);
-  if (!quality.passed) {
-    notFound();
-  }
+  const serviceOverview = sanityService?.serviceOverview || mdxData?.frontmatter?.serviceOverview;
+  const targetAudience = sanityService?.targetAudience || mdxData?.frontmatter?.targetAudience;
+  const keyConsiderations = sanityService?.keyConsiderations || mdxData?.frontmatter?.keyConsiderations;
+  const processSteps = sanityService?.processSteps || mdxData?.frontmatter?.processSteps;
+  const faqItems = sanityService?.faq || mdxData?.frontmatter?.faq;
 
-  // 4. Construct Quote CTA URL using explicit quoteCargoType mapping
-  const quoteUrl = service.quoteCargoType
-    ? `/quote?cargo=${service.quoteCargoType}`
-    : '/quote';
+  const quoteUrl = quoteCargoType ? `/quote?cargo=${quoteCargoType}` : '/quote';
 
   const breadcrumbs = [
     { label: 'Home', url: '/' },
     { label: 'Services', url: '/services' },
-    { label: service.name, url: `/services/${service.slug}` },
+    { label: name, url: `/services/${slug}` },
   ];
 
-  const serviceJsonLd = getServiceJsonLd(service.h1, service.seo.description);
+  const serviceJsonLd = getServiceJsonLd(h1Title, description);
   const breadcrumbJsonLd = getBreadcrumbJsonLd(breadcrumbs);
 
-  // FAQ Schema if visible FAQ content exists
   const faqJsonLd =
-    frontmatter.faq && frontmatter.faq.length > 0
+    faqItems && faqItems.length > 0
       ? {
           '@context': 'https://schema.org',
           '@type': 'FAQPage',
-          mainEntity: frontmatter.faq.map((item) => ({
+          mainEntity: faqItems.map((item) => ({
             '@type': 'Question',
             name: item.question,
             acceptedAnswer: {
@@ -150,85 +229,88 @@ export default async function ServiceDetailPage({ params }: ServicePageProps) {
 
       {/* 1. Service Hero Block */}
       <ServiceHero
-        title={service.h1}
-        description={service.seo.description}
+        title={h1Title}
+        description={description}
         quoteUrl={quoteUrl}
-        category={service.category}
+        category={category}
         breadcrumbs={breadcrumbs}
-        slug={service.slug}
+        slug={slug}
       />
 
       {/* 2. Service Summary Panel */}
       <ServiceSummaryPanel
-        serviceOverview={frontmatter.serviceOverview}
-        targetAudience={frontmatter.targetAudience}
-        keyConsiderations={frontmatter.keyConsiderations}
+        serviceOverview={serviceOverview}
+        targetAudience={targetAudience}
+        keyConsiderations={keyConsiderations}
       />
 
       {/* 3. Main Specification / Prose Content */}
       <section className="w-full py-16 border-b border-border bg-surface">
         <Container>
           <div className="max-w-3xl space-y-6 text-brand-black">
-            {/* Prose renderer for MDX content */}
-            {content.split('\n\n').map((paragraph, index) => {
-              if (paragraph.startsWith('# ')) {
+            {sanityService?.body && sanityService.body.length > 0 ? (
+              <PortableText value={sanityService.body} components={portableTextComponents} />
+            ) : mdxData?.content ? (
+              mdxData.content.split('\n\n').map((paragraph, index) => {
+                if (paragraph.startsWith('# ')) {
+                  return (
+                    <h2 key={index} className="text-heading-xl font-bold text-brand-black pt-6 pb-2 border-b border-border">
+                      {paragraph.replace('# ', '')}
+                    </h2>
+                  );
+                }
+                if (paragraph.startsWith('## ')) {
+                  return (
+                    <h3 key={index} className="text-heading-lg font-bold text-brand-black pt-6 pb-2 border-b border-border">
+                      {paragraph.replace('## ', '')}
+                    </h3>
+                  );
+                }
+                if (paragraph.startsWith('- ')) {
+                  const items = paragraph.split('\n- ').map((item) => item.replace('- ', ''));
+                  return (
+                    <ul key={index} className="space-y-2 py-2 text-body-md text-slate-700 font-normal">
+                      {items.map((it, i) => (
+                        <li key={i} className="flex items-start gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2 shrink-0" />
+                          <span>{it}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  );
+                }
                 return (
-                  <h2 key={index} className="text-heading-xl font-bold text-brand-black pt-6 pb-2 border-b border-border">
-                    {paragraph.replace('# ', '')}
-                  </h2>
+                  <p key={index} className="text-body-md text-slate-700 leading-relaxed font-normal">
+                    {paragraph}
+                  </p>
                 );
-              }
-              if (paragraph.startsWith('## ')) {
-                return (
-                  <h3 key={index} className="text-heading-lg font-bold text-brand-black pt-6 pb-2 border-b border-border">
-                    {paragraph.replace('## ', '')}
-                  </h3>
-                );
-              }
-              if (paragraph.startsWith('- ')) {
-                const items = paragraph.split('\n- ').map((item) => item.replace('- ', ''));
-                return (
-                  <ul key={index} className="space-y-2 py-2 text-body-md text-slate-700 font-normal">
-                    {items.map((it, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2 shrink-0" />
-                        <span>{it}</span>
-                      </li>
-                    ))}
-                  </ul>
-                );
-              }
-              return (
-                <p key={index} className="text-body-md text-slate-700 leading-relaxed font-normal">
-                  {paragraph}
-                </p>
-              );
-            })}
+              })
+            ) : null}
           </div>
         </Container>
       </section>
 
       {/* 4. Logistics Process Workflow */}
-      <ServiceProcess steps={frontmatter.processSteps} />
+      <ServiceProcess steps={processSteps} />
 
       {/* 5. Publication-Aware Trade Corridors & Origin Network Links */}
-      <RelatedDestinationsBar destinationSlugs={service.relatedDestinations} />
-      <RelatedLocationsBar locationSlugs={service.relatedLocations} />
-      <RelatedServicesGrid relatedSlugs={service.relatedServices} />
+      <RelatedDestinationsBar destinationSlugs={fallbackService?.relatedDestinations} />
+      <RelatedLocationsBar locationSlugs={fallbackService?.relatedLocations} />
+      <RelatedServicesGrid relatedSlugs={fallbackService?.relatedServices} />
 
       {/* 6. Visible FAQ Accordion */}
-      {frontmatter.faq && frontmatter.faq.length > 0 && (
+      {faqItems && faqItems.length > 0 && (
         <section className="w-full bg-surface-subtle py-16 lg:py-20 border-b border-border text-brand-black">
           <Container>
             <SectionHeading
               badge="FAQ"
               title="Frequently Asked Questions"
-              subtitle={`Common questions regarding ${service.name.toLowerCase()} shipping.`}
+              subtitle={`Common questions regarding ${name.toLowerCase()} shipping.`}
               className="mb-10"
             />
             <div className="max-w-3xl bg-surface p-8 rounded-md border border-border shadow-xs">
               <Accordion
-                items={frontmatter.faq.map((item, idx) => ({
+                items={faqItems.map((item, idx) => ({
                   id: `faq-${idx}`,
                   title: item.question,
                   content: item.answer,

@@ -193,3 +193,57 @@ export const HOMEPAGE_FULL_QUERY = defineQuery(`
     }
   }
 `);
+
+// --------------------------------------------------
+// SERVICES QUERIES (PHASE 3A)
+// --------------------------------------------------
+export const SERVICES_LIST_QUERY = defineQuery(`
+  *[_type == "service"] | order(sortOrder asc) {
+    _id,
+    title,
+    "slug": slug.current,
+    name,
+    shortDescription,
+    category,
+    quoteCargoType,
+    iconName,
+    sortOrder,
+    "heroImage": heroImage.asset->url,
+    heroImageAlt
+  }
+`);
+
+export const SERVICE_BY_SLUG_QUERY = defineQuery(`
+  *[_type == "service" && slug.current == $slug][0] {
+    _id,
+    title,
+    "slug": slug.current,
+    name,
+    shortDescription,
+    category,
+    quoteCargoType,
+    iconName,
+    sortOrder,
+    "heroImage": heroImage.asset->url,
+    heroImageAlt,
+    serviceOverview,
+    targetAudience,
+    keyConsiderations,
+    body,
+    processSteps[] {
+      stepNumber,
+      title,
+      subtitle,
+      description
+    },
+    faq[] {
+      question,
+      answer
+    },
+    seo {
+      metaTitle,
+      metaDescription,
+      "socialImage": socialImage.asset->url
+    }
+  }
+`);

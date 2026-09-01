@@ -1,5 +1,6 @@
 import { siteSettingsType } from './siteSettingsType';
 import { homepageType } from './homepageType';
+import { serviceType } from './serviceType';
 import { ctaObject } from './objects/ctaObject';
 import { seoObject } from './objects/seoObject';
 import { navItemObject } from './objects/navItemObject';
@@ -20,6 +21,7 @@ export const schema = {
     // Documents / Singletons
     siteSettingsType,
     homepageType,
+    serviceType,
 
     // Reusable Objects
     ctaObject,
