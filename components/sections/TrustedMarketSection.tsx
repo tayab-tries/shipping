@@ -1,6 +1,5 @@
 import React from 'react';
 import Image from 'next/image';
-import { Container } from '@/components/ui/Container';
 
 export interface TrustedClientItem {
   name: string;
@@ -34,9 +33,9 @@ export const TrustedMarketSection: React.FC<TrustedMarketSectionProps> = ({ bloc
   const marqueeItems = [...items, ...items, ...items, ...items];
 
   return (
-    <section className="w-full bg-surface-subtle py-16 lg:py-24 border-b border-border text-brand-black overflow-hidden select-none">
-      <Container>
-        <div className="text-center mb-12">
+    <section className="w-full bg-surface-subtle py-14 lg:py-20 border-b border-border text-brand-black overflow-hidden select-none">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+        <div className="text-center mb-10">
           <span className="text-xs font-mono font-bold tracking-widest text-slate-500 uppercase block mb-1.5">
             Corporate Clients & Partners
           </span>
@@ -44,7 +43,7 @@ export const TrustedMarketSection: React.FC<TrustedMarketSectionProps> = ({ bloc
             {heading}
           </h2>
         </div>
-      </Container>
+      </div>
 
       {/* Infinite Logo-Only Carousel Container */}
       <div className="relative w-full max-w-full overflow-hidden pointer-events-none">
@@ -56,13 +55,13 @@ export const TrustedMarketSection: React.FC<TrustedMarketSectionProps> = ({ bloc
           {marqueeItems.map((item, idx) => (
             <div
               key={idx}
-              className="flex items-center justify-center shrink-0 h-20 sm:h-24 w-44 sm:w-56 bg-white rounded-lg border border-slate-200 px-8 py-4 shadow-md pointer-events-none"
+              className="flex items-center justify-center shrink-0 h-20 sm:h-22 w-48 sm:w-60 bg-white rounded-xl border border-slate-200 px-8 py-4 shadow-md pointer-events-none"
             >
               <Image
                 src={item.logo}
                 alt={item.name || 'Client Logo'}
-                width={220}
-                height={70}
+                width={240}
+                height={75}
                 className="max-h-14 sm:max-h-16 w-auto object-contain"
               />
             </div>

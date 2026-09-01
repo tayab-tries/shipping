@@ -1,6 +1,5 @@
 import React from 'react';
 import Image from 'next/image';
-import { Container } from '@/components/ui/Container';
 
 export interface RegistrationItem {
   name: string;
@@ -58,11 +57,11 @@ export const RegistrationsSection: React.FC<RegistrationsSectionProps> = ({ bloc
       : defaultItems;
 
   return (
-    <section className="w-full bg-brand-navy py-16 lg:py-24 border-b border-border-dark text-white select-none">
-      <Container>
-        <div className="text-center space-y-12 max-w-6xl mx-auto">
+    <section className="w-full bg-brand-navy py-14 lg:py-20 border-b border-border-dark text-white select-none">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+        <div className="text-center space-y-10 max-w-5xl mx-auto mb-10">
           {/* Section Heading */}
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             <span className="text-xs font-mono font-bold tracking-widest text-accent uppercase block">
               Official Registrations & Global Affiliations
             </span>
@@ -70,44 +69,44 @@ export const RegistrationsSection: React.FC<RegistrationsSectionProps> = ({ bloc
               {heading}
             </h2>
           </div>
-
-          {/* Large High-Contrast White Logo Cards (Static, NOT Clickable) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-8 items-stretch justify-center">
-            {items.map((item, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-lg border border-slate-200 p-6 sm:p-7 flex flex-col items-center justify-between text-center min-h-[185px] shadow-lg pointer-events-none transition-none"
-              >
-                {/* Logo Image */}
-                <div className="relative w-full h-20 flex items-center justify-center mb-4">
-                  <Image
-                    src={item.logo}
-                    alt={item.name || item.orgName || 'Registration Logo'}
-                    width={240}
-                    height={80}
-                    priority
-                    className="max-h-16 sm:max-h-20 w-auto object-contain"
-                  />
-                </div>
-
-                {/* Organization Label */}
-                <div className="space-y-1 w-full pt-2 border-t border-slate-100">
-                  {item.orgName && (
-                    <span className="text-xs sm:text-sm font-extrabold text-slate-900 block leading-tight">
-                      {item.orgName}
-                    </span>
-                  )}
-                  {item.description && (
-                    <span className="text-[11px] font-mono font-semibold text-slate-500 block">
-                      {item.description}
-                    </span>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
-      </Container>
+
+        {/* Wide Landscape White Cards Grid (Static, NOT Clickable) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 sm:gap-6 items-stretch justify-center">
+          {items.map((item, index) => (
+            <div
+              key={index}
+              className="bg-white rounded-xl border border-slate-200 p-5 sm:p-6 flex flex-col justify-between text-center min-h-[145px] shadow-lg pointer-events-none transition-none"
+            >
+              {/* Logo Asset */}
+              <div className="relative w-full h-16 sm:h-20 flex items-center justify-center mb-3">
+                <Image
+                  src={item.logo}
+                  alt={item.name || item.orgName || 'Registration Logo'}
+                  width={280}
+                  height={80}
+                  priority
+                  className="max-h-14 sm:max-h-16 w-full object-contain"
+                />
+              </div>
+
+              {/* Organization Text Block */}
+              <div className="space-y-1 w-full pt-3 border-t border-slate-100">
+                {item.orgName && (
+                  <span className="text-xs sm:text-sm font-extrabold text-slate-900 block leading-snug">
+                    {item.orgName}
+                  </span>
+                )}
+                {item.description && (
+                  <span className="text-[11px] font-mono font-semibold text-slate-500 block leading-tight">
+                    {item.description}
+                  </span>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </section>
   );
 };
