@@ -58,45 +58,51 @@ export const RegistrationsSection: React.FC<RegistrationsSectionProps> = ({ bloc
       : defaultItems;
 
   return (
-    <section className="w-full bg-brand-navy py-14 lg:py-20 border-b border-border-dark text-white select-none">
+    <section className="w-full bg-brand-navy py-16 lg:py-24 border-b border-border-dark text-white select-none">
       <Container>
-        <div className="text-center space-y-10 max-w-5xl mx-auto">
-          {/* Heading */}
-          <div className="space-y-2">
+        <div className="text-center space-y-12 max-w-6xl mx-auto">
+          {/* Section Heading */}
+          <div className="space-y-3">
             <span className="text-xs font-mono font-bold tracking-widest text-accent uppercase block">
               Official Registrations & Global Affiliations
             </span>
-            <h2 className="text-heading-lg sm:text-heading-xl lg:text-2xl font-extrabold text-white tracking-tight uppercase">
+            <h2 className="text-heading-xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight uppercase leading-snug">
               {heading}
             </h2>
           </div>
 
-          {/* Clean Horizontal Logo Grid (Static, NOT Clickable) */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 sm:gap-8 items-center justify-center">
+          {/* Large High-Contrast White Logo Cards (Static, NOT Clickable) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-8 items-stretch justify-center">
             {items.map((item, index) => (
               <div
                 key={index}
-                className="bg-brand-black-deep/80 rounded-md border border-border-dark p-5 flex flex-col items-center justify-center text-center h-full min-h-[135px] shadow-sm pointer-events-none"
+                className="bg-white rounded-lg border border-slate-200 p-6 sm:p-7 flex flex-col items-center justify-between text-center min-h-[185px] shadow-lg pointer-events-none transition-none"
               >
-                <div className="relative w-full h-12 flex items-center justify-center mb-3">
+                {/* Logo Image */}
+                <div className="relative w-full h-20 flex items-center justify-center mb-4">
                   <Image
                     src={item.logo}
                     alt={item.name || item.orgName || 'Registration Logo'}
-                    width={180}
-                    height={50}
-                    className="max-h-12 w-auto object-contain filter drop-shadow-sm"
+                    width={240}
+                    height={80}
+                    priority
+                    className="max-h-16 sm:max-h-20 w-auto object-contain"
                   />
                 </div>
-                {item.orgName && (
-                  <span className="text-[11px] font-mono font-semibold text-slate-300 line-clamp-1">
-                    {item.orgName}
-                  </span>
-                )}
-                {item.description && (
-                  <span className="text-[10px] text-slate-400 font-mono mt-0.5 line-clamp-1">
-                    {item.description}
-                  </span>
-                )}
+
+                {/* Organization Label */}
+                <div className="space-y-1 w-full pt-2 border-t border-slate-100">
+                  {item.orgName && (
+                    <span className="text-xs sm:text-sm font-extrabold text-slate-900 block leading-tight">
+                      {item.orgName}
+                    </span>
+                  )}
+                  {item.description && (
+                    <span className="text-[11px] font-mono font-semibold text-slate-500 block">
+                      {item.description}
+                    </span>
+                  )}
+                </div>
               </div>
             ))}
           </div>
