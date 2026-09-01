@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import {
   getPublishedDestinations,
   getDestinationBySlug,
+  DestinationCountryData,
 } from '@/lib/destinations/destination-content';
 import { siteConfig } from '@/config/site.config';
 import { getBreadcrumbJsonLd } from '@/lib/seo/jsonld.service';
@@ -17,15 +18,20 @@ import { DestinationSubCitiesGrid } from '@/components/destinations/DestinationS
 import { DestinationGuides } from '@/components/destinations/DestinationGuides';
 import { DestinationFaq } from '@/components/destinations/DestinationFaq';
 import { DestinationCta } from '@/components/destinations/DestinationCta';
+import { getSanityDestinationBySlug, getSanityDestinationsList, SanityDestinationCountryDocument } from '@/sanity/lib/fetch';
 
 interface CountryPageProps {
   params: Promise<{ country: string }>;
 }
 
 /**
- * Pre-render static params for published and verified country destination routes.
+ * Pre-render static params for published country destination routes.
  */
 export async function generateStaticParams() {
+  const sanityDestinations = await getSanityDestinationsList();
+  if (sanityDestinations && sanityDestinations.length > 0) {
+    return sanityDestinations.map((dest) => ({ country: dest.slug }));
+  }
   const publishedDestinations = await getPublishedDestinations();
   return publishedDestinations.map((dest) => ({
     country: dest.slug,
@@ -37,39 +43,87 @@ export async function generateStaticParams() {
  */
 export async function generateMetadata({ params }: CountryPageProps): Promise<Metadata> {
   const { country } = await params;
-  const destination = await getDestinationBySlug(country);
+  const sanityDestination = await getSanityDestinationBySlug(country, { stega: false });
+  const fallbackDestination = await getDestinationBySlug(country);
 
-  if (!destination) {
+  if (!sanityDestination && !fallbackDestination) {
     return {
       title: `Destination Not Found | ${siteConfig.name}`,
     };
   }
 
-  const canonicalUrl = `${siteConfig.domain}/destinations/${destination.slug}`;
+  const title =
+    sanityDestination?.seo?.metaTitle ||
+    (fallbackDestination ? `${fallbackDestination.seoTitle} | ${siteConfig.name}` : `Cargo Shipping | ${siteConfig.name}`);
+
+  const description =
+    sanityDestination?.seo?.metaDescription ||
+    fallbackDestination?.seoDescription ||
+    'International cargo shipping services from Pakistan.';
+
+  const canonicalUrl = `${siteConfig.domain}/destinations/${country}`;
 
   return {
-    title: `${destination.seoTitle} | ${siteConfig.name}`,
-    description: destination.seoDescription,
+    title,
+    description,
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: `${destination.seoTitle} | ${siteConfig.name}`,
-      description: destination.seoDescription,
+      title,
+      description,
       url: canonicalUrl,
       type: 'website',
+      images: sanityDestination?.seo?.socialImage ? [{ url: sanityDestination.seo.socialImage }] : [],
     },
   };
 }
 
 export default async function CountryDetailPage({ params }: CountryPageProps) {
   const { country } = await params;
-  const destination = await getDestinationBySlug(country);
+  const sanityDestination: SanityDestinationCountryDocument | null = await getSanityDestinationBySlug(country);
+  const fallbackDestination = await getDestinationBySlug(country);
 
-  // 1. Authoritative Verification & Publication Check
-  if (!destination) {
+  // Authoritative Verification Check
+  if (!sanityDestination && !fallbackDestination) {
     notFound();
   }
+
+  const destination: DestinationCountryData = {
+    id: sanityDestination?._id || fallbackDestination?.id || country,
+    name: sanityDestination?.name || fallbackDestination?.name || 'International Country',
+    slug: country,
+    region: sanityDestination?.region || fallbackDestination?.region || 'Global',
+    h1: sanityDestination?.h1 || fallbackDestination?.h1 || `Cargo Services to ${sanityDestination?.name || fallbackDestination?.name}`,
+    seoTitle: sanityDestination?.seo?.metaTitle || fallbackDestination?.seoTitle || `Cargo to ${sanityDestination?.name || fallbackDestination?.name}`,
+    seoDescription: sanityDestination?.seo?.metaDescription || fallbackDestination?.seoDescription || `Cargo shipping to ${sanityDestination?.name || fallbackDestination?.name}`,
+    introduction: sanityDestination?.introduction || fallbackDestination?.introduction || `Cargo shipping to ${sanityDestination?.name || fallbackDestination?.name}`,
+    shippingOverview: sanityDestination?.shippingOverview || fallbackDestination?.shippingOverview || '',
+    customsGuidance: sanityDestination?.customsGuidance || fallbackDestination?.customsGuidance || '',
+    supportedServices: sanityDestination?.supportedServices || fallbackDestination?.supportedServices || ['air-freight', 'sea-cargo'],
+    supportedOrigins: sanityDestination?.supportedOrigins || fallbackDestination?.supportedOrigins || [],
+    cities:
+      sanityDestination?.cities?.map((c) => ({
+        id: c._id || c.slug,
+        countryId: sanityDestination._id || country,
+        name: c.name,
+        slug: c.slug,
+        h1: c.h1 || `Cargo Services to ${c.name}, ${sanityDestination.name}`,
+        seoTitle: c.seo?.metaTitle || `Cargo Shipping to ${c.name}`,
+        seoDescription: c.seo?.metaDescription || `Cargo shipping to ${c.name}`,
+        introduction: c.introduction || `Cargo shipping to ${c.name}`,
+        overview: c.overview || c.introduction,
+        preparationConsiderations: c.preparationConsiderations || '',
+        deliveryCoverageNotes: '',
+        status: 'published',
+        isVerified: true,
+        isIndexable: true,
+      })) || fallbackDestination?.cities || [],
+    faqs: sanityDestination?.faqs || fallbackDestination?.faqs || [],
+    status: 'published',
+    isVerified: true,
+    isIndexable: true,
+  };
 
   const quoteUrl = `/quote?destination=${destination.slug}`;
   const breadcrumbs = [

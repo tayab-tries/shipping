@@ -16,6 +16,7 @@ import { DestinationConsiderations } from '@/components/destinations/Destination
 import { DestinationGuides } from '@/components/destinations/DestinationGuides';
 import { DestinationFaq } from '@/components/destinations/DestinationFaq';
 import { DestinationCta } from '@/components/destinations/DestinationCta';
+import { getSanityDestinationCityBySlugs, getSanityDestinationsList } from '@/sanity/lib/fetch';
 
 interface CityPageProps {
   params: Promise<{ country: string; city: string }>;
@@ -25,6 +26,22 @@ interface CityPageProps {
  * Pre-render static params for published destination city routes.
  */
 export async function generateStaticParams() {
+  const sanityDestinations = await getSanityDestinationsList();
+  if (sanityDestinations && sanityDestinations.length > 0) {
+    const params: Array<{ country: string; city: string }> = [];
+    for (const country of sanityDestinations) {
+      if (country.cities) {
+        for (const city of country.cities) {
+          params.push({
+            country: country.slug,
+            city: city.slug,
+          });
+        }
+      }
+    }
+    if (params.length > 0) return params;
+  }
+
   const publishedCountries = getPublishedStaticDestinations();
   const params: Array<{ country: string; city: string }> = [];
 
@@ -47,49 +64,78 @@ export async function generateStaticParams() {
  */
 export async function generateMetadata({ params }: CityPageProps): Promise<Metadata> {
   const { country: countrySlug, city: citySlug } = await params;
-  const result = getStaticDestinationCity(countrySlug, citySlug);
+  const sanityCity = await getSanityDestinationCityBySlugs(countrySlug, citySlug, { stega: false });
+  const fallbackResult = getStaticDestinationCity(countrySlug, citySlug);
 
-  if (!result) {
+  if (!sanityCity && !fallbackResult) {
     return {
       title: `Destination City Not Found | ${siteConfig.name}`,
     };
   }
 
-  const { city } = result;
-  const canonicalUrl = `${siteConfig.domain}/destinations/${countrySlug}/${city.slug}`;
+  const cityName = sanityCity?.name || fallbackResult?.city.name || citySlug;
+  const countryName = sanityCity?.country?.name || fallbackResult?.country.name || countrySlug;
+
+  const title =
+    sanityCity?.seo?.metaTitle ||
+    (fallbackResult ? `${fallbackResult.city.seoTitle} | ${siteConfig.name}` : `Cargo to ${cityName}, ${countryName} | ${siteConfig.name}`);
+
+  const description =
+    sanityCity?.seo?.metaDescription ||
+    fallbackResult?.city.seoDescription ||
+    `Cargo shipping services to ${cityName}, ${countryName}.`;
+
+  const canonicalUrl = `${siteConfig.domain}/destinations/${countrySlug}/${citySlug}`;
 
   return {
-    title: `${city.seoTitle} | ${siteConfig.name}`,
-    description: city.seoDescription,
+    title,
+    description,
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: `${city.seoTitle} | ${siteConfig.name}`,
-      description: city.seoDescription,
+      title,
+      description,
       url: canonicalUrl,
       type: 'website',
+      images: sanityCity?.seo?.socialImage ? [{ url: sanityCity.seo.socialImage }] : [],
     },
   };
 }
 
 export default async function DestinationCityDetailPage({ params }: CityPageProps) {
   const { country: countrySlug, city: citySlug } = await params;
-  const result = getStaticDestinationCity(countrySlug, citySlug);
+  const sanityCity = await getSanityDestinationCityBySlugs(countrySlug, citySlug);
+  const fallbackResult = getStaticDestinationCity(countrySlug, citySlug);
 
-  // 1. Authoritative Publication Check (Parent Country + City 3-Way Gate)
-  if (!result) {
+  // Authoritative Publication Check
+  if (!sanityCity && !fallbackResult) {
     notFound();
   }
 
-  const { country, city } = result;
-  const quoteUrl = `/quote?destination=${country.slug}`;
+  const countryName = sanityCity?.country?.name || fallbackResult?.country.name || countrySlug;
+  const cityName = sanityCity?.name || fallbackResult?.city.name || citySlug;
+  const region = sanityCity?.country?.region || fallbackResult?.country.region || 'Global';
+  const h1 = sanityCity?.h1 || fallbackResult?.city.h1 || `Cargo Services to ${cityName}, ${countryName}`;
+  const introduction = sanityCity?.introduction || fallbackResult?.city.introduction || `Cargo shipping to ${cityName}, ${countryName}.`;
+  const overview = sanityCity?.overview || fallbackResult?.city.overview || introduction;
+  const preparationConsiderations =
+    sanityCity?.preparationConsiderations ||
+    fallbackResult?.city.preparationConsiderations ||
+    fallbackResult?.city.deliveryCoverageNotes ||
+    '';
+
+  const supportedServices = sanityCity?.country?.supportedServices || fallbackResult?.country.supportedServices || ['air-freight', 'sea-cargo'];
+  const supportedOrigins = sanityCity?.country?.supportedOrigins || fallbackResult?.country.supportedOrigins || ['lahore', 'karachi', 'islamabad'];
+  const faqs = sanityCity?.country?.faqs || fallbackResult?.country.faqs || [];
+
+  const quoteUrl = `/quote?destination=${countrySlug}`;
 
   const breadcrumbs = [
     { label: 'Home', url: '/' },
     { label: 'Destinations', url: '/destinations' },
-    { label: country.name, url: `/destinations/${country.slug}` },
-    { label: city.name, url: `/destinations/${country.slug}/${city.slug}` },
+    { label: countryName, url: `/destinations/${countrySlug}` },
+    { label: cityName, url: `/destinations/${countrySlug}/${citySlug}` },
   ];
 
   const breadcrumbJsonLd = getBreadcrumbJsonLd(breadcrumbs);
@@ -98,8 +144,8 @@ export default async function DestinationCityDetailPage({ params }: CityPageProp
   const cityServiceJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Service',
-    name: `Cargo & Shipping Services to ${city.name}, ${country.name}`,
-    description: city.seoDescription,
+    name: `Cargo & Shipping Services to ${cityName}, ${countryName}`,
+    description: sanityCity?.seo?.metaDescription || fallbackResult?.city.seoDescription || `Cargo shipping to ${cityName}`,
     provider: {
       '@type': 'Organization',
       name: siteConfig.name,
@@ -107,10 +153,10 @@ export default async function DestinationCityDetailPage({ params }: CityPageProp
     },
     areaServed: {
       '@type': 'City',
-      name: city.name,
+      name: cityName,
       containedInPlace: {
         '@type': 'Country',
-        name: country.name,
+        name: countryName,
       },
     },
     serviceType: 'International Cargo Shipping',
@@ -130,52 +176,52 @@ export default async function DestinationCityDetailPage({ params }: CityPageProp
 
       {/* 01 HERO (Dark / Photo-led) */}
       <DestinationHero
-        countryName={country.name}
-        cityName={city.name}
-        region={country.region}
-        h1={city.h1}
-        introduction={city.introduction}
+        countryName={countryName}
+        cityName={cityName}
+        region={region}
+        h1={h1}
+        introduction={introduction}
         quoteUrl={quoteUrl}
         breadcrumbs={breadcrumbs}
       />
 
       {/* 02 OVERVIEW (LIGHT) */}
       <DestinationOverview
-        countryName={`${city.name}, ${country.name}`}
-        shippingOverview={city.overview || city.introduction}
+        countryName={`${cityName}, ${countryName}`}
+        shippingOverview={overview}
       />
 
       {/* 03 AVAILABLE SERVICES (LIGHT / WHITE - Inherited from parent country) */}
       <DestinationServiceGrid
-        countryName={`${city.name}, ${country.name}`}
-        countrySlug={country.slug}
-        supportedServices={country.supportedServices}
+        countryName={`${cityName}, ${countryName}`}
+        countrySlug={countrySlug}
+        supportedServices={supportedServices}
       />
 
       {/* 04 PAKISTAN ORIGIN CITIES (WHITE - Inherited from parent country) */}
       <DestinationOriginGrid
-        countryName={`${city.name}, ${country.name}`}
-        countrySlug={country.slug}
-        supportedOrigins={country.supportedOrigins}
+        countryName={`${cityName}, ${countryName}`}
+        countrySlug={countrySlug}
+        supportedOrigins={supportedOrigins}
       />
 
       {/* 05 SHIPPING PROCESS (LIGHT) */}
-      <DestinationProcess countryName={`${city.name}, ${country.name}`} />
+      <DestinationProcess countryName={`${cityName}, ${countryName}`} />
 
       {/* 06 PREPARATION / CUSTOMS / DELIVERY NOTES (WHITE) */}
       <DestinationConsiderations
-        countryName={`${city.name}, ${country.name}`}
-        preparationConsiderations={city.preparationConsiderations || city.deliveryCoverageNotes}
+        countryName={`${cityName}, ${countryName}`}
+        preparationConsiderations={preparationConsiderations}
       />
 
       {/* 07 GUIDES (WHITE) */}
-      <DestinationGuides countryName={city.name} />
+      <DestinationGuides countryName={cityName} />
 
       {/* 08 FAQ (LIGHT) */}
-      <DestinationFaq countryName={city.name} faqs={country.faqs} />
+      <DestinationFaq countryName={cityName} faqs={faqs} />
 
       {/* 09 CTA (BLACK) */}
-      <DestinationCta countryName={`${city.name}, ${country.name}`} countrySlug={country.slug} />
+      <DestinationCta countryName={`${cityName}, ${countryName}`} countrySlug={countrySlug} />
     </article>
   );
 }

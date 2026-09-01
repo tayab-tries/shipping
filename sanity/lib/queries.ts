@@ -304,3 +304,118 @@ export const LOCATION_BY_SLUG_QUERY = defineQuery(`
     }
   }
 `);
+
+// --------------------------------------------------
+// DESTINATIONS QUERIES (PHASE 3C)
+// --------------------------------------------------
+export const DESTINATIONS_LIST_QUERY = defineQuery(`
+  *[_type == "destinationCountry"] | order(sortOrder asc) {
+    _id,
+    name,
+    "slug": slug.current,
+    region,
+    h1,
+    introduction,
+    shippingOverview,
+    customsGuidance,
+    sortOrder,
+    "heroImage": heroImage.asset->url,
+    heroImageAlt,
+    "supportedServices": supportedServices[]->slug.current,
+    "supportedOrigins": supportedOrigins[]->slug.current,
+    "cities": *[_type == "destinationCity" && references(^._id)] | order(sortOrder asc) {
+      _id,
+      name,
+      "slug": slug.current,
+      h1,
+      introduction,
+      overview,
+      preparationConsiderations
+    },
+    faqs[] {
+      question,
+      answer
+    },
+    seo {
+      metaTitle,
+      metaDescription,
+      "socialImage": socialImage.asset->url
+    }
+  }
+`);
+
+export const DESTINATION_BY_SLUG_QUERY = defineQuery(`
+  *[_type == "destinationCountry" && slug.current == $slug][0] {
+    _id,
+    name,
+    "slug": slug.current,
+    region,
+    h1,
+    introduction,
+    shippingOverview,
+    customsGuidance,
+    sortOrder,
+    "heroImage": heroImage.asset->url,
+    heroImageAlt,
+    "supportedServices": supportedServices[]->slug.current,
+    "supportedOrigins": supportedOrigins[]->slug.current,
+    "cities": *[_type == "destinationCity" && references(^._id)] | order(sortOrder asc) {
+      _id,
+      name,
+      "slug": slug.current,
+      h1,
+      introduction,
+      overview,
+      preparationConsiderations,
+      seo {
+        metaTitle,
+        metaDescription
+      }
+    },
+    faqs[] {
+      question,
+      answer
+    },
+    seo {
+      metaTitle,
+      metaDescription,
+      "socialImage": socialImage.asset->url
+    }
+  }
+`);
+
+export const DESTINATION_CITY_BY_SLUGS_QUERY = defineQuery(`
+  *[_type == "destinationCity" && slug.current == $citySlug && country->slug.current == $countrySlug][0] {
+    _id,
+    name,
+    "slug": slug.current,
+    h1,
+    introduction,
+    overview,
+    preparationConsiderations,
+    sortOrder,
+    "heroImage": heroImage.asset->url,
+    heroImageAlt,
+    "country": country-> {
+      _id,
+      name,
+      "slug": slug.current,
+      region,
+      h1,
+      introduction,
+      shippingOverview,
+      customsGuidance,
+      "supportedServices": supportedServices[]->slug.current,
+      "supportedOrigins": supportedOrigins[]->slug.current,
+      faqs[] {
+        question,
+        answer
+      }
+    },
+    seo {
+      metaTitle,
+      metaDescription,
+      "socialImage": socialImage.asset->url
+    }
+  }
+`);

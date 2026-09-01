@@ -8,6 +8,9 @@ import {
   SERVICE_BY_SLUG_QUERY,
   LOCATIONS_LIST_QUERY,
   LOCATION_BY_SLUG_QUERY,
+  DESTINATIONS_LIST_QUERY,
+  DESTINATION_BY_SLUG_QUERY,
+  DESTINATION_CITY_BY_SLUGS_QUERY,
 } from './queries';
 
 export interface SanityCta {
@@ -186,6 +189,62 @@ export interface SanityLocationDocument {
   };
 }
 
+export interface SanityDestinationCitySummary {
+  _id?: string;
+  name: string;
+  slug: string;
+  h1?: string;
+  introduction?: string;
+  overview?: string;
+  preparationConsiderations?: string;
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+  };
+}
+
+export interface SanityDestinationCountryDocument {
+  _id?: string;
+  name: string;
+  slug: string;
+  region: string;
+  h1: string;
+  introduction: string;
+  shippingOverview?: string;
+  customsGuidance?: string;
+  sortOrder?: number;
+  heroImage?: string;
+  heroImageAlt?: string;
+  supportedServices?: string[];
+  supportedOrigins?: string[];
+  cities?: SanityDestinationCitySummary[];
+  faqs?: { question: string; answer: string }[];
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    socialImage?: string;
+  };
+}
+
+export interface SanityDestinationCityDocument {
+  _id?: string;
+  name: string;
+  slug: string;
+  h1: string;
+  introduction: string;
+  overview?: string;
+  preparationConsiderations?: string;
+  sortOrder?: number;
+  heroImage?: string;
+  heroImageAlt?: string;
+  country?: SanityDestinationCountryDocument;
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    socialImage?: string;
+  };
+}
+
 async function isDraftEnabled(): Promise<boolean> {
   try {
     return (await draftMode()).isEnabled;
@@ -264,6 +323,51 @@ export async function getSanityLocationBySlug(slug: string, options?: { stega?: 
     return await fetchClient.fetch<SanityLocationDocument>(LOCATION_BY_SLUG_QUERY, { slug }, { stega: options?.stega ?? false });
   } catch (error) {
     console.warn(`[Sanity] getSanityLocationBySlug fetch error for slug ${slug}, using fallbacks:`, error);
+    return null;
+  }
+}
+
+export async function getSanityDestinationsList(): Promise<SanityDestinationCountryDocument[]> {
+  if (!isSanityConfigured) return [];
+  try {
+    const isDraft = await isDraftEnabled();
+    const fetchClient = isDraft && readToken ? client.withConfig({ token: readToken }) : client;
+    const data = await fetchClient.fetch<SanityDestinationCountryDocument[]>(DESTINATIONS_LIST_QUERY, {}, { stega: false });
+    return data || [];
+  } catch (error) {
+    console.warn('[Sanity] getSanityDestinationsList fetch error, using fallbacks:', error);
+    return [];
+  }
+}
+
+export async function getSanityDestinationBySlug(slug: string, options?: { stega?: boolean }): Promise<SanityDestinationCountryDocument | null> {
+  if (!isSanityConfigured) return null;
+  try {
+    const isDraft = await isDraftEnabled();
+    const fetchClient = isDraft && readToken ? client.withConfig({ token: readToken }) : client;
+    return await fetchClient.fetch<SanityDestinationCountryDocument>(DESTINATION_BY_SLUG_QUERY, { slug }, { stega: options?.stega ?? false });
+  } catch (error) {
+    console.warn(`[Sanity] getSanityDestinationBySlug fetch error for slug ${slug}, using fallbacks:`, error);
+    return null;
+  }
+}
+
+export async function getSanityDestinationCityBySlugs(
+  countrySlug: string,
+  citySlug: string,
+  options?: { stega?: boolean }
+): Promise<SanityDestinationCityDocument | null> {
+  if (!isSanityConfigured) return null;
+  try {
+    const isDraft = await isDraftEnabled();
+    const fetchClient = isDraft && readToken ? client.withConfig({ token: readToken }) : client;
+    return await fetchClient.fetch<SanityDestinationCityDocument>(
+      DESTINATION_CITY_BY_SLUGS_QUERY,
+      { countrySlug, citySlug },
+      { stega: options?.stega ?? false }
+    );
+  } catch (error) {
+    console.warn(`[Sanity] getSanityDestinationCityBySlugs fetch error for ${countrySlug}/${citySlug}, using fallbacks:`, error);
     return null;
   }
 }

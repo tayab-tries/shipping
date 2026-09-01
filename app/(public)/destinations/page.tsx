@@ -9,10 +9,11 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
-import { getPublishedDestinations } from '@/lib/destinations/destination-content';
+import { getPublishedDestinations, DestinationCountryData } from '@/lib/destinations/destination-content';
 import { getPublishedLocations } from '@/lib/locations/location-content';
 import { siteConfig } from '@/config/site.config';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
+import { getSanityDestinationsList, getSanityLocationsList, SanityDestinationCountryDocument } from '@/sanity/lib/fetch';
 
 export const metadata: Metadata = {
   title: `International Cargo Destinations from Pakistan | ${siteConfig.name}`,
@@ -24,10 +25,59 @@ export const metadata: Metadata = {
 };
 
 export default async function DestinationsHubPage() {
-  const [destinations, originLocations] = await Promise.all([
+  const [sanityDestinations, fallbackDestinations, sanityLocations, fallbackLocations] = await Promise.all([
+    getSanityDestinationsList(),
     getPublishedDestinations(),
+    getSanityLocationsList(),
     getPublishedLocations(),
   ]);
+
+  const destinations: DestinationCountryData[] =
+    sanityDestinations.length > 0
+      ? sanityDestinations.map((doc: SanityDestinationCountryDocument) => {
+          const fallback = fallbackDestinations.find((f) => f.slug === doc.slug);
+          return {
+            id: doc._id || doc.slug,
+            name: doc.name,
+            slug: doc.slug,
+            region: doc.region || fallback?.region || 'Global',
+            h1: doc.h1 || fallback?.h1 || `Cargo Services to ${doc.name}`,
+            seoTitle: doc.seo?.metaTitle || fallback?.seoTitle || `Cargo to ${doc.name}`,
+            seoDescription: doc.seo?.metaDescription || fallback?.seoDescription || `Cargo shipping to ${doc.name}`,
+            introduction: doc.introduction || fallback?.introduction || `Cargo shipping to ${doc.name}`,
+            shippingOverview: doc.shippingOverview || fallback?.shippingOverview || '',
+            customsGuidance: doc.customsGuidance || fallback?.customsGuidance || '',
+            supportedServices: doc.supportedServices || fallback?.supportedServices || ['air-freight', 'sea-cargo'],
+            supportedOrigins: doc.supportedOrigins || fallback?.supportedOrigins || [],
+            cities:
+              doc.cities?.map((c) => ({
+                id: c._id || c.slug,
+                countryId: doc._id || doc.slug,
+                name: c.name,
+                slug: c.slug,
+                h1: c.h1 || `Cargo Services to ${c.name}, ${doc.name}`,
+                seoTitle: c.seo?.metaTitle || `Cargo Shipping to ${c.name}`,
+                seoDescription: c.seo?.metaDescription || `Cargo shipping to ${c.name}, ${doc.name}`,
+                introduction: c.introduction || `Cargo shipping to ${c.name}`,
+                overview: c.overview || c.introduction,
+                preparationConsiderations: c.preparationConsiderations || '',
+                deliveryCoverageNotes: '',
+                status: 'published',
+                isVerified: true,
+                isIndexable: true,
+              })) || fallback?.cities || [],
+            faqs: doc.faqs || fallback?.faqs || [],
+            status: 'published',
+            isVerified: true,
+            isIndexable: true,
+          };
+        })
+      : fallbackDestinations;
+
+  const originLocations =
+    sanityLocations.length > 0
+      ? sanityLocations.map((l) => ({ name: l.name, slug: l.slug, province: l.province }))
+      : fallbackLocations.map((l) => ({ name: l.name, slug: l.slug, province: l.province }));
 
   const featuredCorridor = destinations.length > 0 ? destinations[0] : null;
   const secondaryCorridors = destinations.length > 1 ? destinations.slice(1) : [];
