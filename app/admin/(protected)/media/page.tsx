@@ -138,6 +138,7 @@ export default function AdminMediaPage() {
 
   const handleTriggerUpload = () => {
     if (fileInputRef.current) {
+      fileInputRef.current.value = '';
       fileInputRef.current.click();
     }
   };
@@ -162,12 +163,24 @@ export default function AdminMediaPage() {
     setIsUploading(true);
     setUploadError(null);
 
-    const formData = new FormData();
-    formData.append('file', selectedFile);
-    formData.append('altText', uploadAltText.trim());
-
     try {
-      const result = await uploadMediaAssetAction(formData);
+      // Convert File to base64 string safely
+      const reader = new FileReader();
+      const base64Promise = new Promise<string>((resolve, reject) => {
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = (error) => reject(error);
+        reader.readAsDataURL(selectedFile);
+      });
+
+      const base64Data = await base64Promise;
+
+      const result = await uploadMediaAssetAction({
+        fileName: selectedFile.name,
+        mimeType: selectedFile.type,
+        base64Data,
+        sizeBytes: selectedFile.size,
+        altText: uploadAltText.trim(),
+      });
 
       if (result.success && result.data) {
         const newAsset: MediaAssetItem = {
@@ -187,7 +200,7 @@ export default function AdminMediaPage() {
         setUploadError(result.error || 'Failed to upload image. Please try again.');
       }
     } catch (err: unknown) {
-      setUploadError(err instanceof Error ? err.message : 'Server action error uploading image.');
+      setUploadError(err instanceof Error ? err.message : 'Error converting image file.');
     } finally {
       setIsUploading(false);
     }
@@ -343,7 +356,13 @@ export default function AdminMediaPage() {
                 size="md"
                 onClick={handleConfirmUpload}
                 disabled={isUploading}
-                leftIcon={isUploading ? <Loader2 className="w-4 h-4 text-brand-black animate-spin" /> : <Upload className="w-4 h-4 text-brand-black" />}
+                leftIcon={
+                  isUploading ? (
+                    <Loader2 className="w-4 h-4 text-brand-black animate-spin" />
+                  ) : (
+                    <Upload className="w-4 h-4 text-brand-black" />
+                  )
+                }
               >
                 {isUploading ? 'Uploading...' : 'Save & Publish Image'}
               </Button>
@@ -377,7 +396,9 @@ export default function AdminMediaPage() {
         <div className="p-12 text-center bg-surface-subtle rounded border border-border text-slate-500 space-y-3">
           <ImageIcon className="w-8 h-8 mx-auto text-slate-400" />
           <p className="text-body-md font-semibold text-brand-black">No media assets found</p>
-          <p className="text-xs text-slate-500 font-mono">Upload an image asset using the button above to add to the library.</p>
+          <p className="text-xs text-slate-500 font-mono">
+            Upload an image asset using the button above to add to the library.
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
