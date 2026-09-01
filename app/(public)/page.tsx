@@ -3,6 +3,8 @@ import { HeroSection } from '@/components/sections/HeroSection';
 import { QuickQuoteTeaser } from '@/components/sections/QuickQuoteTeaser';
 import { UseCasesSection } from '@/components/sections/UseCasesSection';
 import { ServicesOverview } from '@/components/sections/ServicesOverview';
+import { RegistrationsSection } from '@/components/sections/RegistrationsSection';
+import { TrustedMarketSection } from '@/components/sections/TrustedMarketSection';
 import { PakistanReachSection } from '@/components/sections/PakistanReachSection';
 import { DestinationShowcase } from '@/components/sections/DestinationShowcase';
 import { ProcessSection } from '@/components/sections/ProcessSection';
@@ -35,27 +37,37 @@ export default async function HomePage() {
       {/* 04. CORE SERVICES */}
       {blocks.services?.enabled && <ServicesOverview blockData={blocks.services.contentData} />}
 
-      {/* 05. PAKISTAN COVERAGE */}
+      {/* 05. OFFICIAL REGISTRATIONS & ASSOCIATIONS */}
+      {blocks.registrations_associations?.enabled !== false && (
+        <RegistrationsSection blockData={blocks.registrations_associations?.contentData} />
+      )}
+
+      {/* 06. TRUSTED BY THE MARKET (CLIENT CAROUSEL) */}
+      {blocks.trusted_market?.enabled !== false && (
+        <TrustedMarketSection blockData={blocks.trusted_market?.contentData} />
+      )}
+
+      {/* 07. PAKISTAN COVERAGE */}
       {blocks.locations?.enabled && <PakistanReachSection blockData={blocks.locations.contentData} />}
 
-      {/* 06. POPULAR DESTINATIONS */}
+      {/* 08. POPULAR DESTINATIONS */}
       {blocks.destinations?.enabled && <DestinationShowcase blockData={blocks.destinations.contentData} />}
 
-      {/* 07. PROCESS */}
+      {/* 09. PROCESS */}
       {blocks.process?.enabled && <ProcessSection blockData={blocks.process.contentData} />}
 
-      {/* 08. TRUST / RELIABILITY */}
+      {/* 10. TRUST / RELIABILITY */}
       {blocks.trust?.enabled && <TrustSection blockData={blocks.trust.contentData} />}
 
-      {/* 09. GUIDES / RESOURCES */}
+      {/* 11. GUIDES / RESOURCES */}
       {blocks.guides?.enabled && <GuidesPreviewSection blockData={blocks.guides.contentData} />}
 
-      {/* 10. FAQ */}
+      {/* 12. FAQ */}
       {blocks.faq?.enabled && (
         <FaqSection blockData={blocks.faq.contentData} whatsappNumber={business.whatsappNumber} />
       )}
 
-      {/* 11. FINAL CTA */}
+      {/* 13. FINAL CTA */}
       {blocks.cta?.enabled && (
         <FinalCtaSection blockData={blocks.cta.contentData} whatsappNumber={business.whatsappNumber} />
       )}

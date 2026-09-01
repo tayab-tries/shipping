@@ -16,14 +16,17 @@ export interface HomepageBlockInput {
 const defaultBlocks: HomepageBlockInput[] = [
   { id: 'blk-1', type: 'hero', label: BLOCK_DEFINITIONS.hero.label, enabled: true, sortOrder: 1, contentData: { ...BLOCK_DEFINITIONS.hero.defaultData } },
   { id: 'blk-2', type: 'quick_quote', label: BLOCK_DEFINITIONS.quick_quote.label, enabled: true, sortOrder: 2, contentData: { ...BLOCK_DEFINITIONS.quick_quote.defaultData } },
-  { id: 'blk-3', type: 'services', label: BLOCK_DEFINITIONS.services.label, enabled: true, sortOrder: 3, contentData: { ...BLOCK_DEFINITIONS.services.defaultData } },
-  { id: 'blk-4', type: 'locations', label: BLOCK_DEFINITIONS.locations.label, enabled: true, sortOrder: 4, contentData: { ...BLOCK_DEFINITIONS.locations.defaultData } },
-  { id: 'blk-5', type: 'destinations', label: BLOCK_DEFINITIONS.destinations.label, enabled: true, sortOrder: 5, contentData: { ...BLOCK_DEFINITIONS.destinations.defaultData } },
-  { id: 'blk-6', type: 'process', label: BLOCK_DEFINITIONS.process.label, enabled: true, sortOrder: 6, contentData: { ...BLOCK_DEFINITIONS.process.defaultData } },
-  { id: 'blk-7', type: 'trust', label: BLOCK_DEFINITIONS.trust.label, enabled: true, sortOrder: 7, contentData: { ...BLOCK_DEFINITIONS.trust.defaultData } },
-  { id: 'blk-8', type: 'guides', label: BLOCK_DEFINITIONS.guides.label, enabled: true, sortOrder: 8, contentData: { ...BLOCK_DEFINITIONS.guides.defaultData } },
-  { id: 'blk-9', type: 'faq', label: BLOCK_DEFINITIONS.faq.label, enabled: true, sortOrder: 9, contentData: { ...BLOCK_DEFINITIONS.faq.defaultData } },
-  { id: 'blk-10', type: 'cta', label: BLOCK_DEFINITIONS.cta.label, enabled: true, sortOrder: 10, contentData: { ...BLOCK_DEFINITIONS.cta.defaultData } },
+  { id: 'blk-3', type: 'use_cases', label: BLOCK_DEFINITIONS.use_cases.label, enabled: true, sortOrder: 3, contentData: { ...BLOCK_DEFINITIONS.use_cases.defaultData } },
+  { id: 'blk-4', type: 'services', label: BLOCK_DEFINITIONS.services.label, enabled: true, sortOrder: 4, contentData: { ...BLOCK_DEFINITIONS.services.defaultData } },
+  { id: 'blk-5', type: 'registrations_associations', label: BLOCK_DEFINITIONS.registrations_associations.label, enabled: true, sortOrder: 5, contentData: { ...BLOCK_DEFINITIONS.registrations_associations.defaultData } },
+  { id: 'blk-6', type: 'trusted_market', label: BLOCK_DEFINITIONS.trusted_market.label, enabled: true, sortOrder: 6, contentData: { ...BLOCK_DEFINITIONS.trusted_market.defaultData } },
+  { id: 'blk-7', type: 'locations', label: BLOCK_DEFINITIONS.locations.label, enabled: true, sortOrder: 7, contentData: { ...BLOCK_DEFINITIONS.locations.defaultData } },
+  { id: 'blk-8', type: 'destinations', label: BLOCK_DEFINITIONS.destinations.label, enabled: true, sortOrder: 8, contentData: { ...BLOCK_DEFINITIONS.destinations.defaultData } },
+  { id: 'blk-9', type: 'process', label: BLOCK_DEFINITIONS.process.label, enabled: true, sortOrder: 9, contentData: { ...BLOCK_DEFINITIONS.process.defaultData } },
+  { id: 'blk-10', type: 'trust', label: BLOCK_DEFINITIONS.trust.label, enabled: true, sortOrder: 10, contentData: { ...BLOCK_DEFINITIONS.trust.defaultData } },
+  { id: 'blk-11', type: 'guides', label: BLOCK_DEFINITIONS.guides.label, enabled: true, sortOrder: 11, contentData: { ...BLOCK_DEFINITIONS.guides.defaultData } },
+  { id: 'blk-12', type: 'faq', label: BLOCK_DEFINITIONS.faq.label, enabled: true, sortOrder: 12, contentData: { ...BLOCK_DEFINITIONS.faq.defaultData } },
+  { id: 'blk-13', type: 'cta', label: BLOCK_DEFINITIONS.cta.label, enabled: true, sortOrder: 13, contentData: { ...BLOCK_DEFINITIONS.cta.defaultData } },
 ];
 
 export async function getHomepageBlocksAction() {
@@ -42,6 +45,14 @@ export async function getHomepageBlocksAction() {
         sortOrder: b.display_order ?? b.sort_order ?? 0,
         contentData: (b.content || b.content_data || {}) as Record<string, unknown>,
       }));
+      formatted.sort((a, b) => a.sortOrder - b.sortOrder);
+
+      // Ensure new blocks exist in array even if old database missing them
+      for (const defBlock of defaultBlocks) {
+        if (!formatted.some((f) => f.type === defBlock.type)) {
+          formatted.push(defBlock);
+        }
+      }
       formatted.sort((a, b) => a.sortOrder - b.sortOrder);
       return { success: true, data: formatted };
     }

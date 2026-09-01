@@ -5,6 +5,8 @@ export type BlockType =
   | 'quick_quote'
   | 'use_cases'
   | 'services'
+  | 'registrations_associations'
+  | 'trusted_market'
   | 'locations'
   | 'destinations'
   | 'process'
@@ -104,6 +106,74 @@ export const BLOCK_DEFINITIONS: Record<BlockType, BlockDefinition> = {
       sea_cargo_description: 'Sea cargo shipping with door-to-door delivery. Economical ocean container shipping for heavy goods and large household shipments.',
       air_cargo_image: '/images/service-air.jpg',
       sea_cargo_image: '/images/service-sea.jpg',
+    },
+  },
+  registrations_associations: {
+    type: 'registrations_associations',
+    label: 'Registrations & Associations',
+    description: 'Static credibility bar displaying FBR and international mover registrations.',
+    schema: z.object({
+      heading: z.string().default('WE ARE REGISTERED WITH FBR AND ASSOCIATED WITH'),
+      items: z.array(
+        z.object({
+          name: z.string(),
+          logo: z.string(),
+          orgName: z.string().optional(),
+          description: z.string().optional(),
+          sort_order: z.number().optional(),
+        })
+      ).default([
+        { name: 'FBR', logo: '/images/logos/fbr.svg', orgName: 'Federal Board of Revenue', description: 'Government of Pakistan', sort_order: 1 },
+        { name: 'IAM (USA)', logo: '/images/logos/iam-usa.svg', orgName: 'International Association of Movers', description: 'USA Global Network', sort_order: 2 },
+        { name: 'MOVERS P.O.E', logo: '/images/logos/movers-poe.svg', orgName: 'Movers Port of Entry', description: 'Registered Port Alliance', sort_order: 3 },
+        { name: 'FIDI GLOBAL ALLIANCE', logo: '/images/logos/fidi.svg', orgName: 'FIDI Global Alliance', description: 'FAIM Quality Certified', sort_order: 4 },
+        { name: 'CANADIAN ASSOCIATION OF MOVERS (CAM)', logo: '/images/logos/cam.svg', orgName: 'Canadian Association of Movers', description: 'CAM Canada', sort_order: 5 },
+      ]),
+    }),
+    defaultData: {
+      heading: 'WE ARE REGISTERED WITH FBR AND ASSOCIATED WITH',
+      items: [
+        { name: 'FBR', logo: '/images/logos/fbr.svg', orgName: 'Federal Board of Revenue', description: 'Government of Pakistan', sort_order: 1 },
+        { name: 'IAM (USA)', logo: '/images/logos/iam-usa.svg', orgName: 'International Association of Movers', description: 'USA Global Network', sort_order: 2 },
+        { name: 'MOVERS P.O.E', logo: '/images/logos/movers-poe.svg', orgName: 'Movers Port of Entry', description: 'Registered Port Alliance', sort_order: 3 },
+        { name: 'FIDI GLOBAL ALLIANCE', logo: '/images/logos/fidi.svg', orgName: 'FIDI Global Alliance', description: 'FAIM Quality Certified', sort_order: 4 },
+        { name: 'CANADIAN ASSOCIATION OF MOVERS (CAM)', logo: '/images/logos/cam.svg', orgName: 'Canadian Association of Movers', description: 'CAM Canada', sort_order: 5 },
+      ],
+    },
+  },
+  trusted_market: {
+    type: 'trusted_market',
+    label: 'Trusted By The Market',
+    description: 'Logo-only horizontal marquee carousel featuring major market clients.',
+    schema: z.object({
+      heading: z.string().default('TRUSTED BY THE MARKET'),
+      items: z.array(
+        z.object({
+          name: z.string(),
+          logo: z.string(),
+          sort_order: z.number().optional(),
+        })
+      ).default([
+        { name: 'Ufone', logo: '/images/logos/ufone.svg', sort_order: 1 },
+        { name: 'Daraz', logo: '/images/logos/daraz.svg', sort_order: 2 },
+        { name: 'Faysal Bank', logo: '/images/logos/faysal-bank.svg', sort_order: 3 },
+        { name: 'HBL', logo: '/images/logos/hbl.svg', sort_order: 4 },
+        { name: 'Puma', logo: '/images/logos/puma.svg', sort_order: 5 },
+        { name: 'PTN', logo: '/images/logos/ptn.svg', sort_order: 6 },
+        { name: 'PTCL', logo: '/images/logos/ptcl.svg', sort_order: 7 },
+      ]),
+    }),
+    defaultData: {
+      heading: 'TRUSTED BY THE MARKET',
+      items: [
+        { name: 'Ufone', logo: '/images/logos/ufone.svg', sort_order: 1 },
+        { name: 'Daraz', logo: '/images/logos/daraz.svg', sort_order: 2 },
+        { name: 'Faysal Bank', logo: '/images/logos/faysal-bank.svg', sort_order: 3 },
+        { name: 'HBL', logo: '/images/logos/hbl.svg', sort_order: 4 },
+        { name: 'Puma', logo: '/images/logos/puma.svg', sort_order: 5 },
+        { name: 'PTN', logo: '/images/logos/ptn.svg', sort_order: 6 },
+        { name: 'PTCL', logo: '/images/logos/ptcl.svg', sort_order: 7 },
+      ],
     },
   },
   locations: {

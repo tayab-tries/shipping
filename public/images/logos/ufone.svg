@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 60" width="100%" height="100%">
+  <!-- Ufone 4G Logo -->
+  <g transform="translate(10, 8)">
+    <circle cx="22" cy="22" r="20" fill="#F97316" />
+    <text x="22" y="29" font-family="Arial, sans-serif" font-weight="900" font-size="24" fill="#FFFFFF" text-anchor="middle">u</text>
+  </g>
+  <text x="58" y="33" font-family="Arial, sans-serif" font-weight="900" font-size="22" fill="#F97316" letter-spacing="-0.5">ufone</text>
+  <text x="124" y="33" font-family="Arial, sans-serif" font-weight="900" font-size="16" fill="#1E293B">4G</text>
+</svg>
