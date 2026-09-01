@@ -3,33 +3,47 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ShieldCheck, MapPin, Phone, Mail, MessageSquare } from 'lucide-react';
 import { siteConfig } from '@/config/site.config';
+import { footerNavigation as defaultFooterNav } from '@/config/nav.config';
 import { Container } from '@/components/ui/Container';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
-import { getSanitySiteSettingsFull } from '@/sanity/lib/fetch';
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
+import { SanitySiteSettings } from '@/sanity/lib/fetch';
 
-export const Footer = async () => {
-  const [business, sanitySettings] = await Promise.all([
-    getPublishedBusinessSettings(),
-    getSanitySiteSettingsFull(),
-  ]);
+interface FooterProps {
+  sanitySiteSettings?: SanitySiteSettings | null;
+}
 
-  const brandName = sanitySettings?.businessName || business.brandName || siteConfig.name;
-  const phone = sanitySettings?.phone || business.phonePrimary || siteConfig.phone || '+92 300 1234567';
-  const whatsappNumber = sanitySettings?.whatsappNumber || business.whatsappNumber || siteConfig.contact?.whatsappNumber || phone;
+export const Footer: React.FC<FooterProps> = async ({ sanitySiteSettings }) => {
+  const business = await getPublishedBusinessSettings();
+
+  // Rule #1: Business contact fields as single source of contact info
+  const brandName = sanitySiteSettings?.businessName || business.brandName || siteConfig.name;
+  const phone = sanitySiteSettings?.phone || business.phonePrimary || siteConfig.phone || '+92 300 1234567';
+  const whatsappNumber = sanitySiteSettings?.whatsappNumber || business.whatsappNumber || siteConfig.contact?.whatsappNumber || phone;
   const whatsappUrl = buildWhatsappUrl(whatsappNumber);
-  const email = sanitySettings?.email || business.emailInfo || siteConfig.contact?.emailInfo || 'info@raahiinternational.pk';
-  const footerDesc =
-    sanitySettings?.footerDescription ||
+  const email = sanitySiteSettings?.email || business.emailInfo || siteConfig.contact?.emailInfo || 'info@raahiinternational.pk';
+  const address = sanitySiteSettings?.address || (business as unknown as { addressPrimary?: string }).addressPrimary || 'Main Airport Cargo Terminal Area, Lahore / Karachi, Pakistan';
+
+  const footerDescription =
+    sanitySiteSettings?.footerDescription ||
     'International cargo delivery provider providing reliable air cargo, ocean sea cargo, and door-to-door shipping services connecting Pakistan worldwide.';
-  const copyrightText = sanitySettings?.copyrightText || 'All rights reserved.';
-  const logoSrc = sanitySettings?.logoUrl || '/images/brand/logo-white.svg';
+
+  const footerGroups =
+    sanitySiteSettings?.footerGroups && sanitySiteSettings.footerGroups.length > 0
+      ? sanitySiteSettings.footerGroups
+      : defaultFooterNav.map((g) => ({ title: g.title, links: g.items }));
+
+  const copyrightText =
+    sanitySiteSettings?.copyrightText ||
+    `© ${new Date().getFullYear()} ${brandName}. All rights reserved.`;
+
+  const logoSrc = sanitySiteSettings?.logo || '/images/brand/logo-white.svg';
 
   return (
     <footer className="w-full bg-brand-black border-t border-border-dark text-slate-300 py-16">
       <Container>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-border-dark">
-          {/* Column 1: Company / Brand */}
+          {/* Column 1: Company / Brand Bio & Contact Details */}
           <div className="space-y-4">
             <Link href="/" className="flex items-center">
               <Image
@@ -41,8 +55,9 @@ export const Footer = async () => {
               />
             </Link>
             <p className="text-body-sm text-slate-400 leading-relaxed">
-              {footerDesc}
+              {footerDescription}
             </p>
+
             <div className="space-y-2 pt-2 text-xs font-mono text-slate-400">
               <div className="flex items-center gap-2">
                 <Phone className="w-3.5 h-3.5 text-accent shrink-0" />
@@ -62,145 +77,37 @@ export const Footer = async () => {
                   {email}
                 </a>
               </div>
+              {address && (
+                <div className="flex items-start gap-2 text-slate-500 pt-1">
+                  <MapPin className="w-3.5 h-3.5 text-accent shrink-0 mt-0.5" />
+                  <span className="leading-snug">{address}</span>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Column 2: Services */}
-          <div className="space-y-3">
-            <h3 className="text-xs font-mono font-semibold uppercase text-accent tracking-wider">
-              Services
-            </h3>
-            <ul className="space-y-2 text-sm font-medium">
-              <li>
-                <Link href="/services/air-freight" className="hover:text-white transition-colors">
-                  Air Cargo Services
-                </Link>
-              </li>
-              <li>
-                <Link href="/services/sea-cargo" className="hover:text-white transition-colors">
-                  Sea Cargo (FCL / LCL)
-                </Link>
-              </li>
-              <li>
-                <Link href="/services/door-to-door" className="hover:text-white transition-colors">
-                  Door-to-Door Delivery
-                </Link>
-              </li>
-              <li>
-                <Link href="/services/commercial-cargo" className="hover:text-white transition-colors">
-                  Commercial Cargo
-                </Link>
-              </li>
-              <li>
-                <Link href="/services" className="text-xs font-mono text-accent hover:underline">
-                  All Services →
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column 3: Locations */}
-          <div className="space-y-3">
-            <h3 className="text-xs font-mono font-semibold uppercase text-accent tracking-wider">
-              Locations
-            </h3>
-            <ul className="space-y-2 text-sm font-medium">
-              <li>
-                <Link href="/locations/lahore" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <MapPin className="w-3 h-3 text-accent shrink-0" />
-                  <span>Lahore Hub</span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/locations/karachi" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <MapPin className="w-3 h-3 text-accent shrink-0" />
-                  <span>Karachi Hub</span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/locations/islamabad" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <MapPin className="w-3 h-3 text-accent shrink-0" />
-                  <span>Islamabad Hub</span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/locations/rawalpindi" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <MapPin className="w-3 h-3 text-accent shrink-0" />
-                  <span>Rawalpindi Hub</span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/locations" className="text-xs font-mono text-accent hover:underline">
-                  All Locations →
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column 4: Destinations */}
-          <div className="space-y-3">
-            <h3 className="text-xs font-mono font-semibold uppercase text-accent tracking-wider">
-              Destinations
-            </h3>
-            <ul className="space-y-2 text-sm font-medium">
-              <li>
-                <Link href="/destinations/uk" className="hover:text-white transition-colors">
-                  Cargo to United Kingdom
-                </Link>
-              </li>
-              <li>
-                <Link href="/destinations/uae" className="hover:text-white transition-colors">
-                  Cargo to UAE / Dubai
-                </Link>
-              </li>
-              <li>
-                <Link href="/destinations/usa" className="hover:text-white transition-colors">
-                  Cargo to United States
-                </Link>
-              </li>
-              <li>
-                <Link href="/destinations/canada" className="hover:text-white transition-colors">
-                  Cargo to Canada
-                </Link>
-              </li>
-              <li>
-                <Link href="/destinations/ksa" className="hover:text-white transition-colors">
-                  Cargo to Saudi Arabia
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column 5: Resources */}
-          <div className="space-y-3">
-            <h3 className="text-xs font-mono font-semibold uppercase text-accent tracking-wider">
-              Resources
-            </h3>
-            <ul className="space-y-2 text-sm font-medium">
-              <li>
-                <Link href="/track" className="hover:text-accent font-semibold transition-colors">
-                  Track Shipment
-                </Link>
-              </li>
-              <li>
-                <Link href="/quote" className="hover:text-accent font-semibold transition-colors">
-                  Request a Quote
-                </Link>
-              </li>
-              <li>
-                <Link href="/guides" className="hover:text-white transition-colors">
-                  Educational Guides
-                </Link>
-              </li>
-            </ul>
-          </div>
+          {/* Dynamic Footer Link Columns */}
+          {footerGroups.map((group, idx) => (
+            <div key={idx} className="space-y-3">
+              <h3 className="text-xs font-mono font-semibold uppercase text-accent tracking-wider">
+                {group.title}
+              </h3>
+              <ul className="space-y-2 text-sm font-medium">
+                {group.links.map((link, lIdx) => (
+                  <li key={lIdx}>
+                    <Link href={link.href} className="hover:text-white transition-colors">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
         {/* Bottom Legal Row */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-slate-500">
-          <div>
-            © {new Date().getFullYear()} {brandName}. {copyrightText}
-          </div>
+          <div>{copyrightText}</div>
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-accent" />
             <span>Verified Air & Sea Cargo Delivery</span>

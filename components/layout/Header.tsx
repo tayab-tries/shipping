@@ -10,28 +10,28 @@ import { TopBar } from './TopBar';
 import { DesktopNav } from './DesktopNav';
 import { MobileNav } from './MobileNav';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
-import { getSanitySiteSettingsFull } from '@/sanity/lib/fetch';
+import { SanitySiteSettings } from '@/sanity/lib/fetch';
 
-export const Header = async () => {
-  const [business, sanitySettings] = await Promise.all([
-    getPublishedBusinessSettings(),
-    getSanitySiteSettingsFull(),
-  ]);
+interface HeaderProps {
+  sanitySiteSettings?: SanitySiteSettings | null;
+}
 
-  const brandName = sanitySettings?.businessName || business.brandName || siteConfig.name;
-  const phone = sanitySettings?.phone || business.phonePrimary;
-  const whatsappNumber = sanitySettings?.whatsappNumber || business.whatsappNumber;
-  const logoSrc = sanitySettings?.logoUrl || '/images/brand/logo-white.svg';
+export const Header: React.FC<HeaderProps> = async ({ sanitySiteSettings }) => {
+  const business = await getPublishedBusinessSettings();
 
-  const ctaLabel = sanitySettings?.primaryCta?.label || defaultPrimaryCta.label;
-  const ctaHref = sanitySettings?.primaryCta?.href || defaultPrimaryCta.href;
+  const brandName = sanitySiteSettings?.businessName || business.brandName || siteConfig.name;
+  const phone = sanitySiteSettings?.phone || business.phonePrimary || siteConfig.phone;
+  const whatsappNumber = sanitySiteSettings?.whatsappNumber || business.whatsappNumber || siteConfig.contact?.whatsappNumber;
+  const logoSrc = sanitySiteSettings?.logo || '/images/brand/logo-white.svg';
+
+  const ctaLabel = sanitySiteSettings?.primaryCta?.label || defaultPrimaryCta.label;
+  const ctaHref = sanitySiteSettings?.primaryCta?.href || defaultPrimaryCta.href;
 
   return (
     <header className="w-full bg-brand-black/95 backdrop-blur-md border-b border-border-dark sticky top-0 z-40">
-      <TopBar />
+      <TopBar phone={phone} whatsappNumber={whatsappNumber} />
       <Container>
         <div className="flex items-center justify-between h-20 sm:h-24 lg:h-26 gap-4 sm:gap-6">
-          {/* Prominent High-Visibility Vector SVG Logo */}
           <div className="flex items-center gap-6 lg:gap-8">
             <Link
               href="/"
@@ -48,11 +48,9 @@ export const Header = async () => {
               />
             </Link>
 
-            {/* Desktop Navigation */}
-            <DesktopNav />
+            <DesktopNav navItems={sanitySiteSettings?.navigationItems} />
           </div>
 
-          {/* Primary CTA & Mobile Navigation Controller */}
           <div className="flex items-center gap-3 sm:gap-4">
             <div className="hidden sm:flex items-center gap-3">
               <Link href={ctaHref}>

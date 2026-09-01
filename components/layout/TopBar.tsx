@@ -6,10 +6,15 @@ import { Container } from '@/components/ui/Container';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
 
-export const TopBar = async () => {
+interface TopBarProps {
+  phone?: string;
+  whatsappNumber?: string;
+}
+
+export const TopBar: React.FC<TopBarProps> = async ({ phone: propPhone, whatsappNumber: propWhatsapp }) => {
   const business = await getPublishedBusinessSettings();
-  const phone = business.phonePrimary || siteConfig.phone || '+92 300 1234567';
-  const whatsappNumber = business.whatsappNumber || siteConfig.contact?.whatsappNumber || phone;
+  const phone = propPhone || business.phonePrimary || siteConfig.phone || '+92 300 1234567';
+  const whatsappNumber = propWhatsapp || business.whatsappNumber || siteConfig.contact?.whatsappNumber || phone;
   const whatsappUrl = buildWhatsappUrl(whatsappNumber);
 
   return (

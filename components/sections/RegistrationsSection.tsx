@@ -3,18 +3,23 @@ import Image from 'next/image';
 
 export interface RegistrationItem {
   name: string;
-  logo: string;
-  orgName?: string;
-  description?: string;
-  sort_order?: number;
+  logo?: string;
+  altText?: string;
 }
 
 export interface RegistrationsSectionProps {
+  heading?: string;
+  items?: RegistrationItem[];
   blockData?: Record<string, unknown>;
 }
 
-export const RegistrationsSection: React.FC<RegistrationsSectionProps> = ({ blockData }) => {
+export const RegistrationsSection: React.FC<RegistrationsSectionProps> = ({
+  heading: propHeading,
+  items: propItems,
+  blockData,
+}) => {
   const heading =
+    propHeading ||
     (blockData?.heading as string) ||
     'WE ARE REGISTERED WITH FBR AND ASSOCIATED WITH';
 
@@ -22,45 +27,46 @@ export const RegistrationsSection: React.FC<RegistrationsSectionProps> = ({ bloc
     {
       name: 'FBR',
       logo: '/images/logos/fbr.svg',
-      orgName: 'Federal Board of Revenue',
-      description: 'Government of Pakistan',
+      altText: 'Federal Board of Revenue Pakistan',
     },
     {
       name: 'IAM (USA)',
       logo: '/images/logos/iam-usa.svg',
-      orgName: 'International Association of Movers',
-      description: 'USA Global Network',
+      altText: 'International Association of Movers USA',
     },
     {
       name: 'MOVERS P.O.E',
       logo: '/images/logos/movers-poe.svg',
-      orgName: 'Movers Port of Entry',
-      description: 'Registered Port Alliance',
+      altText: 'Movers Port of Entry',
     },
     {
       name: 'FIDI GLOBAL ALLIANCE',
       logo: '/images/logos/fidi.svg',
-      orgName: 'FIDI Global Alliance',
-      description: 'FAIM Quality Certified',
+      altText: 'FIDI Global Alliance',
     },
     {
       name: 'CANADIAN ASSOCIATION OF MOVERS (CAM)',
       logo: '/images/logos/cam.svg',
-      orgName: 'Canadian Association of Movers',
-      description: 'CAM Canada',
+      altText: 'Canadian Association of Movers',
     },
   ];
 
-  const items: RegistrationItem[] =
-    Array.isArray(blockData?.items) && blockData.items.length > 0
-      ? (blockData.items as RegistrationItem[])
-      : defaultItems;
+  const rawItems = propItems && propItems.length > 0
+    ? propItems
+    : Array.isArray(blockData?.items) && blockData.items.length > 0
+    ? (blockData.items as RegistrationItem[])
+    : defaultItems;
+
+  const items = rawItems.filter((item): item is RegistrationItem & { logo: string } => Boolean(item && item.logo));
+
+  if (!items || items.length === 0) {
+    return null;
+  }
 
   return (
     <section className="w-full bg-brand-navy py-14 lg:py-20 border-b border-border-dark text-white select-none">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
         <div className="text-center space-y-10 max-w-5xl mx-auto mb-10">
-          {/* Section Heading */}
           <div className="space-y-2.5">
             <span className="text-xs font-mono font-bold tracking-widest text-accent uppercase block">
               Official Registrations & Global Affiliations
@@ -71,38 +77,25 @@ export const RegistrationsSection: React.FC<RegistrationsSectionProps> = ({ bloc
           </div>
         </div>
 
-        {/* Wide Landscape White Cards Grid (Static, NOT Clickable) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 sm:gap-6 items-stretch justify-center">
           {items.map((item, index) => (
             <div
               key={index}
-              className="bg-white rounded-xl border border-slate-200 p-5 sm:p-6 flex flex-col justify-between text-center min-h-[145px] shadow-lg pointer-events-none transition-none"
+              className="bg-white rounded-xl border border-slate-200 p-5 sm:p-6 flex flex-col justify-center items-center text-center min-h-[120px] shadow-lg pointer-events-none transition-none"
             >
-              {/* Logo Asset */}
-              <div className="relative w-full h-16 sm:h-20 flex items-center justify-center mb-3">
+              <div className="relative w-full h-16 sm:h-20 flex items-center justify-center">
                 <Image
                   src={item.logo}
-                  alt={item.name || item.orgName || 'Registration Logo'}
+                  alt={item.altText || item.name || 'Registration Logo'}
                   width={280}
                   height={80}
                   priority
                   className="max-h-14 sm:max-h-16 w-full object-contain"
                 />
               </div>
-
-              {/* Organization Text Block */}
-              <div className="space-y-1 w-full pt-3 border-t border-slate-100">
-                {item.orgName && (
-                  <span className="text-xs sm:text-sm font-extrabold text-slate-900 block leading-snug">
-                    {item.orgName}
-                  </span>
-                )}
-                {item.description && (
-                  <span className="text-[11px] font-mono font-semibold text-slate-500 block leading-tight">
-                    {item.description}
-                  </span>
-                )}
-              </div>
+              <span className="text-xs font-bold text-slate-800 mt-2 block font-mono">
+                {item.name}
+              </span>
             </div>
           ))}
         </div>

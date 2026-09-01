@@ -10,58 +10,70 @@ import { PakistanReachSection } from '@/components/sections/PakistanReachSection
 import { DestinationShowcase } from '@/components/sections/DestinationShowcase';
 import { ProcessSection } from '@/components/sections/ProcessSection';
 import { TrustSection } from '@/components/sections/TrustSection';
-import { GuidesPreviewSection } from '@/components/sections/GuidesPreviewSection';
+import { TestimonialsSection } from '@/components/sections/TestimonialsSection';
 import { FaqSection } from '@/components/sections/FaqSection';
 import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
+import { MobileBottomCta } from '@/components/layout/MobileBottomCta';
 import { getPublishedHomepageBlocks } from '@/lib/cms/homepage.service';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
-import { getSanityHomepageFull, getSanitySiteSettingsFull } from '@/sanity/lib/fetch';
-import { constructMetadata } from '@/lib/seo/metadata.service';
+import { getSanityHomepageData, getSanitySiteSettingsData } from '@/sanity/lib/fetch';
 
 export async function generateMetadata(): Promise<Metadata> {
   const [sanityHomepage, sanitySiteSettings] = await Promise.all([
-    getSanityHomepageFull(),
-    getSanitySiteSettingsFull(),
+    getSanityHomepageData(),
+    getSanitySiteSettingsData(),
   ]);
 
-  const metaTitle =
+  const title =
     sanityHomepage?.seo?.metaTitle ||
-    sanitySiteSettings?.defaultMetaTitle ||
-    'Door-to-Door Cargo Shipping From Pakistan';
+    sanitySiteSettings?.defaultSeoTitle ||
+    'Raahi International — Cargo Shipping & Door-to-Door Delivery From Pakistan';
 
-  const metaDescription =
+  const description =
     sanityHomepage?.seo?.metaDescription ||
-    sanitySiteSettings?.defaultMetaDescription ||
-    'Door-to-door cargo shipping services from Pakistan worldwide by air and sea freight. Home pickup, customs clearance, and global delivery.';
+    sanitySiteSettings?.defaultSeoDescription ||
+    'Reliable air cargo and sea cargo shipping with doorstep pickup across Pakistan and door-to-door delivery to UK, UAE, USA, Canada, KSA & worldwide.';
 
-  const ogImage =
-    sanityHomepage?.seo?.socialImageUrl ||
-    sanitySiteSettings?.defaultSocialImageUrl;
+  const socialImage =
+    sanityHomepage?.seo?.socialImage ||
+    sanitySiteSettings?.defaultSocialImage;
 
-  return constructMetadata({
-    title: metaTitle,
-    description: metaDescription,
-    ogImage: ogImage || undefined,
-  });
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: socialImage ? [{ url: socialImage }] : [],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: socialImage ? [socialImage] : [],
+    },
+  };
 }
 
 export default async function HomePage() {
   const [blocks, business, sanityHomepage, sanitySiteSettings] = await Promise.all([
     getPublishedHomepageBlocks(),
     getPublishedBusinessSettings(),
-    getSanityHomepageFull(),
-    getSanitySiteSettingsFull(),
+    getSanityHomepageData(),
+    getSanitySiteSettingsData(),
   ]);
 
   const activeWhatsapp = sanitySiteSettings?.whatsappNumber || business.whatsappNumber;
+  const activePhone = sanitySiteSettings?.phone || business.phonePrimary || '+92 300 1234567';
 
   return (
-    <div className="w-full">
+    <div className="w-full pb-16 sm:pb-0">
       {/* 01. HERO */}
       {blocks.hero?.enabled && (
         <HeroSection
           blockData={blocks.hero.contentData}
           sanityHeroData={sanityHomepage?.hero}
+          heroFeatureChips={sanityHomepage?.heroFeatureChips}
           whatsappNumber={activeWhatsapp}
         />
       )}
@@ -69,138 +81,112 @@ export default async function HomePage() {
       {/* 02. QUICK QUOTE / ENTRY ACTION */}
       {blocks.quick_quote?.enabled && (
         <QuickQuoteTeaser
-          blockData={{
-            ...blocks.quick_quote.contentData,
-            title: sanityHomepage?.quickQuote?.heading || blocks.quick_quote.contentData?.section_title,
-            subtitle: sanityHomepage?.quickQuote?.description || blocks.quick_quote.contentData?.subtitle,
-            ctaText: sanityHomepage?.quickQuote?.ctaText,
-          }}
+          heading={sanityHomepage?.quickQuote?.heading}
+          description={sanityHomepage?.quickQuote?.description}
+          ctaText={sanityHomepage?.quickQuote?.ctaText}
+          blockData={blocks.quick_quote.contentData}
         />
       )}
 
-      {/* 03. CUSTOMER USE CASES */}
+      {/* 03. CUSTOMER USE CASES / WHAT CAN YOU SEND */}
       {blocks.use_cases?.enabled !== false && (
         <UseCasesSection
-          blockData={{
-            ...blocks.use_cases?.contentData,
-            badge: sanityHomepage?.whatCanYouSend?.badge || blocks.use_cases?.contentData?.badge,
-            title: sanityHomepage?.whatCanYouSend?.heading || blocks.use_cases?.contentData?.title,
-            subtitle: sanityHomepage?.whatCanYouSend?.description || blocks.use_cases?.contentData?.subtitle,
-            items: sanityHomepage?.whatCanYouSend?.items || blocks.use_cases?.contentData?.items,
-          }}
+          badge={sanityHomepage?.whatCanYouSend?.badge}
+          heading={sanityHomepage?.whatCanYouSend?.heading}
+          description={sanityHomepage?.whatCanYouSend?.description}
+          items={sanityHomepage?.whatCanYouSend?.items}
+          blockData={blocks.use_cases?.contentData}
         />
       )}
 
-      {/* 04. CORE SERVICES (AIR + SEA CARGO STRICT 2 CARDS) */}
+      {/* 04. CORE SERVICES (AIR + SEA CARGO ONLY) */}
       {blocks.services?.enabled && (
         <ServicesOverview
-          blockData={{
-            ...blocks.services.contentData,
-            badge: sanityHomepage?.servicesOverview?.badge || blocks.services.contentData?.badge,
-            title: sanityHomepage?.servicesOverview?.heading || blocks.services.contentData?.title,
-            subtitle: sanityHomepage?.servicesOverview?.description || blocks.services.contentData?.subtitle,
-            air_cargo_title: sanityHomepage?.servicesOverview?.airCargo?.title,
-            air_cargo_description: sanityHomepage?.servicesOverview?.airCargo?.description,
-            air_cargo_image: sanityHomepage?.servicesOverview?.airCargo?.imageUrl,
-            sea_cargo_title: sanityHomepage?.servicesOverview?.seaCargo?.title,
-            sea_cargo_description: sanityHomepage?.servicesOverview?.seaCargo?.description,
-            sea_cargo_image: sanityHomepage?.servicesOverview?.seaCargo?.imageUrl,
-          }}
+          badge={sanityHomepage?.servicesOverview?.badge}
+          heading={sanityHomepage?.servicesOverview?.heading}
+          description={sanityHomepage?.servicesOverview?.description}
+          airCargo={sanityHomepage?.servicesOverview?.airCargo}
+          seaCargo={sanityHomepage?.servicesOverview?.seaCargo}
+          blockData={blocks.services.contentData}
         />
       )}
 
       {/* 05. OFFICIAL REGISTRATIONS & ASSOCIATIONS */}
       {blocks.registrations_associations?.enabled !== false && (
         <RegistrationsSection
-          blockData={{
-            ...blocks.registrations_associations?.contentData,
-            heading: sanityHomepage?.registrations?.heading || blocks.registrations_associations?.contentData?.heading,
-            items: sanityHomepage?.registrations?.items?.map((item) => ({
-              name: item.name,
-              logo: item.logoUrl || '/images/logos/fbr.svg',
-              orgName: item.orgName,
-              description: item.description,
-            })) || blocks.registrations_associations?.contentData?.items,
-          }}
+          heading={sanityHomepage?.registrations?.heading}
+          items={sanityHomepage?.registrations?.items}
+          blockData={blocks.registrations_associations?.contentData}
         />
       )}
 
       {/* 06. TRUSTED BY THE MARKET (CLIENT CAROUSEL) */}
       {blocks.trusted_market?.enabled !== false && (
         <TrustedMarketSection
-          blockData={{
-            ...blocks.trusted_market?.contentData,
-            heading: sanityHomepage?.trustedMarket?.heading || blocks.trusted_market?.contentData?.heading,
-            items: sanityHomepage?.trustedMarket?.items?.map((item) => ({
-              name: item.companyName,
-              logo: item.logoUrl || '/images/logos/ufone.svg',
-            })) || blocks.trusted_market?.contentData?.items,
-          }}
+          heading={sanityHomepage?.trustedMarket?.heading}
+          items={sanityHomepage?.trustedMarket?.items}
+          blockData={blocks.trusted_market?.contentData}
         />
       )}
 
-      {/* 07. PAKISTAN COVERAGE (PICKUP CITIES) */}
+      {/* 07. PAKISTAN COVERAGE / PICKUP CITIES */}
       {blocks.locations?.enabled && (
         <PakistanReachSection
-          blockData={{
-            ...blocks.locations.contentData,
-            badge: sanityHomepage?.pickupCities?.badge || blocks.locations.contentData?.badge,
-            title: sanityHomepage?.pickupCities?.heading || blocks.locations.contentData?.title,
-            subtitle: sanityHomepage?.pickupCities?.description || blocks.locations.contentData?.subtitle,
-            cities: sanityHomepage?.pickupCities?.cities || blocks.locations.contentData?.cities,
-          }}
+          badge={sanityHomepage?.pickupCities?.badge}
+          heading={sanityHomepage?.pickupCities?.heading}
+          description={sanityHomepage?.pickupCities?.description}
+          cities={sanityHomepage?.pickupCities?.cities}
+          blockData={blocks.locations.contentData}
         />
       )}
 
       {/* 08. POPULAR DESTINATIONS */}
       {blocks.destinations?.enabled && (
         <DestinationShowcase
-          blockData={{
-            ...blocks.destinations.contentData,
-            badge: sanityHomepage?.popularDestinations?.badge || blocks.destinations.contentData?.badge,
-            title: sanityHomepage?.popularDestinations?.heading || blocks.destinations.contentData?.title,
-            subtitle: sanityHomepage?.popularDestinations?.description || blocks.destinations.contentData?.subtitle,
-            destinations: sanityHomepage?.popularDestinations?.destinations || blocks.destinations.contentData?.destinations,
-          }}
+          badge={sanityHomepage?.popularDestinations?.badge}
+          heading={sanityHomepage?.popularDestinations?.heading}
+          description={sanityHomepage?.popularDestinations?.description}
+          destinations={sanityHomepage?.popularDestinations?.destinations}
+          blockData={blocks.destinations.contentData}
         />
       )}
 
-      {/* 09. PROCESS (HOW IT WORKS) */}
+      {/* 09. PROCESS / HOW IT WORKS */}
       {blocks.process?.enabled && (
         <ProcessSection
-          blockData={{
-            ...blocks.process.contentData,
-            badge: sanityHomepage?.howItWorks?.badge || blocks.process.contentData?.badge,
-            title: sanityHomepage?.howItWorks?.heading || blocks.process.contentData?.title,
-            subtitle: sanityHomepage?.howItWorks?.description || blocks.process.contentData?.subtitle,
-            steps: sanityHomepage?.howItWorks?.steps || blocks.process.contentData?.steps,
-          }}
+          badge={sanityHomepage?.howItWorks?.badge}
+          heading={sanityHomepage?.howItWorks?.heading}
+          description={sanityHomepage?.howItWorks?.description}
+          steps={sanityHomepage?.howItWorks?.steps}
+          blockData={blocks.process.contentData}
         />
       )}
 
-      {/* 10. TRUST / RELIABILITY (TRUST METRICS) */}
+      {/* 10. TRUST / RELIABILITY */}
       {blocks.trust?.enabled && (
         <TrustSection
-          blockData={{
-            ...blocks.trust.contentData,
-            trustMetrics: sanityHomepage?.trustMetrics || blocks.trust.contentData?.trustMetrics,
-          }}
+          badge={sanityHomepage?.trustMetrics ? 'Reliability' : undefined}
+          metrics={sanityHomepage?.trustMetrics}
+          blockData={blocks.trust.contentData}
         />
       )}
 
-      {/* 11. GUIDES / RESOURCES */}
-      {blocks.guides?.enabled && <GuidesPreviewSection blockData={blocks.guides.contentData} />}
+      {/* 11. TESTIMONIALS / DELIVERY PROOF */}
+      <TestimonialsSection
+        badge={sanityHomepage?.testimonials?.badge}
+        heading={sanityHomepage?.testimonials?.heading}
+        description={sanityHomepage?.testimonials?.description}
+        items={sanityHomepage?.testimonials?.items}
+      />
 
       {/* 12. FAQ */}
       {blocks.faq?.enabled && (
         <FaqSection
-          blockData={{
-            ...blocks.faq.contentData,
-            badge: sanityHomepage?.faq?.badge || blocks.faq.contentData?.badge,
-            title: sanityHomepage?.faq?.heading || blocks.faq.contentData?.title,
-            subtitle: sanityHomepage?.faq?.description || blocks.faq.contentData?.subtitle,
-            items: sanityHomepage?.faq?.items || blocks.faq.contentData?.items,
-          }}
+          badge={sanityHomepage?.faq?.badge}
+          title={sanityHomepage?.faq?.heading}
+          subtitle={sanityHomepage?.faq?.description}
+          faqs={sanityHomepage?.faq?.items}
+          blockData={blocks.faq.contentData}
           whatsappNumber={activeWhatsapp}
         />
       )}
@@ -208,19 +194,24 @@ export default async function HomePage() {
       {/* 13. FINAL CTA */}
       {blocks.cta?.enabled && (
         <FinalCtaSection
-          blockData={{
-            ...blocks.cta.contentData,
-            eyebrow: sanityHomepage?.finalCta?.eyebrow || blocks.cta.contentData?.eyebrow,
-            title: sanityHomepage?.finalCta?.heading || blocks.cta.contentData?.title,
-            supporting_copy: sanityHomepage?.finalCta?.description || blocks.cta.contentData?.supporting_copy,
-            primary_cta_label: sanityHomepage?.finalCta?.primaryCtaLabel || blocks.cta.contentData?.primary_cta_label,
-            primary_cta_href: sanityHomepage?.finalCta?.primaryCtaHref || blocks.cta.contentData?.primary_cta_href,
-            secondary_cta_label: sanityHomepage?.finalCta?.secondaryCtaLabel || blocks.cta.contentData?.secondary_cta_label,
-            secondary_cta_href: sanityHomepage?.finalCta?.secondaryCtaHref || blocks.cta.contentData?.secondary_cta_href,
-          }}
+          eyebrow={sanityHomepage?.finalCta?.eyebrow}
+          heading={sanityHomepage?.finalCta?.heading}
+          description={sanityHomepage?.finalCta?.description}
+          primaryCta={sanityHomepage?.finalCta?.primaryCta}
+          secondaryCta={sanityHomepage?.finalCta?.secondaryCta}
+          blockData={blocks.cta.contentData}
           whatsappNumber={activeWhatsapp}
         />
       )}
+
+      {/* 14. MOBILE BOTTOM CTA */}
+      <MobileBottomCta
+        callLabel={sanityHomepage?.mobileBottomCta?.callLabel}
+        whatsappLabel={sanityHomepage?.mobileBottomCta?.whatsappLabel}
+        quoteLabel={sanityHomepage?.mobileBottomCta?.quoteLabel}
+        phone={activePhone}
+        whatsappNumber={activeWhatsapp}
+      />
     </div>
   );
 }

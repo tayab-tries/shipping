@@ -2,18 +2,19 @@ import { defineType, defineField } from 'sanity';
 
 export const ctaObject = defineType({
   name: 'ctaObject',
-  title: 'Call to Action / Link',
+  title: 'Call to Action',
   type: 'object',
   fields: [
     defineField({
       name: 'label',
-      title: 'Button / Link Text',
+      title: 'Button / Link Label',
       type: 'string',
     }),
     defineField({
       name: 'href',
-      title: 'Destination URL / Path',
+      title: 'Link Target URL',
       type: 'string',
+      description: 'Internal path (e.g. /quote) or external URL',
     }),
   ],
 });

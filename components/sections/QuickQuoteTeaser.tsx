@@ -8,18 +8,35 @@ import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
 
 export interface QuickQuoteTeaserProps {
+  heading?: string;
+  description?: string;
+  ctaText?: string;
   blockData?: Record<string, unknown>;
 }
 
-export const QuickQuoteTeaser: React.FC<QuickQuoteTeaserProps> = ({ blockData }) => {
+export const QuickQuoteTeaser: React.FC<QuickQuoteTeaserProps> = ({
+  heading: propHeading,
+  description: propDescription,
+  ctaText: propCtaText,
+  blockData,
+}) => {
   const router = useRouter();
   const [origin, setOrigin] = useState('lahore');
   const [destination, setDestination] = useState('uk');
   const [cargo, setCargo] = useState('air_freight');
 
-  const title = (blockData?.section_title as string) || (blockData?.title as string) || 'Quick Rate & Route Inquiry';
+  const title =
+    propHeading ||
+    (blockData?.section_title as string) ||
+    (blockData?.title as string) ||
+    'Quick Rate & Route Inquiry';
+
   const subtitle =
-    (blockData?.subtitle as string) || 'Select shipment parameters to initiate a quote request';
+    propDescription ||
+    (blockData?.subtitle as string) ||
+    'Select shipment parameters to initiate a quote request';
+
+  const buttonText = propCtaText || 'Continue to Quote';
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,7 +108,7 @@ export const QuickQuoteTeaser: React.FC<QuickQuoteTeaserProps> = ({ blockData })
               className="w-full h-[44px]"
               rightIcon={<ArrowRight className="w-4 h-4 text-brand-black" />}
             >
-              Continue to Quote
+              {buttonText}
             </Button>
           </form>
         </div>

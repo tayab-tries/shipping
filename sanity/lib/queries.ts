@@ -1,27 +1,9 @@
 import { defineQuery } from 'next-sanity';
 
-export const HOMEPAGE_FULL_QUERY = defineQuery(`
-  *[_type == "homepage"][0] {
-    seo,
-    hero,
-    heroFeatureChips,
-    quickQuote,
-    trustMetrics,
-    registrations,
-    trustedMarket,
-    whatCanYouSend,
-    servicesOverview,
-    popularDestinations,
-    pickupCities,
-    howItWorks,
-    testimonials,
-    faq,
-    finalCta,
-    mobileBottomCta
-  }
-`);
-
-export const SITE_SETTINGS_FULL_QUERY = defineQuery(`
+// --------------------------------------------------
+// SITE SETTINGS SINGLETON QUERY
+// --------------------------------------------------
+export const SITE_SETTINGS_QUERY = defineQuery(`
   *[_type == "siteSettings"][0] {
     businessName,
     shortDescription,
@@ -30,17 +12,184 @@ export const SITE_SETTINGS_FULL_QUERY = defineQuery(`
     email,
     address,
     operatingHours,
-    logo,
-    logoDark,
-    logoLight,
-    navigationItems,
-    primaryCta,
+    "logo": logo.asset->url,
+    "logoDark": logoDark.asset->url,
+    "logoLight": logoLight.asset->url,
+    navigationItems[] {
+      label,
+      href
+    },
+    primaryCta {
+      label,
+      href
+    },
     footerDescription,
-    footerGroups,
+    footerGroups[] {
+      title,
+      links[] {
+        label,
+        href
+      }
+    },
     copyrightText,
-    defaultMetaTitle,
-    defaultMetaDescription,
-    defaultSocialImage,
-    socialLinks
+    defaultSeoTitle,
+    defaultSeoDescription,
+    "defaultSocialImage": defaultSocialImage.asset->url,
+    socialLinks {
+      facebook,
+      instagram,
+      linkedin,
+      tiktok
+    }
+  }
+`);
+
+// --------------------------------------------------
+// HOMEPAGE SINGLETON QUERY
+// --------------------------------------------------
+export const HOMEPAGE_FULL_QUERY = defineQuery(`
+  *[_type == "homepage"][0] {
+    seo {
+      metaTitle,
+      metaDescription,
+      "socialImage": socialImage.asset->url
+    },
+    hero {
+      eyebrow,
+      heading,
+      highlightedHeading,
+      description,
+      primaryCta { label, href },
+      secondaryCta { label, href },
+      "heroImage": heroImage.asset->url,
+      heroImageAlt
+    },
+    heroFeatureChips[] {
+      label,
+      icon
+    },
+    quickQuote {
+      heading,
+      description,
+      ctaText
+    },
+    trustMetrics[] {
+      value,
+      label
+    },
+    registrations {
+      heading,
+      items[] {
+        name,
+        "logo": logo.asset->url,
+        altText
+      }
+    },
+    trustedMarket {
+      heading,
+      items[] {
+        companyName,
+        "logo": logo.asset->url,
+        altText
+      }
+    },
+    whatCanYouSend {
+      badge,
+      heading,
+      description,
+      items[] {
+        title,
+        description,
+        badgeText,
+        iconName
+      }
+    },
+    servicesOverview {
+      badge,
+      heading,
+      description,
+      airCargo {
+        title,
+        description,
+        "image": image.asset->url,
+        imageAlt,
+        featureBullets,
+        cta { label, href }
+      },
+      seaCargo {
+        title,
+        description,
+        "image": image.asset->url,
+        imageAlt,
+        featureBullets,
+        cta { label, href }
+      }
+    },
+    popularDestinations {
+      badge,
+      heading,
+      description,
+      destinations[] {
+        name,
+        countryCode,
+        "flagImage": flagImage.asset->url,
+        shortText,
+        href
+      }
+    },
+    pickupCities {
+      badge,
+      heading,
+      description,
+      cities[] {
+        name,
+        href
+      }
+    },
+    howItWorks {
+      badge,
+      heading,
+      description,
+      steps[] {
+        stepNumber,
+        title,
+        subtitle,
+        description
+      }
+    },
+    testimonials {
+      badge,
+      heading,
+      description,
+      items[] {
+        name,
+        location,
+        quote,
+        rating,
+        "image": image.asset->url,
+        caption
+      }
+    },
+    faq {
+      badge,
+      heading,
+      description,
+      items[] {
+        question,
+        answer
+      }
+    },
+    finalCta {
+      eyebrow,
+      heading,
+      description,
+      primaryCta { label, href },
+      secondaryCta { label, href }
+    },
+    mobileBottomCta {
+      callLabel,
+      whatsappLabel,
+      quoteLabel
+    }
   }
 `);

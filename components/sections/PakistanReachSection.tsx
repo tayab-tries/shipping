@@ -6,33 +6,57 @@ import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
 
+export interface PickupCityData {
+  name: string;
+  href?: string;
+}
+
 export interface PakistanReachSectionProps {
+  badge?: string;
+  heading?: string;
+  description?: string;
+  cities?: PickupCityData[];
   blockData?: Record<string, unknown>;
 }
 
-export const PakistanReachSection: React.FC<PakistanReachSectionProps> = ({ blockData }) => {
-  const badge = (blockData?.badge as string) || 'Home Pickup';
-  const title = (blockData?.title as string) || 'WE PICK UP CARGO ACROSS PAKISTAN';
+export const PakistanReachSection: React.FC<PakistanReachSectionProps> = ({
+  badge: propBadge,
+  heading: propHeading,
+  description: propDescription,
+  cities: propCities,
+  blockData,
+}) => {
+  const badge = propBadge || (blockData?.badge as string) || 'Home Pickup';
+  const title = propHeading || (blockData?.title as string) || 'WE PICK UP CARGO ACROSS PAKISTAN';
   const subtitle =
+    propDescription ||
     (blockData?.subtitle as string) ||
     'Doorstep collection available across major commercial cities in Pakistan.';
 
-  const verifiedCities = [
-    { name: 'Lahore', slug: 'lahore' },
-    { name: 'Karachi', slug: 'karachi' },
-    { name: 'Islamabad', slug: 'islamabad' },
-    { name: 'Rawalpindi', slug: 'rawalpindi' },
-    { name: 'Faisalabad', slug: 'faisalabad' },
-    { name: 'Sialkot', slug: 'sialkot' },
-    { name: 'Multan', slug: 'multan' },
-    { name: 'Peshawar', slug: 'peshawar' },
+  const defaultCities: PickupCityData[] = [
+    { name: 'Lahore', href: '/locations/lahore' },
+    { name: 'Karachi', href: '/locations/karachi' },
+    { name: 'Islamabad', href: '/locations/islamabad' },
+    { name: 'Rawalpindi', href: '/locations/rawalpindi' },
+    { name: 'Faisalabad', href: '/locations/faisalabad' },
+    { name: 'Sialkot', href: '/locations/sialkot' },
+    { name: 'Multan', href: '/locations/multan' },
+    { name: 'Peshawar', href: '/locations/peshawar' },
   ];
+
+  const verifiedCities: PickupCityData[] =
+    propCities && propCities.length > 0
+      ? propCities
+      : defaultCities;
+
+  if (!verifiedCities || verifiedCities.length === 0) {
+    return null;
+  }
 
   return (
     <section className="w-full bg-brand-black py-16 lg:py-24 border-b border-border-dark text-white">
       <Container>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          {/* Left Column: Customer Copy & Image */}
           <div className="lg:col-span-6 space-y-5">
             <SectionHeading
               badge={badge}
@@ -60,7 +84,6 @@ export const PakistanReachSection: React.FC<PakistanReachSectionProps> = ({ bloc
             </div>
           </div>
 
-          {/* Right Column: Clean City List */}
           <div className="lg:col-span-6 bg-brand-navy/60 border border-border-dark rounded-md p-6 lg:p-8 space-y-5">
             <div className="flex items-center justify-between border-b border-border-dark pb-3">
               <span className="text-xs font-mono font-semibold uppercase text-slate-300 tracking-wider">
@@ -70,24 +93,28 @@ export const PakistanReachSection: React.FC<PakistanReachSectionProps> = ({ bloc
             </div>
 
             <div className="divide-y divide-border-dark">
-              {verifiedCities.map((city) => (
-                <Link
-                  key={city.slug}
-                  href={`/locations/${city.slug}`}
-                  className="py-3 px-2 flex items-center justify-between hover:bg-brand-black-deep/60 rounded transition-colors group"
-                >
-                  <div className="flex items-center gap-3">
-                    <MapPin className="w-4 h-4 text-accent shrink-0" />
-                    <span className="text-sm font-semibold text-white group-hover:text-accent transition-colors">
-                      Cargo Pickup in {city.name}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono text-slate-400 hidden sm:inline">Doorstep Available</span>
-                    <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-accent transition-colors shrink-0" />
-                  </div>
-                </Link>
-              ))}
+              {verifiedCities.map((city, idx) => {
+                const targetHref = city.href || `/locations/${city.name.toLowerCase()}`;
+
+                return (
+                  <Link
+                    key={idx}
+                    href={targetHref}
+                    className="py-3 px-2 flex items-center justify-between hover:bg-brand-black-deep/60 rounded transition-colors group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <MapPin className="w-4 h-4 text-accent shrink-0" />
+                      <span className="text-sm font-semibold text-white group-hover:text-accent transition-colors">
+                        Cargo Pickup in {city.name}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-mono text-slate-400 hidden sm:inline">Doorstep Available</span>
+                      <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-accent transition-colors shrink-0" />
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
 
             <div className="pt-3 border-t border-border-dark flex items-center justify-between text-xs font-mono text-slate-400">

@@ -5,494 +5,275 @@ export const homepageType = defineType({
   title: 'Homepage',
   type: 'document',
   fields: [
-    defineField({
-      name: 'title',
-      title: 'Page Document Name',
-      type: 'string',
-      initialValue: 'Main Homepage',
-      readOnly: true,
-    }),
-
-    // A. SEO Metadata
+    // --------------------------------------------------
+    // A. SEO
+    // --------------------------------------------------
     defineField({
       name: 'seo',
-      title: 'A. SEO Metadata',
+      title: 'Homepage SEO Settings',
       type: 'seoObject',
     }),
 
-    // B. Hero Section
+    // --------------------------------------------------
+    // B. HERO
+    // --------------------------------------------------
     defineField({
       name: 'hero',
-      title: 'B. Hero Section',
+      title: 'Hero Section',
       type: 'object',
       fields: [
-        defineField({
-          name: 'eyebrow',
-          title: 'Eyebrow Badge Text',
-          type: 'string',
-          initialValue: 'DOOR-TO-DOOR CARGO SHIPPING FROM PAKISTAN',
-        }),
-        defineField({
-          name: 'heading',
-          title: 'Primary Heading',
-          type: 'string',
-          initialValue: 'SEND CARGO FROM PAKISTAN.',
-        }),
-        defineField({
-          name: 'highlightedHeading',
-          title: 'Highlighted Sub-Heading',
-          type: 'string',
-          initialValue: "WE'LL HANDLE THE REST.",
-        }),
-        defineField({
-          name: 'description',
-          title: 'Hero Description Copy',
-          type: 'text',
-          rows: 3,
-          initialValue:
-            'Door-to-door cargo delivery by air and sea. We pick up from Pakistan and deliver to destinations worldwide.',
-        }),
-        defineField({
-          name: 'primaryCtaLabel',
-          title: 'Primary CTA Button Text',
-          type: 'string',
-          initialValue: 'GET A QUOTE',
-        }),
-        defineField({
-          name: 'primaryCtaHref',
-          title: 'Primary CTA Link Destination',
-          type: 'string',
-          initialValue: '/quote',
-        }),
-        defineField({
-          name: 'secondaryCtaLabel',
-          title: 'Secondary CTA Button Text',
-          type: 'string',
-          initialValue: 'WHATSAPP US',
-        }),
-        defineField({
-          name: 'secondaryCtaHref',
-          title: 'Secondary CTA Link Destination',
-          type: 'string',
-          initialValue:
-            'https://wa.me/923001234567?text=Assalam%20o%20Alaikum%2C%20I%20want%20to%20send%20cargo%20from%20Pakistan.%20Please%20give%20me%20a%20quote.',
-        }),
-        defineField({
-          name: 'heroImage',
-          title: 'Hero Background Image',
-          type: 'image',
-          options: { hotspot: true },
-        }),
-        defineField({
-          name: 'heroImageAlt',
-          title: 'Hero Background Image Alt Text',
-          type: 'string',
-          initialValue: 'Air and sea cargo shipping from Pakistan',
-        }),
+        defineField({ name: 'eyebrow', title: 'Eyebrow / Small Badge', type: 'string' }),
+        defineField({ name: 'heading', title: 'Main Heading', type: 'string' }),
+        defineField({ name: 'highlightedHeading', title: 'Highlighted Heading Text', type: 'string' }),
+        defineField({ name: 'description', title: 'Hero Description', type: 'text', rows: 3 }),
+        defineField({ name: 'primaryCta', title: 'Primary Action Button', type: 'ctaObject' }),
+        defineField({ name: 'secondaryCta', title: 'Secondary Action Button', type: 'ctaObject' }),
+        defineField({ name: 'heroImage', title: 'Hero Background / Graphic Image', type: 'image', options: { hotspot: true } }),
+        defineField({ name: 'heroImageAlt', title: 'Hero Image Alt Text', type: 'string' }),
       ],
     }),
 
-    // C. Hero Feature Chips
+    // --------------------------------------------------
+    // C. HERO FEATURE CHIPS
+    // --------------------------------------------------
     defineField({
       name: 'heroFeatureChips',
-      title: 'C. Hero Capability Chips',
+      title: 'Hero Feature Chips',
       type: 'array',
       of: [
         {
           type: 'object',
           fields: [
-            defineField({ name: 'label', title: 'Chip Label', type: 'string' }),
-            defineField({ name: 'icon', title: 'Icon Key (Optional)', type: 'string' }),
+            defineField({ name: 'label', title: 'Chip Label', type: 'string', validation: (rule) => rule.required() }),
+            defineField({ name: 'icon', title: 'Optional Icon Identifier', type: 'string' }),
           ],
         },
       ],
     }),
 
-    // D. Quick Quote / Tracking Area
+    // --------------------------------------------------
+    // D. QUICK QUOTE / TRACKING TEASER
+    // --------------------------------------------------
     defineField({
       name: 'quickQuote',
-      title: 'D. Quick Quote Teaser Area',
+      title: 'Quick Quote Teaser Bar',
       type: 'object',
       fields: [
-        defineField({
-          name: 'heading',
-          title: 'Section Heading',
-          type: 'string',
-          initialValue: 'Quick Rate & Route Inquiry',
-        }),
-        defineField({
-          name: 'description',
-          title: 'Section Subtitle / Description',
-          type: 'string',
-          initialValue: 'Select shipment parameters to initiate a quote request',
-        }),
-        defineField({
-          name: 'ctaText',
-          title: 'Form Submit Button Text',
-          type: 'string',
-          initialValue: 'Continue to Quote',
-        }),
+        defineField({ name: 'heading', title: 'Teaser Heading', type: 'string' }),
+        defineField({ name: 'description', title: 'Subheading / Helper Text', type: 'string' }),
+        defineField({ name: 'ctaText', title: 'Form Button Text', type: 'string' }),
       ],
     }),
 
-    // E. Trust Metrics
+    // --------------------------------------------------
+    // E. TRUST METRICS
+    // --------------------------------------------------
     defineField({
       name: 'trustMetrics',
-      title: 'E. Trust Metrics (Optional)',
+      title: 'Trust & Verification Metrics',
       type: 'array',
-      of: [
-        {
-          type: 'object',
-          fields: [
-            defineField({ name: 'value', title: 'Metric Value (e.g. 100%)', type: 'string' }),
-            defineField({ name: 'label', title: 'Metric Label', type: 'string' }),
-          ],
-        },
-      ],
+      of: [{ type: 'trustMetricObject' }],
     }),
 
-    // F. Registrations & Associations
+    // --------------------------------------------------
+    // F. REGISTRATIONS & ASSOCIATIONS
+    // --------------------------------------------------
     defineField({
       name: 'registrations',
-      title: 'F. Registrations & Global Affiliations',
+      title: 'Official Registrations & Associations',
       type: 'object',
       fields: [
-        defineField({
-          name: 'heading',
-          title: 'Section Heading',
-          type: 'string',
-          initialValue: 'WE ARE REGISTERED WITH FBR AND ASSOCIATED WITH',
-        }),
+        defineField({ name: 'heading', title: 'Section Heading', type: 'string' }),
         defineField({
           name: 'items',
-          title: 'Registration Items',
+          title: 'Registered Organizations',
           type: 'array',
-          of: [
-            {
-              type: 'object',
-              fields: [
-                defineField({ name: 'name', title: 'Short Name', type: 'string' }),
-                defineField({ name: 'logo', title: 'Logo Image', type: 'image', options: { hotspot: true } }),
-                defineField({ name: 'altText', title: 'Alt Text', type: 'string' }),
-                defineField({ name: 'orgName', title: 'Full Organization Name', type: 'string' }),
-                defineField({ name: 'description', title: 'Sub-text Description', type: 'string' }),
-              ],
-            },
-          ],
+          of: [{ type: 'registrationItemObject' }],
         }),
       ],
     }),
 
-    // G. Trusted by the Market
+    // --------------------------------------------------
+    // G. TRUSTED BY THE MARKET
+    // --------------------------------------------------
     defineField({
       name: 'trustedMarket',
-      title: 'G. Trusted by the Market',
+      title: 'Trusted by the Market (Client Logos)',
       type: 'object',
       fields: [
-        defineField({
-          name: 'heading',
-          title: 'Section Heading',
-          type: 'string',
-          initialValue: 'TRUSTED BY THE MARKET',
-        }),
+        defineField({ name: 'heading', title: 'Section Heading', type: 'string' }),
         defineField({
           name: 'items',
           title: 'Client Logos',
           type: 'array',
-          of: [
-            {
-              type: 'object',
-              fields: [
-                defineField({ name: 'companyName', title: 'Company Name', type: 'string' }),
-                defineField({ name: 'logo', title: 'Logo Image', type: 'image', options: { hotspot: true } }),
-                defineField({ name: 'altText', title: 'Alt Text', type: 'string' }),
-              ],
-            },
-          ],
+          of: [{ type: 'clientLogoObject' }],
         }),
       ],
     }),
 
-    // H. What Can You Send
+    // --------------------------------------------------
+    // H. WHAT CAN YOU SEND
+    // --------------------------------------------------
     defineField({
       name: 'whatCanYouSend',
-      title: 'H. What Can You Send Section',
+      title: 'What Can You Send (Cargo Types)',
       type: 'object',
       fields: [
-        defineField({
-          name: 'badge',
-          title: 'Badge Label',
-          type: 'string',
-          initialValue: 'Cargo Types',
-        }),
-        defineField({
-          name: 'heading',
-          title: 'Section Heading',
-          type: 'string',
-          initialValue: 'WHAT CAN YOU SEND?',
-        }),
-        defineField({
-          name: 'description',
-          title: 'Section Subtitle',
-          type: 'text',
-          rows: 2,
-          initialValue:
-            'We handle personal belongings, luggage, gifts, and commercial export shipments.',
-        }),
+        defineField({ name: 'badge', title: 'Badge Label', type: 'string' }),
+        defineField({ name: 'heading', title: 'Section Heading', type: 'string' }),
+        defineField({ name: 'description', title: 'Section Subtitle', type: 'text', rows: 2 }),
         defineField({
           name: 'items',
           title: 'Cargo Category Cards',
           type: 'array',
-          of: [
-            {
-              type: 'object',
-              fields: [
-                defineField({ name: 'title', title: 'Card Title', type: 'string' }),
-                defineField({ name: 'description', title: 'Card Description', type: 'text', rows: 2 }),
-                defineField({ name: 'badgeText', title: 'Card Tag / Badge', type: 'string' }),
-                defineField({ name: 'iconName', title: 'Icon Identifier (Package, Luggage, Building2)', type: 'string' }),
-              ],
-            },
-          ],
+          of: [{ type: 'useCaseCardObject' }],
         }),
       ],
     }),
 
-    // I. Air + Sea Cargo Section (Strictly 2 Service Cards)
+    // --------------------------------------------------
+    // I. AIR + SEA CARGO SECTION (Strict 2-Card Limit)
+    // --------------------------------------------------
     defineField({
       name: 'servicesOverview',
-      title: 'I. Air & Sea Cargo Section (2 Services Only)',
+      title: 'Air & Sea Cargo Services Overview',
       type: 'object',
       fields: [
-        defineField({
-          name: 'badge',
-          title: 'Section Badge',
-          type: 'string',
-          initialValue: 'Our Services',
-        }),
-        defineField({
-          name: 'heading',
-          title: 'Section Heading',
-          type: 'string',
-          initialValue: 'Air & Sea Cargo Services',
-        }),
-        defineField({
-          name: 'description',
-          title: 'Section Subtitle',
-          type: 'text',
-          rows: 2,
-          initialValue:
-            'Fast air cargo and economical sea cargo with complete door-to-door delivery from Pakistan.',
-        }),
-        defineField({
-          name: 'airCargo',
-          title: '1. Air Cargo Service Card',
-          type: 'object',
-          fields: [
-            defineField({ name: 'title', title: 'Title', type: 'string', initialValue: 'AIR CARGO' }),
-            defineField({
-              name: 'description',
-              title: 'Description',
-              type: 'text',
-              rows: 3,
-              initialValue:
-                'Air cargo shipping with door-to-door delivery. Fast air dispatches for boxes, gifts, excess baggage, and urgent shipments.',
-            }),
-            defineField({ name: 'image', title: 'Card Photo Image', type: 'image', options: { hotspot: true } }),
-            defineField({ name: 'imageAlt', title: 'Image Alt Text', type: 'string' }),
-            defineField({ name: 'features', title: 'Feature Bullet Points', type: 'array', of: [{ type: 'string' }] }),
-            defineField({ name: 'ctaLabel', title: 'CTA Button Text', type: 'string', initialValue: 'Air Cargo Details' }),
-            defineField({ name: 'ctaHref', title: 'CTA Button Destination', type: 'string', initialValue: '/services/air-freight' }),
-          ],
-        }),
-        defineField({
-          name: 'seaCargo',
-          title: '2. Sea Cargo Service Card',
-          type: 'object',
-          fields: [
-            defineField({ name: 'title', title: 'Title', type: 'string', initialValue: 'SEA CARGO' }),
-            defineField({
-              name: 'description',
-              title: 'Description',
-              type: 'text',
-              rows: 3,
-              initialValue:
-                'Sea cargo shipping with door-to-door delivery. Economical ocean container shipping for heavy goods and large household shipments.',
-            }),
-            defineField({ name: 'image', title: 'Card Photo Image', type: 'image', options: { hotspot: true } }),
-            defineField({ name: 'imageAlt', title: 'Image Alt Text', type: 'string' }),
-            defineField({ name: 'features', title: 'Feature Bullet Points', type: 'array', of: [{ type: 'string' }] }),
-            defineField({ name: 'ctaLabel', title: 'CTA Button Text', type: 'string', initialValue: 'Sea Cargo Details' }),
-            defineField({ name: 'ctaHref', title: 'CTA Button Destination', type: 'string', initialValue: '/services/sea-cargo' }),
-          ],
-        }),
+        defineField({ name: 'badge', title: 'Badge Label', type: 'string' }),
+        defineField({ name: 'heading', title: 'Section Heading', type: 'string' }),
+        defineField({ name: 'description', title: 'Section Subtitle', type: 'text', rows: 2 }),
+        defineField({ name: 'airCargo', title: '1. Air Cargo Service Card', type: 'serviceCardObject' }),
+        defineField({ name: 'seaCargo', title: '2. Sea Cargo Service Card', type: 'serviceCardObject' }),
       ],
     }),
 
-    // J. Popular Destinations
+    // --------------------------------------------------
+    // J. POPULAR DESTINATIONS
+    // --------------------------------------------------
     defineField({
       name: 'popularDestinations',
-      title: 'J. Popular Destinations Section',
+      title: 'Popular Destinations',
       type: 'object',
       fields: [
-        defineField({ name: 'badge', title: 'Badge', type: 'string', initialValue: 'Global Routes' }),
-        defineField({ name: 'heading', title: 'Section Heading', type: 'string', initialValue: 'POPULAR DESTINATIONS FROM PAKISTAN' }),
-        defineField({ name: 'description', title: 'Section Subtitle', type: 'text', rows: 2, initialValue: 'Direct cargo delivery connecting Pakistan to major international destination countries.' }),
+        defineField({ name: 'badge', title: 'Badge Label', type: 'string' }),
+        defineField({ name: 'heading', title: 'Section Heading', type: 'string' }),
+        defineField({ name: 'description', title: 'Section Subtitle', type: 'text', rows: 2 }),
         defineField({
           name: 'destinations',
           title: 'Destination Cards',
           type: 'array',
-          of: [
-            {
-              type: 'object',
-              fields: [
-                defineField({ name: 'name', title: 'Destination Country Name', type: 'string' }),
-                defineField({ name: 'countryCode', title: 'Country Code (uk, uae, usa, canada, ksa)', type: 'string' }),
-                defineField({ name: 'flagImage', title: 'Flag / Image Asset', type: 'image', options: { hotspot: true } }),
-                defineField({ name: 'shortText', title: 'Short Description Copy', type: 'string' }),
-                defineField({ name: 'href', title: 'Destination Link Path', type: 'string' }),
-              ],
-            },
-          ],
+          of: [{ type: 'destinationCardObject' }],
         }),
       ],
     }),
 
-    // K. Pickup Cities
+    // --------------------------------------------------
+    // K. PICKUP CITIES
+    // --------------------------------------------------
     defineField({
       name: 'pickupCities',
-      title: 'K. Pickup Cities Across Pakistan',
+      title: 'Pickup Cities Across Pakistan',
       type: 'object',
       fields: [
-        defineField({ name: 'badge', title: 'Badge', type: 'string', initialValue: 'Home Pickup' }),
-        defineField({ name: 'heading', title: 'Section Heading', type: 'string', initialValue: 'WE PICK UP CARGO ACROSS PAKISTAN' }),
-        defineField({ name: 'description', title: 'Section Subtitle', type: 'text', rows: 2, initialValue: 'Doorstep collection available across major commercial cities in Pakistan.' }),
+        defineField({ name: 'badge', title: 'Badge Label', type: 'string' }),
+        defineField({ name: 'heading', title: 'Section Heading', type: 'string' }),
+        defineField({ name: 'description', title: 'Section Subtitle', type: 'text', rows: 2 }),
         defineField({
           name: 'cities',
-          title: 'City Links Array',
+          title: 'City Links',
           type: 'array',
-          of: [
-            {
-              type: 'object',
-              fields: [
-                defineField({ name: 'name', title: 'City Name', type: 'string' }),
-                defineField({ name: 'href', title: 'City Link Path', type: 'string' }),
-              ],
-            },
-          ],
+          of: [{ type: 'pickupCityObject' }],
         }),
       ],
     }),
 
-    // L. How It Works
+    // --------------------------------------------------
+    // L. HOW IT WORKS
+    // --------------------------------------------------
     defineField({
       name: 'howItWorks',
-      title: 'L. How It Works (Process Steps)',
+      title: 'How It Works (Shipping Process)',
       type: 'object',
       fields: [
-        defineField({ name: 'badge', title: 'Badge', type: 'string', initialValue: 'How It Works' }),
-        defineField({ name: 'heading', title: 'Section Heading', type: 'string', initialValue: 'Simple 4-Step Cargo Shipping Process' }),
-        defineField({ name: 'description', title: 'Section Subtitle', type: 'text', rows: 2, initialValue: 'From your initial quote to doorstep delivery at your destination address.' }),
+        defineField({ name: 'badge', title: 'Badge Label', type: 'string' }),
+        defineField({ name: 'heading', title: 'Section Heading', type: 'string' }),
+        defineField({ name: 'description', title: 'Section Subtitle', type: 'text', rows: 2 }),
         defineField({
           name: 'steps',
-          title: 'Process Steps',
+          title: 'Shipping Process Steps',
           type: 'array',
-          of: [
-            {
-              type: 'object',
-              fields: [
-                defineField({ name: 'stepNumber', title: 'Step Number (01, 02, 03, 04)', type: 'string' }),
-                defineField({ name: 'title', title: 'Step Title', type: 'string' }),
-                defineField({ name: 'subtitle', title: 'Step Subtitle', type: 'string' }),
-                defineField({ name: 'description', title: 'Step Description', type: 'text', rows: 2 }),
-              ],
-            },
-          ],
+          of: [{ type: 'processStepObject' }],
         }),
       ],
     }),
 
-    // M. Testimonials / Delivery Proof (Optional)
+    // --------------------------------------------------
+    // M. TESTIMONIALS / DELIVERY PROOF
+    // --------------------------------------------------
     defineField({
       name: 'testimonials',
-      title: 'M. Testimonials / Delivery Proof (Optional)',
+      title: 'Testimonials & Delivery Proof',
       type: 'object',
       fields: [
-        defineField({ name: 'badge', title: 'Badge', type: 'string', initialValue: 'Customer Reviews' }),
-        defineField({ name: 'heading', title: 'Section Heading', type: 'string', initialValue: 'What Our Customers Say' }),
+        defineField({ name: 'badge', title: 'Badge Label', type: 'string' }),
+        defineField({ name: 'heading', title: 'Section Heading', type: 'string' }),
         defineField({ name: 'description', title: 'Section Subtitle', type: 'text', rows: 2 }),
         defineField({
           name: 'items',
-          title: 'Testimonial Cards / Delivery Photos',
+          title: 'Testimonials / Proof Items',
           type: 'array',
-          of: [
-            {
-              type: 'object',
-              fields: [
-                defineField({ name: 'name', title: 'Customer Name', type: 'string' }),
-                defineField({ name: 'location', title: 'Customer Location', type: 'string' }),
-                defineField({ name: 'quote', title: 'Testimonial Quote Text', type: 'text', rows: 3 }),
-                defineField({ name: 'rating', title: 'Star Rating (1-5)', type: 'number' }),
-                defineField({ name: 'image', title: 'Delivery Proof Photo', type: 'image', options: { hotspot: true } }),
-                defineField({ name: 'caption', title: 'Photo Caption / Alt', type: 'string' }),
-              ],
-            },
-          ],
+          of: [{ type: 'testimonialItemObject' }],
         }),
       ],
     }),
 
-    // N. FAQ Section
+    // --------------------------------------------------
+    // N. FAQ
+    // --------------------------------------------------
     defineField({
       name: 'faq',
-      title: 'N. Frequently Asked Questions',
+      title: 'Frequently Asked Questions',
       type: 'object',
       fields: [
-        defineField({ name: 'badge', title: 'Badge', type: 'string', initialValue: 'FAQ' }),
-        defineField({ name: 'heading', title: 'Section Heading', type: 'string', initialValue: 'Frequently Asked Questions' }),
-        defineField({ name: 'description', title: 'Section Subtitle', type: 'text', rows: 2, initialValue: 'Simple answers about cargo pickup, rates, personal belongings, and WhatsApp quotes.' }),
+        defineField({ name: 'badge', title: 'Badge Label', type: 'string' }),
+        defineField({ name: 'heading', title: 'Section Heading', type: 'string' }),
+        defineField({ name: 'description', title: 'Section Subtitle', type: 'text', rows: 2 }),
         defineField({
           name: 'items',
-          title: 'FAQ Accordion Items',
+          title: 'FAQ Question Items',
           type: 'array',
-          of: [
-            {
-              type: 'object',
-              fields: [
-                defineField({ name: 'question', title: 'Question', type: 'string' }),
-                defineField({ name: 'answer', title: 'Answer', type: 'text', rows: 4 }),
-              ],
-            },
-          ],
+          of: [{ type: 'faqItemObject' }],
         }),
       ],
     }),
 
-    // O. Final CTA
+    // --------------------------------------------------
+    // O. FINAL CTA
+    // --------------------------------------------------
     defineField({
       name: 'finalCta',
-      title: 'O. Final Bottom CTA Section',
+      title: 'Final Call to Action',
       type: 'object',
       fields: [
-        defineField({ name: 'eyebrow', title: 'Eyebrow Text', type: 'string', initialValue: 'Door-to-Door Delivery' }),
-        defineField({ name: 'heading', title: 'Section Heading', type: 'string', initialValue: 'Ready to send cargo from Pakistan?' }),
-        defineField({ name: 'description', title: 'Description Copy', type: 'text', rows: 2, initialValue: 'Get an instant quote online or message us on WhatsApp to discuss your cargo shipping requirements.' }),
-        defineField({ name: 'primaryCtaLabel', title: 'Primary CTA Text', type: 'string', initialValue: 'GET A QUOTE' }),
-        defineField({ name: 'primaryCtaHref', title: 'Primary CTA Link', type: 'string', initialValue: '/quote' }),
-        defineField({ name: 'secondaryCtaLabel', title: 'Secondary CTA Text', type: 'string', initialValue: 'WHATSAPP US' }),
-        defineField({ name: 'secondaryCtaHref', title: 'Secondary CTA Link', type: 'string', initialValue: 'https://wa.me/923001234567?text=Assalam%20o%20Alaikum%2C%20I%20want%20to%20send%20cargo%20from%20Pakistan.%20Please%20give%20me%20a%20quote.' }),
+        defineField({ name: 'eyebrow', title: 'Eyebrow / Small Badge', type: 'string' }),
+        defineField({ name: 'heading', title: 'Main Headline', type: 'string' }),
+        defineField({ name: 'description', title: 'Supporting Text', type: 'text', rows: 2 }),
+        defineField({ name: 'primaryCta', title: 'Primary CTA Button', type: 'ctaObject' }),
+        defineField({ name: 'secondaryCta', title: 'Secondary CTA Button', type: 'ctaObject' }),
       ],
     }),
 
-    // P. Mobile Bottom CTA
+    // --------------------------------------------------
+    // P. MOBILE BOTTOM CTA
+    // --------------------------------------------------
     defineField({
       name: 'mobileBottomCta',
-      title: 'P. Mobile Sticky Bottom CTA Labels',
+      title: 'Sticky Mobile Bottom CTA Bar Labels',
       type: 'object',
       fields: [
-        defineField({ name: 'callLabel', title: 'Call Button Text', type: 'string', initialValue: 'Call Now' }),
-        defineField({ name: 'whatsappLabel', title: 'WhatsApp Button Text', type: 'string', initialValue: 'WhatsApp' }),
-        defineField({ name: 'quoteLabel', title: 'Quote Button Text', type: 'string', initialValue: 'Get Quote' }),
+        defineField({ name: 'callLabel', title: 'Call Button Label', type: 'string' }),
+        defineField({ name: 'whatsappLabel', title: 'WhatsApp Button Label', type: 'string' }),
+        defineField({ name: 'quoteLabel', title: 'Get Quote Button Label', type: 'string' }),
       ],
     }),
   ],

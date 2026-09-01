@@ -2,34 +2,47 @@ import React from 'react';
 import Image from 'next/image';
 
 export interface TrustedClientItem {
-  name: string;
-  logo: string;
-  sort_order?: number;
+  companyName: string;
+  logo?: string;
+  altText?: string;
 }
 
 export interface TrustedMarketSectionProps {
+  heading?: string;
+  items?: TrustedClientItem[];
   blockData?: Record<string, unknown>;
 }
 
-export const TrustedMarketSection: React.FC<TrustedMarketSectionProps> = ({ blockData }) => {
-  const heading = (blockData?.heading as string) || 'TRUSTED BY THE MARKET';
+export const TrustedMarketSection: React.FC<TrustedMarketSectionProps> = ({
+  heading: propHeading,
+  items: propItems,
+  blockData,
+}) => {
+  const heading =
+    propHeading || (blockData?.heading as string) || 'TRUSTED BY THE MARKET';
 
   const defaultLogos: TrustedClientItem[] = [
-    { name: 'Ufone', logo: '/images/logos/ufone.svg' },
-    { name: 'Daraz', logo: '/images/logos/daraz.svg' },
-    { name: 'Faysal Bank', logo: '/images/logos/faysal-bank.svg' },
-    { name: 'HBL', logo: '/images/logos/hbl.svg' },
-    { name: 'Puma', logo: '/images/logos/puma.svg' },
-    { name: 'PTN', logo: '/images/logos/ptn.svg' },
-    { name: 'PTCL', logo: '/images/logos/ptcl.svg' },
+    { companyName: 'Ufone', logo: '/images/logos/ufone.svg' },
+    { companyName: 'Daraz', logo: '/images/logos/daraz.svg' },
+    { companyName: 'Faysal Bank', logo: '/images/logos/faysal-bank.svg' },
+    { companyName: 'HBL', logo: '/images/logos/hbl.svg' },
+    { companyName: 'Puma', logo: '/images/logos/puma.svg' },
+    { companyName: 'PTN', logo: '/images/logos/ptn.svg' },
+    { companyName: 'PTCL', logo: '/images/logos/ptcl.svg' },
   ];
 
-  const items: TrustedClientItem[] =
-    Array.isArray(blockData?.items) && blockData.items.length > 0
-      ? (blockData.items as TrustedClientItem[])
-      : defaultLogos;
+  const rawItems = propItems && propItems.length > 0
+    ? propItems
+    : Array.isArray(blockData?.items) && blockData.items.length > 0
+    ? (blockData.items as TrustedClientItem[])
+    : defaultLogos;
 
-  // Quadruple items to ensure an unbreakable smooth infinite marquee loop
+  const items = rawItems.filter((item): item is TrustedClientItem & { logo: string } => Boolean(item && item.logo));
+
+  if (!items || items.length === 0) {
+    return null;
+  }
+
   const marqueeItems = [...items, ...items, ...items, ...items];
 
   return (
@@ -45,9 +58,7 @@ export const TrustedMarketSection: React.FC<TrustedMarketSectionProps> = ({ bloc
         </div>
       </div>
 
-      {/* Infinite Logo-Only Carousel Container */}
       <div className="relative w-full max-w-full overflow-hidden pointer-events-none">
-        {/* Soft edge blur gradient overlays for smooth visual transition */}
         <div className="absolute top-0 bottom-0 left-0 w-20 sm:w-36 bg-gradient-to-r from-surface-subtle to-transparent z-10 pointer-events-none" />
         <div className="absolute top-0 bottom-0 right-0 w-20 sm:w-36 bg-gradient-to-l from-surface-subtle to-transparent z-10 pointer-events-none" />
 
@@ -59,7 +70,7 @@ export const TrustedMarketSection: React.FC<TrustedMarketSectionProps> = ({ bloc
             >
               <Image
                 src={item.logo}
-                alt={item.name || 'Client Logo'}
+                alt={item.altText || item.companyName || 'Client Logo'}
                 width={240}
                 height={75}
                 className="max-h-14 sm:max-h-16 w-auto object-contain"

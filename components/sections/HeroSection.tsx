@@ -6,17 +6,19 @@ import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
-import type { SanityHeroData } from '@/sanity/lib/fetch';
+import type { SanityHomepageData } from '@/sanity/lib/fetch';
 
 export interface HeroSectionProps {
   blockData?: Record<string, unknown>;
-  sanityHeroData?: SanityHeroData | null;
+  sanityHeroData?: SanityHomepageData['hero'] | null;
+  heroFeatureChips?: SanityHomepageData['heroFeatureChips'];
   whatsappNumber?: string;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
   blockData,
   sanityHeroData,
+  heroFeatureChips,
   whatsappNumber: propWhatsapp,
 }) => {
   const activeWhatsapp = (blockData?.whatsapp_number as string) || propWhatsapp;
@@ -47,50 +49,51 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     'Door-to-door cargo delivery by air and sea. We pick up from Pakistan and deliver to destinations worldwide.';
 
   const primaryCtaLabel =
-    sanityHeroData?.primaryCtaLabel ||
+    sanityHeroData?.primaryCta?.label ||
     (blockData?.primary_cta_label as string) ||
     'GET A QUOTE';
 
   const primaryCtaHref =
-    sanityHeroData?.primaryCtaHref ||
+    sanityHeroData?.primaryCta?.href ||
     (blockData?.primary_cta_href as string) ||
     '/quote';
 
   const secondaryCtaLabel =
-    sanityHeroData?.secondaryCtaLabel ||
+    sanityHeroData?.secondaryCta?.label ||
     (blockData?.secondary_cta_label as string) ||
     'WHATSAPP US';
 
   let rawSecondaryHref =
-    sanityHeroData?.secondaryCtaHref ||
+    sanityHeroData?.secondaryCta?.href ||
     (blockData?.secondary_cta_href as string) ||
     defaultWhatsappUrl;
 
-  // If secondary CTA is a WhatsApp link, dynamically enforce active admin WhatsApp number
   if (rawSecondaryHref.includes('wa.me') || rawSecondaryHref.includes('whatsapp')) {
     const messageMatch = rawSecondaryHref.match(/text=([^&]*)/);
     const customMsg = messageMatch ? decodeURIComponent(messageMatch[1]) : undefined;
     rawSecondaryHref = buildWhatsappUrl(activeWhatsapp, customMsg);
   }
 
-  const capabilityLine =
+  const defaultCapabilityLine =
     (blockData?.capability_line as string) || 'HOME PICKUP • AIR CARGO • SEA CARGO • DOOR-TO-DOOR';
 
+  const capabilities: string[] =
+    heroFeatureChips && heroFeatureChips.length > 0
+      ? heroFeatureChips.map((c) => c.label)
+      : defaultCapabilityLine
+          .split(/•|\|/)
+          .map((s) => s.trim())
+          .filter(Boolean);
+
   const bgImage =
-    sanityHeroData?.backgroundImageUrl ||
+    sanityHeroData?.heroImage ||
     (blockData?.background_image as string) ||
     IMAGE_SLOTS.heroBackground.src;
 
   const imageAlt =
-    sanityHeroData?.backgroundImageAlt ||
+    sanityHeroData?.heroImageAlt ||
     (blockData?.image_alt_text as string) ||
     IMAGE_SLOTS.heroBackground.alt;
-
-  // Split capability line items cleanly by bullet or pipe
-  const capabilities = capabilityLine
-    .split(/•|\|/)
-    .map((s) => s.trim())
-    .filter(Boolean);
 
   const isWhatsapp = rawSecondaryHref.includes('wa.me') || rawSecondaryHref.includes('whatsapp');
 
@@ -107,7 +110,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           className="object-cover object-[65%_center] lg:object-[center_right] opacity-80"
         />
 
-        {/* 2. Directional Gradient Overlay — Desktop */}
         <div
           className="absolute inset-0 z-10 pointer-events-none hidden md:block"
           style={{
@@ -122,7 +124,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           }}
         />
 
-        {/* 3. Directional Gradient Overlay — Mobile */}
         <div
           className="absolute inset-0 z-10 pointer-events-none md:hidden"
           style={{
@@ -135,7 +136,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           }}
         />
 
-        {/* 4. Dotted Route Line + Moving Cargo Aircraft (Technical Animated SVG) */}
         <svg
           className="absolute inset-0 w-full h-full text-accent pointer-events-none z-10 overflow-hidden"
           xmlns="http://www.w3.org/2000/svg"
@@ -167,17 +167,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         </svg>
       </div>
 
-      {/* 5. Hero Content Stack Layered ABOVE Image */}
       <Container className="relative z-20 py-16 lg:py-24">
         <div className="w-full lg:w-[60%] max-w-[720px] space-y-6">
-          {/* Eyebrow */}
           <div className="flex items-center gap-2">
             <span className="text-[11px] sm:text-[12px] font-semibold uppercase tracking-[0.08em] px-3 py-1 bg-brand-navy/80 text-slate-200 border border-border-dark rounded-xs">
               {eyebrow}
             </span>
           </div>
 
-          {/* Headline */}
           <h1 className="text-[36px] sm:text-[52px] lg:text-[64px] font-extrabold tracking-tight text-white leading-[1.05] max-w-[720px]">
             {headline.includes('\n') ? (
               <>
@@ -194,12 +191,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             )}
           </h1>
 
-          {/* Supporting Copy */}
           <p className="text-[16px] sm:text-[18px] text-slate-300 leading-[1.6] font-normal max-w-[640px]">
             {supportingCopy}
           </p>
 
-          {/* Dual CTAs: GET A QUOTE & WHATSAPP US */}
           <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-[12px]">
             <Link href={primaryCtaHref}>
               <Button
@@ -228,7 +223,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </a>
           </div>
 
-          {/* Capability Row */}
           <div className="pt-6 mt-5 border-t border-border-dark/80 flex flex-wrap items-center gap-2 sm:gap-4 text-[12px] font-mono uppercase tracking-[0.08em] text-slate-300">
             {capabilities.map((item, idx) => (
               <React.Fragment key={idx}>

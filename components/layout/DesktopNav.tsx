@@ -3,20 +3,26 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { navConfig } from '@/config/nav.config';
+import { navConfig as defaultNavConfig } from '@/config/nav.config';
 import { cn } from '@/components/ui/Button';
 
-export const DesktopNav: React.FC = () => {
+interface DesktopNavProps {
+  navItems?: { label: string; href: string }[];
+}
+
+export const DesktopNav: React.FC<DesktopNavProps> = ({ navItems }) => {
   const pathname = usePathname();
+
+  const items = navItems && navItems.length > 0 ? navItems : defaultNavConfig;
 
   return (
     <nav className="hidden lg:flex items-center gap-1">
-      {navConfig.map((item) => {
+      {items.map((item, idx) => {
         const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
 
         return (
           <Link
-            key={item.href}
+            key={idx}
             href={item.href}
             className={cn(
               'px-3.5 py-2 text-sm font-medium rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',

@@ -11,16 +11,27 @@ export interface FaqItem {
   answer: string;
 }
 
-interface FaqSectionProps {
+export interface FaqSectionProps {
+  badge?: string;
+  title?: string;
+  subtitle?: string;
   faqs?: FaqItem[];
   blockData?: Record<string, unknown>;
   whatsappNumber?: string;
 }
 
-export const FaqSection: React.FC<FaqSectionProps> = ({ faqs, blockData, whatsappNumber }) => {
-  const badge = (blockData?.badge as string) || 'FAQ';
-  const title = (blockData?.title as string) || 'Frequently Asked Questions';
+export const FaqSection: React.FC<FaqSectionProps> = ({
+  badge: propBadge,
+  title: propTitle,
+  subtitle: propSubtitle,
+  faqs,
+  blockData,
+  whatsappNumber,
+}) => {
+  const badge = propBadge || (blockData?.badge as string) || 'FAQ';
+  const title = propTitle || (blockData?.title as string) || 'Frequently Asked Questions';
   const subtitle =
+    propSubtitle ||
     (blockData?.subtitle as string) ||
     'Simple answers about cargo pickup, rates, personal belongings, and WhatsApp quotes.';
 
@@ -115,7 +126,6 @@ export const FaqSection: React.FC<FaqSectionProps> = ({ faqs, blockData, whatsap
           })}
         </div>
 
-        {/* WhatsApp Inquiry Banner */}
         <div className="mt-10 p-6 bg-emerald-50 rounded-md border border-emerald-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
           <div>
             <h4 className="text-sm font-bold text-emerald-900">Have a question or need instant rate guidance?</h4>

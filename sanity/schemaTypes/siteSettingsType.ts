@@ -5,161 +5,135 @@ export const siteSettingsType = defineType({
   title: 'Site Settings',
   type: 'document',
   fields: [
+    // --------------------------------------------------
+    // 1. BUSINESS INFORMATION (Single Source of Contact Info)
+    // --------------------------------------------------
     defineField({
       name: 'businessName',
-      title: 'Business Name',
+      title: 'Business / Brand Name',
       type: 'string',
-      initialValue: 'Raahi International',
+      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'shortDescription',
-      title: 'Short Business Summary',
+      title: 'Short Business Description',
       type: 'text',
       rows: 2,
-      initialValue: 'Door-to-door cargo delivery by air and sea from Pakistan worldwide.',
     }),
     defineField({
       name: 'phone',
       title: 'Primary Phone Number',
       type: 'string',
-      initialValue: '+92 300 1234567',
     }),
     defineField({
       name: 'whatsappNumber',
       title: 'WhatsApp Number',
       type: 'string',
-      initialValue: '+92 300 1234567',
     }),
     defineField({
       name: 'email',
-      title: 'Support Email Address',
+      title: 'Contact Email Address',
       type: 'string',
-      initialValue: 'info@raahiinternational.pk',
     }),
     defineField({
       name: 'address',
-      title: 'Physical Address / Headquarters',
-      type: 'text',
-      rows: 3,
-      initialValue: 'Lahore Hub, Pakistan',
+      title: 'Main Office Address',
+      type: 'string',
     }),
     defineField({
       name: 'operatingHours',
       title: 'Operating Hours',
       type: 'string',
-      initialValue: '24/7 Operations & Customer Support',
     }),
-    // Header Settings
+
+    // --------------------------------------------------
+    // 2. HEADER CONFIGURATION
+    // --------------------------------------------------
     defineField({
       name: 'logo',
-      title: 'Header Logo',
+      title: 'Main Brand Logo',
       type: 'image',
       options: { hotspot: true },
     }),
     defineField({
       name: 'logoDark',
-      title: 'Header Logo (Dark Version)',
+      title: 'Dark Variant Logo',
       type: 'image',
       options: { hotspot: true },
     }),
     defineField({
       name: 'logoLight',
-      title: 'Header Logo (Light Version)',
+      title: 'Light / Inverse Variant Logo',
       type: 'image',
       options: { hotspot: true },
     }),
     defineField({
       name: 'navigationItems',
-      title: 'Header Navigation Items',
+      title: 'Main Header Navigation Links',
       type: 'array',
-      of: [
-        {
-          type: 'object',
-          fields: [
-            defineField({ name: 'label', title: 'Label', type: 'string' }),
-            defineField({ name: 'href', title: 'URL Path', type: 'string' }),
-          ],
-        },
-      ],
+      of: [{ type: 'navItemObject' }],
     }),
     defineField({
       name: 'primaryCta',
       title: 'Header Primary CTA Button',
       type: 'ctaObject',
     }),
-    // Footer Settings
+
+    // --------------------------------------------------
+    // 3. FOOTER CONFIGURATION (NO duplicate contact fields!)
+    // --------------------------------------------------
     defineField({
       name: 'footerDescription',
-      title: 'Footer Summary Copy',
+      title: 'Footer Brand Bio Text',
       type: 'text',
       rows: 3,
-      initialValue:
-        'International cargo delivery provider providing reliable air cargo, ocean sea cargo, and door-to-door shipping services connecting Pakistan worldwide.',
     }),
     defineField({
       name: 'footerGroups',
-      title: 'Footer Navigation Columns',
+      title: 'Footer Link Columns / Groups',
       type: 'array',
-      of: [
-        {
-          type: 'object',
-          fields: [
-            defineField({ name: 'title', title: 'Column Title', type: 'string' }),
-            defineField({
-              name: 'links',
-              title: 'Links',
-              type: 'array',
-              of: [
-                {
-                  type: 'object',
-                  fields: [
-                    defineField({ name: 'label', title: 'Label', type: 'string' }),
-                    defineField({ name: 'href', title: 'URL Path', type: 'string' }),
-                  ],
-                },
-              ],
-            }),
-          ],
-        },
-      ],
+      of: [{ type: 'navGroupObject' }],
     }),
     defineField({
       name: 'copyrightText',
-      title: 'Footer Copyright Text',
+      title: 'Footer Copyright Notice',
       type: 'string',
-      initialValue: 'All rights reserved.',
+      description: 'e.g. All rights reserved.',
     }),
-    // Default SEO Settings
+
+    // --------------------------------------------------
+    // 4. DEFAULT SEO
+    // --------------------------------------------------
     defineField({
-      name: 'defaultMetaTitle',
-      title: 'Default SEO Title',
+      name: 'defaultSeoTitle',
+      title: 'Default Meta Title',
       type: 'string',
-      initialValue: 'Raahi International — Door-to-Door Cargo Shipping From Pakistan',
     }),
     defineField({
-      name: 'defaultMetaDescription',
-      title: 'Default SEO Meta Description',
+      name: 'defaultSeoDescription',
+      title: 'Default Meta Description',
       type: 'text',
       rows: 3,
-      initialValue:
-        'Door-to-door cargo shipping services from Pakistan worldwide by air and sea freight. Home pickup, customs clearance, and global delivery.',
     }),
     defineField({
       name: 'defaultSocialImage',
-      title: 'Default Social Share Image',
+      title: 'Default Open Graph / Social Image',
       type: 'image',
       options: { hotspot: true },
     }),
-    // Social Links
+
+    // --------------------------------------------------
+    // 5. SOCIAL LINKS
+    // --------------------------------------------------
     defineField({
       name: 'socialLinks',
       title: 'Social Media Profiles',
       type: 'object',
       fields: [
-        defineField({ name: 'facebook', title: 'Facebook URL', type: 'url' }),
-        defineField({ name: 'instagram', title: 'Instagram URL', type: 'url' }),
-        defineField({ name: 'linkedin', title: 'LinkedIn URL', type: 'url' }),
-        defineField({ name: 'tiktok', title: 'TikTok URL', type: 'url' }),
+        defineField({ name: 'facebook', title: 'Facebook URL', type: 'string' }),
+        defineField({ name: 'instagram', title: 'Instagram URL', type: 'string' }),
+        defineField({ name: 'linkedin', title: 'LinkedIn URL', type: 'string' }),
+        defineField({ name: 'tiktok', title: 'TikTok URL', type: 'string' }),
       ],
     }),
   ],

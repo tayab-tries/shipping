@@ -6,28 +6,69 @@ import { Button } from '@/components/ui/Button';
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
 
 export interface FinalCtaSectionProps {
+  eyebrow?: string;
+  heading?: string;
+  description?: string;
+  primaryCta?: { label?: string; href?: string };
+  secondaryCta?: { label?: string; href?: string };
   blockData?: Record<string, unknown>;
   whatsappNumber?: string;
 }
 
-export const FinalCtaSection: React.FC<FinalCtaSectionProps> = ({ blockData, whatsappNumber }) => {
+export const FinalCtaSection: React.FC<FinalCtaSectionProps> = ({
+  eyebrow: propEyebrow,
+  heading: propHeading,
+  description: propDescription,
+  primaryCta: propPrimary,
+  secondaryCta: propSecondary,
+  blockData,
+  whatsappNumber,
+}) => {
   const defaultWhatsappUrl = buildWhatsappUrl(
     whatsappNumber,
     'Assalam o Alaikum, I want to send cargo from Pakistan. Please give me a quote.'
   );
 
-  const eyebrow = (blockData?.eyebrow as string) || (blockData?.badge as string) || 'Door-to-Door Delivery';
-  const headline = (blockData?.headline as string) || (blockData?.title as string) || 'Ready to send cargo from Pakistan?';
+  const eyebrow =
+    propEyebrow ||
+    (blockData?.eyebrow as string) ||
+    (blockData?.badge as string) ||
+    'Door-to-Door Delivery';
+
+  const headline =
+    propHeading ||
+    (blockData?.headline as string) ||
+    (blockData?.title as string) ||
+    'Ready to send cargo from Pakistan?';
+
   const supportingCopy =
+    propDescription ||
     (blockData?.supporting_copy as string) ||
     (blockData?.subtitle as string) ||
     'Get an instant quote online or message us on WhatsApp to discuss your cargo shipping requirements.';
-  const primaryCtaLabel =
-    (blockData?.primary_cta_label as string) || (blockData?.button_text as string) || 'GET A QUOTE';
-  const primaryCtaHref = (blockData?.primary_cta_href as string) || (blockData?.button_href as string) || '/quote';
-  const secondaryCtaLabel = (blockData?.secondary_cta_label as string) || 'WHATSAPP US';
 
-  let rawSecondaryHref = (blockData?.secondary_cta_href as string) || defaultWhatsappUrl;
+  const primaryCtaLabel =
+    propPrimary?.label ||
+    (blockData?.primary_cta_label as string) ||
+    (blockData?.button_text as string) ||
+    'GET A QUOTE';
+
+  const primaryCtaHref =
+    propPrimary?.href ||
+    (blockData?.primary_cta_href as string) ||
+    (blockData?.button_href as string) ||
+    '/quote';
+
+  const secondaryCtaLabel =
+    propSecondary?.label ||
+    (blockData?.secondary_cta_label as string) ||
+    'WHATSAPP US';
+
+  let rawSecondaryHref =
+    propSecondary?.href ||
+    (blockData?.secondary_cta_href as string) ||
+    defaultWhatsappUrl;
+
   if (rawSecondaryHref.includes('wa.me') || rawSecondaryHref.includes('whatsapp')) {
     const messageMatch = rawSecondaryHref.match(/text=([^&]*)/);
     const customMsg = messageMatch ? decodeURIComponent(messageMatch[1]) : undefined;
