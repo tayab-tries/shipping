@@ -2,8 +2,8 @@ import React from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import {
-  getPublishedStaticLocations,
-  getStaticLocationBySlug,
+  getPublishedLocations,
+  getLocationBySlug,
 } from '@/lib/locations/location-content';
 import { siteConfig } from '@/config/site.config';
 import { getBreadcrumbJsonLd } from '@/lib/seo/jsonld.service';
@@ -25,7 +25,7 @@ interface LocationPageProps {
  * Pre-render static params for published and verified location routes.
  */
 export async function generateStaticParams() {
-  const publishedLocations = getPublishedStaticLocations();
+  const publishedLocations = await getPublishedLocations();
   return publishedLocations.map((location) => ({
     slug: location.slug,
   }));
@@ -36,7 +36,7 @@ export async function generateStaticParams() {
  */
 export async function generateMetadata({ params }: LocationPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const location = getStaticLocationBySlug(slug);
+  const location = await getLocationBySlug(slug);
 
   if (!location) {
     return {
@@ -63,7 +63,7 @@ export async function generateMetadata({ params }: LocationPageProps): Promise<M
 
 export default async function LocationDetailPage({ params }: LocationPageProps) {
   const { slug } = await params;
-  const location = getStaticLocationBySlug(slug);
+  const location = await getLocationBySlug(slug);
 
   // 1. Authoritative Verification & Publication Check
   if (!location) {

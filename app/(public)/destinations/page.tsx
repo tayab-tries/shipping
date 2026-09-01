@@ -9,8 +9,8 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
-import { getPublishedStaticDestinations } from '@/lib/destinations/destination-content';
-import { getPublishedStaticLocations } from '@/lib/locations/location-content';
+import { getPublishedDestinations } from '@/lib/destinations/destination-content';
+import { getPublishedLocations } from '@/lib/locations/location-content';
 import { siteConfig } from '@/config/site.config';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
 
@@ -23,12 +23,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function DestinationsHubPage() {
-  const destinations = getPublishedStaticDestinations();
-  const originLocations = getPublishedStaticLocations();
+export default async function DestinationsHubPage() {
+  const [destinations, originLocations] = await Promise.all([
+    getPublishedDestinations(),
+    getPublishedLocations(),
+  ]);
 
-  const featuredCorridor = destinations.find((d) => d.slug === 'uk') || destinations[0];
-  const secondaryCorridors = destinations.filter((d) => d.slug !== featuredCorridor?.slug);
+  const featuredCorridor = destinations.length > 0 ? destinations[0] : null;
+  const secondaryCorridors = destinations.length > 1 ? destinations.slice(1) : [];
 
   const breadcrumbs = [
     { label: 'Home', url: '/' },
@@ -116,7 +118,7 @@ export default function DestinationsHubPage() {
         </Container>
       </section>
 
-      {/* 02 INTRODUCTION (LIGHT / WHITE Section) */}
+      {/* 02 INTRODUCTION */}
       <section className="w-full bg-background py-16 lg:py-20 border-b border-border text-brand-black">
         <Container>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
@@ -128,14 +130,14 @@ export default function DestinationsHubPage() {
             </div>
             <div className="lg:col-span-7 space-y-4">
               <p className="text-body-lg text-slate-700 leading-relaxed font-normal">
-                Each destination corridor features dedicated air cargo space and scheduled ocean vessel transport. Origin dispatches depart from major Pakistan hubs (Lahore, Karachi, Islamabad, Rawalpindi) for direct processing and customs entry.
+                Each destination corridor features dedicated air cargo space and scheduled ocean vessel transport. Origin dispatches depart from Pakistan hubs for direct processing and customs entry.
               </p>
             </div>
           </div>
         </Container>
       </section>
 
-      {/* 03 FEATURED CORRIDORS (Editorial Trade Route Layout) */}
+      {/* 03 FEATURED CORRIDORS / EMPTY STATE */}
       <section className="w-full bg-brand-navy py-20 lg:py-28 border-b border-border-dark text-white">
         <Container>
           <SectionHeading
@@ -146,91 +148,165 @@ export default function DestinationsHubPage() {
             badgeVariant="outline-dark"
           />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
-            {/* ONE Dominant Featured Corridor (Col-span-7) */}
-            {featuredCorridor && (
-              <div className="lg:col-span-7 bg-brand-black-deep rounded-md border border-border-dark overflow-hidden p-8 lg:p-10 flex flex-col justify-between space-y-8 group hover:border-slate-700 transition-colors shadow-2xl">
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between border-b border-border-dark pb-3">
-                    <span className="text-xs font-mono text-slate-400 uppercase tracking-wider font-semibold">
-                      {featuredCorridor.region.toUpperCase()}
-                    </span>
-                    <Badge variant="accent">Featured Market</Badge>
-                  </div>
-
-                  <div className="space-y-3">
-                    <h2 className="text-display-sm font-bold text-white group-hover:text-accent transition-colors">
-                      {featuredCorridor.name}
-                    </h2>
-                    <p className="text-body-md text-slate-300 leading-relaxed max-w-xl">
-                      {featuredCorridor.introduction}
-                    </p>
-                  </div>
-
-                  {/* Dominant Image Anchor */}
-                  <div className="relative aspect-[16/9] rounded-md overflow-hidden bg-brand-black border border-border-dark mt-4">
-                    <Image
-                      src={IMAGE_SLOTS.destination.src}
-                      alt={IMAGE_SLOTS.destination.alt}
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 650px"
-                      className="object-cover object-center group-hover:scale-102 transition-transform duration-500 opacity-80"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-brand-black/90 via-transparent to-transparent" />
-                    <div className="absolute bottom-4 left-4 text-xs font-mono text-slate-300">
-                      Air & Ocean Freight Linehaul Desk
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-6 border-t border-border-dark flex items-center justify-between">
-                  <Link
-                    href={`/destinations/${featuredCorridor.slug}`}
-                    className="text-xs font-mono font-semibold text-slate-200 hover:text-accent flex items-center gap-1.5 transition-colors"
-                  >
-                    <span>View Corridor</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-accent" />
-                  </Link>
-                  <Link href={`/quote?destination=${featuredCorridor.slug}`}>
-                    <Button variant="accent" size="md">
-                      Quote
-                    </Button>
-                  </Link>
-                </div>
+          {destinations.length === 0 ? (
+            <div className="bg-brand-black-deep rounded-md border border-border-dark p-12 text-center space-y-4 max-w-2xl mx-auto shadow-2xl">
+              <Globe className="w-10 h-10 text-accent mx-auto" />
+              <h2 className="text-heading-xl font-bold text-white">No Destination Countries Added Yet</h2>
+              <p className="text-body-md text-slate-300 leading-relaxed">
+                Our operations network is currently updating destination corridors. You can request a custom quote for any international destination worldwide.
+              </p>
+              <div className="pt-2">
+                <Link href="/quote">
+                  <Button variant="accent" size="lg" rightIcon={<ArrowRight className="w-4 h-4 text-brand-black" />}>
+                    Request Destination Quote
+                  </Button>
+                </Link>
               </div>
-            )}
-
-            {/* Secondary Corridors List (Col-span-5) */}
-            <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
-              {secondaryCorridors.map((dest) => (
-                <div
-                  key={dest.slug}
-                  className="bg-brand-black-deep rounded-md border border-border-dark p-8 space-y-6 flex-1 flex flex-col justify-between group hover:border-slate-700 transition-colors shadow-lg"
-                >
-                  <div className="space-y-4">
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
+              {/* ONE Dominant Featured Corridor (Col-span-7) */}
+              {featuredCorridor && (
+                <div className="lg:col-span-7 bg-brand-black-deep rounded-md border border-border-dark overflow-hidden p-8 lg:p-10 flex flex-col justify-between space-y-8 group hover:border-slate-700 transition-colors shadow-2xl">
+                  <div className="space-y-6">
                     <div className="flex items-center justify-between border-b border-border-dark pb-3">
-                      <span className="text-xs font-mono text-slate-400 uppercase tracking-wider">
-                        {dest.region.toUpperCase()}
+                      <span className="text-xs font-mono text-slate-400 uppercase tracking-wider font-semibold">
+                        {featuredCorridor.region.toUpperCase()}
                       </span>
+                      <Badge variant="accent">Featured Market</Badge>
                     </div>
-                    <h3 className="text-heading-lg font-bold text-white group-hover:text-accent transition-colors">
-                      {dest.name}
-                    </h3>
-                    <p className="text-body-sm text-slate-300 leading-relaxed line-clamp-2">
-                      {dest.introduction}
-                    </p>
+
+                    <div className="space-y-3">
+                      <h2 className="text-display-sm font-bold text-white group-hover:text-accent transition-colors">
+                        {featuredCorridor.name}
+                      </h2>
+                      <p className="text-body-md text-slate-300 leading-relaxed max-w-xl">
+                        {featuredCorridor.introduction}
+                      </p>
+                    </div>
+
+                    {/* Dominant Image Anchor */}
+                    <div className="relative aspect-[16/9] rounded-md overflow-hidden bg-brand-black border border-border-dark mt-4">
+                      <Image
+                        src={IMAGE_SLOTS.destination.src}
+                        alt={IMAGE_SLOTS.destination.alt}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 650px"
+                        className="object-cover object-center group-hover:scale-102 transition-transform duration-500 opacity-80"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-brand-black/90 via-transparent to-transparent" />
+                      <div className="absolute bottom-4 left-4 text-xs font-mono text-slate-300">
+                        Air & Ocean Freight Linehaul Desk
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="pt-4 border-t border-border-dark flex items-center justify-between">
+                  <div className="pt-6 border-t border-border-dark flex items-center justify-between">
                     <Link
-                      href={`/destinations/${dest.slug}`}
+                      href={`/destinations/${featuredCorridor.slug}`}
                       className="text-xs font-mono font-semibold text-slate-200 hover:text-accent flex items-center gap-1.5 transition-colors"
                     >
                       <span>View Corridor</span>
                       <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-accent" />
                     </Link>
+                    <Link href={`/quote?destination=${featuredCorridor.slug}`}>
+                      <Button variant="accent" size="md">
+                        Quote
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              )}
+
+              {/* Secondary Corridors List (Col-span-5) */}
+              {secondaryCorridors.length > 0 && (
+                <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
+                  {secondaryCorridors.map((dest) => (
+                    <div
+                      key={dest.slug}
+                      className="bg-brand-black-deep rounded-md border border-border-dark p-8 space-y-6 flex-1 flex flex-col justify-between group hover:border-slate-700 transition-colors shadow-lg"
+                    >
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between border-b border-border-dark pb-3">
+                          <span className="text-xs font-mono text-slate-400 uppercase tracking-wider">
+                            {dest.region.toUpperCase()}
+                          </span>
+                        </div>
+                        <h3 className="text-heading-lg font-bold text-white group-hover:text-accent transition-colors">
+                          {dest.name}
+                        </h3>
+                        <p className="text-body-sm text-slate-300 leading-relaxed line-clamp-2">
+                          {dest.introduction}
+                        </p>
+                      </div>
+
+                      <div className="pt-4 border-t border-border-dark flex items-center justify-between">
+                        <Link
+                          href={`/destinations/${dest.slug}`}
+                          className="text-xs font-mono font-semibold text-slate-200 hover:text-accent flex items-center gap-1.5 transition-colors"
+                        >
+                          <span>View Corridor</span>
+                          <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-accent" />
+                        </Link>
+                        <Link href={`/quote?destination=${dest.slug}`}>
+                          <Button variant="outline-dark" size="sm">
+                            Quote
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </Container>
+      </section>
+
+      {/* 04 COUNTRY DIRECTORY */}
+      {destinations.length > 0 && (
+        <section className="w-full bg-surface-subtle py-20 lg:py-28 border-b border-border text-brand-black">
+          <Container>
+            <SectionHeading
+              badge="Directory"
+              title="Complete International Destination Market Directory"
+              subtitle="Verified destination corridors supported for export cargo dispatches from Pakistan."
+              className="mb-14"
+            />
+
+            <div className="bg-surface rounded-md border border-border divide-y divide-border shadow-xs overflow-hidden">
+              {destinations.map((dest) => (
+                <div
+                  key={dest.slug}
+                  className="p-6 lg:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:bg-surface-subtle/80 transition-colors group"
+                >
+                  <div className="space-y-1 md:w-1/3">
+                    <div className="text-xs font-mono text-slate-500 uppercase tracking-wider">
+                      {dest.region} Region
+                    </div>
+                    <h3 className="text-heading-md font-bold text-brand-black group-hover:text-accent transition-colors flex items-center gap-2">
+                      <Globe className="w-4 h-4 text-slate-500 group-hover:text-accent transition-colors shrink-0" />
+                      <Link href={`/destinations/${dest.slug}`}>{dest.name}</Link>
+                    </h3>
+                  </div>
+
+                  <div className="text-xs font-mono text-slate-600 md:w-1/3">
+                    <span className="text-slate-400 block">Supported Modes</span>
+                    <span className="font-semibold text-brand-black">
+                      Air Freight, Sea Cargo, Commercial Cargo
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-4 md:justify-end md:w-1/3">
+                    <Link
+                      href={`/destinations/${dest.slug}`}
+                      className="text-xs font-mono font-semibold text-brand-black hover:text-accent flex items-center gap-1 transition-colors"
+                    >
+                      <span>Corridor Specification</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-accent" />
+                    </Link>
                     <Link href={`/quote?destination=${dest.slug}`}>
-                      <Button variant="outline-dark" size="sm">
+                      <Button variant="outline" size="sm">
                         Quote
                       </Button>
                     </Link>
@@ -238,153 +314,94 @@ export default function DestinationsHubPage() {
                 </div>
               ))}
             </div>
-          </div>
-        </Container>
-      </section>
+          </Container>
+        </section>
+      )}
 
-      {/* 04 COUNTRY DIRECTORY (LIGHT / WHITE Section with Row Dividers) */}
-      <section className="w-full bg-surface-subtle py-20 lg:py-28 border-b border-border text-brand-black">
-        <Container>
-          <SectionHeading
-            badge="Directory"
-            title="Complete International Destination Market Directory"
-            subtitle="Verified destination corridors supported for export cargo dispatches from Pakistan."
-            className="mb-14"
-          />
+      {/* 05 ORIGIN → DESTINATION EXPLANATION */}
+      {originLocations.length > 0 && destinations.length > 0 && (
+        <section className="w-full bg-surface py-20 lg:py-28 border-b border-border text-brand-black">
+          <Container>
+            <SectionHeading
+              badge="Network Manifest"
+              title="Pakistan Origins → Global Markets"
+              subtitle="Cargo receiving operates across primary cities in Pakistan for direct linehaul dispatch to international destination ports."
+              className="mb-14"
+            />
 
-          <div className="bg-surface rounded-md border border-border divide-y divide-border shadow-xs overflow-hidden">
-            {destinations.map((dest) => (
-              <div
-                key={dest.slug}
-                className="p-6 lg:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:bg-surface-subtle/80 transition-colors group"
-              >
-                <div className="space-y-1 md:w-1/3">
-                  <div className="text-xs font-mono text-slate-500 uppercase tracking-wider">
-                    {dest.region} Region
+            <div className="bg-surface-subtle border border-border rounded-md p-6 lg:p-10 shadow-xs">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+                {/* LEFT COLUMN: PAKISTAN ORIGINS */}
+                <div className="lg:col-span-5 space-y-4">
+                  <div className="text-xs font-mono font-bold uppercase text-slate-500 tracking-wider border-b border-border pb-3 flex items-center justify-between">
+                    <span>Pakistan Origins</span>
+                    <span className="text-[10px] text-slate-400 font-normal">{originLocations.length} Hubs</span>
                   </div>
-                  <h3 className="text-heading-md font-bold text-brand-black group-hover:text-accent transition-colors flex items-center gap-2">
-                    <Globe className="w-4 h-4 text-slate-500 group-hover:text-accent transition-colors shrink-0" />
-                    <Link href={`/destinations/${dest.slug}`}>{dest.name}</Link>
-                  </h3>
+
+                  <div className="divide-y divide-border/60">
+                    {originLocations.map((loc) => (
+                      <Link
+                        key={loc.slug}
+                        href={`/locations/${loc.slug}`}
+                        className="group min-h-[56px] py-3.5 px-4 rounded flex items-center justify-between hover:bg-surface transition-colors"
+                      >
+                        <div className="space-y-0.5">
+                          <span className="text-body-md font-semibold text-brand-black group-hover:text-accent transition-colors block">
+                            {loc.name}
+                          </span>
+                          <span className="text-xs text-slate-500 font-normal block">
+                            {loc.province}
+                          </span>
+                        </div>
+                        <span className="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover:bg-accent transition-colors shrink-0" />
+                      </Link>
+                    ))}
+                  </div>
                 </div>
 
-                <div className="text-xs font-mono text-slate-600 md:w-1/3">
-                  <span className="text-slate-400 block">Supported Modes</span>
-                  <span className="font-semibold text-brand-black">
-                    Air Freight, Sea Cargo, Commercial Cargo
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-4 md:justify-end md:w-1/3">
-                  <Link
-                    href={`/destinations/${dest.slug}`}
-                    className="text-xs font-mono font-semibold text-brand-black hover:text-accent flex items-center gap-1 transition-colors"
-                  >
-                    <span>Corridor Specification</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-accent" />
-                  </Link>
-                  <Link href={`/quote?destination=${dest.slug}`}>
-                    <Button variant="outline" size="sm">
-                      Quote
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      {/* 05 ORIGIN → DESTINATION EXPLANATION (EDITORIAL FREIGHT ROUTE MANIFEST) */}
-      <section className="w-full bg-surface py-20 lg:py-28 border-b border-border text-brand-black">
-        <Container>
-          <SectionHeading
-            badge="Network Manifest"
-            title="Pakistan Origins → Global Markets"
-            subtitle="Cargo receiving operates across primary cities in Pakistan for direct linehaul dispatch to international destination ports."
-            className="mb-14"
-          />
-
-          {/* Clean Editorial Route Container (No Circular Arrows, No Floating Buttons) */}
-          <div className="bg-surface-subtle border border-border rounded-md p-6 lg:p-10 shadow-xs">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-              
-              {/* LEFT COLUMN: PAKISTAN ORIGINS */}
-              <div className="lg:col-span-5 space-y-4">
-                <div className="text-xs font-mono font-bold uppercase text-slate-500 tracking-wider border-b border-border pb-3 flex items-center justify-between">
-                  <span>Pakistan Origins</span>
-                  <span className="text-[10px] text-slate-400 font-normal">4 Hubs</span>
-                </div>
-
-                <div className="divide-y divide-border/60">
-                  {originLocations.map((loc) => (
-                    <Link
-                      key={loc.slug}
-                      href={`/locations/${loc.slug}`}
-                      className="group min-h-[56px] py-3.5 px-4 rounded flex items-center justify-between hover:bg-surface transition-colors"
-                    >
-                      <div className="space-y-0.5">
-                        <span className="text-body-md font-semibold text-brand-black group-hover:text-accent transition-colors block">
-                          {loc.name}
-                        </span>
-                        <span className="text-xs text-slate-500 font-normal block">
-                          {loc.province}
-                        </span>
-                      </div>
-                      <span className="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover:bg-accent transition-colors shrink-0" />
-                    </Link>
+                {/* CENTER COLUMN: THIN ROUTE CONNECTOR LINES */}
+                <div className="hidden lg:col-span-2 lg:flex flex-col justify-around items-center py-10">
+                  {originLocations.slice(0, 4).map((loc, idx) => (
+                    <div key={idx} className="w-full flex items-center justify-center gap-1 my-2">
+                      <div className="h-[1px] w-full bg-border/80 group-hover:bg-accent/60 transition-colors" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0 opacity-70" />
+                      <div className="h-[1px] w-full bg-border/80 group-hover:bg-accent/60 transition-colors" />
+                    </div>
                   ))}
                 </div>
-              </div>
 
-              {/* CENTER COLUMN: THIN ROUTE CONNECTOR LINES (Desktop Only) */}
-              <div className="hidden lg:col-span-2 lg:flex flex-col justify-around items-center py-10">
-                {originLocations.map((loc, idx) => (
-                  <div key={idx} className="w-full flex items-center justify-center gap-1 my-2">
-                    <div className="h-[1px] w-full bg-border/80 group-hover:bg-accent/60 transition-colors" />
-                    <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0 opacity-70" />
-                    <div className="h-[1px] w-full bg-border/80 group-hover:bg-accent/60 transition-colors" />
+                {/* RIGHT COLUMN: INTERNATIONAL MARKETS */}
+                <div className="lg:col-span-5 space-y-4">
+                  <div className="text-xs font-mono font-bold uppercase text-slate-500 tracking-wider border-b border-border pb-3 flex items-center justify-between">
+                    <span>International Markets</span>
+                    <span className="text-[10px] text-slate-400 font-normal">{destinations.length} Countries</span>
                   </div>
-                ))}
-              </div>
 
-              {/* MOBILE DIVIDER (Mobile Only) */}
-              <div className="lg:hidden py-2 text-center border-t border-b border-border text-xs font-mono text-slate-500 uppercase tracking-wider">
-                Export Linehaul Network
-              </div>
-
-              {/* RIGHT COLUMN: INTERNATIONAL MARKETS */}
-              <div className="lg:col-span-5 space-y-4">
-                <div className="text-xs font-mono font-bold uppercase text-slate-500 tracking-wider border-b border-border pb-3 flex items-center justify-between">
-                  <span>International Markets</span>
-                  <span className="text-[10px] text-slate-400 font-normal">5 Countries</span>
-                </div>
-
-                <div className="divide-y divide-border/60">
-                  {destinations.map((dest) => (
-                    <Link
-                      key={dest.slug}
-                      href={`/destinations/${dest.slug}`}
-                      className="group min-h-[56px] py-3.5 px-4 rounded flex items-center justify-between hover:bg-surface transition-colors"
-                    >
-                      <div className="space-y-0.5">
-                        <span className="text-body-md font-semibold text-brand-black group-hover:text-accent transition-colors block">
-                          {dest.name}
-                        </span>
-                        <span className="text-xs text-slate-500 font-normal block">
-                          {dest.region}
-                        </span>
-                      </div>
-                      <span className="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover:bg-accent transition-colors shrink-0" />
-                    </Link>
-                  ))}
+                  <div className="divide-y divide-border/60">
+                    {destinations.map((dest) => (
+                      <Link
+                        key={dest.slug}
+                        href={`/destinations/${dest.slug}`}
+                        className="group min-h-[56px] py-3.5 px-4 rounded flex items-center justify-between hover:bg-surface transition-colors"
+                      >
+                        <div className="space-y-0.5">
+                          <span className="text-body-md font-semibold text-brand-black group-hover:text-accent transition-colors block">
+                            {dest.name}
+                          </span>
+                          <span className="text-xs text-slate-500 font-normal block">
+                            {dest.region}
+                          </span>
+                        </div>
+                        <span className="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover:bg-accent transition-colors shrink-0" />
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               </div>
-
             </div>
-          </div>
-        </Container>
-      </section>
+          </Container>
+        </section>
+      )}
 
       {/* 06 FINAL CONVERSION PANEL */}
       <FinalCtaSection />

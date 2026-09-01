@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { servicesRegistry, getEnabledServices } from '@/config/services.config';
 import { siteConfig } from '@/config/site.config';
 import { getServiceMdxContent } from '@/lib/content/mdx.service';
@@ -36,6 +36,13 @@ export async function generateStaticParams() {
  */
 export async function generateMetadata({ params }: ServicePageProps): Promise<Metadata> {
   const { slug } = await params;
+  if (slug === 'door-to-door' || slug === 'door_to_door') {
+    return {
+      title: `Door-to-Door Delivery Available on Air & Sea Cargo | ${siteConfig.name}`,
+      description: 'Door-to-door delivery options are integrated directly into our Air Cargo and Sea Cargo services from Pakistan.',
+    };
+  }
+
   const service = servicesRegistry.find((s) => s.slug === slug);
 
   if (!service || !service.enabled || !service.isVerified) {
@@ -63,6 +70,12 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
 
 export default async function ServiceDetailPage({ params }: ServicePageProps) {
   const { slug } = await params;
+
+  // Handle legacy door-to-door route by redirecting cleanly to /services hub
+  if (slug === 'door-to-door' || slug === 'door_to_door') {
+    redirect('/services');
+  }
+
   const service = servicesRegistry.find((s) => s.slug === slug);
 
   // 1. Authoritative Registry Verification Check

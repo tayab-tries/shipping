@@ -7,7 +7,7 @@ export interface ServiceConfigItem {
   shortDescription: string;
   enabled: boolean;                  // Single source of truth for publication
   isVerified: boolean;               // Single source of truth for business verification
-  quoteCargoType?: CargoType;        // Explicit enum mapping (undefined for umbrella services)
+  quoteCargoType?: CargoType;        // Explicit enum mapping
   contentPath: string;
   iconName: 'Package' | 'Plane' | 'Ship' | 'Truck' | 'FileText' | 'Building2' | 'Luggage';
   category: 'core' | 'specialized';
@@ -22,98 +22,60 @@ export interface ServiceConfigItem {
 
 export const servicesRegistry: ServiceConfigItem[] = [
   {
-    slug: 'international-cargo',
-    name: 'International Cargo',
-    h1: 'International Cargo & Shipping Services from Pakistan',
-    shortDescription: 'International cargo shipping solutions connecting shippers in Pakistan with global destinations.',
-    enabled: true,
-    isVerified: true,
-    quoteCargoType: undefined,       // Umbrella service -> Navigates to /quote without preselecting mode
-    contentPath: 'content/services/international-cargo.mdx',
-    iconName: 'Package',
-    category: 'core',
-    relatedServices: ['air-freight', 'sea-cargo', 'door-to-door'],
-    relatedDestinations: ['uk', 'uae', 'usa', 'canada', 'ksa'],
-    relatedLocations: ['lahore', 'karachi', 'islamabad', 'rawalpindi'],
-    seo: {
-      title: 'International Cargo & Shipping Services Pakistan',
-      description: 'International cargo shipping solutions from Pakistan connecting businesses and individuals with global delivery.',
-    },
-  },
-  {
     slug: 'air-freight',
     name: 'Air Cargo',
-    h1: 'Air Cargo Shipping & Delivery Services',
-    shortDescription: 'Air cargo shipping with door-to-door delivery options for international shipments.',
+    h1: 'Air Cargo Shipping with Door-to-Door Delivery',
+    shortDescription: 'Air cargo shipping with door-to-door delivery.',
     enabled: true,
     isVerified: true,
-    quoteCargoType: 'air_freight',   // Direct enum match -> Navigates to /quote?cargo=air_freight
+    quoteCargoType: 'air_freight',
     contentPath: 'content/services/air-freight.mdx',
     iconName: 'Plane',
     category: 'core',
-    relatedServices: ['international-cargo', 'door-to-door', 'excess-baggage'],
+    relatedServices: ['sea-cargo', 'excess-baggage'],
     relatedDestinations: ['uk', 'uae', 'usa', 'canada', 'ksa'],
     relatedLocations: ['lahore', 'karachi', 'islamabad', 'rawalpindi'],
     seo: {
-      title: 'Air Cargo Services Pakistan | International Air Delivery',
-      description: 'Air cargo shipping services originating from Pakistan export hubs to international destination airports.',
+      title: 'Air Cargo Shipping Services Pakistan',
+      description: 'Air cargo shipping with door-to-door delivery originating from Pakistan export hubs to international destinations.',
     },
   },
   {
     slug: 'sea-cargo',
     name: 'Sea Cargo',
-    h1: 'Sea Cargo & Container Shipping Services',
-    shortDescription: 'Sea cargo shipping with door-to-door delivery from pickup to destination.',
+    h1: 'Sea Cargo Shipping with Door-to-Door Delivery',
+    shortDescription: 'Sea cargo shipping with door-to-door delivery.',
     enabled: true,
     isVerified: true,
-    quoteCargoType: 'sea_cargo',     // Direct enum match -> Navigates to /quote?cargo=sea_cargo
+    quoteCargoType: 'sea_cargo',
     contentPath: 'content/services/sea-cargo.mdx',
     iconName: 'Ship',
     category: 'core',
-    relatedServices: ['international-cargo', 'commercial-cargo', 'freight-forwarding'],
+    relatedServices: ['air-freight', 'commercial-cargo'],
     relatedDestinations: ['uk', 'uae', 'usa', 'canada', 'ksa'],
     relatedLocations: ['karachi', 'lahore'],
     seo: {
-      title: 'Sea Cargo & Shipping Services Pakistan',
-      description: 'Sea cargo shipping services from Pakistan for ocean shipping requirements.',
+      title: 'Sea Cargo Shipping Services Pakistan',
+      description: 'Sea cargo shipping with door-to-door delivery from Pakistan for ocean freight requirements.',
     },
   },
   {
     slug: 'door-to-door',
     name: 'Door-to-Door Delivery',
     h1: 'Door-to-Door Cargo Shipping Services',
-    shortDescription: 'Coordinated international cargo shipping services from collection through destination delivery.',
-    enabled: true,
-    isVerified: true,
-    quoteCargoType: 'door_to_door',  // Direct enum match -> Navigates to /quote?cargo=door_to_door
+    shortDescription: 'Integrated door-to-door cargo delivery via Air Cargo and Sea Cargo modes.',
+    enabled: false, // REMOVED AS STANDALONE SERVICE CARD (Integrated into Air & Sea Cargo)
+    isVerified: false,
+    quoteCargoType: 'door_to_door',
     contentPath: 'content/services/door-to-door.mdx',
     iconName: 'Truck',
     category: 'core',
-    relatedServices: ['international-cargo', 'air-freight', 'excess-baggage'],
+    relatedServices: ['air-freight', 'sea-cargo'],
     relatedDestinations: ['uk', 'uae', 'usa', 'canada', 'ksa'],
     relatedLocations: ['lahore', 'karachi', 'islamabad', 'rawalpindi'],
     seo: {
       title: 'Door to Door International Shipping Pakistan',
-      description: 'Coordinated door-to-door cargo shipping services from Pakistan to international destinations.',
-    },
-  },
-  {
-    slug: 'freight-forwarding',
-    name: 'Cargo Shipping',
-    h1: 'Cargo Shipping & Shipping Coordination',
-    shortDescription: 'Logistics coordination and shipping documentation services for export cargo.',
-    enabled: true,
-    isVerified: true,
-    quoteCargoType: undefined,       // Specialized logistics -> Navigates to /quote
-    contentPath: 'content/services/freight-forwarding.mdx',
-    iconName: 'FileText',
-    category: 'specialized',
-    relatedServices: ['international-cargo', 'commercial-cargo', 'sea-cargo'],
-    relatedDestinations: ['uk', 'uae', 'usa'],
-    relatedLocations: ['karachi', 'lahore'],
-    seo: {
-      title: 'Cargo Shipping Services Pakistan',
-      description: 'Cargo shipping and coordination services for international export cargo from Pakistan.',
+      description: 'Door-to-door cargo delivery options available on Air Cargo and Sea Cargo from Pakistan.',
     },
   },
   {
@@ -123,11 +85,11 @@ export const servicesRegistry: ServiceConfigItem[] = [
     shortDescription: 'Commercial cargo shipping for exporters, trade shipments, and commercial goods.',
     enabled: true,
     isVerified: true,
-    quoteCargoType: 'commercial_freight', // Direct enum match -> Navigates to /quote?cargo=commercial_freight
+    quoteCargoType: 'commercial_freight',
     contentPath: 'content/services/commercial-cargo.mdx',
     iconName: 'Building2',
     category: 'specialized',
-    relatedServices: ['sea-cargo', 'air-freight', 'freight-forwarding'],
+    relatedServices: ['sea-cargo', 'air-freight'],
     relatedDestinations: ['uk', 'uae', 'usa', 'canada', 'ksa'],
     relatedLocations: ['lahore', 'karachi', 'sialkot', 'faisalabad'],
     seo: {
@@ -142,11 +104,11 @@ export const servicesRegistry: ServiceConfigItem[] = [
     shortDescription: 'Baggage shipping for personal belongings, travelers, students, and relocating families.',
     enabled: true,
     isVerified: true,
-    quoteCargoType: 'excess_baggage', // Direct enum match -> Navigates to /quote?cargo=excess_baggage
+    quoteCargoType: 'excess_baggage',
     contentPath: 'content/services/excess-baggage.mdx',
     iconName: 'Luggage',
     category: 'specialized',
-    relatedServices: ['air-freight', 'door-to-door'],
+    relatedServices: ['air-freight', 'sea-cargo'],
     relatedDestinations: ['uk', 'uae', 'usa', 'canada', 'ksa'],
     relatedLocations: ['lahore', 'karachi', 'islamabad'],
     seo: {

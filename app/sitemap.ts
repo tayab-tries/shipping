@@ -1,8 +1,8 @@
 import { MetadataRoute } from 'next';
 import { siteConfig } from '@/config/site.config';
 import { getEnabledServices } from '@/config/services.config';
-import { getPublishedStaticLocations } from '@/lib/locations/location-content';
-import { getPublishedStaticDestinations } from '@/lib/destinations/destination-content';
+import { getPublishedLocations } from '@/lib/locations/location-content';
+import { getPublishedDestinations } from '@/lib/destinations/destination-content';
 import { getPublishedStaticArticles } from '@/lib/guides/guide-content';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -24,11 +24,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const serviceRoutes = enabledServices.map((s) => `/services/${s.slug}`);
 
   // 2. Dynamically map ONLY published & verified location hubs
-  const publishedLocations = getPublishedStaticLocations();
+  const publishedLocations = await getPublishedLocations();
   const locationRoutes = publishedLocations.map((l) => `/locations/${l.slug}`);
 
   // 3. Dynamically map ONLY published & verified destination countries & cities
-  const publishedDestinations = getPublishedStaticDestinations();
+  const publishedDestinations = await getPublishedDestinations();
   const destinationRoutes: string[] = [];
 
   for (const country of publishedDestinations) {

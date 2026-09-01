@@ -17,7 +17,7 @@ export const DestinationShowcase: React.FC<DestinationShowcaseProps> = ({ blockD
 
   const corridors = [
     { country: 'UK', code: 'uk', hub: 'London & UK Nationwide', mode: 'Air & Sea Cargo' },
-    { country: 'UAE', code: 'uae', hub: 'Dubai & UAE Nationwide', mode: 'Express & Door-to-Door' },
+    { country: 'UAE', code: 'uae', hub: 'Dubai & UAE Nationwide', mode: 'Air & Sea Cargo' },
     { country: 'Saudi Arabia', code: 'ksa', hub: 'Riyadh, Jeddah & KSA', mode: 'Air & Sea Cargo' },
     { country: 'Canada', code: 'canada', hub: 'Toronto & Canada Nationwide', mode: 'Air & Sea Cargo' },
     { country: 'USA', code: 'usa', hub: 'New York & USA Nationwide', mode: 'Air & Sea Cargo' },

@@ -1,7 +1,5 @@
 import { z } from 'zod';
 import { cargoTypes } from '@/types/content'; // Single Source of Truth
-import { getPublishedStaticLocations } from '@/lib/locations/location-content';
-import { getPublishedStaticDestinations } from '@/lib/destinations/destination-content';
 
 export const quoteSubmissionSchema = z
   .object({
@@ -59,35 +57,19 @@ export type QuoteSubmissionInput = z.infer<typeof quoteSubmissionSchema>;
 
 /**
  * Secondary Server-Side Entity Validation Layer
- * Verifies origin, destination, and cargo type against published CMS entities prior to DB insertion.
+ * Verifies origin, destination, and cargo type prior to DB insertion.
  */
 export function validateQuoteEntitiesServerSide(data: {
   origin_city: string;
   destination_country: string;
   cargo_type: string;
 }): { isValid: boolean; error?: string } {
-  const publishedLocations = getPublishedStaticLocations();
-  const validOrigin =
-    data.origin_city.toLowerCase() === 'other' ||
-    publishedLocations.some(
-      (l) => l.slug === data.origin_city || l.name.toLowerCase() === data.origin_city.toLowerCase()
-    );
-
-  if (!validOrigin) {
-    return { isValid: false, error: `Invalid origin city "${data.origin_city}".` };
+  if (!data.origin_city || data.origin_city.trim().length < 2) {
+    return { isValid: false, error: 'Invalid origin city.' };
   }
 
-  const publishedDestinations = getPublishedStaticDestinations();
-  const validDestination =
-    data.destination_country.toLowerCase() === 'other' ||
-    publishedDestinations.some(
-      (d) =>
-        d.slug === data.destination_country ||
-        d.name.toLowerCase() === data.destination_country.toLowerCase()
-    );
-
-  if (!validDestination) {
-    return { isValid: false, error: `Invalid destination country "${data.destination_country}".` };
+  if (!data.destination_country || data.destination_country.trim().length < 2) {
+    return { isValid: false, error: 'Invalid destination country.' };
   }
 
   return { isValid: true };

@@ -9,24 +9,24 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
-import { getPublishedStaticLocations } from '@/lib/locations/location-content';
+import { getPublishedLocations } from '@/lib/locations/location-content';
 import { siteConfig } from '@/config/site.config';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
 
 export const metadata: Metadata = {
   title: `Pakistan Cargo Pickup Locations & Origin Hubs | ${siteConfig.name}`,
   description:
-    'Explore international cargo shipping pickup centers and origin hubs across major cities in Pakistan including Lahore, Karachi, Islamabad, and Rawalpindi.',
+    'Explore international cargo shipping pickup centers and origin hubs across major cities in Pakistan.',
   alternates: {
     canonical: `${siteConfig.domain}/locations`,
   },
 };
 
-export default function LocationsHubPage() {
-  const locations = getPublishedStaticLocations();
+export default async function LocationsHubPage() {
+  const locations = await getPublishedLocations();
 
-  const featuredCity = locations.find((l) => l.slug === 'lahore') || locations[0];
-  const supportingCities = locations.filter((l) => l.slug !== featuredCity?.slug);
+  const featuredCity = locations.length > 0 ? locations[0] : null;
+  const supportingCities = locations.length > 1 ? locations.slice(1) : [];
 
   const breadcrumbs = [
     { label: 'Home', url: '/' },
@@ -114,7 +114,7 @@ export default function LocationsHubPage() {
         </Container>
       </section>
 
-      {/* 2. Featured Origin Cities (Asymmetric Editorial Layout) */}
+      {/* 2. Featured Origin Cities / Empty State */}
       <section className="w-full bg-brand-navy py-20 lg:py-28 border-b border-border-dark text-white">
         <Container>
           <SectionHeading
@@ -125,99 +125,164 @@ export default function LocationsHubPage() {
             badgeVariant="outline-dark"
           />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
-            {/* ONE Dominant Featured City Card (Col-span-7) */}
-            {featuredCity && (
-              <div className="lg:col-span-7 bg-brand-black-deep rounded-md border border-border-dark overflow-hidden p-8 lg:p-10 flex flex-col justify-between space-y-8 group hover:border-slate-700 transition-colors shadow-2xl">
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <Badge variant="accent">Primary Logistics Hub</Badge>
-                    <span className="text-xs font-mono text-slate-400">{featuredCity.province}</span>
-                  </div>
-
-                  <div className="space-y-3">
-                    <h2 className="text-display-sm font-bold text-white group-hover:text-accent transition-colors flex items-center gap-3">
-                      <MapPin className="w-7 h-7 text-accent shrink-0" />
-                      <span>{featuredCity.name}</span>
-                    </h2>
-                    <p className="text-body-md text-slate-300 leading-relaxed max-w-xl">
-                      {featuredCity.introduction}
-                    </p>
-                  </div>
-
-                  {/* Operational Status Badges */}
-                  <div className="flex flex-wrap gap-3 pt-2 text-xs font-mono text-slate-300">
-                    <div className="flex items-center gap-1.5 bg-brand-navy px-3 py-1.5 rounded border border-border-dark">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-accent" />
-                      <span>Service Available</span>
+          {locations.length === 0 ? (
+            <div className="bg-brand-black-deep rounded-md border border-border-dark p-12 text-center space-y-4 max-w-2xl mx-auto shadow-2xl">
+              <MapPin className="w-10 h-10 text-accent mx-auto" />
+              <h2 className="text-heading-xl font-bold text-white">No Locations Added Yet</h2>
+              <p className="text-body-md text-slate-300 leading-relaxed">
+                Our operations network is currently updating origin location hubs. You can request a shipping quote directly from any location in Pakistan.
+              </p>
+              <div className="pt-2">
+                <Link href="/quote">
+                  <Button variant="accent" size="lg" rightIcon={<ArrowRight className="w-4 h-4 text-brand-black" />}>
+                    Request Pickup Quote
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
+              {/* ONE Dominant Featured City Card (Col-span-7) */}
+              {featuredCity && (
+                <div className="lg:col-span-7 bg-brand-black-deep rounded-md border border-border-dark overflow-hidden p-8 lg:p-10 flex flex-col justify-between space-y-8 group hover:border-slate-700 transition-colors shadow-2xl">
+                  <div className="space-y-6">
+                    <div className="flex items-center justify-between">
+                      <Badge variant="accent">Primary Logistics Hub</Badge>
+                      <span className="text-xs font-mono text-slate-400">{featuredCity.province}</span>
                     </div>
-                    {featuredCity.collectionAvailable && (
+
+                    <div className="space-y-3">
+                      <h2 className="text-display-sm font-bold text-white group-hover:text-accent transition-colors flex items-center gap-3">
+                        <MapPin className="w-7 h-7 text-accent shrink-0" />
+                        <span>{featuredCity.name}</span>
+                      </h2>
+                      <p className="text-body-md text-slate-300 leading-relaxed max-w-xl">
+                        {featuredCity.introduction}
+                      </p>
+                    </div>
+
+                    {/* Operational Status Badges */}
+                    <div className="flex flex-wrap gap-3 pt-2 text-xs font-mono text-slate-300">
                       <div className="flex items-center gap-1.5 bg-brand-navy px-3 py-1.5 rounded border border-border-dark">
                         <CheckCircle2 className="w-3.5 h-3.5 text-accent" />
-                        <span>Doorstep Collection</span>
+                        <span>Service Available</span>
+                      </div>
+                      {featuredCity.collectionAvailable && (
+                        <div className="flex items-center gap-1.5 bg-brand-navy px-3 py-1.5 rounded border border-border-dark">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-accent" />
+                          <span>Doorstep Collection</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="pt-6 border-t border-border-dark flex items-center justify-between">
+                    <span className="text-xs font-mono text-slate-400">Scheduled Dispatch Active</span>
+                    <Link href={`/locations/${featuredCity.slug}`}>
+                      <Button variant="accent" size="md" rightIcon={<ArrowRight className="w-4 h-4 text-brand-black" />}>
+                        View {featuredCity.name} Hub
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              )}
+
+              {/* Secondary Supporting Cities (Col-span-5) */}
+              {supportingCities.length > 0 && (
+                <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
+                  {supportingCities.map((city) => (
+                    <div
+                      key={city.slug}
+                      className="bg-brand-black-deep rounded-md border border-border-dark p-8 space-y-6 flex-1 flex flex-col justify-between group hover:border-slate-700 transition-colors shadow-lg"
+                    >
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between border-b border-border-dark pb-3">
+                          <span className="text-xs font-mono text-slate-400 uppercase tracking-wider">
+                            {city.province}
+                          </span>
+                          <MapPin className="w-5 h-5 text-slate-400 group-hover:text-accent transition-colors" />
+                        </div>
+                        <h3 className="text-heading-lg font-bold text-white group-hover:text-accent transition-colors">
+                          {city.name}
+                        </h3>
+                        <p className="text-body-sm text-slate-300 leading-relaxed">
+                          {city.introduction}
+                        </p>
+                      </div>
+
+                      <div className="pt-4 border-t border-border-dark flex items-center justify-between">
+                        <Link
+                          href={`/locations/${city.slug}`}
+                          className="text-xs font-mono font-semibold text-slate-200 hover:text-accent flex items-center gap-1.5 transition-colors"
+                        >
+                          <span>Explore City Hub</span>
+                          <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-accent" />
+                        </Link>
+                        <Link href={`/quote?origin=${city.slug}`}>
+                          <Button variant="outline-dark" size="sm">
+                            Quote
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </Container>
+      </section>
+
+      {/* 3. Published City Directory */}
+      {locations.length > 0 && (
+        <section className="w-full bg-surface-subtle py-20 lg:py-28 border-b border-border text-brand-black">
+          <Container>
+            <SectionHeading
+              badge="Directory"
+              title="Complete Origin City Network Directory"
+              subtitle="Operational status and collection coverage across published shipping origin locations."
+              className="mb-14"
+            />
+
+            <div className="bg-surface rounded-md border border-border divide-y divide-border shadow-xs overflow-hidden">
+              {locations.map((city) => (
+                <div
+                  key={city.slug}
+                  className="p-6 lg:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:bg-surface-subtle/80 transition-colors group"
+                >
+                  <div className="space-y-1 md:w-1/3">
+                    <div className="text-xs font-mono text-slate-500 uppercase tracking-wider">
+                      {city.province}
+                    </div>
+                    <h3 className="text-heading-md font-bold text-brand-black group-hover:text-accent transition-colors flex items-center gap-2">
+                      <MapPin className="w-4 h-4 text-slate-500 group-hover:text-accent transition-colors shrink-0" />
+                      <Link href={`/locations/${city.slug}`}>{city.name}</Link>
+                    </h3>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-slate-600 md:w-1/3">
+                    <div className="flex items-center gap-1.5 bg-surface-subtle px-3 py-1.5 rounded border border-border">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                      <span>Service Available</span>
+                    </div>
+                    {city.collectionAvailable && (
+                      <div className="flex items-center gap-1.5 bg-surface-subtle px-3 py-1.5 rounded border border-border">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                        <span>Collection Active</span>
                       </div>
                     )}
                   </div>
 
-                  {/* Dominant Image Slot Anchor */}
-                  <div className="relative aspect-[16/9] rounded-md overflow-hidden bg-brand-black border border-border-dark mt-4">
-                    <Image
-                      src={IMAGE_SLOTS.pakistanHub.src}
-                      alt={IMAGE_SLOTS.pakistanHub.alt}
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 650px"
-                      className="object-cover object-center group-hover:scale-102 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-brand-black/90 via-transparent to-transparent" />
-                    <div className="absolute bottom-4 left-4 text-xs font-mono text-slate-300">
-                      Export Cargo Consolidation Terminal
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-6 border-t border-border-dark flex items-center justify-between">
-                  <span className="text-xs font-mono text-slate-400">Scheduled Dispatch Active</span>
-                  <Link href={`/locations/${featuredCity.slug}`}>
-                    <Button variant="accent" size="md" rightIcon={<ArrowRight className="w-4 h-4 text-brand-black" />}>
-                      View {featuredCity.name} Hub
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            )}
-
-            {/* Secondary Supporting Cities (Col-span-5) */}
-            <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
-              {supportingCities.map((city) => (
-                <div
-                  key={city.slug}
-                  className="bg-brand-black-deep rounded-md border border-border-dark p-8 space-y-6 flex-1 flex flex-col justify-between group hover:border-slate-700 transition-colors shadow-lg"
-                >
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between border-b border-border-dark pb-3">
-                      <span className="text-xs font-mono text-slate-400 uppercase tracking-wider">
-                        {city.province}
-                      </span>
-                      <MapPin className="w-5 h-5 text-slate-400 group-hover:text-accent transition-colors" />
-                    </div>
-                    <h3 className="text-heading-lg font-bold text-white group-hover:text-accent transition-colors">
-                      {city.name}
-                    </h3>
-                    <p className="text-body-sm text-slate-300 leading-relaxed">
-                      {city.introduction}
-                    </p>
-                  </div>
-
-                  <div className="pt-4 border-t border-border-dark flex items-center justify-between">
+                  <div className="flex items-center gap-4 md:justify-end md:w-1/3">
                     <Link
                       href={`/locations/${city.slug}`}
-                      className="text-xs font-mono font-semibold text-slate-200 hover:text-accent flex items-center gap-1.5 transition-colors"
+                      className="text-xs font-mono font-semibold text-brand-black hover:text-accent flex items-center gap-1 transition-colors"
                     >
-                      <span>Explore City Hub</span>
+                      <span>View City Hub</span>
                       <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-accent" />
                     </Link>
                     <Link href={`/quote?origin=${city.slug}`}>
-                      <Button variant="outline-dark" size="sm">
+                      <Button variant="outline" size="sm">
                         Quote
                       </Button>
                     </Link>
@@ -225,68 +290,9 @@ export default function LocationsHubPage() {
                 </div>
               ))}
             </div>
-          </div>
-        </Container>
-      </section>
-
-      {/* 3. Published City Directory (Row Dividers, Not Card Grids) */}
-      <section className="w-full bg-surface-subtle py-20 lg:py-28 border-b border-border text-brand-black">
-        <Container>
-          <SectionHeading
-            badge="Directory"
-            title="Complete Origin City Network Directory"
-            subtitle="Operational status and collection coverage across published shipping origin locations."
-            className="mb-14"
-          />
-
-          <div className="bg-surface rounded-md border border-border divide-y divide-border shadow-xs overflow-hidden">
-            {locations.map((city) => (
-              <div
-                key={city.slug}
-                className="p-6 lg:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:bg-surface-subtle/80 transition-colors group"
-              >
-                <div className="space-y-1 md:w-1/3">
-                  <div className="text-xs font-mono text-slate-500 uppercase tracking-wider">
-                    {city.province}
-                  </div>
-                  <h3 className="text-heading-md font-bold text-brand-black group-hover:text-accent transition-colors flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-slate-500 group-hover:text-accent transition-colors shrink-0" />
-                    <Link href={`/locations/${city.slug}`}>{city.name}</Link>
-                  </h3>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-slate-600 md:w-1/3">
-                  <div className="flex items-center gap-1.5 bg-surface-subtle px-3 py-1.5 rounded border border-border">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                    <span>Service Available</span>
-                  </div>
-                  {city.collectionAvailable && (
-                    <div className="flex items-center gap-1.5 bg-surface-subtle px-3 py-1.5 rounded border border-border">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                      <span>Collection Active</span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-4 md:justify-end md:w-1/3">
-                  <Link
-                    href={`/locations/${city.slug}`}
-                    className="text-xs font-mono font-semibold text-brand-black hover:text-accent flex items-center gap-1 transition-colors"
-                  >
-                    <span>View City Hub</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-accent" />
-                  </Link>
-                  <Link href={`/quote?origin=${city.slug}`}>
-                    <Button variant="outline" size="sm">
-                      Quote
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
+          </Container>
+        </section>
+      )}
 
       {/* 4. Service & Dispatch Guidance Section */}
       <section className="w-full bg-brand-navy py-16 text-white border-b border-border-dark">

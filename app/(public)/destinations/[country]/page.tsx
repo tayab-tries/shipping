@@ -2,8 +2,8 @@ import React from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import {
-  getPublishedStaticDestinations,
-  getStaticDestinationBySlug,
+  getPublishedDestinations,
+  getDestinationBySlug,
 } from '@/lib/destinations/destination-content';
 import { siteConfig } from '@/config/site.config';
 import { getBreadcrumbJsonLd } from '@/lib/seo/jsonld.service';
@@ -26,7 +26,7 @@ interface CountryPageProps {
  * Pre-render static params for published and verified country destination routes.
  */
 export async function generateStaticParams() {
-  const publishedDestinations = getPublishedStaticDestinations();
+  const publishedDestinations = await getPublishedDestinations();
   return publishedDestinations.map((dest) => ({
     country: dest.slug,
   }));
@@ -37,7 +37,7 @@ export async function generateStaticParams() {
  */
 export async function generateMetadata({ params }: CountryPageProps): Promise<Metadata> {
   const { country } = await params;
-  const destination = getStaticDestinationBySlug(country);
+  const destination = await getDestinationBySlug(country);
 
   if (!destination) {
     return {
@@ -64,7 +64,7 @@ export async function generateMetadata({ params }: CountryPageProps): Promise<Me
 
 export default async function CountryDetailPage({ params }: CountryPageProps) {
   const { country } = await params;
-  const destination = getStaticDestinationBySlug(country);
+  const destination = await getDestinationBySlug(country);
 
   // 1. Authoritative Verification & Publication Check
   if (!destination) {

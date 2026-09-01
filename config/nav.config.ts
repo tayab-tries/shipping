@@ -29,17 +29,17 @@ export const mainNavigation: NavItem[] = [
       {
         title: 'Air Cargo',
         href: '/services/air-freight',
-        description: 'Express air cargo shipping with door-to-door delivery.',
+        description: 'Air cargo shipping with door-to-door delivery.',
       },
       {
         title: 'Sea Cargo',
         href: '/services/sea-cargo',
-        description: 'Economical sea cargo shipping (FCL/LCL) with door delivery.',
+        description: 'Sea cargo shipping with door-to-door delivery.',
       },
       {
-        title: 'Door-to-Door Delivery',
-        href: '/services/door-to-door',
-        description: 'End-to-end pickup and international doorstep delivery.',
+        title: 'Commercial Cargo',
+        href: '/services/commercial-cargo',
+        description: 'Trade cargo and B2B export shipments.',
       },
     ],
   },
@@ -105,9 +105,8 @@ export const footerNavigation: FooterNavGroup[] = [
     items: [
       { label: 'Air Cargo', href: '/services/air-freight' },
       { label: 'Sea Cargo', href: '/services/sea-cargo' },
-      { label: 'Door-to-Door Delivery', href: '/services/door-to-door' },
-      { label: 'Excess Baggage', href: '/services/excess-baggage' },
       { label: 'Commercial Cargo', href: '/services/commercial-cargo' },
+      { label: 'Excess Baggage', href: '/services/excess-baggage' },
     ],
   },
   {
@@ -123,9 +122,9 @@ export const footerNavigation: FooterNavGroup[] = [
   {
     title: 'Locations',
     items: [
-      { label: 'Lahore Office', href: '/locations/lahore' },
-      { label: 'Karachi Office', href: '/locations/karachi' },
-      { label: 'Islamabad Office', href: '/locations/islamabad' },
+      { label: 'Lahore Hub', href: '/locations/lahore' },
+      { label: 'Karachi Hub', href: '/locations/karachi' },
+      { label: 'Islamabad Hub', href: '/locations/islamabad' },
     ],
   },
   {
