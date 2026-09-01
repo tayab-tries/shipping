@@ -89,24 +89,31 @@ export default function AdminMediaPage() {
 
   useEffect(() => {
     let isMounted = true;
-    getMediaAssetsAction().then((res) => {
-      if (isMounted && res.success && res.data && res.data.length > 0) {
-        const dbAssets: MediaAssetItem[] = res.data.map((rec: MediaAssetRecord) => ({
-          id: rec.id,
-          fileName: rec.file_name,
-          publicUrl: rec.public_url,
-          mimeType: rec.mime_type,
-          sizeBytes: rec.size_bytes,
-          altText: rec.alt_text,
-          isReferenced: false,
-          createdAt: rec.created_at ? rec.created_at.substring(0, 10) : '2026-09-01',
-        }));
-        setAssets(dbAssets);
-      }
-      if (isMounted) {
-        setIsLoading(false);
-      }
-    });
+    getMediaAssetsAction()
+      .then((res) => {
+        if (isMounted && res.success && res.data && res.data.length > 0) {
+          const dbAssets: MediaAssetItem[] = res.data.map((rec: MediaAssetRecord) => ({
+            id: rec.id,
+            fileName: rec.file_name,
+            publicUrl: rec.public_url,
+            mimeType: rec.mime_type,
+            sizeBytes: rec.size_bytes,
+            altText: rec.alt_text,
+            isReferenced: false,
+            createdAt: rec.created_at ? rec.created_at.substring(0, 10) : '2026-09-01',
+          }));
+          setAssets(dbAssets);
+        }
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      })
+      .catch((err: unknown) => {
+        console.warn('Failed to load media assets safely:', err);
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      });
     return () => {
       isMounted = false;
     };
@@ -159,27 +166,31 @@ export default function AdminMediaPage() {
     formData.append('file', selectedFile);
     formData.append('altText', uploadAltText.trim());
 
-    const result = await uploadMediaAssetAction(formData);
+    try {
+      const result = await uploadMediaAssetAction(formData);
 
-    if (result.success && result.data) {
-      const newAsset: MediaAssetItem = {
-        id: result.data.id,
-        fileName: result.data.file_name,
-        publicUrl: result.data.public_url,
-        mimeType: result.data.mime_type,
-        sizeBytes: result.data.size_bytes,
-        altText: result.data.alt_text,
-        isReferenced: false,
-        createdAt: new Date().toISOString().substring(0, 10),
-      };
+      if (result.success && result.data) {
+        const newAsset: MediaAssetItem = {
+          id: result.data.id,
+          fileName: result.data.file_name,
+          publicUrl: result.data.public_url,
+          mimeType: result.data.mime_type,
+          sizeBytes: result.data.size_bytes,
+          altText: result.data.alt_text,
+          isReferenced: false,
+          createdAt: new Date().toISOString().substring(0, 10),
+        };
 
-      setAssets([newAsset, ...assets]);
-      handleCancelModal();
-    } else {
-      setUploadError(result.error || 'Failed to upload image. Please try again.');
+        setAssets([newAsset, ...assets]);
+        handleCancelModal();
+      } else {
+        setUploadError(result.error || 'Failed to upload image. Please try again.');
+      }
+    } catch (err: unknown) {
+      setUploadError(err instanceof Error ? err.message : 'Server action error uploading image.');
+    } finally {
+      setIsUploading(false);
     }
-
-    setIsUploading(false);
   };
 
   const handleCopyUrl = (id: string, url: string) => {
@@ -190,9 +201,13 @@ export default function AdminMediaPage() {
 
   const handleSaveAltText = async (id: string) => {
     if (!editAltText.trim()) return;
-    await updateMediaAltTextAction(id, editAltText.trim());
-    setAssets(assets.map((a) => (a.id === id ? { ...a, altText: editAltText.trim() } : a)));
-    setEditingId(null);
+    try {
+      await updateMediaAltTextAction(id, editAltText.trim());
+      setAssets(assets.map((a) => (a.id === id ? { ...a, altText: editAltText.trim() } : a)));
+      setEditingId(null);
+    } catch (err: unknown) {
+      console.error('Error saving alt text:', err);
+    }
   };
 
   const handleDeleteAsset = async (asset: MediaAssetItem) => {
@@ -204,8 +219,12 @@ export default function AdminMediaPage() {
       return;
     }
 
-    await deleteMediaAssetAction(asset.id);
-    setAssets(assets.filter((a) => a.id !== asset.id));
+    try {
+      await deleteMediaAssetAction(asset.id);
+      setAssets(assets.filter((a) => a.id !== asset.id));
+    } catch (err: unknown) {
+      console.error('Error deleting asset:', err);
+    }
   };
 
   const filteredAssets = assets.filter(
