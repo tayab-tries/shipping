@@ -1,35 +1,46 @@
 import { defineQuery } from 'next-sanity';
 
-export const HOMEPAGE_HERO_QUERY = defineQuery(`
-  *[_type == "homepage"][0].hero {
-    eyebrow,
-    headline,
-    highlightedHeadline,
-    description,
-    primaryCtaLabel,
-    primaryCtaHref,
-    secondaryCtaLabel,
-    secondaryCtaHref,
-    backgroundImage,
-    backgroundImageAlt
+export const HOMEPAGE_FULL_QUERY = defineQuery(`
+  *[_type == "homepage"][0] {
+    seo,
+    hero,
+    heroFeatureChips,
+    quickQuote,
+    trustMetrics,
+    registrations,
+    trustedMarket,
+    whatCanYouSend,
+    servicesOverview,
+    popularDestinations,
+    pickupCities,
+    howItWorks,
+    testimonials,
+    faq,
+    finalCta,
+    mobileBottomCta
   }
 `);
 
-export const SITE_SETTINGS_QUERY = defineQuery(`
+export const SITE_SETTINGS_FULL_QUERY = defineQuery(`
   *[_type == "siteSettings"][0] {
     businessName,
-    legalName,
-    logo,
-    logoDark,
-    logoLight,
+    shortDescription,
     phone,
-    whatsapp,
+    whatsappNumber,
     email,
     address,
     operatingHours,
-    socialLinks,
-    defaultSeoTitle,
-    defaultSeoDescription,
-    defaultOgImage
+    logo,
+    logoDark,
+    logoLight,
+    navigationItems,
+    primaryCta,
+    footerDescription,
+    footerGroups,
+    copyrightText,
+    defaultMetaTitle,
+    defaultMetaDescription,
+    defaultSocialImage,
+    socialLinks
   }
 `);

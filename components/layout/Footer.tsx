@@ -5,15 +5,25 @@ import { ShieldCheck, MapPin, Phone, Mail, MessageSquare } from 'lucide-react';
 import { siteConfig } from '@/config/site.config';
 import { Container } from '@/components/ui/Container';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
+import { getSanitySiteSettingsFull } from '@/sanity/lib/fetch';
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
 
 export const Footer = async () => {
-  const business = await getPublishedBusinessSettings();
-  const phone = business.phonePrimary || siteConfig.phone || '+92 300 1234567';
-  const whatsappNumber = business.whatsappNumber || siteConfig.contact?.whatsappNumber || phone;
+  const [business, sanitySettings] = await Promise.all([
+    getPublishedBusinessSettings(),
+    getSanitySiteSettingsFull(),
+  ]);
+
+  const brandName = sanitySettings?.businessName || business.brandName || siteConfig.name;
+  const phone = sanitySettings?.phone || business.phonePrimary || siteConfig.phone || '+92 300 1234567';
+  const whatsappNumber = sanitySettings?.whatsappNumber || business.whatsappNumber || siteConfig.contact?.whatsappNumber || phone;
   const whatsappUrl = buildWhatsappUrl(whatsappNumber);
-  const email = business.emailInfo || siteConfig.contact?.emailInfo || 'info@raahiinternational.pk';
-  const brandName = business.brandName || siteConfig.name;
+  const email = sanitySettings?.email || business.emailInfo || siteConfig.contact?.emailInfo || 'info@raahiinternational.pk';
+  const footerDesc =
+    sanitySettings?.footerDescription ||
+    'International cargo delivery provider providing reliable air cargo, ocean sea cargo, and door-to-door shipping services connecting Pakistan worldwide.';
+  const copyrightText = sanitySettings?.copyrightText || 'All rights reserved.';
+  const logoSrc = sanitySettings?.logoUrl || '/images/brand/logo-white.svg';
 
   return (
     <footer className="w-full bg-brand-black border-t border-border-dark text-slate-300 py-16">
@@ -23,7 +33,7 @@ export const Footer = async () => {
           <div className="space-y-4">
             <Link href="/" className="flex items-center">
               <Image
-                src="/images/brand/logo-white.svg"
+                src={logoSrc}
                 alt={`${brandName} Logo`}
                 width={220}
                 height={128}
@@ -31,7 +41,7 @@ export const Footer = async () => {
               />
             </Link>
             <p className="text-body-sm text-slate-400 leading-relaxed">
-              International cargo delivery provider providing reliable air cargo, ocean sea cargo, and door-to-door shipping services connecting Pakistan worldwide.
+              {footerDesc}
             </p>
             <div className="space-y-2 pt-2 text-xs font-mono text-slate-400">
               <div className="flex items-center gap-2">
@@ -189,7 +199,7 @@ export const Footer = async () => {
         {/* Bottom Legal Row */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-slate-500">
           <div>
-            © {new Date().getFullYear()} {brandName}. All rights reserved.
+            © {new Date().getFullYear()} {brandName}. {copyrightText}
           </div>
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-accent" />

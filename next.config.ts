@@ -1,7 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  transpilePackages: [
+    'next-sanity',
+    'sanity',
+    '@sanity/sdk-react',
+    '@sanity/workbench',
+  ],
 };
 
 export default nextConfig;

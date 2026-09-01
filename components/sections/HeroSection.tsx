@@ -31,11 +31,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     'DOOR-TO-DOOR CARGO SHIPPING FROM PAKISTAN';
 
   let headline = (blockData?.headline as string) || '';
-  if (sanityHeroData?.headline) {
-    if (sanityHeroData.highlightedHeadline) {
-      headline = `${sanityHeroData.headline}\n${sanityHeroData.highlightedHeadline}`;
+  if (sanityHeroData?.heading) {
+    if (sanityHeroData.highlightedHeading) {
+      headline = `${sanityHeroData.heading}\n${sanityHeroData.highlightedHeading}`;
     } else {
-      headline = sanityHeroData.headline;
+      headline = sanityHeroData.heading;
     }
   } else if (!headline) {
     headline = "SEND CARGO FROM PAKISTAN.\nWE'LL HANDLE THE REST.";
