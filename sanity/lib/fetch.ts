@@ -1,7 +1,14 @@
 import { draftMode } from 'next/headers';
 import { client } from './client';
 import { isSanityConfigured, readToken } from '../env';
-import { HOMEPAGE_FULL_QUERY, SITE_SETTINGS_QUERY, SERVICES_LIST_QUERY, SERVICE_BY_SLUG_QUERY } from './queries';
+import {
+  HOMEPAGE_FULL_QUERY,
+  SITE_SETTINGS_QUERY,
+  SERVICES_LIST_QUERY,
+  SERVICE_BY_SLUG_QUERY,
+  LOCATIONS_LIST_QUERY,
+  LOCATION_BY_SLUG_QUERY,
+} from './queries';
 
 export interface SanityCta {
   label?: string;
@@ -157,6 +164,28 @@ export interface SanityServiceDocument {
   };
 }
 
+export interface SanityLocationDocument {
+  _id?: string;
+  name: string;
+  slug: string;
+  province: string;
+  h1: string;
+  introduction: string;
+  sortOrder?: number;
+  serviceAvailable?: boolean;
+  collectionAvailable?: boolean;
+  hasPhysicalBranch?: boolean;
+  branchAddress?: string;
+  localCoverageText?: string;
+  supportedServices?: string[];
+  faqs?: { question: string; answer: string }[];
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    socialImage?: string;
+  };
+}
+
 async function isDraftEnabled(): Promise<boolean> {
   try {
     return (await draftMode()).isEnabled;
@@ -210,6 +239,31 @@ export async function getSanityServiceBySlug(slug: string, options?: { stega?: b
     return await fetchClient.fetch<SanityServiceDocument>(SERVICE_BY_SLUG_QUERY, { slug }, { stega: options?.stega ?? false });
   } catch (error) {
     console.warn(`[Sanity] getSanityServiceBySlug fetch error for slug ${slug}, using fallbacks:`, error);
+    return null;
+  }
+}
+
+export async function getSanityLocationsList(): Promise<SanityLocationDocument[]> {
+  if (!isSanityConfigured) return [];
+  try {
+    const isDraft = await isDraftEnabled();
+    const fetchClient = isDraft && readToken ? client.withConfig({ token: readToken }) : client;
+    const data = await fetchClient.fetch<SanityLocationDocument[]>(LOCATIONS_LIST_QUERY, {}, { stega: false });
+    return data || [];
+  } catch (error) {
+    console.warn('[Sanity] getSanityLocationsList fetch error, using fallbacks:', error);
+    return [];
+  }
+}
+
+export async function getSanityLocationBySlug(slug: string, options?: { stega?: boolean }): Promise<SanityLocationDocument | null> {
+  if (!isSanityConfigured) return null;
+  try {
+    const isDraft = await isDraftEnabled();
+    const fetchClient = isDraft && readToken ? client.withConfig({ token: readToken }) : client;
+    return await fetchClient.fetch<SanityLocationDocument>(LOCATION_BY_SLUG_QUERY, { slug }, { stega: options?.stega ?? false });
+  } catch (error) {
+    console.warn(`[Sanity] getSanityLocationBySlug fetch error for slug ${slug}, using fallbacks:`, error);
     return null;
   }
 }

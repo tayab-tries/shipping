@@ -9,9 +9,10 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
-import { getPublishedLocations } from '@/lib/locations/location-content';
+import { getPublishedLocations, LocationData } from '@/lib/locations/location-content';
 import { siteConfig } from '@/config/site.config';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
+import { getSanityLocationsList, SanityLocationDocument } from '@/sanity/lib/fetch';
 
 export const metadata: Metadata = {
   title: `Pakistan Cargo Pickup Locations & Origin Hubs | ${siteConfig.name}`,
@@ -23,7 +24,38 @@ export const metadata: Metadata = {
 };
 
 export default async function LocationsHubPage() {
-  const locations = await getPublishedLocations();
+  const [sanityLocations, fallbackLocations] = await Promise.all([
+    getSanityLocationsList(),
+    getPublishedLocations(),
+  ]);
+
+  const locations: LocationData[] =
+    sanityLocations.length > 0
+      ? sanityLocations.map((doc: SanityLocationDocument) => {
+          const fallback = fallbackLocations.find((f) => f.slug === doc.slug);
+          return {
+            id: doc._id || doc.slug,
+            name: doc.name,
+            slug: doc.slug,
+            province: doc.province || fallback?.province || 'Pakistan',
+            h1: doc.h1 || fallback?.h1 || `Cargo Services in ${doc.name}`,
+            seoTitle: doc.seo?.metaTitle || fallback?.seoTitle || `Cargo Shipping ${doc.name}`,
+            seoDescription: doc.seo?.metaDescription || fallback?.seoDescription || `Cargo shipping in ${doc.name}`,
+            introduction: doc.introduction || fallback?.introduction || `Cargo shipping in ${doc.name}`,
+            serviceAvailable: doc.serviceAvailable ?? fallback?.serviceAvailable ?? true,
+            collectionAvailable: doc.collectionAvailable ?? fallback?.collectionAvailable ?? true,
+            hasPhysicalBranch: doc.hasPhysicalBranch ?? fallback?.hasPhysicalBranch ?? false,
+            branchAddress: doc.branchAddress || fallback?.branchAddress || '',
+            localCoverageText: doc.localCoverageText || fallback?.localCoverageText || '',
+            supportedServices: doc.supportedServices || fallback?.supportedServices || ['air-freight', 'sea-cargo'],
+            supportedDestinations: fallback?.supportedDestinations || [],
+            status: 'published',
+            isVerified: true,
+            isIndexable: true,
+            faqs: doc.faqs || fallback?.faqs || [],
+          };
+        })
+      : fallbackLocations;
 
   const featuredCity = locations.length > 0 ? locations[0] : null;
   const supportingCities = locations.length > 1 ? locations.slice(1) : [];

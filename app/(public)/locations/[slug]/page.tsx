@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import {
   getPublishedLocations,
   getLocationBySlug,
+  LocationData,
 } from '@/lib/locations/location-content';
 import { siteConfig } from '@/config/site.config';
 import { getBreadcrumbJsonLd } from '@/lib/seo/jsonld.service';
@@ -16,15 +17,20 @@ import { LocationProcess } from '@/components/locations/LocationProcess';
 import { LocationGuides } from '@/components/locations/LocationGuides';
 import { LocationFaq } from '@/components/locations/LocationFaq';
 import { LocationCta } from '@/components/locations/LocationCta';
+import { getSanityLocationBySlug, getSanityLocationsList, SanityLocationDocument } from '@/sanity/lib/fetch';
 
 interface LocationPageProps {
   params: Promise<{ slug: string }>;
 }
 
 /**
- * Pre-render static params for published and verified location routes.
+ * Pre-render static params for published location routes.
  */
 export async function generateStaticParams() {
+  const sanityLocations = await getSanityLocationsList();
+  if (sanityLocations && sanityLocations.length > 0) {
+    return sanityLocations.map((loc) => ({ slug: loc.slug }));
+  }
   const publishedLocations = await getPublishedLocations();
   return publishedLocations.map((location) => ({
     slug: location.slug,
@@ -36,39 +42,73 @@ export async function generateStaticParams() {
  */
 export async function generateMetadata({ params }: LocationPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const location = await getLocationBySlug(slug);
+  const sanityLocation = await getSanityLocationBySlug(slug, { stega: false });
+  const fallbackLocation = await getLocationBySlug(slug);
 
-  if (!location) {
+  if (!sanityLocation && !fallbackLocation) {
     return {
       title: `Location Not Found | ${siteConfig.name}`,
     };
   }
 
-  const canonicalUrl = `${siteConfig.domain}/locations/${location.slug}`;
+  const title =
+    sanityLocation?.seo?.metaTitle ||
+    (fallbackLocation ? `${fallbackLocation.seoTitle} | ${siteConfig.name}` : `Cargo Services | ${siteConfig.name}`);
+
+  const description =
+    sanityLocation?.seo?.metaDescription ||
+    fallbackLocation?.seoDescription ||
+    'International cargo shipping services from Pakistan.';
+
+  const canonicalUrl = `${siteConfig.domain}/locations/${slug}`;
 
   return {
-    title: `${location.seoTitle} | ${siteConfig.name}`,
-    description: location.seoDescription,
+    title,
+    description,
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: `${location.seoTitle} | ${siteConfig.name}`,
-      description: location.seoDescription,
+      title,
+      description,
       url: canonicalUrl,
       type: 'website',
+      images: sanityLocation?.seo?.socialImage ? [{ url: sanityLocation.seo.socialImage }] : [],
     },
   };
 }
 
 export default async function LocationDetailPage({ params }: LocationPageProps) {
   const { slug } = await params;
-  const location = await getLocationBySlug(slug);
+  const sanityLocation: SanityLocationDocument | null = await getSanityLocationBySlug(slug);
+  const fallbackLocation = await getLocationBySlug(slug);
 
-  // 1. Authoritative Verification & Publication Check
-  if (!location) {
+  // Authoritative Verification Check
+  if (!sanityLocation && !fallbackLocation) {
     notFound();
   }
+
+  const location: LocationData = {
+    id: sanityLocation?._id || fallbackLocation?.id || slug,
+    name: sanityLocation?.name || fallbackLocation?.name || 'Pakistan City',
+    slug,
+    province: sanityLocation?.province || fallbackLocation?.province || 'Pakistan',
+    h1: sanityLocation?.h1 || fallbackLocation?.h1 || `Cargo Services in ${sanityLocation?.name || fallbackLocation?.name}`,
+    seoTitle: sanityLocation?.seo?.metaTitle || fallbackLocation?.seoTitle || `Cargo Shipping ${sanityLocation?.name || fallbackLocation?.name}`,
+    seoDescription: sanityLocation?.seo?.metaDescription || fallbackLocation?.seoDescription || `Cargo shipping in ${sanityLocation?.name || fallbackLocation?.name}`,
+    introduction: sanityLocation?.introduction || fallbackLocation?.introduction || `Cargo shipping services operating across ${sanityLocation?.name || fallbackLocation?.name}.`,
+    serviceAvailable: sanityLocation?.serviceAvailable ?? fallbackLocation?.serviceAvailable ?? true,
+    collectionAvailable: sanityLocation?.collectionAvailable ?? fallbackLocation?.collectionAvailable ?? true,
+    hasPhysicalBranch: sanityLocation?.hasPhysicalBranch ?? fallbackLocation?.hasPhysicalBranch ?? false,
+    branchAddress: sanityLocation?.branchAddress || fallbackLocation?.branchAddress || '',
+    localCoverageText: sanityLocation?.localCoverageText || fallbackLocation?.localCoverageText || '',
+    supportedServices: sanityLocation?.supportedServices || fallbackLocation?.supportedServices || ['air-freight', 'sea-cargo'],
+    supportedDestinations: fallbackLocation?.supportedDestinations || [],
+    status: 'published',
+    isVerified: true,
+    isIndexable: true,
+    faqs: sanityLocation?.faqs || fallbackLocation?.faqs || [],
+  };
 
   const quoteUrl = `/quote?origin=${location.slug}`;
   const breadcrumbs = [

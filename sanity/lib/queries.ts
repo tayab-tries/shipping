@@ -247,3 +247,60 @@ export const SERVICE_BY_SLUG_QUERY = defineQuery(`
     }
   }
 `);
+
+// --------------------------------------------------
+// LOCATIONS QUERIES (PHASE 3B)
+// --------------------------------------------------
+export const LOCATIONS_LIST_QUERY = defineQuery(`
+  *[_type == "location"] | order(sortOrder asc) {
+    _id,
+    name,
+    "slug": slug.current,
+    province,
+    h1,
+    introduction,
+    sortOrder,
+    serviceAvailable,
+    collectionAvailable,
+    hasPhysicalBranch,
+    branchAddress,
+    localCoverageText,
+    "supportedServices": supportedServices[]->slug.current,
+    faqs[] {
+      question,
+      answer
+    },
+    seo {
+      metaTitle,
+      metaDescription,
+      "socialImage": socialImage.asset->url
+    }
+  }
+`);
+
+export const LOCATION_BY_SLUG_QUERY = defineQuery(`
+  *[_type == "location" && slug.current == $slug][0] {
+    _id,
+    name,
+    "slug": slug.current,
+    province,
+    h1,
+    introduction,
+    sortOrder,
+    serviceAvailable,
+    collectionAvailable,
+    hasPhysicalBranch,
+    branchAddress,
+    localCoverageText,
+    "supportedServices": supportedServices[]->slug.current,
+    faqs[] {
+      question,
+      answer
+    },
+    seo {
+      metaTitle,
+      metaDescription,
+      "socialImage": socialImage.asset->url
+    }
+  }
+`);
