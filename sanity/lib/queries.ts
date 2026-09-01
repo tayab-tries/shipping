@@ -419,3 +419,67 @@ export const DESTINATION_CITY_BY_SLUGS_QUERY = defineQuery(`
     }
   }
 `);
+
+// --------------------------------------------------
+// GUIDES QUERIES (PHASE 3D)
+// --------------------------------------------------
+export const GUIDES_LIST_QUERY = defineQuery(`
+  *[_type == "guide"] | order(publishedAt desc) {
+    _id,
+    title,
+    "slug": slug.current,
+    excerpt,
+    category,
+    authorName,
+    publishedAt,
+    updatedAt,
+    readingTimeMinutes,
+    isFeatured,
+    containsRegulatoryClaims,
+    verificationNotes,
+    contentMarkdown,
+    "supportedServices": supportedServices[]->slug.current,
+    "supportedOrigins": supportedOrigins[]->slug.current,
+    "supportedDestinations": supportedDestinations[]->slug.current,
+    faqs[] {
+      question,
+      answer
+    },
+    seo {
+      metaTitle,
+      metaDescription,
+      "socialImage": socialImage.asset->url
+    }
+  }
+`);
+
+export const GUIDE_BY_SLUG_QUERY = defineQuery(`
+  *[_type == "guide" && slug.current == $slug][0] {
+    _id,
+    title,
+    "slug": slug.current,
+    excerpt,
+    category,
+    authorName,
+    publishedAt,
+    updatedAt,
+    readingTimeMinutes,
+    isFeatured,
+    containsRegulatoryClaims,
+    verificationNotes,
+    contentMarkdown,
+    body,
+    "supportedServices": supportedServices[]->slug.current,
+    "supportedOrigins": supportedOrigins[]->slug.current,
+    "supportedDestinations": supportedDestinations[]->slug.current,
+    faqs[] {
+      question,
+      answer
+    },
+    seo {
+      metaTitle,
+      metaDescription,
+      "socialImage": socialImage.asset->url
+    }
+  }
+`);

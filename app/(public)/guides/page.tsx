@@ -9,9 +9,10 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
-import { getPublishedStaticArticles } from '@/lib/guides/guide-content';
+import { getPublishedStaticArticles, GuideArticleData } from '@/lib/guides/guide-content';
 import { siteConfig } from '@/config/site.config';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
+import { getSanityGuidesList, SanityGuideDocument } from '@/sanity/lib/fetch';
 
 export const metadata: Metadata = {
   title: `Customs & Shipping Guides | ${siteConfig.name}`,
@@ -28,7 +29,44 @@ interface GuidesPageProps {
 
 export default async function GuidesHubPage({ searchParams }: GuidesPageProps) {
   const { category: activeCategory } = await searchParams;
-  const allArticles = getPublishedStaticArticles();
+
+  const [sanityGuides, fallbackGuides] = await Promise.all([
+    getSanityGuidesList(),
+    getPublishedStaticArticles(),
+  ]);
+
+  const allArticles: GuideArticleData[] =
+    sanityGuides.length > 0
+      ? sanityGuides.map((doc: SanityGuideDocument) => {
+          const fallback = fallbackGuides.find((f) => f.slug === doc.slug);
+          return {
+            id: doc._id || doc.slug,
+            title: doc.title,
+            slug: doc.slug,
+            excerpt: doc.excerpt || fallback?.excerpt || '',
+            contentMarkdown: doc.contentMarkdown || fallback?.contentMarkdown || '',
+            category: doc.category || fallback?.category || 'shipping-guides',
+            authorName: doc.authorName || fallback?.authorName || 'Logistics Editorial Team',
+            publishedAt: doc.publishedAt || fallback?.publishedAt || '2026-08-01',
+            updatedAt: doc.updatedAt || fallback?.updatedAt,
+            readingTimeMinutes: doc.readingTimeMinutes || fallback?.readingTimeMinutes || 5,
+            seoTitle: doc.seo?.metaTitle || fallback?.seoTitle || doc.title,
+            seoDescription: doc.seo?.metaDescription || fallback?.seoDescription || doc.excerpt,
+            searchIntent: fallback?.searchIntent || 'informational',
+            primaryTopic: fallback?.primaryTopic || doc.title,
+            containsRegulatoryClaims: doc.containsRegulatoryClaims ?? fallback?.containsRegulatoryClaims ?? false,
+            verificationNotes: doc.verificationNotes || fallback?.verificationNotes,
+            supportedServices: doc.supportedServices || fallback?.supportedServices || [],
+            supportedOrigins: doc.supportedOrigins || fallback?.supportedOrigins || [],
+            supportedDestinations: doc.supportedDestinations || fallback?.supportedDestinations || [],
+            status: 'published',
+            isVerified: true,
+            isIndexable: true,
+            isFeatured: doc.isFeatured ?? fallback?.isFeatured ?? false,
+            faqs: doc.faqs || fallback?.faqs || [],
+          };
+        })
+      : fallbackGuides;
 
   const filteredArticles = activeCategory
     ? allArticles.filter((a) => a.category === activeCategory)

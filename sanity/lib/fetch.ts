@@ -11,6 +11,8 @@ import {
   DESTINATIONS_LIST_QUERY,
   DESTINATION_BY_SLUG_QUERY,
   DESTINATION_CITY_BY_SLUGS_QUERY,
+  GUIDES_LIST_QUERY,
+  GUIDE_BY_SLUG_QUERY,
 } from './queries';
 
 export interface SanityCta {
@@ -245,6 +247,32 @@ export interface SanityDestinationCityDocument {
   };
 }
 
+export interface SanityGuideDocument {
+  _id?: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  category: 'shipping-guides' | 'cargo-rates' | 'customs-documentation' | 'packing-guides' | 'destinations-guide' | 'cargo-types';
+  authorName: string;
+  publishedAt: string;
+  updatedAt?: string;
+  readingTimeMinutes: number;
+  isFeatured?: boolean;
+  containsRegulatoryClaims?: boolean;
+  verificationNotes?: string;
+  contentMarkdown?: string;
+  body?: unknown[];
+  supportedServices?: string[];
+  supportedOrigins?: string[];
+  supportedDestinations?: string[];
+  faqs?: { question: string; answer: string }[];
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    socialImage?: string;
+  };
+}
+
 async function isDraftEnabled(): Promise<boolean> {
   try {
     return (await draftMode()).isEnabled;
@@ -368,6 +396,31 @@ export async function getSanityDestinationCityBySlugs(
     );
   } catch (error) {
     console.warn(`[Sanity] getSanityDestinationCityBySlugs fetch error for ${countrySlug}/${citySlug}, using fallbacks:`, error);
+    return null;
+  }
+}
+
+export async function getSanityGuidesList(): Promise<SanityGuideDocument[]> {
+  if (!isSanityConfigured) return [];
+  try {
+    const isDraft = await isDraftEnabled();
+    const fetchClient = isDraft && readToken ? client.withConfig({ token: readToken }) : client;
+    const data = await fetchClient.fetch<SanityGuideDocument[]>(GUIDES_LIST_QUERY, {}, { stega: false });
+    return data || [];
+  } catch (error) {
+    console.warn('[Sanity] getSanityGuidesList fetch error, using fallbacks:', error);
+    return [];
+  }
+}
+
+export async function getSanityGuideBySlug(slug: string, options?: { stega?: boolean }): Promise<SanityGuideDocument | null> {
+  if (!isSanityConfigured) return null;
+  try {
+    const isDraft = await isDraftEnabled();
+    const fetchClient = isDraft && readToken ? client.withConfig({ token: readToken }) : client;
+    return await fetchClient.fetch<SanityGuideDocument>(GUIDE_BY_SLUG_QUERY, { slug }, { stega: options?.stega ?? false });
+  } catch (error) {
+    console.warn(`[Sanity] getSanityGuideBySlug fetch error for slug ${slug}, using fallbacks:`, error);
     return null;
   }
 }

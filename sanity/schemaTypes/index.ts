@@ -4,6 +4,7 @@ import { serviceType } from './serviceType';
 import { locationType } from './locationType';
 import { destinationCountryType } from './destinationCountryType';
 import { destinationCityType } from './destinationCityType';
+import { guideType } from './guideType';
 import { ctaObject } from './objects/ctaObject';
 import { seoObject } from './objects/seoObject';
 import { navItemObject } from './objects/navItemObject';
@@ -28,6 +29,7 @@ export const schema = {
     locationType,
     destinationCountryType,
     destinationCityType,
+    guideType,
 
     // Reusable Objects
     ctaObject,

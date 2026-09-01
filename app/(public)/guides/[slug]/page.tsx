@@ -5,6 +5,7 @@ import { Container } from '@/components/ui/Container';
 import {
   getPublishedStaticArticles,
   getStaticArticleBySlug,
+  GuideArticleData,
 } from '@/lib/guides/guide-content';
 import { siteConfig } from '@/config/site.config';
 import { getBreadcrumbJsonLd } from '@/lib/seo/jsonld.service';
@@ -18,12 +19,17 @@ import { RelatedLocationsBar } from '@/components/guides/RelatedLocationsBar';
 import { RelatedGuidesGrid } from '@/components/guides/RelatedGuidesGrid';
 import { ArticleFaq } from '@/components/guides/ArticleFaq';
 import { ArticleCta } from '@/components/guides/ArticleCta';
+import { getSanityGuideBySlug, getSanityGuidesList, SanityGuideDocument } from '@/sanity/lib/fetch';
 
 interface GuideArticlePageProps {
   params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
+  const sanityGuides = await getSanityGuidesList();
+  if (sanityGuides && sanityGuides.length > 0) {
+    return sanityGuides.map((guide) => ({ slug: guide.slug }));
+  }
   const publishedArticles = getPublishedStaticArticles();
   return publishedArticles.map((article) => ({
     slug: article.slug,
@@ -32,41 +38,82 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: GuideArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
-  const article = getStaticArticleBySlug(slug);
+  const sanityGuide = await getSanityGuideBySlug(slug, { stega: false });
+  const fallbackArticle = getStaticArticleBySlug(slug);
 
-  if (!article) {
+  if (!sanityGuide && !fallbackArticle) {
     return {
       title: `Article Not Found | ${siteConfig.name}`,
     };
   }
 
-  const canonicalUrl = `${siteConfig.domain}/guides/${article.slug}`;
+  const title =
+    sanityGuide?.seo?.metaTitle ||
+    (fallbackArticle ? `${fallbackArticle.seoTitle} | ${siteConfig.name}` : `Shipping Guide | ${siteConfig.name}`);
+
+  const description =
+    sanityGuide?.seo?.metaDescription ||
+    fallbackArticle?.seoDescription ||
+    'Customs and shipping guide for international cargo from Pakistan.';
+
+  const canonicalUrl = `${siteConfig.domain}/guides/${slug}`;
+  const publishedTime = sanityGuide?.publishedAt || fallbackArticle?.publishedAt || '2026-08-01';
+  const authorName = sanityGuide?.authorName || fallbackArticle?.authorName || 'Logistics Editorial Team';
 
   return {
-    title: `${article.seoTitle} | ${siteConfig.name}`,
-    description: article.seoDescription,
+    title,
+    description,
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: `${article.seoTitle} | ${siteConfig.name}`,
-      description: article.seoDescription,
+      title,
+      description,
       url: canonicalUrl,
       type: 'article',
-      publishedTime: article.publishedAt,
-      authors: [article.authorName],
+      publishedTime,
+      authors: [authorName],
+      images: sanityGuide?.seo?.socialImage ? [{ url: sanityGuide.seo.socialImage }] : [],
     },
   };
 }
 
 export default async function GuideArticleDetailPage({ params }: GuideArticlePageProps) {
   const { slug } = await params;
-  const article = getStaticArticleBySlug(slug);
+  const sanityGuide: SanityGuideDocument | null = await getSanityGuideBySlug(slug);
+  const fallbackArticle = getStaticArticleBySlug(slug);
 
-  // Authoritative Publication Check
-  if (!article) {
+  // Authoritative Verification Check
+  if (!sanityGuide && !fallbackArticle) {
     notFound();
   }
+
+  const article: GuideArticleData = {
+    id: sanityGuide?._id || fallbackArticle?.id || slug,
+    title: sanityGuide?.title || fallbackArticle?.title || 'Shipping Guide',
+    slug,
+    excerpt: sanityGuide?.excerpt || fallbackArticle?.excerpt || '',
+    contentMarkdown: sanityGuide?.contentMarkdown || fallbackArticle?.contentMarkdown || '',
+    category: sanityGuide?.category || fallbackArticle?.category || 'shipping-guides',
+    authorName: sanityGuide?.authorName || fallbackArticle?.authorName || 'Logistics Editorial Team',
+    publishedAt: sanityGuide?.publishedAt || fallbackArticle?.publishedAt || '2026-08-01',
+    updatedAt: sanityGuide?.updatedAt || fallbackArticle?.updatedAt,
+    readingTimeMinutes: sanityGuide?.readingTimeMinutes || fallbackArticle?.readingTimeMinutes || 5,
+    seoTitle: sanityGuide?.seo?.metaTitle || fallbackArticle?.seoTitle || sanityGuide?.title || 'Shipping Guide',
+    seoDescription: sanityGuide?.seo?.metaDescription || fallbackArticle?.seoDescription || sanityGuide?.excerpt || '',
+    searchIntent: fallbackArticle?.searchIntent || 'informational',
+    primaryTopic: fallbackArticle?.primaryTopic || sanityGuide?.title || 'Logistics Guide',
+    containsRegulatoryClaims: sanityGuide?.containsRegulatoryClaims ?? fallbackArticle?.containsRegulatoryClaims ?? false,
+    verificationNotes: sanityGuide?.verificationNotes || fallbackArticle?.verificationNotes,
+    supportedServices: sanityGuide?.supportedServices || fallbackArticle?.supportedServices || [],
+    supportedOrigins: sanityGuide?.supportedOrigins || fallbackArticle?.supportedOrigins || [],
+    supportedDestinations: sanityGuide?.supportedDestinations || fallbackArticle?.supportedDestinations || [],
+    status: 'published',
+    isVerified: true,
+    isIndexable: true,
+    isFeatured: sanityGuide?.isFeatured ?? fallbackArticle?.isFeatured ?? false,
+    faqs: sanityGuide?.faqs || fallbackArticle?.faqs || [],
+  };
 
   const breadcrumbs = [
     { label: 'Home', url: '/' },
