@@ -19,7 +19,6 @@ import { Input } from '@/components/ui/Input';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
 import {
   getMediaAssetsAction,
-  uploadMediaAssetAction,
   updateMediaAltTextAction,
   deleteMediaAssetAction,
   MediaAssetRecord,
@@ -164,25 +163,18 @@ export default function AdminMediaPage() {
     setUploadError(null);
 
     try {
-      // Convert File to base64 string safely
-      const reader = new FileReader();
-      const base64Promise = new Promise<string>((resolve, reject) => {
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = (error) => reject(error);
-        reader.readAsDataURL(selectedFile);
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+      formData.append('altText', uploadAltText.trim());
+
+      const res = await fetch('/api/admin/media/upload', {
+        method: 'POST',
+        body: formData,
       });
 
-      const base64Data = await base64Promise;
+      const result = await res.json();
 
-      const result = await uploadMediaAssetAction({
-        fileName: selectedFile.name,
-        mimeType: selectedFile.type,
-        base64Data,
-        sizeBytes: selectedFile.size,
-        altText: uploadAltText.trim(),
-      });
-
-      if (result.success && result.data) {
+      if (res.ok && result.success && result.data) {
         const newAsset: MediaAssetItem = {
           id: result.data.id,
           fileName: result.data.file_name,
@@ -200,7 +192,7 @@ export default function AdminMediaPage() {
         setUploadError(result.error || 'Failed to upload image. Please try again.');
       }
     } catch (err: unknown) {
-      setUploadError(err instanceof Error ? err.message : 'Error converting image file.');
+      setUploadError(err instanceof Error ? err.message : 'Error processing image upload.');
     } finally {
       setIsUploading(false);
     }
