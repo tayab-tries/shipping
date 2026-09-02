@@ -12,7 +12,6 @@ import {
   HelpCircle,
   ChevronRight,
   ListOrdered,
-  Tag,
 } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 import { Badge } from '@/components/ui/Badge';
@@ -66,41 +65,27 @@ export default async function CargoServicesPage() {
   ];
 
   const airCargoRates = [
-    { country: 'UAE', flag: '🇦🇪', minWeight: '20 KG', pricePkr: 'PKR 650 – 850', priceUsd: '£2.20 – £2.80 / kg' },
-    { country: 'Saudi Arabia', flag: '🇸🇦', minWeight: '20 KG', pricePkr: 'PKR 750 – 950', priceUsd: '£2.50 – £3.20 / kg' },
-    { country: 'Qatar', flag: '🇶🇦', minWeight: '20 KG', pricePkr: 'PKR 800 – 1,000', priceUsd: '£2.70 – £3.40 / kg' },
-    { country: 'Oman', flag: '🇴🇲', minWeight: '20 KG', pricePkr: 'PKR 750 – 950', priceUsd: '£2.50 – £3.20 / kg' },
-    { country: 'Bahrain', flag: '🇧🇭', minWeight: '20 KG', pricePkr: 'PKR 800 – 1,000', priceUsd: '£2.70 – £3.40 / kg' },
-    { country: 'Kuwait', flag: '🇰🇼', minWeight: '20 KG', pricePkr: 'PKR 850 – 1,050', priceUsd: '£2.80 – £3.60 / kg' },
-    { country: 'United Kingdom', flag: '🇬🇧', minWeight: '20 KG', pricePkr: 'PKR 950 – 1,250', priceUsd: '£3.20 – £4.20 / kg' },
-    { country: 'USA', flag: '🇺🇸', minWeight: '20 KG', pricePkr: 'PKR 1,200 – 1,500', priceUsd: '$4.20 – $5.50 / kg' },
-    { country: 'Canada', flag: '🇨🇦', minWeight: '20 KG', pricePkr: 'PKR 1,250 – 1,550', priceUsd: '$4.50 – $5.80 / kg' },
-    { country: 'Australia', flag: '🇦🇺', minWeight: '20 KG', pricePkr: 'PKR 1,350 – 1,650', priceUsd: '$4.80 – $6.20 / kg' },
-    { country: 'Germany', flag: '🇩🇪', minWeight: '20 KG', pricePkr: 'PKR 1,100 – 1,350', priceUsd: '€3.50 – €4.50 / kg' },
-    { country: 'France', flag: '🇫🇷', minWeight: '20 KG', pricePkr: 'PKR 1,100 – 1,350', priceUsd: '€3.50 – €4.50 / kg' },
-    { country: 'Italy', flag: '🇮🇹', minWeight: '20 KG', pricePkr: 'PKR 1,100 – 1,350', priceUsd: '€3.50 – €4.50 / kg' },
-    { country: 'Spain', flag: '🇪🇸', minWeight: '20 KG', pricePkr: 'PKR 1,150 – 1,400', priceUsd: '€3.80 – €4.80 / kg' },
-    { country: 'Netherlands', flag: '🇳🇱', minWeight: '20 KG', pricePkr: 'PKR 1,100 – 1,350', priceUsd: '€3.50 – €4.50 / kg' },
-    { country: 'Turkey', flag: '🇹🇷', minWeight: '20 KG', pricePkr: 'PKR 900 – 1,150', priceUsd: '$3.20 – $4.10 / kg' },
-    { country: 'Malaysia', flag: '🇲🇾', minWeight: '20 KG', pricePkr: 'PKR 850 – 1,100', priceUsd: '$3.00 – $3.90 / kg' },
-    { country: 'Singapore', flag: '🇸🇬', minWeight: '20 KG', pricePkr: 'PKR 950 – 1,200', priceUsd: '$3.40 – $4.30 / kg' },
-    { country: 'Japan', flag: '🇯🇵', minWeight: '20 KG', pricePkr: 'PKR 1,300 – 1,600', priceUsd: '$4.60 – $5.70 / kg' },
+    { country: 'USA', flag: '🇺🇸', rate: 'Rs. 2,750 – 2,950/KG', deliveryTime: '10–15 Days' },
+    { country: 'United Kingdom', flag: '🇬🇧', rate: 'Rs. 1,750 – 1,850/KG', deliveryTime: '10–12 Days' },
+    { country: 'UAE', flag: '🇦🇪', rate: 'Rs. 1,350 – 1,450/KG', deliveryTime: '10–17 Days' },
+    { country: 'Canada', flag: '🇨🇦', rate: 'Rs. 2,850 – 2,950/KG', deliveryTime: '10–15 Days' },
+    { country: 'Saudi Arabia', flag: '🇸🇦', rate: 'Rs. 2,150 – 2,250/KG', deliveryTime: '10–20 Days' },
+    { country: 'Europe', flag: '🇪🇺', rate: 'Rs. 2,350 – 2,450/KG', deliveryTime: '10–15 Days' },
+    { country: 'Australia', flag: '🇦🇺', rate: 'Rs. 2,350 – 2,450/KG', deliveryTime: '10–15 Days' },
+    { country: 'Scotland', flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', rate: 'Rs. 2,350/KG', deliveryTime: '10–15 Days' },
+    { country: 'Dubai', flag: '🇦🇪', rate: 'Rs. 1,350 – 1,450/KG', deliveryTime: '10–17 Days' },
   ];
 
   const seaCargoRates = [
-    { country: 'UAE', flag: '🇦🇪', service: 'LCL', minReq: '70–100 KG', pricePkr: 'PKR 250 – 350 / kg' },
-    { country: 'Saudi Arabia', flag: '🇸🇦', service: 'LCL', minReq: '70–100 KG', pricePkr: 'PKR 300 – 400 / kg' },
-    { country: 'Qatar', flag: '🇶🇦', service: 'LCL', minReq: '70–100 KG', pricePkr: 'PKR 320 – 420 / kg' },
-    { country: 'Oman', flag: '🇴🇲', service: 'LCL', minReq: '70–100 KG', pricePkr: 'PKR 300 – 400 / kg' },
-    { country: 'UK', flag: '🇬🇧', service: 'LCL', minReq: '70–100 KG', pricePkr: 'PKR 450 – 580 / kg' },
-    { country: 'USA', flag: '🇺🇸', service: 'LCL', minReq: '70–100 KG', pricePkr: 'PKR 550 – 720 / kg' },
-    { country: 'Canada', flag: '🇨🇦', service: 'LCL', minReq: '70–100 KG', pricePkr: 'PKR 580 – 750 / kg' },
-    { country: 'Australia', flag: '🇦🇺', service: 'LCL', minReq: '70–100 KG', pricePkr: 'PKR 600 – 780 / kg' },
-    { country: 'Germany', flag: '🇩🇪', service: 'LCL', minReq: '70–100 KG', pricePkr: 'PKR 480 – 620 / kg' },
-    { country: 'France', flag: '🇫🇷', service: 'LCL', minReq: '70–100 KG', pricePkr: 'PKR 480 – 620 / kg' },
-    { country: 'Italy', flag: '🇮🇹', service: 'LCL', minReq: '70–100 KG', pricePkr: 'PKR 480 – 620 / kg' },
-    { country: 'Netherlands', flag: '🇳🇱', service: 'LCL', minReq: '70–100 KG', pricePkr: 'PKR 480 – 620 / kg' },
-    { country: 'Turkey', flag: '🇹🇷', service: 'LCL', minReq: '70–100 KG', pricePkr: 'PKR 400 – 520 / kg' },
+    { country: 'United Kingdom', flag: '🇬🇧', rate: 'Rs. 950 – 1,000/KG', deliveryTime: '1.5 – 2.5 Months' },
+    { country: 'UAE', flag: '🇦🇪', rate: 'Rs. 600 – 700/KG', deliveryTime: '1.5 – 2.5 Months' },
+    { country: 'USA', flag: '🇺🇸', rate: 'Rs. 1,550 – 1,650/KG', deliveryTime: '2 – 2.5 Months' },
+    { country: 'Saudi Arabia', flag: '🇸🇦', rate: 'Rs. 950 – 1,000/KG', deliveryTime: '1.5 – 2.5 Months' },
+    { country: 'Germany', flag: '🇩🇪', rate: 'Rs. 1,450/KG', deliveryTime: '2 – 2.5 Months' },
+    { country: 'Canada', flag: '🇨🇦', rate: 'Rs. 1,750 – 1,850/KG', deliveryTime: '2 – 3 Months' },
+    { country: 'Scotland', flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', rate: 'Rs. 1,250/KG', deliveryTime: '1.5 – 2.5 Months' },
+    { country: 'Australia', flag: '🇦🇺', rate: 'Rs. 1,450/KG', deliveryTime: '2 – 2.5 Months' },
+    { country: 'Europe', flag: '🇪🇺', rate: 'Rs. 1,450/KG', deliveryTime: '2 – 2.5 Months' },
   ];
 
   const faqs = [
@@ -157,7 +142,7 @@ export default async function CargoServicesPage() {
   ];
 
   return (
-    <div className="w-full bg-background text-foreground">
+    <div className="w-full bg-background text-foreground font-sans">
       {/* 1. HERO SECTION — DUAL AIR & SEA CARGO HUB */}
       <section className="relative w-full bg-brand-navy py-16 lg:py-24 border-b border-border-dark text-white overflow-hidden">
         <div className="absolute inset-0 bg-radial-gradient opacity-40 pointer-events-none" />
@@ -192,7 +177,7 @@ export default async function CargoServicesPage() {
                 </div>
                 <div>
                   <div className="text-xs font-mono font-bold text-emerald-400 uppercase">Air Cargo Express</div>
-                  <div className="text-body-sm font-bold text-white">Minimum 20 KG • Fast Air Freight</div>
+                  <div className="text-body-sm font-bold text-white">Minimum Air Shipment: 20 KG</div>
                 </div>
               </div>
 
@@ -201,13 +186,13 @@ export default async function CargoServicesPage() {
                   <Ship className="w-6 h-6" />
                 </div>
                 <div>
-                  <div className="text-xs font-mono font-bold text-blue-400 uppercase">Sea Cargo Economical</div>
-                  <div className="text-body-sm font-bold text-white">Minimum 70–100 KG • LCL & FCL</div>
+                  <div className="text-xs font-mono font-bold text-blue-400 uppercase">Sea Freight Economical</div>
+                  <div className="text-body-sm font-bold text-white">Minimum Sea Cargo: 70–100 KG</div>
                 </div>
               </div>
             </div>
 
-            {/* HERO BUTTONS WITH CONFORTABLE SPACING */}
+            {/* HERO BUTTONS WITH COMFORTABLE SPACING */}
             <div className="pt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-6">
               <Link href="/quote" className="w-full sm:w-auto">
                 <Button
@@ -262,8 +247,8 @@ export default async function CargoServicesPage() {
                     </a>
                   </li>
                   <li>
-                    <a href="#air-cargo-rates" className="hover:text-accent-dark hover:underline flex items-center gap-1.5 font-bold text-emerald-700">
-                      <ChevronRight className="w-3.5 h-3.5 text-emerald-600 shrink-0" /> 💰 Air Cargo Rate Table
+                    <a href="#air-cargo-rates" className="hover:text-accent-dark hover:underline flex items-center gap-1.5 font-bold text-brand-black">
+                      <ChevronRight className="w-3.5 h-3.5 text-accent-dark shrink-0" /> ✈️ Air Cargo Rates & Delivery Time
                     </a>
                   </li>
                   <li>
@@ -272,8 +257,8 @@ export default async function CargoServicesPage() {
                     </a>
                   </li>
                   <li>
-                    <a href="#sea-cargo-rates" className="hover:text-accent-dark hover:underline flex items-center gap-1.5 font-bold text-blue-700">
-                      <ChevronRight className="w-3.5 h-3.5 text-blue-600 shrink-0" /> 💰 Sea Cargo Rate Table
+                    <a href="#sea-cargo-rates" className="hover:text-accent-dark hover:underline flex items-center gap-1.5 font-bold text-brand-black">
+                      <ChevronRight className="w-3.5 h-3.5 text-accent-dark shrink-0" /> 🚢 Sea Freight Rates & Delivery Time
                     </a>
                   </li>
                   <li>
@@ -301,58 +286,44 @@ export default async function CargoServicesPage() {
                   <h2 className="text-heading-xl font-bold text-brand-black">Choose the Right Cargo Option</h2>
                 </div>
 
-                <div className="overflow-x-auto border border-slate-200 rounded-lg shadow-xs bg-white">
-                  <table className="w-full text-left text-sm sm:text-base border-collapse">
+                <div className="overflow-x-auto border border-border rounded-md shadow-xs bg-surface">
+                  <table className="w-full text-left text-body-sm border-collapse">
                     <thead>
-                      <tr className="bg-slate-900 text-white text-xs sm:text-sm font-semibold uppercase tracking-wider">
-                        <th className="py-4 px-6 border-b border-slate-800">Feature</th>
-                        <th className="py-4 px-6 border-b border-slate-800 text-accent font-bold">✈️ Air Cargo</th>
-                        <th className="py-4 px-6 border-b border-slate-800">🚢 Sea Cargo</th>
+                      <tr className="bg-surface-subtle text-brand-black text-xs font-mono font-bold uppercase tracking-wider border-b border-border">
+                        <th className="p-4 font-bold text-brand-black">Feature</th>
+                        <th className="p-4 font-bold text-brand-black">✈️ Air Cargo</th>
+                        <th className="p-4 font-bold text-brand-black">🚢 Sea Cargo</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100 font-normal text-slate-700">
-                      <tr className="hover:bg-slate-50 transition-colors">
-                        <td className="py-4 px-6 font-bold text-brand-black">Best For</td>
-                        <td className="py-4 px-6 font-semibold text-slate-900">Faster shipments</td>
-                        <td className="py-4 px-6">Larger & heavier shipments</td>
+                    <tbody className="divide-y divide-border font-normal text-slate-700">
+                      <tr className="hover:bg-surface-subtle transition-colors">
+                        <td className="p-4 font-bold text-brand-black">Best For</td>
+                        <td className="p-4 font-semibold text-brand-black">Faster shipments</td>
+                        <td className="p-4">Larger & heavier shipments</td>
                       </tr>
-                      <tr className="hover:bg-slate-50 transition-colors">
-                        <td className="py-4 px-6 font-bold text-brand-black">Minimum Weight</td>
-                        <td className="py-4 px-6"><Badge variant="accent" size="sm">20 KG</Badge></td>
-                        <td className="py-4 px-6"><Badge variant="secondary" size="sm">70–100 KG</Badge></td>
+                      <tr className="hover:bg-surface-subtle transition-colors">
+                        <td className="p-4 font-bold text-brand-black">Minimum Weight</td>
+                        <td className="p-4"><Badge variant="accent" size="sm">20 KG</Badge></td>
+                        <td className="p-4"><Badge variant="secondary" size="sm">70–100 KG</Badge></td>
                       </tr>
-                      <tr className="hover:bg-slate-50 transition-colors">
-                        <td className="py-4 px-6 font-bold text-brand-black">Transit Time</td>
-                        <td className="py-4 px-6 text-emerald-700 font-semibold">Generally faster (3–7 Days)</td>
-                        <td className="py-4 px-6 text-slate-600">Generally slower (20–35 Days)</td>
+                      <tr className="hover:bg-surface-subtle transition-colors">
+                        <td className="p-4 font-bold text-brand-black">Transit Time</td>
+                        <td className="p-4 text-emerald-700 font-semibold">Generally 10–15 Days</td>
+                        <td className="p-4 text-slate-600">Generally 1.5–2.5 Months</td>
                       </tr>
-                      <tr className="hover:bg-slate-50 transition-colors">
-                        <td className="py-4 px-6 font-bold text-brand-black">Cost</td>
-                        <td className="py-4 px-6">Higher per kg</td>
-                        <td className="py-4 px-6 font-semibold text-emerald-700">More economical for larger shipments</td>
+                      <tr className="hover:bg-surface-subtle transition-colors">
+                        <td className="p-4 font-bold text-brand-black">Cost</td>
+                        <td className="p-4">Higher per kg</td>
+                        <td className="p-4 font-semibold text-emerald-700">More economical for larger shipments</td>
                       </tr>
-                      <tr className="hover:bg-slate-50 transition-colors">
-                        <td className="py-4 px-6 font-bold text-brand-black">Suitable For</td>
-                        <td className="py-4 px-6">Personal & commercial cargo</td>
-                        <td className="py-4 px-6">Personal, commercial & bulk cargo</td>
-                      </tr>
-                      <tr className="hover:bg-slate-50 transition-colors">
-                        <td className="py-4 px-6 font-bold text-brand-black">Main Pricing Factor</td>
-                        <td className="py-4 px-6">Actual/volumetric weight</td>
-                        <td className="py-4 px-6">Weight/volume and shipment type</td>
-                      </tr>
-                      <tr className="hover:bg-slate-50 transition-colors">
-                        <td className="py-4 px-6 font-bold text-brand-black">Delivery Options</td>
-                        <td className="py-4 px-6">Airport-to-airport / door-to-door where available</td>
-                        <td className="py-4 px-6">Port-to-port / door-to-door where available</td>
+                      <tr className="hover:bg-surface-subtle transition-colors">
+                        <td className="p-4 font-bold text-brand-black">Suitable For</td>
+                        <td className="p-4">Personal & commercial cargo</td>
+                        <td className="p-4">Personal, commercial & bulk cargo</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
-
-                <p className="text-body-xs text-slate-500 italic">
-                  * Transit times, service availability and final charges vary by destination, carrier and shipment requirements.
-                </p>
               </section>
 
               {/* PART 1 — AIR CARGO */}
@@ -367,104 +338,57 @@ export default async function CargoServicesPage() {
                   <p className="text-body-md text-slate-700 leading-relaxed font-normal">
                     When time matters, air cargo is one of the most efficient ways to transport goods internationally. Raahi International arranges air freight solutions for customers sending permitted cargo from Pakistan to destinations around the world.
                   </p>
-                  <p className="text-body-md text-slate-700 leading-relaxed font-normal">
-                    Our air cargo service is suitable for customers who need a faster international transportation option and for shipments where speed is more important than the lower transportation cost typically associated with sea freight.
-                  </p>
                 </div>
 
-                {/* MINIMUM WEIGHT BADGE CALLOUT */}
+                {/* MINIMUM AIR SHIPMENT CALLOUT */}
                 <div className="bg-amber-50 border-l-4 border-amber-500 p-5 rounded-r-md flex items-center justify-between gap-4">
                   <div>
                     <div className="text-xs font-mono font-bold text-amber-800 uppercase tracking-wider">Air Cargo Requirement</div>
-                    <div className="text-heading-sm font-bold text-amber-900">Minimum Air Cargo Weight: 20 KG</div>
-                    <p className="text-body-xs text-amber-800 mt-1">
-                      For shipments below 20 kg, available courier or parcel solutions may be more appropriate depending on destination and cargo type.
-                    </p>
+                    <div className="text-heading-sm font-bold text-amber-900">Minimum Air Shipment: 20 KG</div>
                   </div>
                   <Badge variant="accent" size="md" className="shrink-0 font-bold text-sm">20 KG MIN</Badge>
                 </div>
 
-                {/* WHAT CAN YOU SEND BY AIR CARGO */}
-                <div className="space-y-4">
-                  <h3 className="text-heading-md font-bold text-brand-black">What Can You Send by Air Cargo?</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                    {[
-                      'Personal belongings',
-                      'Household items',
-                      'Clothing & garments',
-                      'Documents and permitted parcels',
-                      'Business samples',
-                      'E-commerce shipments',
-                      'Commercial goods',
-                      'Spare parts',
-                      'Electronics and equipment',
-                      'Machinery parts',
-                      'General permitted cargo',
-                      'Other non-restricted goods',
-                    ].map((item) => (
-                      <div key={item} className="flex items-center gap-2 text-body-sm font-medium text-slate-800">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                        <span>{item}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* AIR CARGO RATE TABLE — CLEAN, PLEASING & SPACIOUS WITH EXPLICIT PRICES */}
+                {/* AIR CARGO RATES & DELIVERY TIME TABLE */}
                 <div id="air-cargo-rates" className="scroll-mt-28 space-y-6 pt-4">
-                  <div className="bg-emerald-950 text-white p-6 rounded-md border border-emerald-500/40 space-y-3 shadow-md">
-                    <div className="flex items-center justify-between flex-wrap gap-2">
-                      <div className="flex items-center gap-2 text-xs font-mono text-emerald-400 font-bold uppercase tracking-wider">
-                        <Tag className="w-4 h-4 text-emerald-400 shrink-0" />
-                        <span>Indicative Rate Card — Air Freight</span>
-                      </div>
-                      <Badge variant="accent" size="sm" className="font-mono font-bold">20 KG MIN</Badge>
+                  <div className="bg-surface-subtle p-5 rounded-md border border-border flex items-center justify-between flex-wrap gap-2">
+                    <div>
+                      <h3 className="text-heading-md font-bold text-brand-black">
+                        Air Cargo Rates & Delivery Time
+                      </h3>
+                      <p className="text-body-xs text-slate-600">
+                        Indicative air cargo rates per KG and estimated delivery timelines from Pakistan.
+                      </p>
                     </div>
-                    <h3 className="text-heading-lg font-bold text-white">
-                      Average Air Cargo Rates from Pakistan
-                    </h3>
-                    <p className="text-body-xs text-emerald-200">
-                      Sample indicative air rates from major export hubs in Pakistan to worldwide destinations.
-                    </p>
+                    <Badge variant="accent" size="sm" className="font-mono font-bold">20 KG MIN</Badge>
                   </div>
 
-                  <div className="overflow-x-auto border border-slate-200 rounded-lg shadow-xs bg-white">
-                    <table className="w-full text-left border-collapse">
+                  <div className="overflow-x-auto border border-border rounded-md shadow-xs bg-surface">
+                    <table className="w-full text-left text-body-md border-collapse">
                       <thead>
-                        <tr className="bg-slate-900 text-white text-xs sm:text-sm font-semibold uppercase tracking-wider">
-                          <th className="py-4 px-6 border-b border-slate-800">Destination Country</th>
-                          <th className="py-4 px-6 border-b border-slate-800 text-emerald-400">Indicative Air Rate</th>
-                          <th className="py-4 px-6 border-b border-slate-800">Min Weight</th>
-                          <th className="py-4 px-6 border-b border-slate-800 text-right">Get Exact Quote</th>
+                        <tr className="bg-surface-subtle text-brand-black text-xs font-mono font-bold uppercase tracking-wider border-b border-border">
+                          <th className="p-4 font-bold text-brand-black">Destination</th>
+                          <th className="p-4 font-bold text-brand-black">Rate</th>
+                          <th className="p-4 font-bold text-brand-black">Delivery Time</th>
+                          <th className="p-4 font-bold text-brand-black text-right">Get Quote</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100 font-normal text-slate-700">
+                      <tbody className="divide-y divide-border font-normal text-slate-700">
                         {airCargoRates.map((rate) => (
-                          <tr key={rate.country} className="hover:bg-slate-50/80 transition-colors">
-                            <td className="py-4 px-6 font-bold text-slate-900 text-base sm:text-lg flex items-center gap-3">
-                              <span className="text-2xl">{rate.flag}</span>
-                              <span className="font-bold">{rate.country}</span>
+                          <tr key={rate.country} className="hover:bg-surface-subtle transition-colors">
+                            <td className="p-4 font-bold text-brand-black text-body-md flex items-center gap-2.5">
+                              <span className="text-xl">{rate.flag}</span>
+                              <span>{rate.country}</span>
                             </td>
-                            <td className="py-4 px-6">
-                              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                                <span className="text-base sm:text-lg font-bold font-mono text-emerald-700">
-                                  {rate.pricePkr}
-                                </span>
-                                <span className="text-xs font-mono text-slate-400">
-                                  ({rate.priceUsd})
-                                </span>
-                              </div>
+                            <td className="p-4 font-bold font-mono text-brand-black text-body-md">
+                              {rate.rate}
                             </td>
-                            <td className="py-4 px-6">
-                              <span className="inline-block px-3 py-1 bg-slate-100 text-slate-800 font-mono font-bold text-xs rounded-full border border-slate-200">
-                                {rate.minWeight}
-                              </span>
+                            <td className="p-4 text-body-sm text-slate-700 font-medium">
+                              {rate.deliveryTime}
                             </td>
-                            <td className="py-4 px-6 text-right">
-                              <Link href={`/quote?service=air-freight`}>
-                                <Button variant="accent" size="sm" className="font-bold text-xs px-4 py-2">
-                                  Get Rate →
-                                </Button>
+                            <td className="p-4 text-right">
+                              <Link href="/quote?service=air-freight" className="text-xs font-bold text-brand-black hover:text-accent-dark underline">
+                                Get Quote →
                               </Link>
                             </td>
                           </tr>
@@ -472,10 +396,6 @@ export default async function CargoServicesPage() {
                       </tbody>
                     </table>
                   </div>
-
-                  <p className="text-body-xs text-slate-500 italic">
-                    * Rate Disclaimer: The rates indicated above are average/indicative rates for information purposes only and may change without notice. Actual shipping charges depend on origin, destination, actual weight, volumetric weight, cargo type, airline, service level, customs requirements, fuel surcharges and other applicable charges. Contact Raahi International for a current quotation.
-                  </p>
                 </div>
               </section>
 
@@ -491,77 +411,57 @@ export default async function CargoServicesPage() {
                   <p className="text-body-md text-slate-700 leading-relaxed font-normal">
                     Sea cargo is a practical option for customers who need to transport larger, heavier or higher-volume shipments internationally. Compared with air freight, sea transportation generally takes longer but can offer a more economical solution for larger shipments.
                   </p>
-                  <p className="text-body-md text-slate-700 leading-relaxed font-normal">
-                    Raahi International helps coordinate sea cargo shipments from Pakistan to international destinations, subject to route availability and cargo requirements.
-                  </p>
                 </div>
 
                 {/* MINIMUM SEA WEIGHT BADGE CALLOUT */}
                 <div className="bg-blue-50 border-l-4 border-blue-600 p-5 rounded-r-md flex items-center justify-between gap-4">
                   <div>
                     <div className="text-xs font-mono font-bold text-blue-800 uppercase tracking-wider">Sea Cargo Requirement</div>
-                    <div className="text-heading-sm font-bold text-blue-950">Minimum Sea Cargo Weight: 70–100 KG</div>
-                    <p className="text-body-xs text-blue-900 mt-1">
-                      For larger shipments, sea freight becomes particularly useful when priority is cost efficiency rather than transit speed.
-                    </p>
+                    <div className="text-heading-sm font-bold text-blue-950">Minimum Sea Cargo: 70–100 KG</div>
                   </div>
                   <Badge variant="secondary" size="md" className="shrink-0 font-bold text-sm">70–100 KG MIN</Badge>
                 </div>
 
-                {/* SEA CARGO RATE TABLE — CLEAN, PLEASING & SPACIOUS WITH EXPLICIT PRICES */}
+                {/* SEA CARGO RATES & DELIVERY TIME TABLE */}
                 <div id="sea-cargo-rates" className="scroll-mt-28 space-y-6 pt-4">
-                  <div className="bg-blue-950 text-white p-6 rounded-md border border-blue-500/40 space-y-3 shadow-md">
-                    <div className="flex items-center justify-between flex-wrap gap-2">
-                      <div className="flex items-center gap-2 text-xs font-mono text-blue-400 font-bold uppercase tracking-wider">
-                        <Tag className="w-4 h-4 text-blue-400 shrink-0" />
-                        <span>Indicative Rate Card — Ocean Freight</span>
-                      </div>
-                      <Badge variant="secondary" size="sm" className="font-mono font-bold">70–100 KG MIN</Badge>
+                  <div className="bg-surface-subtle p-5 rounded-md border border-border flex items-center justify-between flex-wrap gap-2">
+                    <div>
+                      <h3 className="text-heading-md font-bold text-brand-black">
+                        Sea Cargo Rates & Delivery Time
+                      </h3>
+                      <p className="text-body-xs text-slate-600">
+                        Indicative ocean freight rates (PKR/KG) and estimated delivery timelines from Pakistan.
+                      </p>
                     </div>
-                    <h3 className="text-heading-lg font-bold text-white">
-                      Average Sea Cargo Rates from Pakistan
-                    </h3>
-                    <p className="text-body-xs text-blue-200">
-                      Indicative ocean freight guidelines for LCL & FCL shipments departing Karachi Port & Port Qasim.
-                    </p>
+                    <Badge variant="secondary" size="sm" className="font-mono font-bold">70–100 KG MIN</Badge>
                   </div>
 
-                  <div className="overflow-x-auto border border-slate-200 rounded-lg shadow-xs bg-white">
-                    <table className="w-full text-left border-collapse">
+                  <div className="overflow-x-auto border border-border rounded-md shadow-xs bg-surface">
+                    <table className="w-full text-left text-body-md border-collapse">
                       <thead>
-                        <tr className="bg-slate-900 text-white text-xs sm:text-sm font-semibold uppercase tracking-wider">
-                          <th className="py-4 px-6 border-b border-slate-800">Destination Country</th>
-                          <th className="py-4 px-6 border-b border-slate-800">Service Mode</th>
-                          <th className="py-4 px-6 border-b border-slate-800 text-blue-400">Indicative Ocean Rate</th>
-                          <th className="py-4 px-6 border-b border-slate-800">Min Requirement</th>
-                          <th className="py-4 px-6 border-b border-slate-800 text-right">Get Exact Quote</th>
+                        <tr className="bg-surface-subtle text-brand-black text-xs font-mono font-bold uppercase tracking-wider border-b border-border">
+                          <th className="p-4 font-bold text-brand-black">Destination</th>
+                          <th className="p-4 font-bold text-brand-black">Rate</th>
+                          <th className="p-4 font-bold text-brand-black">Delivery Time</th>
+                          <th className="p-4 font-bold text-brand-black text-right">Get Quote</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-100 font-normal text-slate-700">
+                      <tbody className="divide-y divide-border font-normal text-slate-700">
                         {seaCargoRates.map((rate) => (
-                          <tr key={rate.country} className="hover:bg-slate-50/80 transition-colors">
-                            <td className="py-4 px-6 font-bold text-slate-900 text-base sm:text-lg flex items-center gap-3">
-                              <span className="text-2xl">{rate.flag}</span>
-                              <span className="font-bold">{rate.country}</span>
+                          <tr key={rate.country} className="hover:bg-surface-subtle transition-colors">
+                            <td className="p-4 font-bold text-brand-black text-body-md flex items-center gap-2.5">
+                              <span className="text-xl">{rate.flag}</span>
+                              <span>{rate.country}</span>
                             </td>
-                            <td className="py-4 px-6">
-                              <span className="px-3 py-1 bg-blue-100 text-blue-900 border border-blue-200 font-mono font-bold text-xs rounded-full">
-                                {rate.service}
-                              </span>
+                            <td className="p-4 font-bold font-mono text-brand-black text-body-md">
+                              {rate.rate}
                             </td>
-                            <td className="py-4 px-6 font-bold font-mono text-blue-900 text-base sm:text-lg">
-                              {rate.pricePkr}
+                            <td className="p-4 text-body-sm text-slate-700 font-medium">
+                              {rate.deliveryTime}
                             </td>
-                            <td className="py-4 px-6">
-                              <span className="inline-block px-3 py-1 bg-slate-100 text-slate-800 font-mono font-bold text-xs rounded-full border border-slate-200">
-                                {rate.minReq}
-                              </span>
-                            </td>
-                            <td className="py-4 px-6 text-right">
-                              <Link href={`/quote?service=sea-cargo`}>
-                                <Button variant="outline" size="sm" className="font-bold text-xs px-4 py-2 border-blue-500 text-blue-700 hover:bg-blue-50">
-                                  Get Rate →
-                                </Button>
+                            <td className="p-4 text-right">
+                              <Link href="/quote?service=sea-cargo" className="text-xs font-bold text-brand-black hover:text-accent-dark underline">
+                                Get Quote →
                               </Link>
                             </td>
                           </tr>
@@ -569,17 +469,18 @@ export default async function CargoServicesPage() {
                       </tbody>
                     </table>
                   </div>
+
+                  <p className="text-body-xs text-slate-500 italic">
+                    * Rate Disclaimer: Rates shown above are indicative and may vary depending on shipment volume, weight, origin, destination, port/airport charges, airline/shipping line, customs requirements, fuel surcharges, and local delivery location. Contact Raahi International for a current quotation.
+                  </p>
                 </div>
               </section>
 
-              {/* AIR VS SEA DECISION GUIDE */}
-              <section id="air-vs-sea" className="scroll-mt-28 space-y-6 pt-8 border-t border-border">
+              {/* SECTION: WHICH ONE SHOULD I PICK? */}
+              <section id="which-to-pick" className="scroll-mt-28 space-y-6 pt-8 border-t border-border">
                 <div className="border-b border-border pb-3">
-                  <Badge variant="outline" size="sm" className="mb-2 font-mono uppercase">Decision Guide</Badge>
-                  <h2 className="text-heading-xl font-bold text-brand-black">Air Cargo or Sea Cargo — Which Is Right for You?</h2>
-                  <p className="text-body-md text-slate-600">
-                    Choosing between air and sea freight depends mainly on how quickly you need your shipment, how much cargo you have and your budget.
-                  </p>
+                  <Badge variant="outline" size="sm" className="mb-2 font-mono uppercase">Practical Decision Guide</Badge>
+                  <h2 className="text-heading-xl font-bold text-brand-black">Which One Should I Pick?</h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -590,7 +491,7 @@ export default async function CargoServicesPage() {
                     <ul className="space-y-2.5 text-body-sm text-emerald-900 font-medium">
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                        <span>You need faster delivery for time-critical goods.</span>
+                        <span>You need faster delivery (10–15 days typical).</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
@@ -622,7 +523,7 @@ export default async function CargoServicesPage() {
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-                        <span>You have flexible delivery timelines for planned logistics.</span>
+                        <span>You have flexible delivery timelines (1.5–2.5 months typical).</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
@@ -633,7 +534,7 @@ export default async function CargoServicesPage() {
                 </div>
               </section>
 
-              {/* DOOR-TO-DOOR OPTION */}
+              {/* SECTION: DOOR-TO-DOOR OPTION */}
               <section id="door-to-door" className="scroll-mt-28 space-y-6 pt-8 border-t border-border">
                 <div className="border-b border-border pb-3">
                   <Badge variant="accent" size="sm" className="mb-2 font-mono uppercase">Door-to-Door Service</Badge>
@@ -671,11 +572,11 @@ export default async function CargoServicesPage() {
                 </div>
               </section>
 
-              {/* 100% INLINE FAQS */}
+              {/* SECTION: FAQS */}
               <section id="faqs" className="scroll-mt-28 space-y-6 pt-8 border-t border-border">
                 <div className="border-b border-border pb-3">
                   <div className="text-xs font-mono text-slate-500 uppercase tracking-wider">Frequently Asked Questions</div>
-                  <h2 className="text-heading-xl font-bold text-brand-black">Air & Sea Cargo FAQs</h2>
+                  <h2 className="text-heading-xl font-bold text-brand-black">Air Cargo & Comparison FAQs</h2>
                 </div>
 
                 <div className="space-y-4">
@@ -749,13 +650,13 @@ export default async function CargoServicesPage() {
                     <span>Air vs Sea Cargo Matrix</span>
                     <ArrowRight className="w-3.5 h-3.5 text-accent-dark" />
                   </a>
-                  <a href="#air-cargo-rates" className="block p-2.5 rounded-xs bg-surface-subtle hover:bg-border transition-colors font-semibold text-brand-black flex items-center justify-between text-emerald-800 font-bold">
-                    <span>Air Cargo Rate Card</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-emerald-700" />
+                  <a href="#air-cargo-rates" className="block p-2.5 rounded-xs bg-surface-subtle hover:bg-border transition-colors font-semibold text-brand-black flex items-center justify-between text-brand-black font-bold">
+                    <span>Air Cargo Rates & Delivery Time</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-accent-dark" />
                   </a>
-                  <a href="#sea-cargo-rates" className="block p-2.5 rounded-xs bg-surface-subtle hover:bg-border transition-colors font-semibold text-brand-black flex items-center justify-between text-blue-800 font-bold">
-                    <span>Sea Cargo Rate Card</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-blue-700" />
+                  <a href="#sea-cargo-rates" className="block p-2.5 rounded-xs bg-surface-subtle hover:bg-border transition-colors font-semibold text-brand-black flex items-center justify-between text-brand-black font-bold">
+                    <span>Sea Cargo Rates & Delivery Time</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-accent-dark" />
                   </a>
                   <Link href="/services/commercial-cargo" className="block p-2.5 rounded-xs bg-surface-subtle hover:bg-border transition-colors font-semibold text-brand-black flex items-center justify-between">
                     <span>Commercial Cargo</span>
