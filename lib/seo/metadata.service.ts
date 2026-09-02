@@ -22,6 +22,9 @@ export function constructMetadata({
   return {
     title: fullTitle,
     description,
+    verification: {
+      google: 'google4aea07eb5eec62b9',
+    },
     icons: {
       icon: [
         { url: '/favicon.ico' },
