@@ -62,6 +62,10 @@ Sea cargo is the primary choice for heavy, bulky, or large-volume commercial shi
 | **High volumetric weight or heavy commercial items** | Ocean Sea Cargo |
 | **Small commercial samples under 100 kg** | Air Freight |
 | **Full household relocation or bulk goods** | Ocean Sea Cargo |
+
+## 4. Comprehensive Air & Sea Cargo Hub
+
+For a complete breakdown of indicative air cargo rates for 19+ destination countries, LCL vs FCL ocean freight pricing, step-by-step dispatch workflows, and door-to-door shipping guidelines, visit our full [Air & Sea Cargo Services](/cargo-services) page.
 `,
     category: 'shipping-guides',
     authorName: 'Logistics Editorial Team',

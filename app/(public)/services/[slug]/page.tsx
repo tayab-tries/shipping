@@ -138,9 +138,12 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
 export default async function ServiceDetailPage({ params }: ServicePageProps) {
   const { slug } = await params;
 
-  // Handle legacy door-to-door route by redirecting cleanly to /services hub
+  // Handle legacy door-to-door or cargo-services route by redirecting cleanly
   if (slug === 'door-to-door' || slug === 'door_to_door') {
     redirect('/services');
+  }
+  if (slug === 'cargo-services' || slug === 'cargo_services') {
+    redirect('/cargo-services');
   }
 
   const sanityService: SanityServiceDocument | null = await getSanityServiceBySlug(slug);
