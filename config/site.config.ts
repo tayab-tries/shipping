@@ -3,7 +3,7 @@ import { SiteConfig } from '@/types/config';
 export const siteConfig: SiteConfig = {
   name: "Raahi International",
   legalName: "Raahi International",
-  domain: "https://raahiinternational.pk",
+  domain: process.env.NEXT_PUBLIC_SITE_URL || "https://cargo.raahiinternational4.workers.dev",
   tagline: "International Air & Sea Cargo Delivery",
   phone: "+92 300 1234567",
   whatsapp: "+92 300 1234567",

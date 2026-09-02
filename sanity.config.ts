@@ -13,7 +13,7 @@ function getPreviewOrigin(): string {
   if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
     return 'http://localhost:3000';
   }
-  return 'https://raahi.pk';
+  return 'https://cargo.raahiinternational4.workers.dev';
 }
 
 export default defineConfig({
