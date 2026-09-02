@@ -7,6 +7,6 @@ export const client = createClient({
   apiVersion,
   useCdn: process.env.NODE_ENV === 'production',
   stega: {
-    studioUrl: process.env.NEXT_PUBLIC_SANITY_STUDIO_URL || 'https://raahi-international.sanity.studio',
+    studioUrl: 'https://raahi-international.sanity.studio',
   },
 });
