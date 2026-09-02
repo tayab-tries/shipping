@@ -15,6 +15,7 @@ import {
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
+import { siteConfig } from '@/config/site.config';
 
 export interface LocationBlogArticleProps {
   cityName: string;
@@ -37,11 +38,13 @@ export const LocationBlogArticle: React.FC<LocationBlogArticleProps> = ({
   localCoverageText,
   sections = [],
   faqs = [],
-  phone = '+92 300 1234567',
+  phone,
   whatsappNumber,
 }) => {
+  const activePhone = phone || siteConfig.contact?.phonePrimary || siteConfig.phone || '+92 300 1234567';
+  const activeWhatsapp = whatsappNumber || siteConfig.contact?.whatsappNumber || siteConfig.whatsapp || activePhone;
   const whatsappUrl = buildWhatsappUrl(
-    whatsappNumber || phone,
+    activeWhatsapp,
     `Assalam o Alaikum, I want to send international cargo from ${cityName}. Please guide me.`
   );
 
@@ -284,11 +287,11 @@ export const LocationBlogArticle: React.FC<LocationBlogArticleProps> = ({
                 Speak directly with our Pakistan logistics dispatch team.
               </p>
               <a
-                href={`tel:${phone.replace(/\s+/g, '')}`}
+                href={`tel:${activePhone.replace(/\s+/g, '')}`}
                 className="inline-flex items-center gap-2 text-sm font-bold text-brand-black hover:text-accent-dark transition-colors"
               >
                 <Phone className="w-4 h-4 text-accent-dark" />
-                <span>{phone}</span>
+                <span>{activePhone}</span>
               </a>
             </div>
           </aside>

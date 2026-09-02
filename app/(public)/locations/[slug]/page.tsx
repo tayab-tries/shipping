@@ -16,7 +16,8 @@ import { LocationBlogArticle } from '@/components/locations/LocationBlogArticle'
 import { LocationProcess } from '@/components/locations/LocationProcess';
 import { LocationGuides } from '@/components/locations/LocationGuides';
 import { LocationCta } from '@/components/locations/LocationCta';
-import { getSanityLocationBySlug, getSanityLocationsList, SanityLocationDocument } from '@/sanity/lib/fetch';
+import { getSanityLocationBySlug, getSanityLocationsList, getSanitySiteSettingsData } from '@/sanity/lib/fetch';
+import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
 
 interface LocationPageProps {
   params: Promise<{ slug: string }>;
@@ -80,13 +81,20 @@ export async function generateMetadata({ params }: LocationPageProps): Promise<M
 
 export default async function LocationDetailPage({ params }: LocationPageProps) {
   const { slug } = await params;
-  const sanityLocation: SanityLocationDocument | null = await getSanityLocationBySlug(slug);
-  const fallbackLocation = await getLocationBySlug(slug);
+  const [sanityLocation, fallbackLocation, business, sanitySiteSettings] = await Promise.all([
+    getSanityLocationBySlug(slug),
+    getLocationBySlug(slug),
+    getPublishedBusinessSettings(),
+    getSanitySiteSettingsData(),
+  ]);
 
   // Authoritative Verification Check
   if (!sanityLocation && !fallbackLocation) {
     notFound();
   }
+
+  const activePhone = sanitySiteSettings?.phone || business?.phonePrimary;
+  const activeWhatsapp = sanitySiteSettings?.whatsappNumber || business?.whatsappNumber;
 
   const location: LocationData = {
     id: sanityLocation?._id || fallbackLocation?.id || slug,
@@ -204,6 +212,8 @@ export default async function LocationDetailPage({ params }: LocationPageProps) 
         localCoverageText={location.localCoverageText}
         sections={location.sections}
         faqs={location.faqs}
+        phone={activePhone}
+        whatsappNumber={activeWhatsapp}
       />
 
       {/* 5. Supported Destination Countries Grid */}
