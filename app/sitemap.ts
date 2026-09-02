@@ -10,7 +10,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticRoutes = [
     '',
-    '/cargo-services',
     '/services',
     '/destinations',
     '/locations',
@@ -41,9 +40,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
-  // 4. Dynamically map ONLY published & verified educational guides
+  // 4. Dynamically map ONLY published & verified educational guides (excluding redirected guides)
   const publishedArticles = getPublishedStaticArticles();
-  const guideRoutes = publishedArticles.map((a) => `/guides/${a.slug}`);
+  const guideRoutes = publishedArticles
+    .filter((a) => a.slug !== 'air-vs-sea-cargo')
+    .map((a) => `/guides/${a.slug}`);
 
   const allRoutes = [
     ...staticRoutes,

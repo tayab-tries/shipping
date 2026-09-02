@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { Container } from '@/components/ui/Container';
 import {
   getPublishedStaticArticles,
@@ -80,6 +80,9 @@ export async function generateMetadata({ params }: GuideArticlePageProps): Promi
 
 export default async function GuideArticleDetailPage({ params }: GuideArticlePageProps) {
   const { slug } = await params;
+  if (slug === 'air-vs-sea-cargo' || slug === 'air_vs_sea_cargo') {
+    permanentRedirect('/services/air-freight');
+  }
   const sanityGuide: SanityGuideDocument | null = await getSanityGuideBySlug(slug);
   const fallbackArticle = getStaticArticleBySlug(slug);
 

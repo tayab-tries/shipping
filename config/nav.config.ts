@@ -87,7 +87,7 @@ export const mainNavigation: NavItem[] = [
     children: [
       { title: 'Customs & Documentation', href: '/guides/export-customs-documentation-guide' },
       { title: 'Packaging Guidelines', href: '/guides/packing-cargo-guide' },
-      { title: 'Air vs Sea Cargo', href: '/guides/air-vs-sea-cargo' },
+      { title: 'Air vs Sea Cargo', href: '/services/air-freight' },
     ],
   },
   {
@@ -146,7 +146,7 @@ export const footerNavigation: FooterNavGroup[] = [
       { label: 'Request Quote', href: '/quote' },
       { label: 'Export Documentation', href: '/guides/export-customs-documentation-guide' },
       { label: 'Packaging Guide', href: '/guides/packing-cargo-guide' },
-      { label: 'Air vs Sea Freight', href: '/guides/air-vs-sea-cargo' },
+      { label: 'Air vs Sea Freight', href: '/services/air-freight' },
     ],
   },
 ];

@@ -17,7 +17,9 @@ import { Accordion } from '@/components/ui/Accordion';
 import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
-import { getSanityServiceBySlug, getSanityServicesList, SanityServiceDocument } from '@/sanity/lib/fetch';
+import { getSanityServiceBySlug, getSanityServicesList, SanityServiceDocument, getSanitySiteSettingsData } from '@/sanity/lib/fetch';
+import { AirFreightServiceContent } from '@/components/services/AirFreightServiceContent';
+import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
 
 interface ServicePageProps {
   params: Promise<{ slug: string }>;
@@ -74,7 +76,7 @@ const portableTextComponents: PortableTextComponents = {
 };
 
 /**
- * Pre-render static params for services.
+ * Pre-render static params for published service routes.
  */
 export async function generateStaticParams() {
   const sanityServices = await getSanityServicesList();
@@ -92,6 +94,25 @@ export async function generateStaticParams() {
  */
 export async function generateMetadata({ params }: ServicePageProps): Promise<Metadata> {
   const { slug } = await params;
+
+  if (slug === 'air-freight') {
+    return {
+      title: `Air Cargo from Pakistan | ${siteConfig.name}`,
+      description:
+        'Air cargo services from Pakistan worldwide. Compare air freight vs sea cargo, rates, delivery timelines, customs clearance, and door-to-door solutions.',
+      alternates: {
+        canonical: `${siteConfig.domain}/services/air-freight`,
+      },
+      openGraph: {
+        title: `Air Cargo from Pakistan | ${siteConfig.name}`,
+        description:
+          'Air cargo services from Pakistan worldwide. Compare air freight vs sea cargo, rates, delivery timelines, customs clearance, and door-to-door solutions.',
+        url: `${siteConfig.domain}/services/air-freight`,
+        type: 'website',
+      },
+    };
+  }
+
   if (slug === 'door-to-door' || slug === 'door_to_door') {
     return {
       title: `Door-to-Door Delivery Available on Air & Sea Cargo | ${siteConfig.name}`,
@@ -138,13 +159,21 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
 export default async function ServiceDetailPage({ params }: ServicePageProps) {
   const { slug } = await params;
 
-  // Handle legacy door-to-door or cargo-services route by redirecting cleanly
+  // Handle legacy door-to-door or cargo-services route by redirecting cleanly to /services/air-freight
   if (slug === 'door-to-door' || slug === 'door_to_door') {
     redirect('/services');
   }
   if (slug === 'cargo-services' || slug === 'cargo_services') {
-    redirect('/cargo-services');
+    redirect('/services/air-freight');
   }
+
+  const [business, sanitySiteSettings] = await Promise.all([
+    getPublishedBusinessSettings(),
+    getSanitySiteSettingsData(),
+  ]);
+
+  const activePhone = sanitySiteSettings?.phone || business.phonePrimary || siteConfig.phone || '+92 300 1234567';
+  const activeWhatsapp = sanitySiteSettings?.whatsappNumber || business.whatsappNumber || siteConfig.contact?.whatsappNumber || activePhone;
 
   const sanityService: SanityServiceDocument | null = await getSanityServiceBySlug(slug);
   const fallbackService = servicesRegistry.find((s) => s.slug === slug);
@@ -170,14 +199,16 @@ export default async function ServiceDetailPage({ params }: ServicePageProps) {
     }
   }
 
-  const name = sanityService?.name || fallbackService?.name || 'Cargo Service';
-  const h1Title = sanityService?.title || fallbackService?.h1 || 'International Cargo Services';
+  const name = slug === 'air-freight' ? 'Air Cargo' : (sanityService?.name || fallbackService?.name || 'Cargo Service');
+  const h1Title = slug === 'air-freight' ? 'Air Cargo from Pakistan' : (sanityService?.title || fallbackService?.h1 || 'International Cargo Services');
   const category = sanityService?.category || fallbackService?.category || 'core';
   const quoteCargoType = sanityService?.quoteCargoType || fallbackService?.quoteCargoType;
   const description =
-    sanityService?.seo?.metaDescription ||
-    fallbackService?.seo.description ||
-    'International cargo shipping services from Pakistan.';
+    slug === 'air-freight'
+      ? 'Reliable international air cargo and express freight solutions connecting Pakistan with destinations worldwide.'
+      : (sanityService?.seo?.metaDescription ||
+        fallbackService?.seo.description ||
+        'International cargo shipping services from Pakistan.');
 
   const serviceOverview = sanityService?.serviceOverview || mdxData?.frontmatter?.serviceOverview;
   const targetAudience = sanityService?.targetAudience || mdxData?.frontmatter?.targetAudience;
@@ -240,61 +271,71 @@ export default async function ServiceDetailPage({ params }: ServicePageProps) {
         slug={slug}
       />
 
-      {/* 2. Service Summary Panel */}
-      <ServiceSummaryPanel
-        serviceOverview={serviceOverview}
-        targetAudience={targetAudience}
-        keyConsiderations={keyConsiderations}
-      />
+      {slug === 'air-freight' ? (
+        <section className="w-full py-12 lg:py-20 border-b border-border">
+          <Container>
+            <AirFreightServiceContent phone={activePhone} whatsappNumber={activeWhatsapp} />
+          </Container>
+        </section>
+      ) : (
+        <>
+          {/* 2. Service Summary Panel */}
+          <ServiceSummaryPanel
+            serviceOverview={serviceOverview}
+            targetAudience={targetAudience}
+            keyConsiderations={keyConsiderations}
+          />
 
-      {/* 3. Main Specification / Prose Content */}
-      <section className="w-full py-16 border-b border-border bg-surface">
-        <Container>
-          <div className="max-w-3xl space-y-6 text-brand-black">
-            {sanityService?.body && sanityService.body.length > 0 ? (
-              <PortableText value={sanityService.body} components={portableTextComponents} />
-            ) : mdxData?.content ? (
-              mdxData.content.split('\n\n').map((paragraph, index) => {
-                if (paragraph.startsWith('# ')) {
-                  return (
-                    <h2 key={index} className="text-heading-xl font-bold text-brand-black pt-6 pb-2 border-b border-border">
-                      {paragraph.replace('# ', '')}
-                    </h2>
-                  );
-                }
-                if (paragraph.startsWith('## ')) {
-                  return (
-                    <h3 key={index} className="text-heading-lg font-bold text-brand-black pt-6 pb-2 border-b border-border">
-                      {paragraph.replace('## ', '')}
-                    </h3>
-                  );
-                }
-                if (paragraph.startsWith('- ')) {
-                  const items = paragraph.split('\n- ').map((item) => item.replace('- ', ''));
-                  return (
-                    <ul key={index} className="space-y-2 py-2 text-body-md text-slate-700 font-normal">
-                      {items.map((it, i) => (
-                        <li key={i} className="flex items-start gap-2">
-                          <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2 shrink-0" />
-                          <span>{it}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  );
-                }
-                return (
-                  <p key={index} className="text-body-md text-slate-700 leading-relaxed font-normal">
-                    {paragraph}
-                  </p>
-                );
-              })
-            ) : null}
-          </div>
-        </Container>
-      </section>
+          {/* 3. Main Specification / Prose Content */}
+          <section className="w-full py-16 border-b border-border bg-surface">
+            <Container>
+              <div className="max-w-3xl space-y-6 text-brand-black">
+                {sanityService?.body && sanityService.body.length > 0 ? (
+                  <PortableText value={sanityService.body} components={portableTextComponents} />
+                ) : mdxData?.content ? (
+                  mdxData.content.split('\n\n').map((paragraph, index) => {
+                    if (paragraph.startsWith('# ')) {
+                      return (
+                        <h2 key={index} className="text-heading-xl font-bold text-brand-black pt-6 pb-2 border-b border-border">
+                          {paragraph.replace('# ', '')}
+                        </h2>
+                      );
+                    }
+                    if (paragraph.startsWith('## ')) {
+                      return (
+                        <h3 key={index} className="text-heading-lg font-bold text-brand-black pt-6 pb-2 border-b border-border">
+                          {paragraph.replace('## ', '')}
+                        </h3>
+                      );
+                    }
+                    if (paragraph.startsWith('- ')) {
+                      const items = paragraph.split('\n- ').map((item) => item.replace('- ', ''));
+                      return (
+                        <ul key={index} className="space-y-2 py-2 text-body-md text-slate-700 font-normal">
+                          {items.map((it, i) => (
+                            <li key={i} className="flex items-start gap-2">
+                              <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2 shrink-0" />
+                              <span>{it}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      );
+                    }
+                    return (
+                      <p key={index} className="text-body-md text-slate-700 leading-relaxed font-normal">
+                        {paragraph}
+                      </p>
+                    );
+                  })
+                ) : null}
+              </div>
+            </Container>
+          </section>
 
-      {/* 4. Logistics Process Workflow */}
-      <ServiceProcess steps={processSteps} />
+          {/* 4. Logistics Process Workflow */}
+          <ServiceProcess steps={processSteps} />
+        </>
+      )}
 
       {/* 5. Publication-Aware Trade Corridors & Origin Network Links */}
       <RelatedDestinationsBar destinationSlugs={fallbackService?.relatedDestinations} />

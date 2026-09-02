@@ -65,7 +65,7 @@ Sea cargo is the primary choice for heavy, bulky, or large-volume commercial shi
 
 ## 4. Comprehensive Air & Sea Cargo Hub
 
-For a complete breakdown of indicative air cargo rates for 19+ destination countries, LCL vs FCL ocean freight pricing, step-by-step dispatch workflows, and door-to-door shipping guidelines, visit our full [Air & Sea Cargo Services](/cargo-services) page.
+For a complete breakdown of indicative air cargo rates for 19+ destination countries, LCL vs FCL ocean freight pricing, step-by-step dispatch workflows, and door-to-door shipping guidelines, visit our full [Air Cargo from Pakistan](/services/air-freight) page.
 `,
     category: 'shipping-guides',
     authorName: 'Logistics Editorial Team',
