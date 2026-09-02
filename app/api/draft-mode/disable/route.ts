@@ -6,6 +6,10 @@ export async function GET(request: Request) {
   draft.disable();
 
   const { searchParams } = new URL(request.url);
-  const redirectUrl = searchParams.get('redirect') || '/';
+  const redirectUrl =
+    searchParams.get('sanity-preview-pathname') ||
+    searchParams.get('redirect') ||
+    '/';
+
   return NextResponse.redirect(new URL(redirectUrl, request.url));
 }
