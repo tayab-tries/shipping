@@ -7,6 +7,11 @@ import { structure } from './sanity/structure';
 import { resolve } from './sanity/presentation/resolve';
 import { apiVersion, dataset, projectId, isSanityConfigured } from './sanity/env';
 
+const previewOrigin =
+  process.env.SANITY_STUDIO_PREVIEW_URL ||
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  'https://raahi.pk';
+
 export default defineConfig({
   basePath: '/',
   name: 'raahi_cargo_studio',
@@ -19,6 +24,7 @@ export default defineConfig({
     presentationTool({
       resolve,
       previewUrl: {
+        origin: previewOrigin,
         previewMode: {
           enable: '/api/draft-mode/enable',
         },

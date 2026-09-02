@@ -8,6 +8,7 @@ const eslintConfig = [
       "**/.*",
       ".next/**",
       ".open-next/**",
+      "dist/**",
       "out/**",
       "build/**",
       "next-env.d.ts",
