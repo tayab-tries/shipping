@@ -1,0 +1,2451 @@
+[
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "businessName",
+        "type": "string",
+        "title": "Business / Brand Name"
+      },
+      {
+        "rows": 2,
+        "name": "shortDescription",
+        "type": "text",
+        "title": "Short Business Description"
+      },
+      {
+        "name": "phone",
+        "type": "string",
+        "title": "Primary Phone Number"
+      },
+      {
+        "name": "whatsappNumber",
+        "type": "string",
+        "title": "WhatsApp Number"
+      },
+      {
+        "name": "email",
+        "type": "string",
+        "title": "Contact Email Address"
+      },
+      {
+        "name": "address",
+        "type": "string",
+        "title": "Main Office Address"
+      },
+      {
+        "name": "operatingHours",
+        "type": "string"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "logo",
+        "type": "image",
+        "title": "Main Brand Logo"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "logoDark",
+        "type": "image",
+        "title": "Dark Variant Logo"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "logoLight",
+        "type": "image",
+        "title": "Light / Inverse Variant Logo"
+      },
+      {
+        "of": [
+          {
+            "type": "navItemObject",
+            "title": "Navigation Link"
+          }
+        ],
+        "name": "navigationItems",
+        "type": "array",
+        "title": "Main Header Navigation Links"
+      },
+      {
+        "name": "primaryCta",
+        "type": "ctaObject",
+        "title": "Header Primary CTA Button"
+      },
+      {
+        "rows": 3,
+        "name": "footerDescription",
+        "type": "text",
+        "title": "Footer Brand Bio Text"
+      },
+      {
+        "of": [
+          {
+            "type": "navGroupObject",
+            "title": "Footer Navigation Group"
+          }
+        ],
+        "name": "footerGroups",
+        "type": "array",
+        "title": "Footer Link Columns / Groups"
+      },
+      {
+        "description": "e.g. All rights reserved.",
+        "name": "copyrightText",
+        "type": "string",
+        "title": "Footer Copyright Notice"
+      },
+      {
+        "name": "defaultSeoTitle",
+        "type": "string",
+        "title": "Default Meta Title"
+      },
+      {
+        "rows": 3,
+        "name": "defaultSeoDescription",
+        "type": "text",
+        "title": "Default Meta Description"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "defaultSocialImage",
+        "type": "image",
+        "title": "Default Open Graph / Social Image"
+      },
+      {
+        "fields": [
+          {
+            "name": "facebook",
+            "type": "string",
+            "title": "Facebook URL"
+          },
+          {
+            "name": "instagram",
+            "type": "string",
+            "title": "Instagram URL"
+          },
+          {
+            "name": "linkedin",
+            "type": "string",
+            "title": "LinkedIn URL"
+          },
+          {
+            "name": "tiktok",
+            "type": "string",
+            "title": "TikTok URL"
+          }
+        ],
+        "name": "socialLinks",
+        "type": "object",
+        "title": "Social Media Profiles"
+      }
+    ],
+    "name": "siteSettings",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "name": "seo",
+        "type": "seoObject",
+        "title": "Homepage SEO Settings"
+      },
+      {
+        "fields": [
+          {
+            "name": "eyebrow",
+            "type": "string",
+            "title": "Eyebrow / Small Badge"
+          },
+          {
+            "name": "heading",
+            "type": "string",
+            "title": "Main Heading"
+          },
+          {
+            "name": "highlightedHeading",
+            "type": "string",
+            "title": "Highlighted Heading Text"
+          },
+          {
+            "rows": 3,
+            "name": "description",
+            "type": "text",
+            "title": "Hero Description"
+          },
+          {
+            "name": "primaryCta",
+            "type": "ctaObject",
+            "title": "Primary Action Button"
+          },
+          {
+            "name": "secondaryCta",
+            "type": "ctaObject",
+            "title": "Secondary Action Button"
+          },
+          {
+            "options": {
+              "hotspot": true
+            },
+            "name": "heroImage",
+            "type": "image",
+            "title": "Hero Background / Graphic Image"
+          },
+          {
+            "name": "heroImageAlt",
+            "type": "string",
+            "title": "Hero Image Alt Text"
+          }
+        ],
+        "name": "hero",
+        "type": "object",
+        "title": "Hero Section"
+      },
+      {
+        "of": [
+          {
+            "fields": [
+              {
+                "validation": [
+                  {
+                    "level": "error",
+                    "rules": [
+                      {
+                        "flag": "presence",
+                        "constraint": "required"
+                      }
+                    ]
+                  }
+                ],
+                "name": "label",
+                "type": "string",
+                "title": "Chip Label"
+              },
+              {
+                "name": "icon",
+                "type": "string",
+                "title": "Optional Icon Identifier"
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "name": "heroFeatureChips",
+        "type": "array"
+      },
+      {
+        "fields": [
+          {
+            "name": "heading",
+            "type": "string",
+            "title": "Teaser Heading"
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "title": "Subheading / Helper Text"
+          },
+          {
+            "name": "ctaText",
+            "type": "string",
+            "title": "Form Button Text"
+          }
+        ],
+        "name": "quickQuote",
+        "type": "object",
+        "title": "Quick Quote Teaser Bar"
+      },
+      {
+        "of": [
+          {
+            "type": "trustMetricObject",
+            "title": "Trust / Verification Metric"
+          }
+        ],
+        "name": "trustMetrics",
+        "type": "array",
+        "title": "Trust & Verification Metrics"
+      },
+      {
+        "fields": [
+          {
+            "name": "heading",
+            "type": "string",
+            "title": "Section Heading"
+          },
+          {
+            "of": [
+              {
+                "type": "registrationItemObject",
+                "title": "Official Registration / Association Item"
+              }
+            ],
+            "name": "items",
+            "type": "array",
+            "title": "Registered Organizations"
+          }
+        ],
+        "name": "registrations",
+        "type": "object",
+        "title": "Official Registrations & Associations"
+      },
+      {
+        "fields": [
+          {
+            "name": "heading",
+            "type": "string",
+            "title": "Section Heading"
+          },
+          {
+            "of": [
+              {
+                "type": "clientLogoObject",
+                "title": "Corporate Client Logo"
+              }
+            ],
+            "name": "items",
+            "type": "array",
+            "title": "Client Logos"
+          }
+        ],
+        "name": "trustedMarket",
+        "type": "object",
+        "title": "Trusted by the Market (Client Logos)"
+      },
+      {
+        "fields": [
+          {
+            "name": "badge",
+            "type": "string",
+            "title": "Badge Label"
+          },
+          {
+            "name": "heading",
+            "type": "string",
+            "title": "Section Heading"
+          },
+          {
+            "rows": 2,
+            "name": "description",
+            "type": "text",
+            "title": "Section Subtitle"
+          },
+          {
+            "of": [
+              {
+                "type": "useCaseCardObject",
+                "title": "Cargo Type / Use Case Card"
+              }
+            ],
+            "name": "items",
+            "type": "array",
+            "title": "Cargo Category Cards"
+          }
+        ],
+        "name": "whatCanYouSend",
+        "type": "object",
+        "title": "What Can You Send (Cargo Types)"
+      },
+      {
+        "fields": [
+          {
+            "name": "badge",
+            "type": "string",
+            "title": "Badge Label"
+          },
+          {
+            "name": "heading",
+            "type": "string",
+            "title": "Section Heading"
+          },
+          {
+            "rows": 2,
+            "name": "description",
+            "type": "text",
+            "title": "Section Subtitle"
+          },
+          {
+            "name": "airCargo",
+            "type": "serviceCardObject",
+            "title": "1. Air Cargo Service Card"
+          },
+          {
+            "name": "seaCargo",
+            "type": "serviceCardObject",
+            "title": "2. Sea Cargo Service Card"
+          }
+        ],
+        "name": "servicesOverview",
+        "type": "object",
+        "title": "Air & Sea Cargo Services Overview"
+      },
+      {
+        "fields": [
+          {
+            "name": "badge",
+            "type": "string",
+            "title": "Badge Label"
+          },
+          {
+            "name": "heading",
+            "type": "string",
+            "title": "Section Heading"
+          },
+          {
+            "rows": 2,
+            "name": "description",
+            "type": "text",
+            "title": "Section Subtitle"
+          },
+          {
+            "of": [
+              {
+                "type": "destinationCardObject",
+                "title": "Destination Card"
+              }
+            ],
+            "name": "destinations",
+            "type": "array",
+            "title": "Destination Cards"
+          }
+        ],
+        "name": "popularDestinations",
+        "type": "object"
+      },
+      {
+        "fields": [
+          {
+            "name": "badge",
+            "type": "string",
+            "title": "Badge Label"
+          },
+          {
+            "name": "heading",
+            "type": "string",
+            "title": "Section Heading"
+          },
+          {
+            "rows": 2,
+            "name": "description",
+            "type": "text",
+            "title": "Section Subtitle"
+          },
+          {
+            "of": [
+              {
+                "type": "pickupCityObject",
+                "title": "Pickup City Link"
+              }
+            ],
+            "name": "cities",
+            "type": "array",
+            "title": "City Links"
+          }
+        ],
+        "name": "pickupCities",
+        "type": "object",
+        "title": "Pickup Cities Across Pakistan"
+      },
+      {
+        "fields": [
+          {
+            "name": "badge",
+            "type": "string",
+            "title": "Badge Label"
+          },
+          {
+            "name": "heading",
+            "type": "string",
+            "title": "Section Heading"
+          },
+          {
+            "rows": 2,
+            "name": "description",
+            "type": "text",
+            "title": "Section Subtitle"
+          },
+          {
+            "of": [
+              {
+                "type": "processStepObject",
+                "title": "Process Step"
+              }
+            ],
+            "name": "steps",
+            "type": "array",
+            "title": "Shipping Process Steps"
+          }
+        ],
+        "name": "howItWorks",
+        "type": "object",
+        "title": "How It Works (Shipping Process)"
+      },
+      {
+        "fields": [
+          {
+            "name": "badge",
+            "type": "string",
+            "title": "Badge Label"
+          },
+          {
+            "name": "heading",
+            "type": "string",
+            "title": "Section Heading"
+          },
+          {
+            "rows": 2,
+            "name": "description",
+            "type": "text",
+            "title": "Section Subtitle"
+          },
+          {
+            "of": [
+              {
+                "type": "testimonialItemObject",
+                "title": "Testimonial / Delivery Proof Item"
+              }
+            ],
+            "name": "items",
+            "type": "array",
+            "title": "Testimonials / Proof Items"
+          }
+        ],
+        "name": "testimonials",
+        "type": "object",
+        "title": "Testimonials & Delivery Proof"
+      },
+      {
+        "fields": [
+          {
+            "name": "badge",
+            "type": "string",
+            "title": "Badge Label"
+          },
+          {
+            "name": "heading",
+            "type": "string",
+            "title": "Section Heading"
+          },
+          {
+            "rows": 2,
+            "name": "description",
+            "type": "text",
+            "title": "Section Subtitle"
+          },
+          {
+            "of": [
+              {
+                "type": "faqItemObject",
+                "title": "FAQ Item"
+              }
+            ],
+            "name": "items",
+            "type": "array",
+            "title": "FAQ Question Items"
+          }
+        ],
+        "name": "faq",
+        "type": "object",
+        "title": "Frequently Asked Questions"
+      },
+      {
+        "fields": [
+          {
+            "name": "eyebrow",
+            "type": "string",
+            "title": "Eyebrow / Small Badge"
+          },
+          {
+            "name": "heading",
+            "type": "string",
+            "title": "Main Headline"
+          },
+          {
+            "rows": 2,
+            "name": "description",
+            "type": "text",
+            "title": "Supporting Text"
+          },
+          {
+            "name": "primaryCta",
+            "type": "ctaObject",
+            "title": "Primary CTA Button"
+          },
+          {
+            "name": "secondaryCta",
+            "type": "ctaObject",
+            "title": "Secondary CTA Button"
+          }
+        ],
+        "name": "finalCta",
+        "type": "object",
+        "title": "Final Call to Action"
+      },
+      {
+        "fields": [
+          {
+            "name": "callLabel",
+            "type": "string",
+            "title": "Call Button Label"
+          },
+          {
+            "name": "whatsappLabel",
+            "type": "string",
+            "title": "WhatsApp Button Label"
+          },
+          {
+            "name": "quoteLabel",
+            "type": "string",
+            "title": "Get Quote Button Label"
+          }
+        ],
+        "name": "mobileBottomCta",
+        "type": "object",
+        "title": "Sticky Mobile Bottom CTA Bar Labels"
+      }
+    ],
+    "name": "homepage",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "title",
+        "type": "string",
+        "title": "Service Title (H1)"
+      },
+      {
+        "options": {
+          "source": "title"
+        },
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "slug",
+        "type": "slug",
+        "title": "Slug (URL Identifier)"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "name",
+        "type": "string",
+        "title": "Short Name (for Nav & Cards)"
+      },
+      {
+        "rows": 2,
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "shortDescription",
+        "type": "text",
+        "title": "Short Description (Hub Listing)"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Core Freight Mode (core)",
+              "value": "core"
+            },
+            {
+              "title": "Specialized Freight Solution (specialized)",
+              "value": "specialized"
+            }
+          ]
+        },
+        "initialValue": "core",
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "valid",
+                "constraint": [
+                  "core",
+                  "specialized"
+                ]
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "category",
+        "type": "string",
+        "title": "Service Category"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Air Cargo Express (air_freight)",
+              "value": "air_freight"
+            },
+            {
+              "title": "Sea Cargo FCL/LCL (sea_cargo)",
+              "value": "sea_cargo"
+            },
+            {
+              "title": "Commercial Cargo (commercial_freight)",
+              "value": "commercial_freight"
+            },
+            {
+              "title": "Excess Baggage (excess_baggage)",
+              "value": "excess_baggage"
+            },
+            {
+              "title": "Door-to-Door Delivery (door_to_door)",
+              "value": "door_to_door"
+            }
+          ]
+        },
+        "description": "Pre-selects cargo option in quote form",
+        "name": "quoteCargoType",
+        "type": "string",
+        "title": "Quote Form Cargo Mode Value"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Plane (Air Freight)",
+              "value": "Plane"
+            },
+            {
+              "title": "Ship (Sea Cargo)",
+              "value": "Ship"
+            },
+            {
+              "title": "Building2 (Commercial)",
+              "value": "Building2"
+            },
+            {
+              "title": "Luggage (Excess Baggage)",
+              "value": "Luggage"
+            },
+            {
+              "title": "Package (Default)",
+              "value": "Package"
+            },
+            {
+              "title": "Truck (Transport)",
+              "value": "Truck"
+            },
+            {
+              "title": "FileText (Documentation)",
+              "value": "FileText"
+            }
+          ]
+        },
+        "initialValue": "Plane",
+        "name": "iconName",
+        "type": "string",
+        "title": "Icon Identifier"
+      },
+      {
+        "initialValue": 1,
+        "name": "sortOrder",
+        "type": "number",
+        "title": "Sort / Display Order"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "heroImage",
+        "type": "image",
+        "title": "Hero Background / Graphic Image"
+      },
+      {
+        "name": "heroImageAlt",
+        "type": "string",
+        "title": "Hero Image Alt Text"
+      },
+      {
+        "rows": 3,
+        "name": "serviceOverview",
+        "type": "text",
+        "title": "Service Overview & Capabilities"
+      },
+      {
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "targetAudience",
+        "type": "array",
+        "title": "Target Shippers & Suitable Cargo"
+      },
+      {
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "keyConsiderations",
+        "type": "array",
+        "title": "Key Operational Considerations"
+      },
+      {
+        "of": [
+          {
+            "lists": [
+              {
+                "value": "bullet",
+                "title": "Bulleted list"
+              },
+              {
+                "value": "number",
+                "title": "Numbered list"
+              }
+            ],
+            "marks": {
+              "annotations": [
+                {
+                  "i18nTitleKey": "inputs.portable-text.annotation.link",
+                  "options": {
+                    "modal": {
+                      "type": "popover"
+                    }
+                  },
+                  "fields": [
+                    {
+                      "validation": [
+                        {
+                          "level": "error",
+                          "rules": [
+                            {
+                              "flag": "uri",
+                              "constraint": {
+                                "options": {
+                                  "scheme": [
+                                    "/^http$/",
+                                    "/^https$/",
+                                    "/^tel$/",
+                                    "/^mailto$/"
+                                  ],
+                                  "allowRelative": true,
+                                  "relativeOnly": false,
+                                  "allowCredentials": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ],
+                      "description": "A valid web, email, phone, or relative link.",
+                      "name": "href",
+                      "type": "url",
+                      "title": "Link"
+                    }
+                  ],
+                  "name": "link",
+                  "type": "object"
+                }
+              ],
+              "decorators": [
+                {
+                  "value": "strong",
+                  "title": "Strong"
+                },
+                {
+                  "value": "em",
+                  "title": "Italic"
+                },
+                {
+                  "value": "code",
+                  "title": "Code"
+                },
+                {
+                  "value": "underline",
+                  "title": "Underline"
+                },
+                {
+                  "value": "strike-through",
+                  "title": "Strike"
+                }
+              ]
+            },
+            "of": [],
+            "styles": [
+              {
+                "value": "normal",
+                "title": "Normal"
+              },
+              {
+                "value": "h1",
+                "title": "Heading 1"
+              },
+              {
+                "value": "h2",
+                "title": "Heading 2"
+              },
+              {
+                "value": "h3",
+                "title": "Heading 3"
+              },
+              {
+                "value": "h4",
+                "title": "Heading 4"
+              },
+              {
+                "value": "h5",
+                "title": "Heading 5"
+              },
+              {
+                "value": "h6",
+                "title": "Heading 6"
+              },
+              {
+                "value": "blockquote",
+                "title": "Quote"
+              }
+            ],
+            "type": "block"
+          }
+        ],
+        "name": "body",
+        "type": "array",
+        "title": "Specification Content (Portable Text)"
+      },
+      {
+        "of": [
+          {
+            "type": "processStepObject",
+            "title": "Process Step"
+          }
+        ],
+        "name": "processSteps",
+        "type": "array",
+        "title": "Shipping Process Steps"
+      },
+      {
+        "of": [
+          {
+            "type": "faqItemObject",
+            "title": "FAQ Item"
+          }
+        ],
+        "name": "faq",
+        "type": "array",
+        "title": "Frequently Asked Questions"
+      },
+      {
+        "name": "seo",
+        "type": "seoObject",
+        "title": "SEO Settings"
+      }
+    ],
+    "name": "service",
+    "type": "document",
+    "title": "Services"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "name",
+        "type": "string",
+        "title": "City Name"
+      },
+      {
+        "options": {
+          "source": "name"
+        },
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "slug",
+        "type": "slug",
+        "title": "Slug (URL Identifier)"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "province",
+        "type": "string",
+        "title": "Province / Region"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "h1",
+        "type": "string",
+        "title": "Page Title (H1)"
+      },
+      {
+        "rows": 3,
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "introduction",
+        "type": "text",
+        "title": "Introduction / Overview Copy"
+      },
+      {
+        "initialValue": 1,
+        "name": "sortOrder",
+        "type": "number",
+        "title": "Sort / Display Order"
+      },
+      {
+        "initialValue": true,
+        "name": "serviceAvailable",
+        "type": "boolean",
+        "title": "Service Available Flag"
+      },
+      {
+        "initialValue": true,
+        "name": "collectionAvailable",
+        "type": "boolean",
+        "title": "Doorstep Collection Available Flag"
+      },
+      {
+        "initialValue": false,
+        "name": "hasPhysicalBranch",
+        "type": "boolean",
+        "title": "Has Physical Branch Flag"
+      },
+      {
+        "rows": 2,
+        "name": "branchAddress",
+        "type": "text",
+        "title": "Hub / Branch Address"
+      },
+      {
+        "rows": 2,
+        "name": "localCoverageText",
+        "type": "text",
+        "title": "Local Coverage Notes"
+      },
+      {
+        "of": [
+          {
+            "to": [
+              {
+                "type": "service"
+              }
+            ],
+            "type": "reference",
+            "title": "Reference to services"
+          }
+        ],
+        "name": "supportedServices",
+        "type": "array",
+        "title": "Supported Services (References)"
+      },
+      {
+        "of": [
+          {
+            "type": "faqItemObject",
+            "title": "FAQ Item"
+          }
+        ],
+        "name": "faqs",
+        "type": "array",
+        "title": "City-Specific FAQs"
+      },
+      {
+        "name": "seo",
+        "type": "seoObject",
+        "title": "SEO Settings"
+      }
+    ],
+    "name": "location",
+    "type": "document",
+    "title": "Locations"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "name",
+        "type": "string",
+        "title": "Country Name"
+      },
+      {
+        "options": {
+          "source": "name"
+        },
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "slug",
+        "type": "slug",
+        "title": "Slug (URL Identifier)"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Europe",
+              "value": "Europe"
+            },
+            {
+              "title": "Middle East",
+              "value": "Middle East"
+            },
+            {
+              "title": "North America",
+              "value": "North America"
+            },
+            {
+              "title": "Asia Pacific",
+              "value": "Asia Pacific"
+            },
+            {
+              "title": "Global",
+              "value": "Global"
+            }
+          ]
+        },
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "valid",
+                "constraint": [
+                  "Europe",
+                  "Middle East",
+                  "North America",
+                  "Asia Pacific",
+                  "Global"
+                ]
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "region",
+        "type": "string",
+        "title": "Global Region"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "h1",
+        "type": "string",
+        "title": "Page Title (H1)"
+      },
+      {
+        "rows": 3,
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "introduction",
+        "type": "text",
+        "title": "Introduction / Overview Copy"
+      },
+      {
+        "rows": 4,
+        "name": "shippingOverview",
+        "type": "text",
+        "title": "Detailed Shipping Overview"
+      },
+      {
+        "rows": 4,
+        "name": "customsGuidance",
+        "type": "text",
+        "title": "Customs & Import Guidance"
+      },
+      {
+        "initialValue": 1,
+        "name": "sortOrder",
+        "type": "number",
+        "title": "Sort / Display Order"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "heroImage",
+        "type": "image"
+      },
+      {
+        "name": "heroImageAlt",
+        "type": "string",
+        "title": "Hero Image Alt Text"
+      },
+      {
+        "of": [
+          {
+            "to": [
+              {
+                "type": "service"
+              }
+            ],
+            "type": "reference",
+            "title": "Reference to services"
+          }
+        ],
+        "name": "supportedServices",
+        "type": "array",
+        "title": "Supported Services (References)"
+      },
+      {
+        "of": [
+          {
+            "to": [
+              {
+                "type": "location"
+              }
+            ],
+            "type": "reference",
+            "title": "Reference to locations"
+          }
+        ],
+        "name": "supportedOrigins",
+        "type": "array",
+        "title": "Supported Pakistan Origins (References)"
+      },
+      {
+        "of": [
+          {
+            "type": "faqItemObject",
+            "title": "FAQ Item"
+          }
+        ],
+        "name": "faqs",
+        "type": "array",
+        "title": "Country-Specific FAQs"
+      },
+      {
+        "name": "seo",
+        "type": "seoObject",
+        "title": "SEO Settings"
+      }
+    ],
+    "name": "destinationCountry",
+    "type": "document",
+    "title": "Destination Countries"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "name",
+        "type": "string",
+        "title": "City Name"
+      },
+      {
+        "options": {
+          "source": "name"
+        },
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "slug",
+        "type": "slug",
+        "title": "Slug (URL Identifier)"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "to": [
+          {
+            "type": "destinationCountry"
+          }
+        ],
+        "name": "country",
+        "type": "reference",
+        "title": "Parent Country (Reference)"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "h1",
+        "type": "string",
+        "title": "Page Title (H1)"
+      },
+      {
+        "rows": 3,
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "introduction",
+        "type": "text",
+        "title": "Introduction Copy"
+      },
+      {
+        "rows": 4,
+        "name": "overview",
+        "type": "text",
+        "title": "City Cargo Overview"
+      },
+      {
+        "rows": 4,
+        "name": "preparationConsiderations",
+        "type": "text",
+        "title": "Preparation & Delivery Notes"
+      },
+      {
+        "initialValue": 1,
+        "name": "sortOrder",
+        "type": "number"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "heroImage",
+        "type": "image"
+      },
+      {
+        "name": "heroImageAlt",
+        "type": "string",
+        "title": "Hero Image Alt Text"
+      },
+      {
+        "name": "seo",
+        "type": "seoObject",
+        "title": "SEO Settings"
+      }
+    ],
+    "name": "destinationCity",
+    "type": "document",
+    "title": "Destination Cities"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "title",
+        "type": "string",
+        "title": "Article Title"
+      },
+      {
+        "options": {
+          "source": "title"
+        },
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "slug",
+        "type": "slug",
+        "title": "Slug (URL Identifier)"
+      },
+      {
+        "rows": 3,
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "excerpt",
+        "type": "text",
+        "title": "Excerpt / Summary"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Shipping Guides",
+              "value": "shipping-guides"
+            },
+            {
+              "title": "Cargo Rates",
+              "value": "cargo-rates"
+            },
+            {
+              "title": "Customs & Documentation",
+              "value": "customs-documentation"
+            },
+            {
+              "title": "Packing Guides",
+              "value": "packing-guides"
+            },
+            {
+              "title": "Destinations Guide",
+              "value": "destinations-guide"
+            },
+            {
+              "title": "Cargo Types",
+              "value": "cargo-types"
+            }
+          ]
+        },
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "valid",
+                "constraint": [
+                  "shipping-guides",
+                  "cargo-rates",
+                  "customs-documentation",
+                  "packing-guides",
+                  "destinations-guide",
+                  "cargo-types"
+                ]
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "category",
+        "type": "string"
+      },
+      {
+        "initialValue": "Logistics Editorial Team",
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "authorName",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "publishedAt",
+        "type": "date",
+        "title": "Published Date"
+      },
+      {
+        "name": "updatedAt",
+        "type": "date",
+        "title": "Updated Date"
+      },
+      {
+        "initialValue": 5,
+        "name": "readingTimeMinutes",
+        "type": "number",
+        "title": "Reading Time (Minutes)"
+      },
+      {
+        "initialValue": false,
+        "name": "isFeatured",
+        "type": "boolean",
+        "title": "Featured Guide Flag"
+      },
+      {
+        "initialValue": false,
+        "name": "containsRegulatoryClaims",
+        "type": "boolean",
+        "title": "Contains Regulatory / Compliance Claims"
+      },
+      {
+        "rows": 2,
+        "name": "verificationNotes",
+        "type": "text",
+        "title": "Verification / Regulatory Notes"
+      },
+      {
+        "rows": 15,
+        "name": "contentMarkdown",
+        "type": "text",
+        "title": "Article Markdown Content"
+      },
+      {
+        "of": [
+          {
+            "lists": [
+              {
+                "value": "bullet",
+                "title": "Bulleted list"
+              },
+              {
+                "value": "number",
+                "title": "Numbered list"
+              }
+            ],
+            "marks": {
+              "annotations": [
+                {
+                  "i18nTitleKey": "inputs.portable-text.annotation.link",
+                  "options": {
+                    "modal": {
+                      "type": "popover"
+                    }
+                  },
+                  "fields": [
+                    {
+                      "validation": [
+                        {
+                          "level": "error",
+                          "rules": [
+                            {
+                              "flag": "uri",
+                              "constraint": {
+                                "options": {
+                                  "scheme": [
+                                    "/^http$/",
+                                    "/^https$/",
+                                    "/^tel$/",
+                                    "/^mailto$/"
+                                  ],
+                                  "allowRelative": true,
+                                  "relativeOnly": false,
+                                  "allowCredentials": false
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      ],
+                      "description": "A valid web, email, phone, or relative link.",
+                      "name": "href",
+                      "type": "url",
+                      "title": "Link"
+                    }
+                  ],
+                  "name": "link",
+                  "type": "object"
+                }
+              ],
+              "decorators": [
+                {
+                  "value": "strong",
+                  "title": "Strong"
+                },
+                {
+                  "value": "em",
+                  "title": "Italic"
+                },
+                {
+                  "value": "code",
+                  "title": "Code"
+                },
+                {
+                  "value": "underline",
+                  "title": "Underline"
+                },
+                {
+                  "value": "strike-through",
+                  "title": "Strike"
+                }
+              ]
+            },
+            "of": [],
+            "styles": [
+              {
+                "value": "normal",
+                "title": "Normal"
+              },
+              {
+                "value": "h1",
+                "title": "Heading 1"
+              },
+              {
+                "value": "h2",
+                "title": "Heading 2"
+              },
+              {
+                "value": "h3",
+                "title": "Heading 3"
+              },
+              {
+                "value": "h4",
+                "title": "Heading 4"
+              },
+              {
+                "value": "h5",
+                "title": "Heading 5"
+              },
+              {
+                "value": "h6",
+                "title": "Heading 6"
+              },
+              {
+                "value": "blockquote",
+                "title": "Quote"
+              }
+            ],
+            "type": "block"
+          },
+          {
+            "options": {
+              "hotspot": true
+            },
+            "fields": [
+              {
+                "name": "alt",
+                "type": "string",
+                "title": "Alt Text"
+              }
+            ],
+            "type": "image"
+          }
+        ],
+        "name": "body",
+        "type": "array",
+        "title": "Article Portable Text Body"
+      },
+      {
+        "of": [
+          {
+            "to": [
+              {
+                "type": "service"
+              }
+            ],
+            "type": "reference",
+            "title": "Reference to services"
+          }
+        ],
+        "name": "supportedServices",
+        "type": "array",
+        "title": "Related Services (References)"
+      },
+      {
+        "of": [
+          {
+            "to": [
+              {
+                "type": "location"
+              }
+            ],
+            "type": "reference",
+            "title": "Reference to locations"
+          }
+        ],
+        "name": "supportedOrigins",
+        "type": "array",
+        "title": "Related Origins (References)"
+      },
+      {
+        "of": [
+          {
+            "to": [
+              {
+                "type": "destinationCountry"
+              }
+            ],
+            "type": "reference",
+            "title": "Reference to destination countries"
+          }
+        ],
+        "name": "supportedDestinations",
+        "type": "array",
+        "title": "Related Destinations (References)"
+      },
+      {
+        "of": [
+          {
+            "type": "faqItemObject",
+            "title": "FAQ Item"
+          }
+        ],
+        "name": "faqs",
+        "type": "array",
+        "title": "Article FAQs"
+      },
+      {
+        "name": "seo",
+        "type": "seoObject",
+        "title": "SEO Settings"
+      }
+    ],
+    "name": "guide",
+    "type": "document",
+    "title": "Guides & Articles"
+  },
+  {
+    "fields": [
+      {
+        "name": "label",
+        "type": "string",
+        "title": "Button / Link Label"
+      },
+      {
+        "description": "Internal path (e.g. /quote) or external URL",
+        "name": "href",
+        "type": "string",
+        "title": "Link Target URL"
+      }
+    ],
+    "name": "ctaObject",
+    "type": "object",
+    "title": "Call to Action"
+  },
+  {
+    "fields": [
+      {
+        "description": "Page title for search engines and browser tabs",
+        "name": "metaTitle",
+        "type": "string"
+      },
+      {
+        "rows": 3,
+        "description": "Search result summary snippet (150-160 characters recommended)",
+        "name": "metaDescription",
+        "type": "text"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "socialImage",
+        "type": "image",
+        "title": "Social Share Image (OG Image)"
+      }
+    ],
+    "name": "seoObject",
+    "type": "object",
+    "title": "SEO Settings"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "label",
+        "type": "string",
+        "title": "Link Label"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "href",
+        "type": "string",
+        "title": "Link URL"
+      }
+    ],
+    "name": "navItemObject",
+    "type": "object",
+    "title": "Navigation Link"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "title",
+        "type": "string",
+        "title": "Group Heading"
+      },
+      {
+        "of": [
+          {
+            "type": "navItemObject",
+            "title": "Navigation Link"
+          }
+        ],
+        "name": "links",
+        "type": "array",
+        "title": "Group Links"
+      }
+    ],
+    "name": "navGroupObject",
+    "type": "object",
+    "title": "Footer Navigation Group"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "name",
+        "type": "string",
+        "title": "Organization Name"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "logo",
+        "type": "image",
+        "title": "Logo Image"
+      },
+      {
+        "name": "altText",
+        "type": "string",
+        "title": "Logo Alt Text"
+      }
+    ],
+    "name": "registrationItemObject",
+    "type": "object",
+    "title": "Official Registration / Association Item"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "companyName",
+        "type": "string"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "logo",
+        "type": "image",
+        "title": "Company Logo"
+      },
+      {
+        "name": "altText",
+        "type": "string",
+        "title": "Logo Alt Text"
+      }
+    ],
+    "name": "clientLogoObject",
+    "type": "object",
+    "title": "Corporate Client Logo"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "rows": 2,
+        "name": "description",
+        "type": "text"
+      },
+      {
+        "name": "badgeText",
+        "type": "string",
+        "title": "Category Badge Text"
+      },
+      {
+        "description": "e.g. package, luggage, building",
+        "name": "iconName",
+        "type": "string",
+        "title": "Icon Identifier"
+      }
+    ],
+    "name": "useCaseCardObject",
+    "type": "object",
+    "title": "Cargo Type / Use Case Card"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "title",
+        "type": "string",
+        "title": "Service Title"
+      },
+      {
+        "rows": 3,
+        "name": "description",
+        "type": "text",
+        "title": "Service Description"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "image",
+        "type": "image",
+        "title": "Service Photo / Graphic"
+      },
+      {
+        "name": "imageAlt",
+        "type": "string",
+        "title": "Image Alt Text"
+      },
+      {
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "featureBullets",
+        "type": "array",
+        "title": "Key Feature Highlights"
+      },
+      {
+        "name": "cta",
+        "type": "ctaObject",
+        "title": "Action Button CTA"
+      }
+    ],
+    "name": "serviceCardObject",
+    "type": "object",
+    "title": "Service Card Definition"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "name",
+        "type": "string",
+        "title": "Country / Destination Name"
+      },
+      {
+        "description": "e.g. uk, uae, usa, canada, ksa",
+        "name": "countryCode",
+        "type": "string",
+        "title": "Country Code (slug identifier)"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "flagImage",
+        "type": "image",
+        "title": "Flag / Country Graphic"
+      },
+      {
+        "name": "shortText",
+        "type": "string",
+        "title": "Coverage / Service Short Text"
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "title": "Destination Target Link"
+      }
+    ],
+    "name": "destinationCardObject",
+    "type": "object",
+    "title": "Destination Card"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "name",
+        "type": "string",
+        "title": "City Name"
+      },
+      {
+        "name": "href",
+        "type": "string",
+        "title": "Target Link URL"
+      }
+    ],
+    "name": "pickupCityObject",
+    "type": "object",
+    "title": "Pickup City Link"
+  },
+  {
+    "fields": [
+      {
+        "description": "e.g. 01, 02, 03, 04",
+        "name": "stepNumber",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "title",
+        "type": "string",
+        "title": "Step Title"
+      },
+      {
+        "name": "subtitle",
+        "type": "string",
+        "title": "Step Subtitle"
+      },
+      {
+        "rows": 2,
+        "name": "description",
+        "type": "text",
+        "title": "Step Description"
+      }
+    ],
+    "name": "processStepObject",
+    "type": "object",
+    "title": "Process Step"
+  },
+  {
+    "fields": [
+      {
+        "description": "e.g. 100% or Verified",
+        "name": "value",
+        "type": "string",
+        "title": "Metric Value"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "label",
+        "type": "string",
+        "title": "Metric Label"
+      }
+    ],
+    "name": "trustMetricObject",
+    "type": "object",
+    "title": "Trust / Verification Metric"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "name",
+        "type": "string",
+        "title": "Customer / Shipper Name"
+      },
+      {
+        "description": "e.g. Lahore to London, UK",
+        "name": "location",
+        "type": "string",
+        "title": "Location / Route"
+      },
+      {
+        "rows": 3,
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "quote",
+        "type": "text",
+        "title": "Testimonial Quote"
+      },
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "min",
+                "constraint": 1
+              },
+              {
+                "flag": "max",
+                "constraint": 5
+              }
+            ]
+          }
+        ],
+        "name": "rating",
+        "type": "number",
+        "title": "Star Rating (1-5)"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "image",
+        "type": "image",
+        "title": "Delivery Proof Photo / Avatar"
+      },
+      {
+        "name": "caption",
+        "type": "string",
+        "title": "Photo Caption / Alt Text"
+      }
+    ],
+    "name": "testimonialItemObject",
+    "type": "object",
+    "title": "Testimonial / Delivery Proof Item"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "question",
+        "type": "string"
+      },
+      {
+        "rows": 3,
+        "validation": [
+          {
+            "level": "error",
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ]
+          }
+        ],
+        "name": "answer",
+        "type": "text"
+      }
+    ],
+    "name": "faqItemObject",
+    "type": "object",
+    "title": "FAQ Item"
+  }
+]

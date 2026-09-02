@@ -1,0 +1,1 @@
+import{r as e}from"./rolldown-runtime-hePW80VL.js";import{Kt as t}from"./_singletons-DjCIHPZP.js";import{t as n}from"./react-CwJFpaho.js";var r=e(n(),1);function i(){return(0,r.useContext)(t)}export{i as t};

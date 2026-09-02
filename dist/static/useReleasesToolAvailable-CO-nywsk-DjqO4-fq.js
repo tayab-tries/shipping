@@ -1,0 +1,1 @@
+import{t as e}from"./compiler-runtime-C4g8XhC5.js";import{wl as t}from"./PerspectiveProvider-CVaQBlks-Chimr7Et.js";import{t as n}from"./plugin-Df5P0jUJ-C2ESF4hZ.js";var r=e();function i(){let e=(0,r.c)(2),n=t(),i;return e[0]===n.tools?i=e[1]:(i=n.tools.some(a),e[0]=n.tools,e[1]=i),i}function a(e){let{name:t}=e;return t===n}export{i as t};

@@ -8,7 +8,7 @@ import { resolve } from './sanity/presentation/resolve';
 import { apiVersion, dataset, projectId, isSanityConfigured } from './sanity/env';
 
 export default defineConfig({
-  basePath: '/studio',
+  basePath: '/',
   name: 'raahi_cargo_studio',
   title: 'Raahi International CMS Studio',
   projectId: isSanityConfigured ? projectId : 'a1b2c3d4',

@@ -1,0 +1,1 @@
+import{r as e,t}from"./rolldown-runtime-hePW80VL.js";import{t as n}from"./eventsource-DA0LpgvW.js";var r=e(t(((e,t)=>{t.exports=n().EventSourcePolyfill}))(),1).default;export{r as default};
