@@ -34,41 +34,41 @@ export const AirFreightServiceContent: React.FC<AirFreightServiceContentProps> =
   )}`;
 
   const airCargoRates = [
-    { country: 'UAE', flag: '🇦🇪', minWeight: '20 KG' },
-    { country: 'Saudi Arabia', flag: '🇸🇦', minWeight: '20 KG' },
-    { country: 'Qatar', flag: '🇶🇦', minWeight: '20 KG' },
-    { country: 'Oman', flag: '🇴🇲', minWeight: '20 KG' },
-    { country: 'Bahrain', flag: '🇧🇭', minWeight: '20 KG' },
-    { country: 'Kuwait', flag: '🇰🇼', minWeight: '20 KG' },
-    { country: 'United Kingdom', flag: '🇬🇧', minWeight: '20 KG' },
-    { country: 'USA', flag: '🇺🇸', minWeight: '20 KG' },
-    { country: 'Canada', flag: '🇨🇦', minWeight: '20 KG' },
-    { country: 'Australia', flag: '🇦🇺', minWeight: '20 KG' },
-    { country: 'Germany', flag: '🇩🇪', minWeight: '20 KG' },
-    { country: 'France', flag: '🇫🇷', minWeight: '20 KG' },
-    { country: 'Italy', flag: '🇮🇹', minWeight: '20 KG' },
-    { country: 'Spain', flag: '🇪🇸', minWeight: '20 KG' },
-    { country: 'Netherlands', flag: '🇳🇱', minWeight: '20 KG' },
-    { country: 'Turkey', flag: '🇹🇷', minWeight: '20 KG' },
-    { country: 'Malaysia', flag: '🇲🇾', minWeight: '20 KG' },
-    { country: 'Singapore', flag: '🇸🇬', minWeight: '20 KG' },
-    { country: 'Japan', flag: '🇯🇵', minWeight: '20 KG' },
+    { country: 'UAE', flag: '🇦🇪', minWeight: '20 KG', pricePkr: 'PKR 650 – 850', priceUsd: '£2.20 – £2.80 / kg' },
+    { country: 'Saudi Arabia', flag: '🇸🇦', minWeight: '20 KG', pricePkr: 'PKR 750 – 950', priceUsd: '£2.50 – £3.20 / kg' },
+    { country: 'Qatar', flag: '🇶🇦', minWeight: '20 KG', pricePkr: 'PKR 800 – 1,000', priceUsd: '£2.70 – £3.40 / kg' },
+    { country: 'Oman', flag: '🇴🇲', minWeight: '20 KG', pricePkr: 'PKR 750 – 950', priceUsd: '£2.50 – £3.20 / kg' },
+    { country: 'Bahrain', flag: '🇧🇭', minWeight: '20 KG', pricePkr: 'PKR 800 – 1,000', priceUsd: '£2.70 – £3.40 / kg' },
+    { country: 'Kuwait', flag: '🇰🇼', minWeight: '20 KG', pricePkr: 'PKR 850 – 1,050', priceUsd: '£2.80 – £3.60 / kg' },
+    { country: 'United Kingdom', flag: '🇬🇧', minWeight: '20 KG', pricePkr: 'PKR 950 – 1,250', priceUsd: '£3.20 – £4.20 / kg' },
+    { country: 'USA', flag: '🇺🇸', minWeight: '20 KG', pricePkr: 'PKR 1,200 – 1,500', priceUsd: '$4.20 – $5.50 / kg' },
+    { country: 'Canada', flag: '🇨🇦', minWeight: '20 KG', pricePkr: 'PKR 1,250 – 1,550', priceUsd: '$4.50 – $5.80 / kg' },
+    { country: 'Australia', flag: '🇦🇺', minWeight: '20 KG', pricePkr: 'PKR 1,350 – 1,650', priceUsd: '$4.80 – $6.20 / kg' },
+    { country: 'Germany', flag: '🇩🇪', minWeight: '20 KG', pricePkr: 'PKR 1,100 – 1,350', priceUsd: '€3.50 – €4.50 / kg' },
+    { country: 'France', flag: '🇫🇷', minWeight: '20 KG', pricePkr: 'PKR 1,100 – 1,350', priceUsd: '€3.50 – €4.50 / kg' },
+    { country: 'Italy', flag: '🇮🇹', minWeight: '20 KG', pricePkr: 'PKR 1,100 – 1,350', priceUsd: '€3.50 – €4.50 / kg' },
+    { country: 'Spain', flag: '🇪🇸', minWeight: '20 KG', pricePkr: 'PKR 1,150 – 1,400', priceUsd: '€3.80 – €4.80 / kg' },
+    { country: 'Netherlands', flag: '🇳🇱', minWeight: '20 KG', pricePkr: 'PKR 1,100 – 1,350', priceUsd: '€3.50 – €4.50 / kg' },
+    { country: 'Turkey', flag: '🇹🇷', minWeight: '20 KG', pricePkr: 'PKR 900 – 1,150', priceUsd: '$3.20 – $4.10 / kg' },
+    { country: 'Malaysia', flag: '🇲🇾', minWeight: '20 KG', pricePkr: 'PKR 850 – 1,100', priceUsd: '$3.00 – $3.90 / kg' },
+    { country: 'Singapore', flag: '🇸🇬', minWeight: '20 KG', pricePkr: 'PKR 950 – 1,200', priceUsd: '$3.40 – $4.30 / kg' },
+    { country: 'Japan', flag: '🇯🇵', minWeight: '20 KG', pricePkr: 'PKR 1,300 – 1,600', priceUsd: '$4.60 – $5.70 / kg' },
   ];
 
   const seaCargoRates = [
-    { country: 'UAE', flag: '🇦🇪', service: 'LCL', minReq: '70–100 KG' },
-    { country: 'Saudi Arabia', flag: '🇸🇦', service: 'LCL', minReq: '70–100 KG' },
-    { country: 'Qatar', flag: '🇶🇦', service: 'LCL', minReq: '70–100 KG' },
-    { country: 'Oman', flag: '🇴🇲', service: 'LCL', minReq: '70–100 KG' },
-    { country: 'UK', flag: '🇬🇧', service: 'LCL', minReq: '70–100 KG' },
-    { country: 'USA', flag: '🇺🇸', service: 'LCL', minReq: '70–100 KG' },
-    { country: 'Canada', flag: '🇨🇦', service: 'LCL', minReq: '70–100 KG' },
-    { country: 'Australia', flag: '🇦🇺', service: 'LCL', minReq: '70–100 KG' },
-    { country: 'Germany', flag: '🇩🇪', service: 'LCL', minReq: '70–100 KG' },
-    { country: 'France', flag: '🇫🇷', service: 'LCL', minReq: '70–100 KG' },
-    { country: 'Italy', flag: '🇮🇹', service: 'LCL', minReq: '70–100 KG' },
-    { country: 'Netherlands', flag: '🇳🇱', service: 'LCL', minReq: '70–100 KG' },
-    { country: 'Turkey', flag: '🇹🇷', service: 'LCL', minReq: '70–100 KG' },
+    { country: 'UAE', flag: '🇦🇪', service: 'LCL', minReq: '70–100 KG', pricePkr: 'PKR 250 – 350 / kg' },
+    { country: 'Saudi Arabia', flag: '🇸🇦', service: 'LCL', minReq: '70–100 KG', pricePkr: 'PKR 300 – 400 / kg' },
+    { country: 'Qatar', flag: '🇶🇦', service: 'LCL', minReq: '70–100 KG', pricePkr: 'PKR 320 – 420 / kg' },
+    { country: 'Oman', flag: '🇴🇲', service: 'LCL', minReq: '70–100 KG', pricePkr: 'PKR 300 – 400 / kg' },
+    { country: 'UK', flag: '🇬🇧', service: 'LCL', minReq: '70–100 KG', pricePkr: 'PKR 450 – 580 / kg' },
+    { country: 'USA', flag: '🇺🇸', service: 'LCL', minReq: '70–100 KG', pricePkr: 'PKR 550 – 720 / kg' },
+    { country: 'Canada', flag: '🇨🇦', service: 'LCL', minReq: '70–100 KG', pricePkr: 'PKR 580 – 750 / kg' },
+    { country: 'Australia', flag: '🇦🇺', service: 'LCL', minReq: '70–100 KG', pricePkr: 'PKR 600 – 780 / kg' },
+    { country: 'Germany', flag: '🇩🇪', service: 'LCL', minReq: '70–100 KG', pricePkr: 'PKR 480 – 620 / kg' },
+    { country: 'France', flag: '🇫🇷', service: 'LCL', minReq: '70–100 KG', pricePkr: 'PKR 480 – 620 / kg' },
+    { country: 'Italy', flag: '🇮🇹', service: 'LCL', minReq: '70–100 KG', pricePkr: 'PKR 480 – 620 / kg' },
+    { country: 'Netherlands', flag: '🇳🇱', service: 'LCL', minReq: '70–100 KG', pricePkr: 'PKR 480 – 620 / kg' },
+    { country: 'Turkey', flag: '🇹🇷', service: 'LCL', minReq: '70–100 KG', pricePkr: 'PKR 400 – 520 / kg' },
   ];
 
   const faqs = [
@@ -147,8 +147,8 @@ export const AirFreightServiceContent: React.FC<AirFreightServiceContentProps> =
             </a>
           </li>
           <li>
-            <a href="#pricing-tables" className="hover:text-accent-dark hover:underline flex items-center gap-1.5">
-              <ChevronRight className="w-3.5 h-3.5 text-accent-dark shrink-0" /> Air & Sea Cargo Rate Tables
+            <a href="#pricing-tables" className="hover:text-accent-dark hover:underline flex items-center gap-1.5 font-bold text-emerald-700">
+              <ChevronRight className="w-3.5 h-3.5 text-emerald-600 shrink-0" /> 💰 Air & Sea Cargo Rate Tables
             </a>
           </li>
           <li>
@@ -265,65 +265,60 @@ export const AirFreightServiceContent: React.FC<AirFreightServiceContentProps> =
           </p>
         </div>
 
-        <div className="overflow-x-auto border border-border rounded-md shadow-xs">
-          <table className="w-full text-left text-body-sm">
+        <div className="overflow-x-auto border border-slate-200 rounded-lg shadow-xs bg-white">
+          <table className="w-full text-left text-sm sm:text-base border-collapse">
             <thead>
-              <tr className="bg-brand-navy text-white text-xs font-mono uppercase tracking-wider">
-                <th className="p-4 border-b border-border-dark">Feature / Criteria</th>
-                <th className="p-4 border-b border-border-dark bg-brand-navy-light text-accent">✈️ Air Cargo</th>
-                <th className="p-4 border-b border-border-dark">🚢 Sea Cargo</th>
+              <tr className="bg-slate-900 text-white text-xs sm:text-sm font-semibold uppercase tracking-wider">
+                <th className="py-4 px-6 border-b border-slate-800">Feature / Criteria</th>
+                <th className="py-4 px-6 border-b border-slate-800 text-accent font-bold">✈️ Air Cargo</th>
+                <th className="py-4 px-6 border-b border-slate-800">🚢 Sea Cargo</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border bg-surface font-normal text-slate-700">
-              <tr className="hover:bg-surface-subtle transition-colors">
-                <td className="p-4 font-bold text-brand-black">Speed / Transit Time</td>
-                <td className="p-4 font-semibold text-emerald-700">Generally faster (Express transit)</td>
-                <td className="p-4 text-slate-600">Generally slower (Ocean vessel transit)</td>
+            <tbody className="divide-y divide-slate-100 font-normal text-slate-700">
+              <tr className="hover:bg-slate-50 transition-colors">
+                <td className="py-4 px-6 font-bold text-brand-black">Speed / Transit Time</td>
+                <td className="py-4 px-6 font-semibold text-emerald-700">Generally faster (Express transit)</td>
+                <td className="py-4 px-6 text-slate-600">Generally slower (Ocean vessel transit)</td>
               </tr>
-              <tr className="hover:bg-surface-subtle transition-colors">
-                <td className="p-4 font-bold text-brand-black">Cost Structure</td>
-                <td className="p-4">Higher per kg</td>
-                <td className="p-4 font-semibold text-emerald-700">More economical for larger shipments</td>
+              <tr className="hover:bg-slate-50 transition-colors">
+                <td className="py-4 px-6 font-bold text-brand-black">Cost Structure</td>
+                <td className="py-4 px-6">Higher per kg</td>
+                <td className="py-4 px-6 font-semibold text-emerald-700">More economical for larger shipments</td>
               </tr>
-              <tr className="hover:bg-surface-subtle transition-colors">
-                <td className="p-4 font-bold text-brand-black">Best For</td>
-                <td className="p-4 font-semibold text-brand-black">Faster, time-sensitive shipments</td>
-                <td className="p-4">Larger, heavier & bulky shipments</td>
+              <tr className="hover:bg-slate-50 transition-colors">
+                <td className="py-4 px-6 font-bold text-brand-black">Best For</td>
+                <td className="py-4 px-6 font-semibold text-brand-black">Faster, time-sensitive shipments</td>
+                <td className="py-4 px-6">Larger, heavier & bulky shipments</td>
               </tr>
-              <tr className="hover:bg-surface-subtle transition-colors">
-                <td className="p-4 font-bold text-brand-black">Suitable Shipment Size</td>
-                <td className="p-4"><Badge variant="accent" size="sm">Min 20 KG</Badge></td>
-                <td className="p-4"><Badge variant="secondary" size="sm">Min 70–100 KG</Badge></td>
+              <tr className="hover:bg-slate-50 transition-colors">
+                <td className="py-4 px-6 font-bold text-brand-black">Suitable Shipment Size</td>
+                <td className="py-4 px-6"><Badge variant="accent" size="sm">Min 20 KG</Badge></td>
+                <td className="py-4 px-6"><Badge variant="secondary" size="sm">Min 70–100 KG</Badge></td>
               </tr>
-              <tr className="hover:bg-surface-subtle transition-colors">
-                <td className="p-4 font-bold text-brand-black">Urgency Level</td>
-                <td className="p-4 text-emerald-700 font-semibold">High / Time-Critical</td>
-                <td className="p-4 text-slate-600">Flexible / Planned Logistics</td>
+              <tr className="hover:bg-slate-50 transition-colors">
+                <td className="py-4 px-6 font-bold text-brand-black">Urgency Level</td>
+                <td className="py-4 px-6 text-emerald-700 font-semibold">High / Time-Critical</td>
+                <td className="py-4 px-6 text-slate-600">Flexible / Planned Logistics</td>
               </tr>
-              <tr className="hover:bg-surface-subtle transition-colors">
-                <td className="p-4 font-bold text-brand-black">Personal Belongings</td>
-                <td className="p-4">Personal baggage, clothing, urgent items</td>
-                <td className="p-4">Full household relocations, furniture</td>
+              <tr className="hover:bg-slate-50 transition-colors">
+                <td className="py-4 px-6 font-bold text-brand-black">Personal Belongings</td>
+                <td className="py-4 px-6">Personal baggage, clothing, urgent items</td>
+                <td className="py-4 px-6">Full household relocations, furniture</td>
               </tr>
-              <tr className="hover:bg-surface-subtle transition-colors">
-                <td className="p-4 font-bold text-brand-black">Commercial Cargo</td>
-                <td className="p-4">Samples, spare parts, high-value stock</td>
-                <td className="p-4">Bulk inventory, factory machinery, LCL/FCL</td>
+              <tr className="hover:bg-slate-50 transition-colors">
+                <td className="py-4 px-6 font-bold text-brand-black">Commercial Cargo</td>
+                <td className="py-4 px-6">Samples, spare parts, high-value stock</td>
+                <td className="py-4 px-6">Bulk inventory, factory machinery, LCL/FCL</td>
               </tr>
-              <tr className="hover:bg-surface-subtle transition-colors">
-                <td className="p-4 font-bold text-brand-black">Main Pricing Factor</td>
-                <td className="p-4">Actual weight vs Volumetric weight</td>
-                <td className="p-4">Volume (CBM), weight & LCL/FCL container type</td>
+              <tr className="hover:bg-slate-50 transition-colors">
+                <td className="py-4 px-6 font-bold text-brand-black">Main Pricing Factor</td>
+                <td className="py-4 px-6">Actual weight vs Volumetric weight</td>
+                <td className="py-4 px-6">Volume (CBM), weight & LCL/FCL container type</td>
               </tr>
-              <tr className="hover:bg-surface-subtle transition-colors">
-                <td className="p-4 font-bold text-brand-black">Door-to-Door Availability</td>
-                <td className="p-4">Airport-to-airport / Door-to-door</td>
-                <td className="p-4">Port-to-port / Door-to-door</td>
-              </tr>
-              <tr className="hover:bg-surface-subtle transition-colors">
-                <td className="p-4 font-bold text-brand-black">Typical Use Case</td>
-                <td className="p-4">Urgent personal baggage, commercial samples</td>
-                <td className="p-4">High-volume commercial export & household moves</td>
+              <tr className="hover:bg-slate-50 transition-colors">
+                <td className="py-4 px-6 font-bold text-brand-black">Door-to-Door Availability</td>
+                <td className="py-4 px-6">Airport-to-airport / Door-to-door</td>
+                <td className="py-4 px-6">Port-to-port / Door-to-door</td>
               </tr>
             </tbody>
           </table>
@@ -344,38 +339,47 @@ export const AirFreightServiceContent: React.FC<AirFreightServiceContentProps> =
         <div className="space-y-4">
           <div className="flex items-center justify-between flex-wrap gap-2">
             <h3 className="text-heading-md font-bold text-brand-black flex items-center gap-2">
-              <Plane className="w-5 h-5 text-accent-dark" /> Average Air Cargo Rates from Pakistan
+              <Plane className="w-5 h-5 text-emerald-600" /> Average Air Cargo Rates from Pakistan
             </h3>
-            <Badge variant="outline" size="sm" className="font-mono text-xs">Indicative Only</Badge>
+            <Badge variant="outline" size="sm" className="font-mono text-xs">20 KG MIN</Badge>
           </div>
 
-          <div className="overflow-x-auto border border-border rounded-md shadow-xs">
-            <table className="w-full text-left text-body-sm">
+          <div className="overflow-x-auto border border-slate-200 rounded-lg shadow-xs bg-white">
+            <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-brand-navy text-white text-xs font-mono uppercase tracking-wider">
-                  <th className="p-3.5 border-b border-border-dark">Destination</th>
-                  <th className="p-3.5 border-b border-border-dark">Average Rate / KG</th>
-                  <th className="p-3.5 border-b border-border-dark">Minimum Weight</th>
-                  <th className="p-3.5 border-b border-border-dark text-right">Get Quote</th>
+                <tr className="bg-slate-900 text-white text-xs sm:text-sm font-semibold uppercase tracking-wider">
+                  <th className="py-4 px-6 border-b border-slate-800">Destination Country</th>
+                  <th className="py-4 px-6 border-b border-slate-800 text-emerald-400">Indicative Air Rate</th>
+                  <th className="py-4 px-6 border-b border-slate-800">Min Weight</th>
+                  <th className="py-4 px-6 border-b border-slate-800 text-right">Get Quote</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border bg-surface font-normal text-slate-700">
+              <tbody className="divide-y divide-slate-100 font-normal text-slate-700">
                 {airCargoRates.map((rate) => (
-                  <tr key={rate.country} className="hover:bg-surface-subtle transition-colors">
-                    <td className="p-3.5 font-bold text-brand-black flex items-center gap-2">
-                      <span>{rate.flag}</span>
-                      <span>{rate.country}</span>
+                  <tr key={rate.country} className="hover:bg-slate-50/80 transition-colors">
+                    <td className="py-4 px-6 font-bold text-slate-900 text-base sm:text-lg flex items-center gap-3">
+                      <span className="text-2xl">{rate.flag}</span>
+                      <span className="font-bold">{rate.country}</span>
                     </td>
-                    <td className="p-3.5 text-accent-dark font-mono font-bold">
-                      <Link href="/quote" className="hover:underline">
-                        Contact us for a quote →
-                      </Link>
+                    <td className="py-4 px-6">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                        <span className="text-base sm:text-lg font-bold font-mono text-emerald-700">
+                          {rate.pricePkr}
+                        </span>
+                        <span className="text-xs font-mono text-slate-400">
+                          ({rate.priceUsd})
+                        </span>
+                      </div>
                     </td>
-                    <td className="p-3.5"><Badge variant="accent" size="sm">{rate.minWeight}</Badge></td>
-                    <td className="p-3.5 text-right">
+                    <td className="py-4 px-6">
+                      <span className="inline-block px-3 py-1 bg-slate-100 text-slate-800 font-mono font-bold text-xs rounded-full border border-slate-200">
+                        {rate.minWeight}
+                      </span>
+                    </td>
+                    <td className="py-4 px-6 text-right">
                       <Link href={`/quote?service=air-freight`}>
-                        <Button variant="ghost" size="sm" className="font-semibold text-accent-dark">
-                          Quote
+                        <Button variant="accent" size="sm" className="font-bold text-xs px-4 py-2">
+                          Get Rate →
                         </Button>
                       </Link>
                     </td>
@@ -392,38 +396,44 @@ export const AirFreightServiceContent: React.FC<AirFreightServiceContentProps> =
             <h3 className="text-heading-md font-bold text-brand-black flex items-center gap-2">
               <Ship className="w-5 h-5 text-blue-600" /> Average Sea Cargo Rates from Pakistan
             </h3>
-            <Badge variant="outline" size="sm" className="font-mono text-xs">Indicative Only</Badge>
+            <Badge variant="outline" size="sm" className="font-mono text-xs">70–100 KG MIN</Badge>
           </div>
 
-          <div className="overflow-x-auto border border-border rounded-md shadow-xs">
-            <table className="w-full text-left text-body-sm">
+          <div className="overflow-x-auto border border-slate-200 rounded-lg shadow-xs bg-white">
+            <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-brand-navy text-white text-xs font-mono uppercase tracking-wider">
-                  <th className="p-3.5 border-b border-border-dark">Destination</th>
-                  <th className="p-3.5 border-b border-border-dark">Service</th>
-                  <th className="p-3.5 border-b border-border-dark">Average Rate</th>
-                  <th className="p-3.5 border-b border-border-dark">Minimum Requirement</th>
-                  <th className="p-3.5 border-b border-border-dark text-right">Get Quote</th>
+                <tr className="bg-slate-900 text-white text-xs sm:text-sm font-semibold uppercase tracking-wider">
+                  <th className="py-4 px-6 border-b border-slate-800">Destination Country</th>
+                  <th className="py-4 px-6 border-b border-slate-800">Service Mode</th>
+                  <th className="py-4 px-6 border-b border-slate-800 text-blue-400">Indicative Ocean Rate</th>
+                  <th className="py-4 px-6 border-b border-slate-800">Min Requirement</th>
+                  <th className="py-4 px-6 border-b border-slate-800 text-right">Get Quote</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border bg-surface font-normal text-slate-700">
+              <tbody className="divide-y divide-slate-100 font-normal text-slate-700">
                 {seaCargoRates.map((rate) => (
-                  <tr key={rate.country} className="hover:bg-surface-subtle transition-colors">
-                    <td className="p-3.5 font-bold text-brand-black flex items-center gap-2">
-                      <span>{rate.flag}</span>
-                      <span>{rate.country}</span>
+                  <tr key={rate.country} className="hover:bg-slate-50/80 transition-colors">
+                    <td className="py-4 px-6 font-bold text-slate-900 text-base sm:text-lg flex items-center gap-3">
+                      <span className="text-2xl">{rate.flag}</span>
+                      <span className="font-bold">{rate.country}</span>
                     </td>
-                    <td className="p-3.5"><Badge variant="secondary" size="sm">{rate.service}</Badge></td>
-                    <td className="p-3.5 text-accent-dark font-mono font-bold">
-                      <Link href="/quote" className="hover:underline">
-                        Contact us for a quote →
-                      </Link>
+                    <td className="py-4 px-6">
+                      <span className="px-3 py-1 bg-blue-100 text-blue-900 border border-blue-200 font-mono font-bold text-xs rounded-full">
+                        {rate.service}
+                      </span>
                     </td>
-                    <td className="p-3.5"><Badge variant="outline" size="sm">{rate.minReq}</Badge></td>
-                    <td className="p-3.5 text-right">
+                    <td className="py-4 px-6 font-bold font-mono text-blue-900 text-base sm:text-lg">
+                      {rate.pricePkr}
+                    </td>
+                    <td className="py-4 px-6">
+                      <span className="inline-block px-3 py-1 bg-slate-100 text-slate-800 font-mono font-bold text-xs rounded-full border border-slate-200">
+                        {rate.minReq}
+                      </span>
+                    </td>
+                    <td className="py-4 px-6 text-right">
                       <Link href={`/quote?service=sea-cargo`}>
-                        <Button variant="ghost" size="sm" className="font-semibold text-accent-dark">
-                          Quote
+                        <Button variant="outline" size="sm" className="font-bold text-xs px-4 py-2 border-blue-500 text-blue-700 hover:bg-blue-50">
+                          Get Rate →
                         </Button>
                       </Link>
                     </td>
@@ -507,32 +517,32 @@ export const AirFreightServiceContent: React.FC<AirFreightServiceContentProps> =
           </p>
         </div>
 
-        <div className="overflow-x-auto border border-border rounded-md shadow-xs">
-          <table className="w-full text-left text-body-sm">
+        <div className="overflow-x-auto border border-slate-200 rounded-lg shadow-xs bg-white">
+          <table className="w-full text-left text-sm sm:text-base border-collapse">
             <thead>
-              <tr className="bg-brand-navy text-white text-xs font-mono uppercase tracking-wider">
-                <th className="p-4 border-b border-border-dark">Shipping Mode</th>
-                <th className="p-4 border-b border-border-dark">Airport / Port Transit</th>
-                <th className="p-4 border-b border-border-dark">Door-to-Door Transit</th>
-                <th className="p-4 border-b border-border-dark">Operational Gateways</th>
+              <tr className="bg-slate-900 text-white text-xs sm:text-sm font-semibold uppercase tracking-wider">
+                <th className="py-4 px-6 border-b border-slate-800">Shipping Mode</th>
+                <th className="py-4 px-6 border-b border-slate-800">Airport / Port Transit</th>
+                <th className="py-4 px-6 border-b border-slate-800">Door-to-Door Transit</th>
+                <th className="py-4 px-6 border-b border-slate-800">Operational Gateways</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border bg-surface font-normal text-slate-700">
-              <tr className="hover:bg-surface-subtle transition-colors">
-                <td className="p-4 font-bold text-brand-black flex items-center gap-2">
+            <tbody className="divide-y divide-slate-100 font-normal text-slate-700">
+              <tr className="hover:bg-slate-50 transition-colors">
+                <td className="py-4 px-6 font-bold text-brand-black flex items-center gap-2">
                   <Plane className="w-4 h-4 text-accent-dark" /> Air Cargo
                 </td>
-                <td className="p-4 font-semibold text-emerald-700">Generally 3–7 Days</td>
-                <td className="p-4 font-semibold text-emerald-700">Generally 5–10 Days</td>
-                <td className="p-4">LHE (Lahore), KHI (Karachi), ISB (Islamabad)</td>
+                <td className="py-4 px-6 font-semibold text-emerald-700">Generally 3–7 Days</td>
+                <td className="py-4 px-6 font-semibold text-emerald-700">Generally 5–10 Days</td>
+                <td className="py-4 px-6">LHE (Lahore), KHI (Karachi), ISB (Islamabad)</td>
               </tr>
-              <tr className="hover:bg-surface-subtle transition-colors">
-                <td className="p-4 font-bold text-brand-black flex items-center gap-2">
+              <tr className="hover:bg-slate-50 transition-colors">
+                <td className="py-4 px-6 font-bold text-brand-black flex items-center gap-2">
                   <Ship className="w-4 h-4 text-blue-600" /> Sea Cargo (LCL / FCL)
                 </td>
-                <td className="p-4 text-slate-700 font-semibold">Generally 20–35 Days</td>
-                <td className="p-4 text-slate-700 font-semibold">Generally 25–45 Days</td>
-                <td className="p-4">Karachi Port & Port Qasim Trade Terminals</td>
+                <td className="py-4 px-6 text-slate-700 font-semibold">Generally 20–35 Days</td>
+                <td className="py-4 px-6 text-slate-700 font-semibold">Generally 25–45 Days</td>
+                <td className="py-4 px-6">Karachi Port & Port Qasim Trade Terminals</td>
               </tr>
             </tbody>
           </table>
@@ -648,12 +658,12 @@ export const AirFreightServiceContent: React.FC<AirFreightServiceContentProps> =
           Whether you need the speed of air freight or the cost efficiency of sea freight, Raahi International can help you arrange an international shipping solution from Pakistan.
         </p>
 
-        <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
           <Link href="/quote" className="w-full sm:w-auto">
             <Button
               variant="accent"
               size="lg"
-              className="w-full sm:w-auto font-bold"
+              className="w-full sm:w-auto font-bold shadow-md"
               rightIcon={<ArrowRight className="w-4 h-4 text-brand-black shrink-0" />}
             >
               Request a Quote
@@ -663,7 +673,7 @@ export const AirFreightServiceContent: React.FC<AirFreightServiceContentProps> =
             <Button
               variant="outline-dark"
               size="lg"
-              className="w-full sm:w-auto border-emerald-500/50 text-emerald-400 hover:bg-emerald-500/10 font-bold"
+              className="w-full sm:w-auto border-emerald-500/50 text-emerald-400 hover:bg-emerald-500/10 font-bold shadow-sm"
               leftIcon={<MessageSquare className="w-4 h-4 text-emerald-400 shrink-0 fill-current" />}
             >
               WhatsApp Us
@@ -673,7 +683,7 @@ export const AirFreightServiceContent: React.FC<AirFreightServiceContentProps> =
             <Button
               variant="outline-dark"
               size="lg"
-              className="w-full sm:w-auto border-slate-600 text-slate-300 hover:bg-slate-800 font-bold"
+              className="w-full sm:w-auto border-slate-600 text-slate-300 hover:bg-slate-800 font-bold shadow-sm"
               leftIcon={<Phone className="w-4 h-4 text-slate-300 shrink-0" />}
             >
               Call Us
