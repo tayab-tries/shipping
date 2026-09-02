@@ -379,7 +379,7 @@ export const CITY_LOCATIONS_DATA: CityLocationRecord[] = [
       {
         title: 'Door-to-Door International Cargo Services in Islamabad',
         content:
-          'Our door-to-door cargo service in Islamabad means your shipment is collected directly from your home, office, or business address and delivered to the final address at your destination country — with no need to visit a cargo terminal or drop-off point yourself.',
+          'Our door-to-door cargo service in Islamabad means your shipment is collected directly from your home, office, or business address and delivered to the final address at your destination country — with no need to visit a cargo terminal or drop-off point yourself.\n\nExact services depend on your shipment type, destination country, and chosen shipping method — our team advises the best option when you request a quote.',
         list: [
           'Doorstep cargo pickup across Islamabad',
           'Professional export packing and shipment preparation',
@@ -394,13 +394,30 @@ export const CITY_LOCATIONS_DATA: CityLocationRecord[] = [
       {
         title: 'Air Cargo Services from Islamabad',
         content:
-          'For urgent, lightweight, or time-sensitive shipments, air cargo from Islamabad is dispatched through Islamabad International Airport, offering direct international connections without the need to route cargo through another city first.',
+          'For urgent, lightweight, or time-sensitive shipments, air cargo from Islamabad is dispatched through Islamabad International Airport, offering direct international connections without the need to route cargo through another city first.\n\nAir cargo pricing from Islamabad is generally calculated using actual weight or volumetric weight (whichever is greater), along with destination, cargo type, and service level.',
+        list: [
+          'Personal belongings and gifts',
+          'Documents and urgent parcels',
+          'Business and corporate samples',
+          'Commercial goods and export products',
+          'Electronics and permitted high-value items',
+          'Household items sent on a tighter timeline',
+          'Time-sensitive shipments',
+        ],
         links: [{ label: 'View Air Cargo Services', href: '/services/air-freight' }],
       },
       {
         title: 'Sea Cargo Services from Islamabad',
         content:
           "For larger, heavier, or bulkier shipments where delivery time is less critical, sea cargo from Islamabad is typically the most cost-effective international shipping option — especially for FCL (Full Container Load) and LCL (Less than Container Load) shipments.\n\nSea cargo from Islamabad is routed through Pakistan's port network (primarily Karachi Port and Port Qasim) before continuing on to its international destination.",
+        list: [
+          'Household goods and furniture',
+          'Commercial and business cargo',
+          'Bulk shipments and business inventory',
+          'Office and corporate relocations',
+          'Larger personal consignments',
+          'Export goods for overseas buyers',
+        ],
         links: [{ label: 'View Sea Cargo Services', href: '/services/sea-cargo' }],
       },
       {
@@ -411,21 +428,56 @@ export const CITY_LOCATIONS_DATA: CityLocationRecord[] = [
       {
         title: 'Commercial Cargo Services from Islamabad',
         content:
-          'Islamabad’s economy is increasingly driven by corporate offices, IT and services exports, government-linked organizations, and NGOs, alongside traditional trade. Our commercial cargo service from Islamabad supports businesses and institutions sending documents, equipment, samples, and inventory.',
+          'Islamabad’s economy is increasingly driven by corporate offices, IT and services exports, government-linked organizations, and NGOs, alongside traditional trade. Our commercial cargo service from Islamabad supports businesses and institutions sending documents, equipment, samples, and inventory to international partners and offices.\n\nWe help select the right shipping method — air freight for urgent corporate or time-sensitive cargo, sea freight (FCL/LCL) for bulk equipment or inventory shipments — based on weight, volume, destination, and delivery timeline.',
+        links: [{ label: 'View Commercial Services', href: '/services/commercial-cargo' }],
       },
       {
         title: 'Customs Clearance & Documentation for Islamabad Shipments',
         content:
-          'International shipments from Islamabad require proper documentation and are subject to customs procedures both in Pakistan and at the destination country. Our team assists with export documentation preparation, customs declaration, and guidance on restricted and prohibited items.',
+          'International shipments from Islamabad require proper documentation and are subject to customs procedures both in Pakistan and at the destination country. Requirements vary by destination, goods type, and shipment value — our team reviews your cargo details before booking to ensure a smooth customs process.',
+        list: [
+          'Export documentation preparation',
+          'Customs declaration and coordination',
+          'Compliance with destination-country import regulations',
+          'Guidance on restricted and prohibited items',
+        ],
+      },
+      {
+        title: 'Why Choose Raahi International for Cargo Services in Islamabad?',
+        content:
+          'Choosing Raahi International for shipping from Islamabad gives you local capital coverage with direct airport access and complete customs support.',
+        list: [
+          'Door-to-door shipping across all Islamabad sectors',
+          'Air cargo dispatched directly via Islamabad International Airport',
+          'Sea cargo and FCL/LCL solutions for larger shipments',
+          'Doorstep pickup — no drop-off required',
+          'Personal, household, corporate, and commercial cargo handling',
+          'Full documentation and customs clearance assistance',
+          'Worldwide destination delivery',
+          'End-to-end support from pickup to final delivery',
+        ],
       },
       {
         title: 'Ship from Islamabad to Worldwide Destinations',
         content:
-          'Whether you are sending a small personal parcel or a larger commercial shipment, our international cargo services in Islamabad cover popular destinations worldwide.',
+          "Whether you're sending a small personal parcel or a larger commercial shipment, our international cargo services in Islamabad cover popular destinations including the UK, USA, Canada, Australia, UAE, Saudi Arabia, and Qatar, with availability depending on current shipping schedules.",
         links: [
           { label: 'Islamabad to UK Cargo', href: '/destinations/uk?origin=islamabad' },
           { label: 'Islamabad to UAE Cargo', href: '/destinations/uae?origin=islamabad' },
           { label: 'Islamabad to USA Cargo', href: '/destinations/usa?origin=islamabad' },
+        ],
+      },
+      {
+        title: 'How International Cargo Shipping from Islamabad Works',
+        content:
+          'Our 6-step international cargo dispatch workflow ensures your shipment moves smoothly from your Islamabad address to its destination abroad:',
+        list: [
+          '1. Request a Quote — Share your destination, cargo details, weight, and dimensions',
+          '2. Choose Your Shipping Method — We help determine whether air freight or sea freight suits your shipment',
+          '3. Pickup & Preparation — Your cargo is collected from your Islamabad address and professionally packed',
+          '4. Documentation & Customs — Required shipping and customs paperwork is prepared and processed',
+          '5. International Transportation — Your shipment is dispatched via Islamabad International Airport or Pakistan\'s sea ports',
+          '6. Destination Delivery — Cargo is delivered to the destination address, door-to-door',
         ],
       },
     ],
@@ -493,7 +545,7 @@ export const CITY_LOCATIONS_DATA: CityLocationRecord[] = [
       {
         title: 'Door-to-Door International Cargo Services in Rawalpindi',
         content:
-          'Our door-to-door cargo service in Rawalpindi means your shipment is collected directly from your home, shop, office, or warehouse and delivered to the final address at your destination country — with no need to visit a cargo terminal or drop-off point yourself.',
+          'Our door-to-door cargo service in Rawalpindi means your shipment is collected directly from your home, shop, office, or warehouse and delivered to the final address at your destination country — with no need to visit a cargo terminal or drop-off point yourself.\n\nExact services depend on your shipment type, destination country, and chosen shipping method — our team advises the best option when you request a quote.',
         list: [
           'Doorstep cargo pickup across Rawalpindi',
           'Professional export packing and shipment preparation',
@@ -508,38 +560,89 @@ export const CITY_LOCATIONS_DATA: CityLocationRecord[] = [
       {
         title: 'Air Cargo Services from Rawalpindi',
         content:
-          'For urgent, lightweight, or time-sensitive shipments, air cargo from Rawalpindi offers a fast international shipping option, with cargo dispatched via the nearby international airport serving the region.',
+          'For urgent, lightweight, or time-sensitive shipments, air cargo from Rawalpindi offers a fast international shipping option, with cargo dispatched via the nearby international airport serving the region.\n\nAir cargo pricing from Rawalpindi is generally calculated using actual weight or volumetric weight (whichever is greater), along with destination, cargo type, and service level.',
+        list: [
+          'Personal belongings and gifts',
+          'Documents and urgent parcels',
+          'Business samples and trade goods',
+          'Commercial goods and export products',
+          'Electronics and permitted high-value items',
+          'Household items sent on a tighter timeline',
+          'Time-sensitive shipments',
+        ],
         links: [{ label: 'View Air Cargo Services', href: '/services/air-freight' }],
       },
       {
         title: 'Sea Cargo Services from Rawalpindi',
         content:
           "For larger, heavier, or bulkier shipments where delivery time is less critical, sea cargo from Rawalpindi is typically the most cost-effective international shipping option — especially for wholesale and trading businesses moving FCL (Full Container Load) and LCL (Less than Container Load) shipments.\n\nSea cargo from Rawalpindi is routed through Pakistan's port network (primarily Karachi Port and Port Qasim) before continuing on to its international destination.",
+        list: [
+          'Household goods and furniture',
+          'Wholesale and retail trade goods',
+          'Commercial and business cargo',
+          'Bulk shipments and business inventory',
+          'Larger personal consignments',
+          'Export goods for overseas buyers',
+        ],
         links: [{ label: 'View Sea Cargo Services', href: '/services/sea-cargo' }],
       },
       {
         title: 'International Household Goods Shipping from Rawalpindi',
         content:
-          'Relocating abroad, or sending belongings to family overseas? Our household goods shipping service from Rawalpindi is designed for both permanent relocation and personal effects shipments to loved ones overseas.\n\nWe coordinate the shipment of permitted household items including furniture, clothing, personal belongings, kitchenware, and other goods, subject to destination-country customs regulations.',
+          'Relocating abroad, or sending belongings to family overseas? Our household goods shipping service from Rawalpindi is designed for both permanent relocation and personal effects shipments to loved ones overseas.\n\nWe coordinate the shipment of permitted household items including furniture, clothing, personal belongings, kitchenware, and other goods, subject to destination-country customs regulations — a service widely used by Rawalpindi families with relatives working and living abroad, particularly across the Gulf and UK.',
       },
       {
         title: 'Commercial Cargo Services from Rawalpindi',
         content:
-          'Rawalpindi’s economy has long centered on wholesale trading, retail goods distribution, and small-to-medium manufacturing, particularly around its historic bazaars and commercial districts. Our commercial cargo service from Rawalpindi supports traders and businesses sending products, samples, inventory, and bulk trade shipments.',
+          'Rawalpindi’s economy has long centered on wholesale trading, retail goods distribution, and small-to-medium manufacturing, particularly around its historic bazaars and commercial districts. Our commercial cargo service from Rawalpindi supports traders and businesses sending products, samples, inventory, and bulk trade shipments to international buyers and partners.\n\nWe help select the right shipping method — air freight for urgent or sample shipments, sea freight (FCL/LCL) for bulk trade and wholesale export orders — based on weight, volume, destination, and delivery timeline.',
+        links: [{ label: 'View Commercial Services', href: '/services/commercial-cargo' }],
       },
       {
         title: 'Customs Clearance & Documentation for Rawalpindi Shipments',
         content:
-          'International shipments from Rawalpindi require proper documentation and are subject to customs procedures both in Pakistan and at the destination country. Our team assists with export documentation preparation, customs declaration, and compliance guidance.',
+          'International shipments from Rawalpindi require proper documentation and are subject to customs procedures both in Pakistan and at the destination country. Requirements vary by destination, goods type, and shipment value — our team reviews your cargo details before booking to ensure a smooth customs process.',
+        list: [
+          'Export documentation preparation',
+          'Customs declaration and coordination',
+          'Compliance with destination-country import regulations',
+          'Guidance on restricted and prohibited items',
+        ],
+      },
+      {
+        title: 'Why Choose Raahi International for Cargo Services in Rawalpindi?',
+        content:
+          'Choosing Raahi International for shipping from Rawalpindi gives you comprehensive coverage across residential and commercial bazaar districts.',
+        list: [
+          'Door-to-door shipping across all Rawalpindi areas',
+          'Air cargo and sea cargo (FCL & LCL) solutions',
+          'Doorstep pickup — no drop-off required',
+          'Personal, household, trade, and commercial cargo handling',
+          'Full documentation and customs clearance assistance',
+          'Worldwide destination delivery',
+          'End-to-end support from pickup to final delivery',
+        ],
       },
       {
         title: 'Ship from Rawalpindi to Worldwide Destinations',
         content:
-          'Whether you are sending a small personal parcel or a larger commercial shipment, our international cargo services in Rawalpindi cover popular destinations worldwide.',
+          "Whether you're sending a small personal parcel or a larger commercial shipment, our international cargo services in Rawalpindi cover popular destinations including the UK, USA, Canada, Australia, UAE, Saudi Arabia, and Qatar, with availability depending on current shipping schedules.",
         links: [
           { label: 'Rawalpindi to UK Cargo', href: '/destinations/uk?origin=rawalpindi' },
           { label: 'Rawalpindi to UAE Cargo', href: '/destinations/uae?origin=rawalpindi' },
           { label: 'Rawalpindi to USA Cargo', href: '/destinations/usa?origin=rawalpindi' },
+        ],
+      },
+      {
+        title: 'How International Cargo Shipping from Rawalpindi Works',
+        content:
+          'Our 6-step international cargo dispatch workflow ensures your shipment moves smoothly from your Rawalpindi address to its destination abroad:',
+        list: [
+          '1. Request a Quote — Share your destination, cargo details, weight, and dimensions',
+          '2. Choose Your Shipping Method — We help determine whether air freight or sea freight suits your shipment',
+          '3. Pickup & Preparation — Your cargo is collected from your Rawalpindi address and professionally packed',
+          '4. Documentation & Customs — Required shipping and customs paperwork is prepared and processed',
+          '5. International Transportation — Your shipment is dispatched via air or sea freight',
+          '6. Destination Delivery — Cargo is delivered to the destination address, door-to-door',
         ],
       },
     ],
@@ -607,7 +710,7 @@ export const CITY_LOCATIONS_DATA: CityLocationRecord[] = [
       {
         title: 'Door-to-Door International Cargo Services in Multan',
         content:
-          'Our door-to-door cargo service in Multan means your shipment is collected directly from your home, farm, shop, or business address and delivered to the final address at your destination country — with no need to visit a cargo terminal or drop-off point yourself.',
+          'Our door-to-door cargo service in Multan means your shipment is collected directly from your home, farm, shop, or business address and delivered to the final address at your destination country — with no need to visit a cargo terminal or drop-off point yourself.\n\nExact services depend on your shipment type, destination country, and chosen shipping method — our team advises the best option when you request a quote.',
         list: [
           'Doorstep cargo pickup across Multan',
           'Professional export packing and shipment preparation',
@@ -622,38 +725,90 @@ export const CITY_LOCATIONS_DATA: CityLocationRecord[] = [
       {
         title: 'Air Cargo Services from Multan',
         content:
-          'For urgent, lightweight, perishable, or time-sensitive shipments, air cargo from Multan is dispatched through Multan International Airport, giving South Punjab direct international air freight access without routing cargo through another city first.',
+          'For urgent, lightweight, perishable, or time-sensitive shipments, air cargo from Multan is dispatched through Multan International Airport, giving South Punjab direct international air freight access without routing cargo through another city first.\n\nAir cargo pricing from Multan is generally calculated using actual weight or volumetric weight (whichever is greater), along with destination, cargo type, and service level.',
+        list: [
+          'Personal belongings and gifts',
+          'Documents and urgent parcels',
+          'Business samples, including handicraft and textile samples',
+          'Commercial goods and export products',
+          'Seasonal perishable exports such as mangoes and citrus',
+          'Electronics and permitted high-value items',
+          'Household items sent on a tighter timeline',
+        ],
         links: [{ label: 'View Air Cargo Services', href: '/services/air-freight' }],
       },
       {
         title: 'Sea Cargo Services from Multan',
         content:
           "For larger, heavier, or bulkier shipments where delivery time is less critical, sea cargo from Multan is typically the most cost-effective international shipping option — especially for exporters moving FCL (Full Container Load) and LCL (Less than Container Load) shipments of textiles, handicrafts, or bulk goods.\n\nSea cargo from Multan is routed through Pakistan's port network (primarily Karachi Port and Port Qasim) before continuing on to its international destination.",
+        list: [
+          'Household goods and furniture',
+          'Handicrafts, pottery, and ceramics',
+          'Textile and garment exports',
+          'Commercial and business cargo',
+          'Bulk shipments and business inventory',
+          'Larger personal consignments',
+        ],
         links: [{ label: 'View Sea Cargo Services', href: '/services/sea-cargo' }],
       },
       {
         title: 'International Household Goods Shipping from Multan',
         content:
-          'Relocating abroad, or sending belongings to family overseas? Our household goods shipping service from Multan is designed for both permanent relocation and personal effects shipments to loved ones overseas.\n\nWe coordinate the shipment of permitted household items including furniture, clothing, personal belongings, kitchenware, and other goods, subject to destination-country customs regulations.',
+          'Relocating abroad, or sending belongings to family overseas? Our household goods shipping service from Multan is designed for both permanent relocation and personal effects shipments to loved ones overseas.\n\nWe coordinate the shipment of permitted household items including furniture, clothing, personal belongings, kitchenware, and other goods, subject to destination-country customs regulations — a service widely used by Multan families with relatives working and living abroad, particularly across the Gulf and UK.',
       },
       {
         title: 'Commercial Cargo Services from Multan',
         content:
-          'Multan is one of Pakistan’s most important centers for agricultural export, handicrafts, textiles, and ceramics, with its famous mango exports forming a major seasonal trade. Our commercial cargo service from Multan supports exporters and businesses sending agricultural produce, handicraft goods, textile products, and inventory.',
+          'Multan is one of Pakistan’s most important centers for agricultural export, handicrafts, textiles, and ceramics, with its famous mango exports forming a major seasonal trade. Our commercial cargo service from Multan supports exporters and businesses sending agricultural produce, handicraft goods, textile products, and inventory to international buyers and partners.\n\nWe help select the right shipping method — air freight for time-sensitive or perishable exports such as mangoes and citrus during peak season, sea freight (FCL/LCL) for bulk handicraft, ceramic, or textile export orders — based on weight, volume, destination, and delivery timeline.',
+        links: [{ label: 'View Commercial Services', href: '/services/commercial-cargo' }],
       },
       {
         title: 'Customs Clearance & Documentation for Multan Shipments',
         content:
-          'International shipments from Multan require proper documentation and are subject to customs procedures both in Pakistan and at the destination country. Our team assists with export documentation preparation, customs declaration, and compliance for agricultural and general exports.',
+          'International shipments from Multan require proper documentation and are subject to customs procedures both in Pakistan and at the destination country. Requirements vary by destination, goods type, and shipment value — our team reviews your cargo details before booking to ensure a smooth customs process.',
+        list: [
+          'Export documentation preparation',
+          'Customs declaration and coordination',
+          'Compliance with destination-country import regulations, including any additional requirements for agricultural and perishable exports',
+          'Guidance on restricted and prohibited items',
+        ],
+      },
+      {
+        title: 'Why Choose Raahi International for Cargo Services in Multan?',
+        content:
+          'Choosing Raahi International for shipping from Multan gives you direct air airport access in South Punjab combined with agricultural export expertise.',
+        list: [
+          'Door-to-door shipping across all Multan areas',
+          'Air cargo dispatched directly via Multan International Airport',
+          'Sea cargo and FCL/LCL solutions for larger shipments',
+          'Doorstep pickup — no drop-off required',
+          'Personal, household, agricultural, and commercial cargo handling',
+          'Full documentation and customs clearance assistance',
+          'Worldwide destination delivery',
+          'End-to-end support from pickup to final delivery',
+        ],
       },
       {
         title: 'Ship from Multan to Worldwide Destinations',
         content:
-          'Whether you are sending a small personal parcel or a larger commercial shipment, our international cargo services in Multan cover popular destinations worldwide.',
+          "Whether you're sending a small personal parcel or a larger commercial shipment, our international cargo services in Multan cover popular destinations including the UK, USA, Canada, Australia, UAE, Saudi Arabia, and Qatar, with availability depending on current shipping schedules.",
         links: [
           { label: 'Multan to UK Cargo', href: '/destinations/uk?origin=multan' },
           { label: 'Multan to UAE Cargo', href: '/destinations/uae?origin=multan' },
           { label: 'Multan to USA Cargo', href: '/destinations/usa?origin=multan' },
+        ],
+      },
+      {
+        title: 'How International Cargo Shipping from Multan Works',
+        content:
+          'Our 6-step international cargo dispatch workflow ensures your shipment moves smoothly from your Multan address to its destination abroad:',
+        list: [
+          '1. Request a Quote — Share your destination, cargo details, weight, and dimensions',
+          '2. Choose Your Shipping Method — We help determine whether air freight or sea freight suits your shipment',
+          '3. Pickup & Preparation — Your cargo is collected from your Multan address and professionally packed',
+          '4. Documentation & Customs — Required shipping and customs paperwork is prepared and processed',
+          '5. International Transportation — Your shipment is dispatched via Multan International Airport or Pakistan\'s sea ports',
+          '6. Destination Delivery — Cargo is delivered to the destination address, door-to-door',
         ],
       },
     ],
@@ -721,7 +876,7 @@ export const CITY_LOCATIONS_DATA: CityLocationRecord[] = [
       {
         title: 'Door-to-Door International Cargo Services in Faisalabad',
         content:
-          'Our door-to-door cargo service in Faisalabad means your shipment is collected directly from your home, factory, shop, or warehouse and delivered to the final address at your destination country — with no need to visit a cargo terminal or drop-off point yourself.',
+          'Our door-to-door cargo service in Faisalabad means your shipment is collected directly from your home, factory, shop, or warehouse and delivered to the final address at your destination country — with no need to visit a cargo terminal or drop-off point yourself.\n\nExact services depend on your shipment type, destination country, and chosen shipping method — our team advises the best option when you request a quote.',
         list: [
           'Doorstep cargo pickup across Faisalabad',
           'Professional export packing and shipment preparation',
@@ -736,38 +891,90 @@ export const CITY_LOCATIONS_DATA: CityLocationRecord[] = [
       {
         title: 'Air Cargo Services from Faisalabad',
         content:
-          'For urgent, lightweight, or time-sensitive shipments, air cargo from Faisalabad provides a fast international shipping option — particularly useful for textile buyers who need fabric or garment samples delivered quickly to confirm orders.',
+          'For urgent, lightweight, or time-sensitive shipments, air cargo from Faisalabad provides a fast international shipping option — particularly useful for textile buyers who need fabric or garment samples delivered quickly to confirm orders.\n\nAir cargo pricing from Faisalabad is generally calculated using actual weight or volumetric weight (whichever is greater), along with destination, cargo type, and service level.',
+        list: [
+          'Personal belongings and gifts',
+          'Documents and urgent parcels',
+          'Textile and garment samples for buyer approval',
+          'Business samples and trade goods',
+          'Commercial goods and export products',
+          'Electronics and permitted high-value items',
+          'Household items sent on a tighter timeline',
+        ],
         links: [{ label: 'View Air Cargo Services', href: '/services/air-freight' }],
       },
       {
         title: 'Sea Cargo Services from Faisalabad',
         content:
           "For larger, heavier, or bulkier shipments where delivery time is less critical, sea cargo from Faisalabad is typically the most cost-effective international shipping option — especially for the city's textile exporters moving FCL (Full Container Load) and LCL (Less than Container Load) shipments of yarn, fabric, and finished garments.\n\nSea cargo from Faisalabad is routed through Pakistan's port network (primarily Karachi Port and Port Qasim) before continuing on to its international destination.",
+        list: [
+          'Textile, yarn, and fabric exports',
+          'Garments and finished apparel',
+          'Home textiles and hosiery products',
+          'Household goods and furniture',
+          'Commercial and business cargo',
+          'Bulk shipments and business inventory',
+          'Larger personal consignments',
+        ],
         links: [{ label: 'View Sea Cargo Services', href: '/services/sea-cargo' }],
       },
       {
         title: 'International Household Goods Shipping from Faisalabad',
         content:
-          'Relocating abroad, or sending belongings to family overseas? Our household goods shipping service from Faisalabad is designed for both permanent relocation and personal effects shipments to loved ones overseas.\n\nWe coordinate the shipment of permitted household items including furniture, clothing, personal belongings, kitchenware, and other goods, subject to destination-country customs regulations.',
+          'Relocating abroad, or sending belongings to family overseas? Our household goods shipping service from Faisalabad is designed for both permanent relocation and personal effects shipments to loved ones overseas.\n\nWe coordinate the shipment of permitted household items including furniture, clothing, personal belongings, kitchenware, and other goods, subject to destination-country customs regulations — a service widely used by Faisalabad families with relatives working and living abroad, particularly across the Gulf and UK.',
       },
       {
         title: 'Commercial Cargo Services from Faisalabad',
         content:
-          'As Pakistan’s textile capital, Faisalabad is home to a dense concentration of spinning mills, weaving units, garment manufacturers, and hosiery exporters. Our commercial cargo service from Faisalabad supports exporters and businesses sending yarn, fabric, garments, home textiles, and bulk inventory.',
+          'As Pakistan’s textile capital, Faisalabad is home to a dense concentration of spinning mills, weaving units, garment manufacturers, and hosiery exporters. Our commercial cargo service from Faisalabad supports exporters and businesses sending yarn, fabric, garments, home textiles, and bulk inventory to international buyers and partners.\n\nWe help select the right shipping method — air freight for urgent sample shipments and buyer approvals, sea freight (FCL/LCL) for bulk textile and garment export orders — based on weight, volume, destination, and delivery timeline.',
+        links: [{ label: 'View Commercial Services', href: '/services/commercial-cargo' }],
       },
       {
         title: 'Customs Clearance & Documentation for Faisalabad Shipments',
         content:
-          'International shipments from Faisalabad require proper documentation and are subject to customs procedures both in Pakistan and at the destination country. Our team assists with export documentation preparation, customs declaration, and compliance for textile and garment export requirements.',
+          'International shipments from Faisalabad require proper documentation and are subject to customs procedures both in Pakistan and at the destination country. Requirements vary by destination, goods type, and shipment value — our team reviews your cargo details before booking to ensure a smooth customs process.',
+        list: [
+          'Export documentation preparation',
+          'Customs declaration and coordination',
+          'Compliance with destination-country import regulations, including textile and garment export requirements',
+          'Guidance on restricted and prohibited items',
+        ],
+      },
+      {
+        title: 'Why Choose Raahi International for Cargo Services in Faisalabad?',
+        content:
+          'Choosing Raahi International for shipping from Faisalabad gives you specialized textile and garment export freight experience.',
+        list: [
+          'Door-to-door shipping across all Faisalabad areas',
+          'Air cargo and sea cargo (FCL & LCL) solutions',
+          'Doorstep pickup — no drop-off required',
+          'Personal, household, textile, and commercial cargo handling',
+          'Full documentation and customs clearance assistance',
+          'Worldwide destination delivery',
+          'End-to-end support from pickup to final delivery',
+        ],
       },
       {
         title: 'Ship from Faisalabad to Worldwide Destinations',
         content:
-          'Whether you are sending a small personal parcel or a larger commercial shipment, our international cargo services in Faisalabad cover popular destinations worldwide.',
+          "Whether you're sending a small personal parcel or a larger commercial shipment, our international cargo services in Faisalabad cover popular destinations including the UK, USA, Canada, Australia, UAE, Saudi Arabia, and Qatar, with availability depending on current shipping schedules.",
         links: [
           { label: 'Faisalabad to UK Cargo', href: '/destinations/uk?origin=faisalabad' },
           { label: 'Faisalabad to UAE Cargo', href: '/destinations/uae?origin=faisalabad' },
           { label: 'Faisalabad to USA Cargo', href: '/destinations/usa?origin=faisalabad' },
+        ],
+      },
+      {
+        title: 'How International Cargo Shipping from Faisalabad Works',
+        content:
+          'Our 6-step international cargo dispatch workflow ensures your shipment moves smoothly from your Faisalabad address to its destination abroad:',
+        list: [
+          '1. Request a Quote — Share your destination, cargo details, weight, and dimensions',
+          '2. Choose Your Shipping Method — We help determine whether air freight or sea freight suits your shipment',
+          '3. Pickup & Preparation — Your cargo is collected from your Faisalabad address and professionally packed',
+          '4. Documentation & Customs — Required shipping and customs paperwork is prepared and processed',
+          '5. International Transportation — Your shipment is dispatched via air or sea freight',
+          '6. Destination Delivery — Cargo is delivered to the destination address, door-to-door',
         ],
       },
     ],
@@ -835,7 +1042,7 @@ export const CITY_LOCATIONS_DATA: CityLocationRecord[] = [
       {
         title: 'Door-to-Door International Cargo Services in Peshawar',
         content:
-          'Our door-to-door cargo service in Peshawar means your shipment is collected directly from your home, shop, office, or warehouse and delivered to the final address at your destination country — with no need to visit a cargo terminal or drop-off point yourself.',
+          'Our door-to-door cargo service in Peshawar means your shipment is collected directly from your home, shop, office, or warehouse and delivered to the final address at your destination country — with no need to visit a cargo terminal or drop-off point yourself.\n\nExact services depend on your shipment type, destination country, and chosen shipping method — our team advises the best option when you request a quote.',
         list: [
           'Doorstep cargo pickup across Peshawar',
           'Professional export packing and shipment preparation',
@@ -850,38 +1057,91 @@ export const CITY_LOCATIONS_DATA: CityLocationRecord[] = [
       {
         title: 'Air Cargo Services from Peshawar',
         content:
-          'For urgent, lightweight, or time-sensitive shipments, air cargo from Peshawar is dispatched through Bacha Khan International Airport, giving Khyber Pakhtunkhwa direct international air freight access without routing cargo through another city first.',
+          'For urgent, lightweight, or time-sensitive shipments, air cargo from Peshawar is dispatched through Bacha Khan International Airport, giving Khyber Pakhtunkhwa direct international air freight access without routing cargo through another city first.\n\nAir cargo pricing from Peshawar is generally calculated using actual weight or volumetric weight (whichever is greater), along with destination, cargo type, and service level.',
+        list: [
+          'Personal belongings and gifts',
+          'Documents and urgent parcels',
+          'Business samples, including handicraft and gemstone samples',
+          'Commercial goods and export products',
+          'Electronics and permitted high-value items',
+          'Household items sent on a tighter timeline',
+          'Time-sensitive shipments',
+        ],
         links: [{ label: 'View Air Cargo Services', href: '/services/air-freight' }],
       },
       {
         title: 'Sea Cargo Services from Peshawar',
         content:
           "For larger, heavier, or bulkier shipments where delivery time is less critical, sea cargo from Peshawar is typically the most cost-effective international shipping option — especially for exporters moving FCL (Full Container Load) and LCL (Less than Container Load) shipments of furniture, marble, or handicrafts.\n\nSea cargo from Peshawar is routed through Pakistan's port network (primarily Karachi Port and Port Qasim) before continuing on to its international destination.",
+        list: [
+          'Furniture and woodwork',
+          'Marble and stone products',
+          'Dry fruits and agricultural goods',
+          'Handicrafts and gemstones',
+          'Household goods and personal belongings',
+          'Commercial and business cargo',
+          'Larger personal consignments',
+        ],
         links: [{ label: 'View Sea Cargo Services', href: '/services/sea-cargo' }],
       },
       {
         title: 'International Household Goods Shipping from Peshawar',
         content:
-          'Relocating abroad, or sending belongings to family overseas? Our household goods shipping service from Peshawar is designed for both permanent relocation and personal effects shipments to loved ones overseas.\n\nWe coordinate the shipment of permitted household items including furniture, clothing, personal belongings, kitchenware, and other goods, subject to destination-country customs regulations.',
+          'Relocating abroad, or sending belongings to family overseas? Our household goods shipping service from Peshawar is designed for both permanent relocation and personal effects shipments to loved ones overseas.\n\nWe coordinate the shipment of permitted household items including furniture, clothing, personal belongings, kitchenware, and other goods, subject to destination-country customs regulations — a service widely used by Peshawar families with relatives working and living abroad, particularly across the Gulf and beyond.',
       },
       {
         title: 'Commercial Cargo Services from Peshawar',
         content:
-          'Peshawar and the surrounding region are known for furniture and woodwork, marble and stone products, dry fruits, handicrafts, and gemstones, alongside its long-standing role as a cross-border trading hub. Our commercial cargo service from Peshawar supports exporters and businesses sending furniture, marble, dry fruits, handicrafts, and inventory.',
+          'Peshawar and the surrounding region are known for furniture and woodwork, marble and stone products, dry fruits, handicrafts, and gemstones, alongside its long-standing role as a cross-border trading hub. Our commercial cargo service from Peshawar supports exporters and businesses sending furniture, marble, dry fruits, handicrafts, and inventory to international buyers and partners.\n\nWe help select the right shipping method — air freight for urgent or sample shipments, sea freight (FCL/LCL) for bulk furniture, marble, or handicraft export orders — based on weight, volume, destination, and delivery timeline.',
+        links: [{ label: 'View Commercial Services', href: '/services/commercial-cargo' }],
       },
       {
         title: 'Customs Clearance & Documentation for Peshawar Shipments',
         content:
-          'International shipments from Peshawar require proper documentation and are subject to customs procedures both in Pakistan and at the destination country. Our team assists with export documentation preparation, customs declaration, and compliance guidance.',
+          'International shipments from Peshawar require proper documentation and are subject to customs procedures both in Pakistan and at the destination country. Requirements vary by destination, goods type, and shipment value — our team reviews your cargo details before booking to ensure a smooth customs process.',
+        list: [
+          'Export documentation preparation',
+          'Customs declaration and coordination',
+          'Compliance with destination-country import regulations',
+          'Guidance on restricted and prohibited items',
+        ],
+      },
+      {
+        title: 'Why Choose Raahi International for Cargo Services in Peshawar?',
+        content:
+          'Choosing Raahi International for shipping from Peshawar gives you direct air airport access in KP combined with export experience for furniture, marble, and handicrafts.',
+        list: [
+          'Door-to-door shipping across all Peshawar areas',
+          'Air cargo dispatched directly via Bacha Khan International Airport',
+          'Sea cargo and FCL/LCL solutions for larger shipments',
+          'Doorstep pickup — no drop-off required',
+          'Personal, household, and commercial cargo handling',
+          'Full documentation and customs clearance assistance',
+          'Worldwide destination delivery',
+          'End-to-end support from pickup to final delivery',
+        ],
       },
       {
         title: 'Ship from Peshawar to Worldwide Destinations',
         content:
-          'Whether you are sending a small personal parcel or a larger commercial shipment, our international cargo services in Peshawar cover popular destinations worldwide.',
+          "Whether you're sending a small personal parcel or a larger commercial shipment, our international cargo services in Peshawar cover popular destinations including the UK, USA, Canada, Australia, UAE, Saudi Arabia, and Qatar, with availability depending on current shipping schedules.",
         links: [
           { label: 'Peshawar to UK Cargo', href: '/destinations/uk?origin=peshawar' },
           { label: 'Peshawar to UAE Cargo', href: '/destinations/uae?origin=peshawar' },
           { label: 'Peshawar to USA Cargo', href: '/destinations/usa?origin=peshawar' },
+        ],
+      },
+      {
+        title: 'How International Cargo Shipping from Peshawar Works',
+        content:
+          'Our 6-step international cargo dispatch workflow ensures your shipment moves smoothly from your Peshawar address to its destination abroad:',
+        list: [
+          '1. Request a Quote — Share your destination, cargo details, weight, and dimensions',
+          '2. Choose Your Shipping Method — We help determine whether air freight or sea freight suits your shipment',
+          '3. Pickup & Preparation — Your cargo is collected from your Peshawar address and professionally packed',
+          '4. Documentation & Customs — Required shipping and customs paperwork is prepared and processed',
+          '5. International Transportation — Your shipment is dispatched via Bacha Khan International Airport or Pakistan\'s sea ports',
+          '6. Destination Delivery — Cargo is delivered to the destination address, door-to-door',
         ],
       },
     ],
