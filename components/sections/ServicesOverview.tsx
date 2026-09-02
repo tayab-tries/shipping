@@ -49,8 +49,8 @@ export const ServicesOverview: React.FC<ServicesOverviewProps> = ({
     'Air cargo shipping with door-to-door delivery. Fast air dispatches for boxes, gifts, excess baggage, and urgent shipments.';
   const airImage = propAir?.image || (blockData?.air_cargo_image as string) || IMAGE_SLOTS.serviceAir.src;
   const airAlt = propAir?.imageAlt || `${airTitle} Delivery Services`;
-  const airCtaLabel = propAir?.cta?.label || 'Air Cargo Details';
-  const airCtaHref = propAir?.cta?.href || '/services/air-freight';
+  const airCtaLabel = propAir?.cta?.label || 'Explore Air Cargo';
+  const airCtaHref = propAir?.cta?.href || '/cargo-services';
 
   // Sea Cargo Data
   const seaTitle = propSea?.title || (blockData?.sea_cargo_title as string) || 'SEA CARGO';
@@ -60,8 +60,8 @@ export const ServicesOverview: React.FC<ServicesOverviewProps> = ({
     'Sea cargo shipping with door-to-door delivery. Economical ocean container shipping for heavy goods and large household shipments.';
   const seaImage = propSea?.image || (blockData?.sea_cargo_image as string) || IMAGE_SLOTS.serviceSea.src;
   const seaAlt = propSea?.imageAlt || `${seaTitle} Delivery Services`;
-  const seaCtaLabel = propSea?.cta?.label || 'Sea Cargo Details';
-  const seaCtaHref = propSea?.cta?.href || '/services/sea-cargo';
+  const seaCtaLabel = propSea?.cta?.label || 'Explore Sea Cargo';
+  const seaCtaHref = propSea?.cta?.href || '/cargo-services';
 
   return (
     <section className="w-full bg-brand-navy py-16 lg:py-24 border-b border-border-dark text-white">

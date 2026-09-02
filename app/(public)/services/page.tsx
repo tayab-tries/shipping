@@ -66,9 +66,7 @@ export default async function ServicesHubPage() {
         })
       : fallbackServices;
 
-  const featuredService = services.find((s) => s.slug === 'air-freight') || services[0];
-  const secondaryCoreServices = services.filter((s) => s.category === 'core' && s.slug !== featuredService?.slug);
-  const specializedServices = services.filter((s) => s.category === 'specialized');
+  const specializedServices = services.filter((s) => s.slug !== 'air-freight' && s.slug !== 'sea-cargo');
 
   const breadcrumbs = [
     { label: 'Home', url: '/' },
@@ -156,7 +154,7 @@ export default async function ServicesHubPage() {
         </Container>
       </section>
 
-      {/* 2. Featured Service + Secondary Core Modes (Asymmetric Editorial Section) */}
+      {/* 2. Core Freight Modes (Balanced 2-Column Grid: AIR CARGO & SEA CARGO EXACT SAME SIZE) */}
       <section className="w-full bg-brand-navy py-20 lg:py-28 border-b border-border-dark text-white">
         <Container>
           <SectionHeading
@@ -167,103 +165,99 @@ export default async function ServicesHubPage() {
             badgeVariant="outline-dark"
           />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-stretch">
-            {/* ONE Dominant Featured Service Card (Col-span-7) */}
-            {featuredService && (
-              <div className="lg:col-span-7 bg-brand-black-deep rounded-md border border-border-dark overflow-hidden p-8 lg:p-10 flex flex-col justify-between space-y-8 group hover:border-slate-700 transition-colors shadow-2xl">
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <Badge variant="accent">Featured Freight Mode</Badge>
-                    <Plane className="w-6 h-6 text-slate-400" />
-                  </div>
-
-                  <div className="space-y-3">
-                    <h2 className="text-display-sm font-bold text-white group-hover:text-accent transition-colors">
-                      {featuredService.h1}
-                    </h2>
-                    <p className="text-body-md text-slate-300 leading-relaxed max-w-xl">
-                      {featuredService.shortDescription} Scheduled carrier allocations optimized for high-value commercial goods, documents, and urgent export shipments.
-                    </p>
-                  </div>
-
-                  {/* Dominant Service Image Slot Anchor */}
-                  <div className="relative aspect-[16/9] rounded-md overflow-hidden bg-brand-black border border-border-dark mt-4">
-                    <Image
-                      src={IMAGE_SLOTS.serviceAir.src}
-                      alt={IMAGE_SLOTS.serviceAir.alt}
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 650px"
-                      className="object-cover object-center group-hover:scale-102 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-brand-black/90 via-transparent to-transparent" />
-                    <div className="absolute bottom-4 left-4 text-xs font-mono text-slate-300">
-                      Palletized Export Air Freight Desk
-                    </div>
-                  </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-stretch">
+            {/* AIR CARGO CARD */}
+            <div className="bg-brand-black-deep rounded-md border border-border-dark overflow-hidden p-8 lg:p-10 flex flex-col justify-between space-y-8 group hover:border-slate-700 transition-colors shadow-2xl">
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <Badge variant="accent">Air Shipping</Badge>
+                  <Plane className="w-6 h-6 text-accent shrink-0" />
                 </div>
 
-                <div className="pt-6 border-t border-border-dark flex items-center justify-between">
-                  <span className="text-xs font-mono text-slate-400">Airport-to-Airport & Doorstep</span>
-                  <Link href={`/services/${featuredService.slug}`}>
-                    <Button variant="accent" size="md" rightIcon={<ArrowRight className="w-4 h-4 text-brand-black" />}>
-                      Explore Air Freight
-                    </Button>
-                  </Link>
+                <div className="space-y-3">
+                  <h2 className="text-display-sm font-bold text-white group-hover:text-accent transition-colors">
+                    Air Cargo Services
+                  </h2>
+                  <p className="text-body-md text-slate-300 leading-relaxed">
+                    Scheduled airline carrier allocations optimized for high-value commercial goods, urgent parcels, clothing, and export shipments originating from Pakistan.
+                  </p>
+                </div>
+
+                {/* Service Image Anchor */}
+                <div className="relative aspect-[16/9] rounded-md overflow-hidden bg-brand-black border border-border-dark mt-4">
+                  <Image
+                    src={IMAGE_SLOTS.serviceAir.src}
+                    alt={IMAGE_SLOTS.serviceAir.alt}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 650px"
+                    className="object-cover object-center group-hover:scale-102 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-brand-black/90 via-transparent to-transparent" />
+                  <div className="absolute bottom-4 left-4 text-xs font-mono text-slate-300 flex items-center gap-2 font-semibold">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    <span>Airport-to-Airport & Doorstep Delivery</span>
+                  </div>
                 </div>
               </div>
-            )}
 
-            {/* Secondary Core Services Rows (Col-span-5) */}
-            <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
-              {secondaryCoreServices.map((service) => {
-                const IconComponent = iconMap[service.iconName] || Package;
-                const quoteUrl = service.quoteCargoType
-                  ? `/quote?cargo=${service.quoteCargoType}`
-                  : '/quote';
+              <div className="pt-6 border-t border-border-dark flex items-center justify-between">
+                <span className="text-xs font-mono text-slate-400">Min 20 KG • Fast Express</span>
+                <Link href="/cargo-services">
+                  <Button variant="accent" size="md" rightIcon={<ArrowRight className="w-4 h-4 text-brand-black" />}>
+                    Explore Air Freight
+                  </Button>
+                </Link>
+              </div>
+            </div>
 
-                return (
-                  <div
-                    key={service.slug}
-                    className="bg-brand-black-deep rounded-md border border-border-dark p-8 space-y-6 flex-1 flex flex-col justify-between group hover:border-slate-700 transition-colors shadow-lg"
-                  >
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between border-b border-border-dark pb-3">
-                        <span className="text-xs font-mono text-slate-400 uppercase tracking-wider">
-                          {service.category} Freight
-                        </span>
-                        <IconComponent className="w-5 h-5 text-slate-400" />
-                      </div>
-                      <h3 className="text-heading-lg font-bold text-white group-hover:text-accent transition-colors">
-                        {service.name}
-                      </h3>
-                      <p className="text-body-sm text-slate-300 leading-relaxed">
-                        {service.shortDescription}
-                      </p>
-                    </div>
+            {/* SEA CARGO CARD (EXACT SAME SIZE & STYLE AS AIR CARGO) */}
+            <div className="bg-brand-black-deep rounded-md border border-border-dark overflow-hidden p-8 lg:p-10 flex flex-col justify-between space-y-8 group hover:border-slate-700 transition-colors shadow-2xl">
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <Badge variant="outline-dark">Sea Shipping</Badge>
+                  <Ship className="w-6 h-6 text-accent shrink-0" />
+                </div>
 
-                    <div className="pt-4 border-t border-border-dark flex items-center justify-between">
-                      <Link
-                        href={`/services/${service.slug}`}
-                        className="text-xs font-mono font-semibold text-slate-200 hover:text-accent flex items-center gap-1.5 transition-colors"
-                      >
-                        <span>View Service Details</span>
-                        <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-accent" />
-                      </Link>
-                      <Link href={quoteUrl}>
-                        <Button variant="outline-dark" size="sm">
-                          Quote
-                        </Button>
-                      </Link>
-                    </div>
+                <div className="space-y-3">
+                  <h2 className="text-display-sm font-bold text-white group-hover:text-accent transition-colors">
+                    Sea Cargo Services
+                  </h2>
+                  <p className="text-body-md text-slate-300 leading-relaxed">
+                    Economical ocean container shipping (LCL & FCL) for heavy goods, bulk commercial stock, machinery, and full household relocations departing Karachi ports.
+                  </p>
+                </div>
+
+                {/* Sea Cargo Image Anchor */}
+                <div className="relative aspect-[16/9] rounded-md overflow-hidden bg-brand-black border border-border-dark mt-4">
+                  <Image
+                    src={IMAGE_SLOTS.serviceSea.src}
+                    alt={IMAGE_SLOTS.serviceSea.alt}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 650px"
+                    className="object-cover object-center group-hover:scale-102 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-brand-black/90 via-transparent to-transparent" />
+                  <div className="absolute bottom-4 left-4 text-xs font-mono text-slate-300 flex items-center gap-2 font-semibold">
+                    <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+                    <span>Port-to-Port & Doorstep Delivery</span>
                   </div>
-                );
-              })}
+                </div>
+              </div>
+
+              <div className="pt-6 border-t border-border-dark flex items-center justify-between">
+                <span className="text-xs font-mono text-slate-400">Min 70–100 KG • Economical</span>
+                <Link href="/cargo-services">
+                  <Button variant="accent" size="md" rightIcon={<ArrowRight className="w-4 h-4 text-brand-black" />}>
+                    Explore Sea Cargo
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </Container>
       </section>
 
-      {/* 3. Full Service Directory (Structured Row Dividers, Not Generic SaaS Cards) */}
+      {/* 3. Full Service Directory */}
       {specializedServices.length > 0 && (
         <section className="w-full bg-surface-subtle py-20 lg:py-28 border-b border-border text-brand-black">
           <Container>
