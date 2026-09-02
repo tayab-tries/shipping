@@ -19,5 +19,18 @@ export async function GET(request: Request) {
     searchParams.get('redirect') ||
     '/';
 
-  return NextResponse.redirect(new URL(redirectUrl, request.url));
+  const response = NextResponse.redirect(new URL(redirectUrl, request.url));
+
+  // Set SameSite=None; Secure; Partitioned on draft mode cookie for iframe compatibility
+  response.cookies.getAll().forEach((cookie) => {
+    response.cookies.set(cookie.name, cookie.value, {
+      path: cookie.path || '/',
+      httpOnly: cookie.httpOnly ?? true,
+      sameSite: 'none',
+      secure: true,
+      partitioned: true,
+    });
+  });
+
+  return response;
 }

@@ -11,5 +11,17 @@ export async function GET(request: Request) {
     searchParams.get('redirect') ||
     '/';
 
-  return NextResponse.redirect(new URL(redirectUrl, request.url));
+  const response = NextResponse.redirect(new URL(redirectUrl, request.url));
+
+  response.cookies.getAll().forEach((cookie) => {
+    response.cookies.set(cookie.name, cookie.value, {
+      path: cookie.path || '/',
+      httpOnly: cookie.httpOnly ?? true,
+      sameSite: 'none',
+      secure: true,
+      partitioned: true,
+    });
+  });
+
+  return response;
 }
