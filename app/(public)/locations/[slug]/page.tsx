@@ -12,11 +12,9 @@ import { LocationHero } from '@/components/locations/LocationHero';
 import { OperationalBadge } from '@/components/locations/OperationalBadge';
 import { LocationServiceGrid } from '@/components/locations/LocationServiceGrid';
 import { LocationDestinationGrid } from '@/components/locations/LocationDestinationGrid';
-import { CoverageSection } from '@/components/locations/CoverageSection';
-import { LocationSections } from '@/components/locations/LocationSections';
+import { LocationBlogArticle } from '@/components/locations/LocationBlogArticle';
 import { LocationProcess } from '@/components/locations/LocationProcess';
 import { LocationGuides } from '@/components/locations/LocationGuides';
-import { LocationFaq } from '@/components/locations/LocationFaq';
 import { LocationCta } from '@/components/locations/LocationCta';
 import { getSanityLocationBySlug, getSanityLocationsList, SanityLocationDocument } from '@/sanity/lib/fetch';
 
@@ -199,8 +197,14 @@ export default async function LocationDetailPage({ params }: LocationPageProps) 
         supportedServices={location.supportedServices}
       />
 
-      {/* 4. Rich Article Content Sections */}
-      <LocationSections sections={location.sections} />
+      {/* 4. Editorial Blog Article Layout with In-Depth Content, Bullets, Links & Full Q&A FAQs */}
+      <LocationBlogArticle
+        cityName={location.name}
+        introduction={location.introduction}
+        localCoverageText={location.localCoverageText}
+        sections={location.sections}
+        faqs={location.faqs}
+      />
 
       {/* 5. Supported Destination Countries Grid */}
       <LocationDestinationGrid
@@ -208,23 +212,13 @@ export default async function LocationDetailPage({ params }: LocationPageProps) 
         supportedDestinations={location.supportedDestinations}
       />
 
-      {/* 6. Local Logistics & Collection Coverage Section */}
-      <CoverageSection
-        cityName={location.name}
-        localCoverageText={location.localCoverageText}
-        collectionAvailable={location.collectionAvailable}
-      />
-
-      {/* 7. Origin Dispatch Process Workflow */}
+      {/* 6. Origin Dispatch Process Workflow */}
       <LocationProcess cityName={location.name} />
 
-      {/* 8. Related Educational Guides */}
+      {/* 7. Related Educational Guides */}
       <LocationGuides cityName={location.name} />
 
-      {/* 9. City-Specific FAQ Accordion */}
-      <LocationFaq cityName={location.name} faqs={location.faqs} />
-
-      {/* 10. Origin-Specific Quote Conversion CTA */}
+      {/* 8. Origin-Specific Quote Conversion CTA */}
       <LocationCta cityName={location.name} slug={location.slug} />
     </article>
   );

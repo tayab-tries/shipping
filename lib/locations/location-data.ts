@@ -52,7 +52,7 @@ export const CITY_LOCATIONS_DATA: CityLocationRecord[] = [
       {
         title: 'Door-to-Door International Cargo Services in Lahore',
         content:
-          'Our door-to-door cargo service in Lahore means your shipment is collected directly from your home, office, shop, or warehouse and delivered to the final address at your destination country — with no need to visit a cargo office or freight terminal.',
+          'Our door-to-door cargo service in Lahore means your shipment is collected directly from your home, office, shop, or warehouse and delivered to the final address at your destination country — with no need to visit a cargo office or freight terminal.\n\nDoor-to-door international shipping from Lahore includes exact services depending on your shipment type, destination country, and chosen shipping method — our team advises the best option when you request a quote.',
         list: [
           'Doorstep cargo pickup in Lahore',
           'Professional export packing and shipment preparation',
@@ -67,38 +67,89 @@ export const CITY_LOCATIONS_DATA: CityLocationRecord[] = [
       {
         title: 'Air Cargo Services from Lahore',
         content:
-          'For urgent, lightweight, or time-sensitive international shipments, air cargo from Lahore offers significantly faster delivery than sea freight — often within days rather than weeks.\n\nAir freight from Lahore is well suited for personal belongings, urgent documents, business samples, commercial export products, and household items on tighter timelines.\n\nAir cargo pricing from Lahore is generally calculated using actual weight or volumetric weight (whichever is greater), along with destination, cargo type, and service level.',
+          'For urgent, lightweight, or time-sensitive international shipments, air cargo from Lahore offers significantly faster delivery than sea freight — often within days rather than weeks.\n\nAir cargo pricing from Lahore is generally calculated using actual weight or volumetric weight (whichever is greater), along with destination, cargo type, and service level.',
+        list: [
+          'Personal belongings and gifts',
+          'Documents and urgent parcels',
+          'Business samples',
+          'Commercial goods and export products',
+          'Electronics and permitted high-value items',
+          'Household items sent on a tighter timeline',
+          'Time-sensitive and perishable shipments',
+        ],
         links: [{ label: 'View Air Cargo Services', href: '/services/air-freight' }],
       },
       {
         title: 'Sea Cargo Services from Lahore',
         content:
           "For larger, heavier, or bulkier shipments where delivery time is less critical, sea cargo from Lahore is typically the most cost-effective international shipping option — especially for FCL (Full Container Load) and LCL (Less than Container Load) shipments.\n\nSea cargo from Lahore moves through Pakistan's port network (primarily Karachi Port and Port Qasim) before continuing on to its international destination.",
+        list: [
+          'Household goods and furniture',
+          'Commercial and business cargo',
+          'Bulk shipments and business inventory',
+          'Machinery and industrial equipment',
+          'Larger personal consignments',
+          'Export goods for overseas buyers',
+        ],
         links: [{ label: 'View Sea Cargo Services', href: '/services/sea-cargo' }],
       },
       {
         title: 'International Household Goods Shipping from Lahore',
         content:
-          'Relocating abroad, or sending belongings to family overseas? Our household goods shipping service from Lahore is built for exactly this — whether you are moving permanently or simply sending personal effects to loved ones.\n\nWe coordinate the shipment of permitted household items including furniture, clothing, personal belongings, kitchenware, and other goods, subject to destination-country customs regulations.',
+          "Relocating abroad, or sending belongings to family overseas? Our household goods shipping service from Lahore is built for exactly this — whether you're moving permanently or simply sending personal effects to loved ones.\n\nWe coordinate the shipment of permitted household items including furniture, clothing, personal belongings, kitchenware, and other goods, subject to destination-country customs regulations. This is one of the most common services we provide for the large overseas Pakistani community sending goods from Lahore to the UK, USA, Canada, and the Gulf.",
       },
       {
         title: 'Commercial Cargo Services from Lahore',
         content:
-          "Lahore is one of Pakistan's largest commercial and industrial hubs, and businesses across the city rely on international cargo services to reach overseas customers and partners. Our commercial cargo service from Lahore supports exporters sending products, samples, inventory, and business shipments internationally.",
+          "Lahore is one of Pakistan's largest commercial and industrial hubs, and businesses across the city rely on international cargo services to reach overseas customers and partners. Our commercial cargo service from Lahore supports exporters sending products, samples, inventory, and business shipments internationally.\n\nWe help select the right shipping method — air freight for urgent commercial cargo, sea freight (FCL/LCL) for bulk export orders — based on weight, volume, destination, and delivery timeline.",
+        links: [{ label: 'View Commercial Services', href: '/services/commercial-cargo' }],
       },
       {
         title: 'Customs Clearance & Documentation for Lahore Shipments',
         content:
-          'International shipments from Lahore require proper documentation and are subject to customs procedures both in Pakistan and at the destination country. Our team assists with export documentation preparation, customs declaration, and guidance on destination-country import compliance.',
+          'International shipments from Lahore require proper documentation and are subject to customs procedures both in Pakistan and at the destination country. Requirements vary by destination, goods type, and shipment value — our team reviews your cargo details before booking to ensure a smooth customs process.',
+        list: [
+          'Export documentation preparation',
+          'Customs declaration and coordination',
+          'Compliance with destination-country import regulations',
+          'Guidance on restricted and prohibited items',
+        ],
+      },
+      {
+        title: 'Why Choose Raahi International for Cargo Services in Lahore?',
+        content:
+          'Choosing Raahi International means partnering with an experienced logistics team dedicated to handling your overseas shipment safely and efficiently.',
+        list: [
+          'Door-to-door shipping across all Lahore areas',
+          'Air cargo and sea cargo (FCL & LCL) solutions',
+          'Doorstep pickup — no drop-off required',
+          'Personal, household, and commercial cargo handling',
+          'Full documentation and customs clearance assistance',
+          'Worldwide destination delivery',
+          'End-to-end support from pickup to final delivery',
+        ],
       },
       {
         title: 'Ship from Lahore to Worldwide Destinations',
         content:
-          'Whether you are sending a small personal parcel or a large commercial shipment, our international cargo services in Lahore cover popular destinations worldwide.',
+          "Whether you're sending a small personal parcel or a large commercial shipment, our international cargo services in Lahore cover popular destinations including the UK, USA, Canada, Australia, UAE, Saudi Arabia, and Qatar, with availability depending on current shipping schedules.",
         links: [
           { label: 'Lahore to UK Cargo', href: '/destinations/uk?origin=lahore' },
           { label: 'Lahore to UAE Cargo', href: '/destinations/uae?origin=lahore' },
           { label: 'Lahore to USA Cargo', href: '/destinations/usa?origin=lahore' },
+        ],
+      },
+      {
+        title: 'How International Cargo Shipping from Lahore Works',
+        content:
+          'Our streamlined 6-step international cargo dispatch workflow ensures your shipment moves smoothly from your Lahore address to its destination abroad:',
+        list: [
+          '1. Request a Quote — Share your destination, cargo details, weight, and dimensions',
+          '2. Choose Your Shipping Method — We help determine whether air freight or sea freight suits your shipment',
+          '3. Pickup & Preparation — Your cargo is collected from your Lahore address and professionally packed',
+          '4. Documentation & Customs — Required shipping and customs paperwork is prepared and processed',
+          '5. International Transportation — Your shipment is dispatched via air or sea freight',
+          '6. Destination Delivery — Cargo is delivered to the destination address, door-to-door',
         ],
       },
     ],
