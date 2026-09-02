@@ -43,9 +43,15 @@ export const IMAGE_SLOTS = {
     aspectRatio: 'aspect-[4/3]',
   },
   pakistanHub: {
-    src: '/images/pakistan-hub.webp',
-    fallbackSrc: '/images/pakistan-hub.svg',
+    src: '/images/hero-freight.jpg',
+    fallbackSrc: '/images/hero-freight.svg',
     alt: 'Pakistan export cargo freight terminal handling facility',
+    aspectRatio: 'aspect-[16/9]',
+  },
+  connectingPakistanMap: {
+    src: '/images/pakistan-map-network.png',
+    fallbackSrc: '/images/hero-freight.jpg',
+    alt: 'Connecting Pakistan — Delivering Possibilities network map',
     aspectRatio: 'aspect-[16/9]',
   },
   destination: {

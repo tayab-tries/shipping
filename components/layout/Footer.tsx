@@ -7,14 +7,25 @@ import { footerNavigation as defaultFooterNav } from '@/config/nav.config';
 import { Container } from '@/components/ui/Container';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
-import { SanitySiteSettings } from '@/sanity/lib/fetch';
+import { SanitySiteSettings, getSanityLocationsList } from '@/sanity/lib/fetch';
+import { getPublishedLocations } from '@/lib/locations/location-content';
 
 interface FooterProps {
   sanitySiteSettings?: SanitySiteSettings | null;
 }
 
 export const Footer: React.FC<FooterProps> = async ({ sanitySiteSettings }) => {
-  const business = await getPublishedBusinessSettings();
+  const [business, sanityLocations, fallbackLocations] = await Promise.all([
+    getPublishedBusinessSettings(),
+    getSanityLocationsList(),
+    getPublishedLocations(),
+  ]);
+
+  // Dynamically resolve published city locations
+  const activeLocations =
+    sanityLocations && sanityLocations.length > 0
+      ? sanityLocations.map((l) => ({ label: `${l.name} Hub`, href: `/locations/${l.slug}` }))
+      : fallbackLocations.map((l) => ({ label: `${l.name} Hub`, href: `/locations/${l.slug}` }));
 
   // Rule #1: Business contact fields as single source of contact info
   const brandName = sanitySiteSettings?.businessName || business.brandName || siteConfig.name;
@@ -28,10 +39,21 @@ export const Footer: React.FC<FooterProps> = async ({ sanitySiteSettings }) => {
     sanitySiteSettings?.footerDescription ||
     'International cargo delivery provider providing reliable air cargo, ocean sea cargo, and door-to-door shipping services connecting Pakistan worldwide.';
 
-  const footerGroups =
+  // Build footer navigation groups, dynamically replacing Origin Locations items if active locations exist
+  const baseFooterGroups =
     sanitySiteSettings?.footerGroups && sanitySiteSettings.footerGroups.length > 0
       ? sanitySiteSettings.footerGroups
       : defaultFooterNav.map((g) => ({ title: g.title, links: g.items }));
+
+  const footerGroups = baseFooterGroups.map((group) => {
+    if (group.title.toLowerCase().includes('location') || group.title.toLowerCase().includes('origin')) {
+      return {
+        ...group,
+        links: activeLocations.length > 0 ? activeLocations : group.links,
+      };
+    }
+    return group;
+  });
 
   const copyrightText =
     sanitySiteSettings?.copyrightText ||

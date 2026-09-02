@@ -13,7 +13,6 @@ import { TrustSection } from '@/components/sections/TrustSection';
 import { TestimonialsSection } from '@/components/sections/TestimonialsSection';
 import { FaqSection } from '@/components/sections/FaqSection';
 import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
-import { MobileBottomCta } from '@/components/layout/MobileBottomCta';
 import { getPublishedHomepageBlocks } from '@/lib/cms/homepage.service';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
 import { getSanityHomepageData, getSanitySiteSettingsData } from '@/sanity/lib/fetch';
@@ -64,7 +63,6 @@ export default async function HomePage() {
   ]);
 
   const activeWhatsapp = sanitySiteSettings?.whatsappNumber || business.whatsappNumber;
-  const activePhone = sanitySiteSettings?.phone || business.phonePrimary || '+92 300 1234567';
 
   return (
     <div className="w-full pb-16 sm:pb-0">
@@ -203,15 +201,6 @@ export default async function HomePage() {
           whatsappNumber={activeWhatsapp}
         />
       )}
-
-      {/* 14. MOBILE BOTTOM CTA */}
-      <MobileBottomCta
-        callLabel={sanityHomepage?.mobileBottomCta?.callLabel}
-        whatsappLabel={sanityHomepage?.mobileBottomCta?.whatsappLabel}
-        quoteLabel={sanityHomepage?.mobileBottomCta?.quoteLabel}
-        phone={activePhone}
-        whatsappNumber={activeWhatsapp}
-      />
     </div>
   );
 }

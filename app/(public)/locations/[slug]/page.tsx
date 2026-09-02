@@ -13,6 +13,7 @@ import { OperationalBadge } from '@/components/locations/OperationalBadge';
 import { LocationServiceGrid } from '@/components/locations/LocationServiceGrid';
 import { LocationDestinationGrid } from '@/components/locations/LocationDestinationGrid';
 import { CoverageSection } from '@/components/locations/CoverageSection';
+import { LocationSections } from '@/components/locations/LocationSections';
 import { LocationProcess } from '@/components/locations/LocationProcess';
 import { LocationGuides } from '@/components/locations/LocationGuides';
 import { LocationFaq } from '@/components/locations/LocationFaq';
@@ -53,7 +54,8 @@ export async function generateMetadata({ params }: LocationPageProps): Promise<M
 
   const title =
     sanityLocation?.seo?.metaTitle ||
-    (fallbackLocation ? `${fallbackLocation.seoTitle} | ${siteConfig.name}` : `Cargo Services | ${siteConfig.name}`);
+    fallbackLocation?.seoTitle ||
+    `Cargo Shipping ${fallbackLocation?.name || ''} | ${siteConfig.name}`;
 
   const description =
     sanityLocation?.seo?.metaDescription ||
@@ -108,6 +110,7 @@ export default async function LocationDetailPage({ params }: LocationPageProps) 
     isVerified: true,
     isIndexable: true,
     faqs: sanityLocation?.faqs || fallbackLocation?.faqs || [],
+    sections: fallbackLocation?.sections,
   };
 
   const quoteUrl = `/quote?origin=${location.slug}`;
@@ -196,29 +199,32 @@ export default async function LocationDetailPage({ params }: LocationPageProps) 
         supportedServices={location.supportedServices}
       />
 
-      {/* 4. Supported Destination Countries Grid */}
+      {/* 4. Rich Article Content Sections */}
+      <LocationSections sections={location.sections} />
+
+      {/* 5. Supported Destination Countries Grid */}
       <LocationDestinationGrid
         cityName={location.name}
         supportedDestinations={location.supportedDestinations}
       />
 
-      {/* 5. Local Logistics & Collection Coverage Section */}
+      {/* 6. Local Logistics & Collection Coverage Section */}
       <CoverageSection
         cityName={location.name}
         localCoverageText={location.localCoverageText}
         collectionAvailable={location.collectionAvailable}
       />
 
-      {/* 6. Origin Dispatch Process Workflow */}
+      {/* 7. Origin Dispatch Process Workflow */}
       <LocationProcess cityName={location.name} />
 
-      {/* 7. Related Educational Guides */}
+      {/* 8. Related Educational Guides */}
       <LocationGuides cityName={location.name} />
 
-      {/* 8. City-Specific FAQ Accordion */}
+      {/* 9. City-Specific FAQ Accordion */}
       <LocationFaq cityName={location.name} faqs={location.faqs} />
 
-      {/* 9. Origin-Specific Quote Conversion CTA */}
+      {/* 10. Origin-Specific Quote Conversion CTA */}
       <LocationCta cityName={location.name} slug={location.slug} />
     </article>
   );

@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { CITY_LOCATIONS_DATA, CityLocationRecord } from './location-data';
 
 export interface LocationData {
   id: string;
@@ -20,10 +21,40 @@ export interface LocationData {
   isVerified: boolean;
   isIndexable: boolean;
   faqs: Array<{ question: string; answer: string }>;
+  sections?: Array<{
+    title: string;
+    content: string;
+    list?: string[];
+    links?: Array<{ label: string; href: string }>;
+  }>;
 }
 
-// ZERO seeded/default location records in codebase
-export const staticLocations: LocationData[] = [];
+function mapCityRecordToLocationData(city: CityLocationRecord): LocationData {
+  return {
+    id: city.id,
+    name: city.name,
+    slug: city.slug,
+    province: city.province,
+    h1: city.h1,
+    seoTitle: city.seoTitle,
+    seoDescription: city.seoDescription,
+    introduction: city.introduction,
+    serviceAvailable: city.serviceAvailable,
+    collectionAvailable: city.collectionAvailable,
+    hasPhysicalBranch: city.hasPhysicalBranch,
+    branchAddress: city.branchAddress,
+    localCoverageText: city.localCoverageText,
+    supportedServices: city.supportedServices,
+    supportedDestinations: city.supportedDestinations,
+    status: 'published',
+    isVerified: true,
+    isIndexable: true,
+    faqs: city.faqs,
+    sections: city.sections,
+  };
+}
+
+export const staticLocations: LocationData[] = CITY_LOCATIONS_DATA.map(mapCityRecordToLocationData);
 
 export async function getPublishedLocations(): Promise<LocationData[]> {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -39,27 +70,31 @@ export async function getPublishedLocations(): Promise<LocationData[]> {
         .order('name', { ascending: true });
 
       if (data && data.length > 0) {
-        return data.map((b) => ({
-          id: b.id,
-          name: b.name,
-          slug: b.slug,
-          province: b.province || 'Pakistan',
-          h1: b.h1 || `Cargo Services in ${b.name}`,
-          seoTitle: b.meta_title || `Cargo Shipping ${b.name}`,
-          seoDescription: b.meta_description || `Cargo shipping in ${b.name}`,
-          introduction: b.meta_description || `Cargo shipping in ${b.name}`,
-          serviceAvailable: true,
-          collectionAvailable: true,
-          hasPhysicalBranch: false,
-          branchAddress: b.hub_address || '',
-          localCoverageText: b.hub_address || '',
-          supportedServices: ['air-freight', 'sea-cargo'],
-          supportedDestinations: [],
-          status: 'published',
-          isVerified: true,
-          isIndexable: true,
-          faqs: b.faqs || [],
-        }));
+        return data.map((b) => {
+          const match = staticLocations.find((l) => l.slug === b.slug);
+          return {
+            id: b.id,
+            name: b.name,
+            slug: b.slug,
+            province: b.province || match?.province || 'Pakistan',
+            h1: match?.h1 || b.h1 || `Cargo Services in ${b.name}`,
+            seoTitle: match?.seoTitle || b.meta_title || `Cargo Shipping ${b.name}`,
+            seoDescription: match?.seoDescription || b.meta_description || `Cargo shipping in ${b.name}`,
+            introduction: match?.introduction || b.meta_description || `Cargo shipping in ${b.name}`,
+            serviceAvailable: true,
+            collectionAvailable: true,
+            hasPhysicalBranch: match?.hasPhysicalBranch || false,
+            branchAddress: b.hub_address || match?.branchAddress || '',
+            localCoverageText: match?.localCoverageText || b.hub_address || '',
+            supportedServices: match?.supportedServices || ['air-freight', 'sea-cargo'],
+            supportedDestinations: match?.supportedDestinations || [],
+            status: 'published',
+            isVerified: true,
+            isIndexable: true,
+            faqs: match?.faqs || b.faqs || [],
+            sections: match?.sections,
+          };
+        });
       }
     } catch (err: unknown) {
       console.error('getPublishedLocations fetch error:', err);
@@ -70,6 +105,9 @@ export async function getPublishedLocations(): Promise<LocationData[]> {
 }
 
 export async function getLocationBySlug(slug: string): Promise<LocationData | undefined> {
+  const match = staticLocations.find((l) => l.slug === slug);
+  if (match) return match;
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
   const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || '';
 
@@ -111,19 +149,13 @@ export async function getLocationBySlug(slug: string): Promise<LocationData | un
     }
   }
 
-  return staticLocations.find((l) => l.slug === slug);
+  return undefined;
 }
 
 export function getPublishedStaticLocations(): LocationData[] {
-  return staticLocations.filter(
-    (loc) => loc.status === 'published' && loc.isVerified === true && loc.isIndexable === true
-  );
+  return staticLocations;
 }
 
 export function getStaticLocationBySlug(slug: string): LocationData | undefined {
-  const loc = staticLocations.find((l) => l.slug === slug);
-  if (loc && loc.status === 'published' && loc.isVerified === true) {
-    return loc;
-  }
-  return undefined;
+  return staticLocations.find((l) => l.slug === slug);
 }

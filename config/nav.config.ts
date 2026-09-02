@@ -41,6 +41,11 @@ export const mainNavigation: NavItem[] = [
         href: '/services/commercial-cargo',
         description: 'Trade cargo and B2B export shipments.',
       },
+      {
+        title: 'Excess Baggage',
+        href: '/services/excess-baggage',
+        description: 'Personal baggage & household goods relocation.',
+      },
     ],
   },
   {
@@ -68,6 +73,9 @@ export const mainNavigation: NavItem[] = [
       { title: 'Karachi Hub', href: '/locations/karachi' },
       { title: 'Islamabad Hub', href: '/locations/islamabad' },
       { title: 'Rawalpindi Hub', href: '/locations/rawalpindi' },
+      { title: 'Multan Hub', href: '/locations/multan' },
+      { title: 'Faisalabad Hub', href: '/locations/faisalabad' },
+      { title: 'Peshawar Hub', href: '/locations/peshawar' },
     ],
   },
   {
@@ -77,9 +85,9 @@ export const mainNavigation: NavItem[] = [
     viewAllHref: '/guides',
     viewAllLabel: 'View all guides',
     children: [
-      { title: 'Customs & Regulations', href: '/guides/customs' },
-      { title: 'Packaging Guidelines', href: '/guides/packaging' },
-      { title: 'Restricted Items', href: '/guides/restricted-items' },
+      { title: 'Customs & Documentation', href: '/guides/export-customs-documentation-guide' },
+      { title: 'Packaging Guidelines', href: '/guides/packing-cargo-guide' },
+      { title: 'Air vs Sea Cargo', href: '/guides/air-vs-sea-cargo' },
     ],
   },
   {
@@ -120,11 +128,15 @@ export const footerNavigation: FooterNavGroup[] = [
     ],
   },
   {
-    title: 'Locations',
+    title: 'Origin Locations',
     items: [
       { label: 'Lahore Hub', href: '/locations/lahore' },
       { label: 'Karachi Hub', href: '/locations/karachi' },
       { label: 'Islamabad Hub', href: '/locations/islamabad' },
+      { label: 'Rawalpindi Hub', href: '/locations/rawalpindi' },
+      { label: 'Multan Hub', href: '/locations/multan' },
+      { label: 'Faisalabad Hub', href: '/locations/faisalabad' },
+      { label: 'Peshawar Hub', href: '/locations/peshawar' },
     ],
   },
   {
@@ -132,9 +144,9 @@ export const footerNavigation: FooterNavGroup[] = [
     items: [
       { label: 'Track Shipment', href: '/track' },
       { label: 'Request Quote', href: '/quote' },
-      { label: 'Customs Guides', href: '/guides/customs' },
-      { label: 'Packaging Tips', href: '/guides/packaging' },
-      { label: 'Contact Us', href: '/contact' },
+      { label: 'Export Documentation', href: '/guides/export-customs-documentation-guide' },
+      { label: 'Packaging Guide', href: '/guides/packing-cargo-guide' },
+      { label: 'Air vs Sea Freight', href: '/guides/air-vs-sea-cargo' },
     ],
   },
 ];
