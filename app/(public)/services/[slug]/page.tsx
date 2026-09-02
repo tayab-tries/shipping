@@ -1,6 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
-import { notFound, redirect } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { PortableText, PortableTextComponents } from 'next-sanity';
 import { servicesRegistry, getEnabledServices } from '@/config/services.config';
 import { siteConfig } from '@/config/site.config';
@@ -159,12 +159,18 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
 export default async function ServiceDetailPage({ params }: ServicePageProps) {
   const { slug } = await params;
 
-  // Handle legacy door-to-door or cargo-services route by redirecting cleanly to /services/air-freight
-  if (slug === 'door-to-door' || slug === 'door_to_door') {
-    redirect('/services');
+  // Redirect Air Cargo, Sea Cargo, and legacy slugs to unified /cargo-services hub
+  if (
+    slug === 'air-freight' ||
+    slug === 'sea-cargo' ||
+    slug === 'cargo-services' ||
+    slug === 'cargo_services' ||
+    slug === 'air-and-sea-cargo'
+  ) {
+    permanentRedirect('/cargo-services');
   }
-  if (slug === 'cargo-services' || slug === 'cargo_services') {
-    redirect('/services/air-freight');
+  if (slug === 'door-to-door' || slug === 'door_to_door') {
+    permanentRedirect('/cargo-services');
   }
 
   const [business, sanitySiteSettings] = await Promise.all([

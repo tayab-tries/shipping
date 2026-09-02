@@ -10,6 +10,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticRoutes = [
     '',
+    '/cargo-services',
     '/services',
     '/destinations',
     '/locations',
@@ -19,9 +20,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/guides',
   ];
 
-  // 1. Dynamically map ONLY enabled & verified services
+  // 1. Dynamically map ONLY enabled & verified non-redirected services
   const enabledServices = getEnabledServices();
-  const serviceRoutes = enabledServices.map((s) => `/services/${s.slug}`);
+  const serviceRoutes = enabledServices
+    .filter((s) => s.slug !== 'air-freight' && s.slug !== 'sea-cargo' && s.slug !== 'door-to-door')
+    .map((s) => `/services/${s.slug}`);
 
   // 2. Dynamically map ONLY published & verified location hubs
   const publishedLocations = await getPublishedLocations();

@@ -10,18 +10,28 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
-        source: '/guides/air-vs-sea-cargo',
-        destination: '/services/air-freight',
+        source: '/services/air-freight',
+        destination: '/cargo-services',
         permanent: true,
       },
       {
-        source: '/cargo-services',
-        destination: '/services/air-freight',
+        source: '/services/sea-cargo',
+        destination: '/cargo-services',
+        permanent: true,
+      },
+      {
+        source: '/guides/air-vs-sea-cargo',
+        destination: '/cargo-services',
         permanent: true,
       },
       {
         source: '/services/cargo-services',
-        destination: '/services/air-freight',
+        destination: '/cargo-services',
+        permanent: true,
+      },
+      {
+        source: '/services/air-and-sea-cargo',
+        destination: '/cargo-services',
         permanent: true,
       },
     ];

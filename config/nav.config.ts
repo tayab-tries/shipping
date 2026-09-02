@@ -87,7 +87,7 @@ export const mainNavigation: NavItem[] = [
     children: [
       { title: 'Customs & Documentation', href: '/guides/export-customs-documentation-guide' },
       { title: 'Packaging Guidelines', href: '/guides/packing-cargo-guide' },
-      { title: 'Air vs Sea Cargo', href: '/services/air-freight' },
+      { title: 'Air vs Sea Cargo', href: '/cargo-services#quick-comparison' },
     ],
   },
   {
@@ -111,8 +111,8 @@ export const footerNavigation: FooterNavGroup[] = [
   {
     title: 'Services',
     items: [
-      { label: 'Air Cargo', href: '/services/air-freight' },
-      { label: 'Sea Cargo', href: '/services/sea-cargo' },
+      { label: 'Air Cargo', href: '/cargo-services#part-1-air-cargo' },
+      { label: 'Sea Cargo', href: '/cargo-services#part-2-sea-cargo' },
       { label: 'Commercial Cargo', href: '/services/commercial-cargo' },
       { label: 'Excess Baggage', href: '/services/excess-baggage' },
     ],
@@ -146,7 +146,7 @@ export const footerNavigation: FooterNavGroup[] = [
       { label: 'Request Quote', href: '/quote' },
       { label: 'Export Documentation', href: '/guides/export-customs-documentation-guide' },
       { label: 'Packaging Guide', href: '/guides/packing-cargo-guide' },
-      { label: 'Air vs Sea Freight', href: '/services/air-freight' },
+      { label: 'Air vs Sea Freight', href: '/cargo-services#quick-comparison' },
     ],
   },
 ];
