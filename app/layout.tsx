@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google';
 import { draftMode } from 'next/headers';
+import Script from 'next/script';
 import { constructMetadata } from '@/lib/seo/metadata.service';
 import { SanityVisualEditing } from '@/components/SanityVisualEditing';
+import { GA_MEASUREMENT_ID } from '@/lib/analytics/gtag';
 import './globals.css';
 
 const sansFont = Plus_Jakarta_Sans({
@@ -37,6 +39,22 @@ export default async function RootLayout({
       <body className="min-h-full flex flex-col font-sans bg-background text-foreground selection:bg-slate-800 selection:text-white">
         {children}
         {isDraft && <SanityVisualEditing />}
+        {GA_MEASUREMENT_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_MEASUREMENT_ID}');
+              `}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   );

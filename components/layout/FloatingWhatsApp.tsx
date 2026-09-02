@@ -1,6 +1,9 @@
+'use client';
+
 import React from 'react';
 import { MessageSquare } from 'lucide-react';
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
+import { trackWhatsAppClick } from '@/lib/analytics/gtag';
 
 interface FloatingWhatsAppProps {
   whatsappNumber?: string;
@@ -17,6 +20,7 @@ export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({ whatsappNumb
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={trackWhatsAppClick}
       className="fixed bottom-5 right-5 z-40 px-4 py-3 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs rounded-full shadow-2xl transition-all border border-emerald-400/40 focus:outline-none focus:ring-2 focus:ring-emerald-400 flex items-center gap-2 min-h-[48px]"
       aria-label="Chat with Raahi International on WhatsApp"
     >

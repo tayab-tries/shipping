@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Phone, MessageSquare, Calculator } from 'lucide-react';
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
+import { trackPhoneClick, trackWhatsAppClick } from '@/lib/analytics/gtag';
 
 export interface MobileBottomCtaProps {
   callLabel?: string;
@@ -32,6 +33,7 @@ export const MobileBottomCta: React.FC<MobileBottomCtaProps> = ({
       {/* Call Button */}
       <a
         href={`tel:${cleanPhone}`}
+        onClick={trackPhoneClick}
         className="flex-1 py-2.5 px-3 bg-brand-navy hover:bg-slate-800 border border-border-dark rounded text-center text-xs font-bold text-white flex items-center justify-center gap-1.5 transition-colors"
       >
         <Phone className="w-4 h-4 text-accent shrink-0" />
@@ -43,6 +45,7 @@ export const MobileBottomCta: React.FC<MobileBottomCtaProps> = ({
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={trackWhatsAppClick}
         className="flex-1 py-2.5 px-3 bg-emerald-600 hover:bg-emerald-700 border border-emerald-500/50 rounded text-center text-xs font-bold text-white flex items-center justify-center gap-1.5 transition-colors"
       >
         <MessageSquare className="w-4 h-4 text-white shrink-0 fill-current" />

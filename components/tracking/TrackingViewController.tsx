@@ -8,6 +8,7 @@ import { TrackingTimeline } from './TrackingTimeline';
 import { TrackingSupportPanel } from './TrackingSupportPanel';
 import { PublicTrackingResponse } from '@/types/tracking';
 import { AlertCircle, Loader2 } from 'lucide-react';
+import { trackTrackingSearch } from '@/lib/analytics/gtag';
 
 export interface TrackingViewControllerProps {
   initialRef?: string;
@@ -59,6 +60,7 @@ export const TrackingViewController: React.FC<TrackingViewControllerProps> = ({ 
 
       setResultData(data.data);
       setStatus('success');
+      trackTrackingSearch();
     } catch {
       setStatus('error');
       setErrorMessage('Unable to process tracking query. Please check your network connection.');
@@ -88,6 +90,7 @@ export const TrackingViewController: React.FC<TrackingViewControllerProps> = ({ 
           }
           setResultData(data.data);
           setStatus('success');
+          trackTrackingSearch();
         })
         .catch(() => {
           if (!isCancelled) {

@@ -7,6 +7,7 @@ import { QuoteStep3Contact } from './QuoteStep3Contact';
 import { QuoteSuccessView } from './QuoteSuccessView';
 import { quoteSubmissionSchema } from '@/lib/quote/quote-validation';
 import { CheckCircle2, ShieldCheck, Clock } from 'lucide-react';
+import { trackQuoteLead } from '@/lib/analytics/gtag';
 
 export interface QuoteFormControllerProps {
   initialOrigin?: string;
@@ -172,6 +173,7 @@ export const QuoteFormController: React.FC<QuoteFormControllerProps> = ({
 
       setQuoteReference(data.data.quoteReference);
       setIsSubmitted(true);
+      trackQuoteLead();
       scrollAndFocusTop();
     } catch {
       setGlobalError('Network communication error. Please check your connection and try again.');
