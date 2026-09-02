@@ -7,10 +7,14 @@ import { structure } from './sanity/structure';
 import { resolve } from './sanity/presentation/resolve';
 import { apiVersion, dataset, projectId, isSanityConfigured } from './sanity/env';
 
-const previewOrigin =
-  process.env.SANITY_STUDIO_PREVIEW_URL ||
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  'https://raahi.pk';
+function getPreviewOrigin(): string {
+  if (process.env.SANITY_STUDIO_PREVIEW_URL) return process.env.SANITY_STUDIO_PREVIEW_URL;
+  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
+  if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+    return 'http://localhost:3000';
+  }
+  return 'https://raahi.pk';
+}
 
 export default defineConfig({
   basePath: '/',
@@ -24,7 +28,7 @@ export default defineConfig({
     presentationTool({
       resolve,
       previewUrl: {
-        origin: previewOrigin,
+        origin: getPreviewOrigin(),
         previewMode: {
           enable: '/api/draft-mode/enable',
         },
