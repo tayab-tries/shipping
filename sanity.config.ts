@@ -11,7 +11,7 @@ export default defineConfig({
   basePath: '/',
   name: 'raahi_cargo_studio',
   title: 'Raahi International CMS Studio',
-  projectId: isSanityConfigured ? projectId : 'a1b2c3d4',
+  projectId: isSanityConfigured ? projectId : 'vst9vvau',
   dataset: dataset || 'production',
   schema,
   plugins: [
