@@ -212,7 +212,7 @@ export const CITY_LOCATIONS_DATA: CityLocationRecord[] = [
       {
         title: 'Door-to-Door International Cargo Services in Karachi',
         content:
-          'Our door-to-door cargo service in Karachi means your shipment is collected directly from your home, office, shop, or warehouse and delivered to the final address at your destination country — with no need to visit a port terminal or cargo office yourself.',
+          'Our door-to-door cargo service in Karachi means your shipment is collected directly from your home, office, shop, or warehouse and delivered to the final address at your destination country — with no need to visit a port terminal or cargo office yourself.\n\nBecause Karachi sits directly on the port, sea cargo shipments here often move to dispatch faster than shipments trucked in from other Pakistani cities — a genuine time and cost advantage for Karachi-based customers.',
         list: [
           'Doorstep cargo pickup across Karachi',
           'Professional export packing and shipment preparation',
@@ -227,38 +227,91 @@ export const CITY_LOCATIONS_DATA: CityLocationRecord[] = [
       {
         title: 'Air Cargo Services from Karachi',
         content:
-          "For urgent, lightweight, or time-sensitive shipments, air cargo from Karachi provides fast international delivery through Jinnah International Airport, one of Pakistan's busiest cargo hubs with frequent international departures.\n\nAir freight from Karachi is well suited for personal belongings, urgent parcels, commercial goods, and time-sensitive perishable exports including seafood.",
+          "For urgent, lightweight, or time-sensitive shipments, air cargo from Karachi provides fast international delivery through Jinnah International Airport, one of Pakistan's busiest cargo hubs with frequent international departures.\n\nAir cargo pricing from Karachi is generally calculated using actual weight or volumetric weight (whichever is greater), along with destination, cargo type, and service level.",
+        list: [
+          'Personal belongings and gifts',
+          'Documents and urgent parcels',
+          'Business samples',
+          'Commercial goods and export products',
+          'Electronics and permitted high-value items',
+          'Household items sent on a tighter timeline',
+          'Time-sensitive and perishable shipments, including seafood exports',
+        ],
         links: [{ label: 'View Air Cargo Services', href: '/services/air-freight' }],
       },
       {
         title: 'Sea Cargo Services from Karachi',
         content:
-          'Karachi is Pakistan’s primary sea freight hub, home to both Karachi Port and Port Qasim — meaning sea cargo from Karachi bypasses the inland transport required by shipments originating in other cities. This makes sea cargo from Karachi one of the most efficient and cost-effective international shipping options in the country, particularly for FCL (Full Container Load) and LCL (Less than Container Load) shipments.',
+          'Karachi is Pakistan’s primary sea freight hub, home to both Karachi Port and Port Qasim — meaning sea cargo from Karachi bypasses the inland transport required by shipments originating in other cities. This makes sea cargo from Karachi one of the most efficient and cost-effective international shipping options in the country, particularly for FCL (Full Container Load) and LCL (Less than Container Load) shipments.\n\nBecause sea cargo originates at the port itself, Karachi shipments typically avoid the additional 1-3 days of inland freight transit that inland cities require before their cargo reaches the ship.',
+        list: [
+          'Household goods and furniture',
+          'Commercial and business cargo',
+          'Bulk shipments and business inventory',
+          'Machinery and industrial equipment',
+          'Textile and pharmaceutical exports',
+          'Larger personal consignments',
+          'Export goods for overseas buyers',
+        ],
         links: [{ label: 'View Sea Cargo Services', href: '/services/sea-cargo' }],
       },
       {
         title: 'International Household Goods Shipping from Karachi',
         content:
-          'Relocating abroad, or sending belongings to family overseas? Our household goods shipping service from Karachi supports both permanent relocation and personal effects shipments to family and friends.\n\nWe coordinate the shipment of permitted household items including furniture, clothing, personal belongings, kitchenware, and other goods, subject to destination-country customs regulations.',
+          "Relocating abroad, or sending belongings to family overseas? Our household goods shipping service from Karachi supports both permanent relocation and personal effects shipments to family and friends.\n\nWe coordinate the shipment of permitted household items including furniture, clothing, personal belongings, kitchenware, and other goods, subject to destination-country customs regulations — a service widely used by Karachi's large overseas community sending goods to the UK, USA, Canada, and the Gulf.",
       },
       {
         title: 'Commercial Cargo Services from Karachi',
         content:
-          'As Pakistan’s largest commercial and industrial city, Karachi is home to major export sectors including textiles, pharmaceuticals, chemicals, seafood, and light engineering goods. Our commercial cargo service from Karachi supports exporters and businesses sending products, samples, inventory, and bulk shipments.',
+          'As Pakistan’s largest commercial and industrial city, Karachi is home to major export sectors including textiles, pharmaceuticals, chemicals, seafood, and light engineering goods. Our commercial cargo service from Karachi supports exporters and businesses sending products, samples, inventory, and bulk shipments to international customers and partners.\n\nWe help select the right shipping method — air freight for urgent or perishable commercial cargo (such as seafood exports), sea freight (FCL/LCL) for bulk industrial and textile exports — based on weight, volume, destination, and delivery timeline.',
+        links: [{ label: 'View Commercial Services', href: '/services/commercial-cargo' }],
       },
       {
         title: 'Customs Clearance & Documentation for Karachi Shipments',
         content:
-          "As the location of Pakistan's two major ports, Karachi handles a significant share of the country's international customs processing. Our team assists with export documentation preparation, customs declaration at Karachi Port and Port Qasim, and compliance coordination.",
+          "As the location of Pakistan's two major ports, Karachi handles a significant share of the country's international customs processing. Requirements vary by destination, goods type, and shipment value — our team reviews your cargo details before booking to ensure smooth customs clearance.",
+        list: [
+          'Export documentation preparation',
+          'Customs declaration and coordination at Karachi Port and Port Qasim',
+          'Compliance with destination-country import regulations',
+          'Guidance on restricted and prohibited items',
+        ],
+      },
+      {
+        title: 'Why Choose Raahi International for Cargo Services in Karachi?',
+        content:
+          'Choosing Raahi International for shipping from Karachi gives you the direct advantage of local port access combined with comprehensive logistics support.',
+        list: [
+          'Direct access to Karachi Port and Port Qasim — no inland freight delay',
+          'Door-to-door shipping across all Karachi areas',
+          'Air cargo and sea cargo (FCL & LCL) solutions',
+          'Doorstep pickup — no drop-off required',
+          'Personal, household, and commercial cargo handling',
+          'Full documentation and customs clearance assistance',
+          'Worldwide destination delivery',
+          'End-to-end support from pickup to final delivery',
+        ],
       },
       {
         title: 'Ship from Karachi to Worldwide Destinations',
         content:
-          'Whether you are sending a small personal parcel or a large commercial shipment, our international cargo services in Karachi cover popular destinations worldwide.',
+          "Whether you're sending a small personal parcel or a large commercial shipment, our international cargo services in Karachi cover popular destinations including the UK, USA, Canada, Australia, UAE, Saudi Arabia, and Qatar, with availability depending on current shipping schedules.",
         links: [
           { label: 'Karachi to UK Cargo', href: '/destinations/uk?origin=karachi' },
           { label: 'Karachi to UAE Cargo', href: '/destinations/uae?origin=karachi' },
           { label: 'Karachi to USA Cargo', href: '/destinations/usa?origin=karachi' },
+        ],
+      },
+      {
+        title: 'How International Cargo Shipping from Karachi Works',
+        content:
+          'Our 6-step international cargo dispatch workflow ensures your shipment moves efficiently from your Karachi address to its destination abroad:',
+        list: [
+          '1. Request a Quote — Share your destination, cargo details, weight, and dimensions',
+          '2. Choose Your Shipping Method — We help determine whether air freight or sea freight suits your shipment',
+          '3. Pickup & Preparation — Your cargo is collected from your Karachi address and professionally packed',
+          '4. Documentation & Customs — Required shipping and customs paperwork is prepared and processed at Karachi Port, Port Qasim, or Jinnah International Airport',
+          '5. International Transportation — Your shipment is dispatched via air or sea freight',
+          '6. Destination Delivery — Cargo is delivered to the destination address, door-to-door',
         ],
       },
     ],
