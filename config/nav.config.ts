@@ -91,6 +91,11 @@ export const mainNavigation: NavItem[] = [
     ],
   },
   {
+    title: 'About Us',
+    label: 'About Us',
+    href: '/about',
+  },
+  {
     title: 'Track Shipment',
     label: 'Tracking',
     href: '/track',
@@ -140,8 +145,9 @@ export const footerNavigation: FooterNavGroup[] = [
     ],
   },
   {
-    title: 'Resources',
+    title: 'Company & Resources',
     items: [
+      { label: 'About Us', href: '/about' },
       { label: 'Track Shipment', href: '/track' },
       { label: 'Request Quote', href: '/quote' },
       { label: 'Export Documentation', href: '/guides/export-customs-documentation-guide' },

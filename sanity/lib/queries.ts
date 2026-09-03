@@ -483,3 +483,27 @@ export const GUIDE_BY_SLUG_QUERY = defineQuery(`
     }
   }
 `);
+
+// --------------------------------------------------
+// ABOUT PAGE SINGLETON QUERY
+// --------------------------------------------------
+export const ABOUT_PAGE_QUERY = defineQuery(`
+  *[_type == "aboutPage"][0] {
+    title,
+    subtitle,
+    intro,
+    "heroImage": heroImage.asset->url,
+    body,
+    cta {
+      title,
+      description,
+      quoteLabel,
+      quoteHref
+    },
+    seo {
+      metaTitle,
+      metaDescription,
+      "socialImage": socialImage.asset->url
+    }
+  }
+`);

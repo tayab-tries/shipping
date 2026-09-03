@@ -13,6 +13,7 @@ import {
   DESTINATION_CITY_BY_SLUGS_QUERY,
   GUIDES_LIST_QUERY,
   GUIDE_BY_SLUG_QUERY,
+  ABOUT_PAGE_QUERY,
 } from './queries';
 
 export interface SanityCta {
@@ -421,6 +422,37 @@ export async function getSanityGuideBySlug(slug: string, options?: { stega?: boo
     return await fetchClient.fetch<SanityGuideDocument>(GUIDE_BY_SLUG_QUERY, { slug }, { stega: options?.stega ?? isDraft });
   } catch (error) {
     console.warn(`[Sanity] getSanityGuideBySlug fetch error for slug ${slug}, using fallbacks:`, error);
+    return null;
+  }
+}
+
+export interface SanityAboutPageDocument {
+  title?: string;
+  subtitle?: string;
+  intro?: string;
+  heroImage?: string;
+  body?: unknown[];
+  cta?: {
+    title?: string;
+    description?: string;
+    quoteLabel?: string;
+    quoteHref?: string;
+  };
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    socialImage?: string;
+  };
+}
+
+export async function getSanityAboutPageData(options?: { stega?: boolean }): Promise<SanityAboutPageDocument | null> {
+  if (!isSanityConfigured) return null;
+  try {
+    const isDraft = await isDraftEnabled();
+    const fetchClient = isDraft && readToken ? client.withConfig({ token: readToken }) : client;
+    return await fetchClient.fetch<SanityAboutPageDocument>(ABOUT_PAGE_QUERY, {}, { stega: options?.stega ?? isDraft });
+  } catch (error) {
+    console.warn('[Sanity] getSanityAboutPageData fetch error, using fallbacks:', error);
     return null;
   }
 }

@@ -34,6 +34,11 @@ const nextConfig: NextConfig = {
         destination: '/cargo-services',
         permanent: true,
       },
+      {
+        source: '/about-us',
+        destination: '/about',
+        permanent: true,
+      },
     ];
   },
 };

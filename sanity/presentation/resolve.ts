@@ -28,6 +28,19 @@ export const resolve = {
         ],
       }),
     }),
+    aboutPage: defineLocations({
+      select: {
+        title: 'title',
+      },
+      resolve: (doc) => ({
+        locations: [
+          {
+            title: doc?.title ? `About: ${doc.title}` : 'About Us Page',
+            href: '/about',
+          },
+        ],
+      }),
+    }),
     service: defineLocations({
       select: {
         title: 'name',

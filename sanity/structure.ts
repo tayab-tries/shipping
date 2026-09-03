@@ -20,9 +20,17 @@ export const structure: StructureResolver = (S) =>
             .schemaType('homepage')
             .documentId('homepage')
         ),
+      S.listItem()
+        .title('About Page')
+        .id('aboutPage')
+        .child(
+          S.document()
+            .schemaType('aboutPage')
+            .documentId('aboutPage')
+        ),
       S.divider(),
       ...S.documentTypeListItems().filter(
         (listItem) =>
-          !['siteSettings', 'homepage'].includes(listItem.getId() || '')
+          !['siteSettings', 'homepage', 'aboutPage'].includes(listItem.getId() || '')
       ),
     ]);

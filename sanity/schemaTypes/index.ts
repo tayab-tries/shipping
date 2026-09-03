@@ -1,5 +1,6 @@
 import { siteSettingsType } from './siteSettingsType';
 import { homepageType } from './homepageType';
+import { aboutPageType } from './aboutPageType';
 import { serviceType } from './serviceType';
 import { locationType } from './locationType';
 import { destinationCountryType } from './destinationCountryType';
@@ -25,6 +26,7 @@ export const schema = {
     // Documents / Singletons
     siteSettingsType,
     homepageType,
+    aboutPageType,
     serviceType,
     locationType,
     destinationCountryType,
