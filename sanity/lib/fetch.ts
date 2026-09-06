@@ -14,6 +14,7 @@ import {
   GUIDES_LIST_QUERY,
   GUIDE_BY_SLUG_QUERY,
   ABOUT_PAGE_QUERY,
+  CARGO_PRICING_QUERY,
 } from './queries';
 
 export interface SanityCta {
@@ -456,3 +457,84 @@ export async function getSanityAboutPageData(options?: { stega?: boolean }): Pro
     return null;
   }
 }
+
+export interface SanityCargoRateItem {
+  country: string;
+  flag?: string;
+  rate: string;
+  deliveryTime: string;
+  sortOrder?: number;
+  quoteHref?: string;
+}
+
+export interface SanityCargoComparisonRow {
+  feature: string;
+  airValue: string;
+  seaValue: string;
+  airBadge?: string;
+  seaBadge?: string;
+  sortOrder?: number;
+}
+
+export interface SanityCargoPricingData {
+  hero?: {
+    eyebrow?: string;
+    heading?: string;
+    subheading?: string;
+    introParagraph?: string;
+    airBadgeTitle?: string;
+    airMinWeightText?: string;
+    seaBadgeTitle?: string;
+    seaMinWeightText?: string;
+  };
+  airCargoSection?: {
+    title?: string;
+    subtitle?: string;
+    minWeightBadge?: string;
+    rates?: SanityCargoRateItem[];
+  };
+  seaCargoSection?: {
+    title?: string;
+    subtitle?: string;
+    minWeightBadge?: string;
+    rates?: SanityCargoRateItem[];
+    disclaimer?: string;
+  };
+  quickComparison?: {
+    title?: string;
+    subtitle?: string;
+    rows?: SanityCargoComparisonRow[];
+  };
+  decisionGuidance?: {
+    title?: string;
+    airTitle?: string;
+    airPoints?: string[];
+    seaTitle?: string;
+    seaPoints?: string[];
+  };
+  doorToDoor?: {
+    badge?: string;
+    title?: string;
+    description?: string;
+    workflowSteps?: string[];
+  };
+  faqs?: { question: string; answer: string }[];
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+    socialImage?: string;
+  };
+}
+
+export async function getSanityCargoPricingData(options?: { stega?: boolean }): Promise<SanityCargoPricingData | null> {
+  if (!isSanityConfigured) return null;
+  try {
+    const isDraft = await isDraftEnabled();
+    const fetchClient = isDraft && readToken ? client.withConfig({ token: readToken }) : client;
+    return await fetchClient.fetch<SanityCargoPricingData>(CARGO_PRICING_QUERY, {}, { stega: options?.stega ?? isDraft });
+  } catch (error) {
+    console.warn('[Sanity] getSanityCargoPricingData fetch error, using fallbacks:', error);
+    return null;
+  }
+}
+

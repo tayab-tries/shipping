@@ -35,7 +35,7 @@ export async function sendAdminQuoteNotification(
   payload: QuoteEmailPayload
 ): Promise<{ success: boolean; errorMetadata?: PiiSafeEmailErrorMetadata }> {
   const apiKey = process.env.RESEND_API_KEY;
-  const adminEmailRecipient = siteConfig.contact.emailQuotes || siteConfig.contact.emailInfo || 'info@example.com';
+  const adminEmailRecipient = siteConfig.contact?.emailQuotes || siteConfig.contact?.emailInfo || process.env.ADMIN_EMAIL || 'quotes@raahiinternational.com';
 
   if (!apiKey) {
     // Non-blocking fallback when RESEND_API_KEY is not configured

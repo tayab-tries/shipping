@@ -8,37 +8,23 @@ import {
   ListOrdered,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
+import { SanityCargoPricingData, SanityCargoRateItem } from '@/sanity/lib/fetch';
 
 interface AirFreightServiceContentProps {
   phone?: string;
   whatsappNumber?: string;
+  cargoPricing?: SanityCargoPricingData | null;
 }
 
-export const AirFreightServiceContent: React.FC<AirFreightServiceContentProps> = () => {
+export const AirFreightServiceContent: React.FC<AirFreightServiceContentProps> = ({
+  cargoPricing,
+}) => {
+  const airCargoRates = cargoPricing?.airCargoSection?.rates || [];
+  const seaCargoRates = cargoPricing?.seaCargoSection?.rates || [];
 
-  const airCargoRates = [
-    { country: 'USA', flag: '🇺🇸', rate: 'Rs. 2,750 – 2,950/KG', deliveryTime: '10–15 Days' },
-    { country: 'United Kingdom', flag: '🇬🇧', rate: 'Rs. 1,750 – 1,850/KG', deliveryTime: '10–12 Days' },
-    { country: 'UAE', flag: '🇦🇪', rate: 'Rs. 1,350 – 1,450/KG', deliveryTime: '10–17 Days' },
-    { country: 'Canada', flag: '🇨🇦', rate: 'Rs. 2,850 – 2,950/KG', deliveryTime: '10–15 Days' },
-    { country: 'Saudi Arabia', flag: '🇸🇦', rate: 'Rs. 2,150 – 2,250/KG', deliveryTime: '10–20 Days' },
-    { country: 'Europe', flag: '🇪🇺', rate: 'Rs. 2,350 – 2,450/KG', deliveryTime: '10–15 Days' },
-    { country: 'Australia', flag: '🇦🇺', rate: 'Rs. 2,350 – 2,450/KG', deliveryTime: '10–15 Days' },
-    { country: 'Scotland', flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', rate: 'Rs. 2,350/KG', deliveryTime: '10–15 Days' },
-    { country: 'Dubai', flag: '🇦🇪', rate: 'Rs. 1,350 – 1,450/KG', deliveryTime: '10–17 Days' },
-  ];
-
-  const seaCargoRates = [
-    { country: 'United Kingdom', flag: '🇬🇧', rate: 'Rs. 950 – 1,000/KG', deliveryTime: '1.5 – 2.5 Months' },
-    { country: 'UAE', flag: '🇦🇪', rate: 'Rs. 600 – 700/KG', deliveryTime: '1.5 – 2.5 Months' },
-    { country: 'USA', flag: '🇺🇸', rate: 'Rs. 1,550 – 1,650/KG', deliveryTime: '2 – 2.5 Months' },
-    { country: 'Saudi Arabia', flag: '🇸🇦', rate: 'Rs. 950 – 1,000/KG', deliveryTime: '1.5 – 2.5 Months' },
-    { country: 'Germany', flag: '🇩🇪', rate: 'Rs. 1,450/KG', deliveryTime: '2 – 2.5 Months' },
-    { country: 'Canada', flag: '🇨🇦', rate: 'Rs. 1,750 – 1,850/KG', deliveryTime: '2 – 3 Months' },
-    { country: 'Scotland', flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', rate: 'Rs. 1,250/KG', deliveryTime: '1.5 – 2.5 Months' },
-    { country: 'Australia', flag: '🇦🇺', rate: 'Rs. 1,450/KG', deliveryTime: '2 – 2.5 Months' },
-    { country: 'Europe', flag: '🇪🇺', rate: 'Rs. 1,450/KG', deliveryTime: '2 – 2.5 Months' },
-  ];
+  const airMinWeightText = cargoPricing?.hero?.airMinWeightText || '';
+  const seaMinWeightText = cargoPricing?.hero?.seaMinWeightText || '';
+  const seaDisclaimer = cargoPricing?.seaCargoSection?.disclaimer || '';
 
   return (
     <div className="w-full space-y-12 font-sans">
@@ -98,96 +84,51 @@ export const AirFreightServiceContent: React.FC<AirFreightServiceContentProps> =
       {/* SECTION: AIR CARGO AT A GLANCE */}
       <section id="air-cargo-glance" className="scroll-mt-28 space-y-6">
         <div className="border-b border-border pb-3">
-          <Badge variant="accent" size="sm" className="mb-2 font-mono uppercase">Overview</Badge>
+          <div className="text-xs font-mono text-slate-500 uppercase tracking-wider">Fast International Freight</div>
           <h2 className="text-heading-xl font-bold text-brand-black">Air Cargo at a Glance</h2>
-          <p className="text-body-md text-slate-600">
-            Fast International Air Freight for Your Cargo Originating from Pakistan
-          </p>
         </div>
+        <p className="text-body-md text-slate-700 leading-relaxed font-normal">
+          Air cargo is designed for shippers who prioritize speed, schedule reliability, and airport-to-airport express delivery. Departing from major Pakistan air terminals in Lahore, Karachi, and Islamabad, air freight provides rapid door-to-door or airport delivery for personal baggage, urgent business samples, and high-priority cargo.
+        </p>
+      </section>
 
-        <div className="prose prose-slate max-w-none space-y-4">
-          <p className="text-body-md text-slate-700 leading-relaxed font-normal">
-            When time matters, air cargo is one of the most efficient ways to transport goods internationally. Raahi International arranges air freight solutions for customers sending permitted cargo from Pakistan to destinations around the world.
-          </p>
+      {/* SECTION: AIR VS SEA COMPARISON */}
+      <section id="air-vs-sea-comparison" className="scroll-mt-28 space-y-6">
+        <div className="border-b border-border pb-3">
+          <div className="text-xs font-mono text-slate-500 uppercase tracking-wider">Mode Selection Matrix</div>
+          <h2 className="text-heading-xl font-bold text-brand-black">Air Cargo vs Sea Cargo Comparison</h2>
         </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pt-2">
-          <div className="bg-surface border border-border p-5 rounded-md space-y-2">
-            <div className="font-bold text-brand-black flex items-center gap-2 text-body-sm">
-              <Clock className="w-4 h-4 text-accent-dark" /> Transit Speed
-            </div>
-            <p className="text-body-xs text-slate-600">
-              Generally faster airport-to-airport or door-to-door transit for time-sensitive cargo.
-            </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-surface border border-border p-6 rounded-md space-y-3">
+            <h3 className="text-heading-sm font-bold text-brand-black flex items-center gap-2">
+              <Clock className="w-5 h-5 text-accent-dark" /> Air Cargo Highlights
+            </h3>
+            <ul className="space-y-2 text-body-sm text-slate-700 font-medium">
+              <li>• Rapid delivery (10–15 days typical transit timing)</li>
+              <li>• Ideal for urgent personal baggage & trade samples</li>
+              <li>• Lower volumetric space requirements</li>
+              <li>• {airMinWeightText}</li>
+            </ul>
           </div>
-
-          <div className="bg-surface border border-border p-5 rounded-md space-y-2">
-            <div className="font-bold text-brand-black flex items-center gap-2 text-body-sm">
-              <Package className="w-4 h-4 text-accent-dark" /> Minimum Weight
-            </div>
-            <p className="text-body-xs text-slate-600">
-              Minimum air cargo shipment weight is 20 kg. Ideal for medium to large parcel loads.
-            </p>
-          </div>
-
-          <div className="bg-surface border border-border p-5 rounded-md space-y-2">
-            <div className="font-bold text-brand-black flex items-center gap-2 text-body-sm">
-              <Truck className="w-4 h-4 text-accent-dark" /> Door-to-Door Option
-            </div>
-            <p className="text-body-xs text-slate-600">
-              Complete pickup from Pakistan export hubs to final doorstep delivery worldwide.
-            </p>
+          <div className="bg-surface border border-border p-6 rounded-md space-y-3">
+            <h3 className="text-heading-sm font-bold text-brand-black flex items-center gap-2">
+              <Truck className="w-5 h-5 text-blue-600" /> Sea Cargo Highlights
+            </h3>
+            <ul className="space-y-2 text-body-sm text-slate-700 font-medium">
+              <li>• Cost-effective ocean freight for heavy volume</li>
+              <li>• Full Container Load (FCL) & Less Container Load (LCL)</li>
+              <li>• Extended delivery timelines (1.5–2.5 months typical)</li>
+              <li>• {seaMinWeightText}</li>
+            </ul>
           </div>
         </div>
       </section>
 
-      {/* SECTION: AIR CARGO VS SEA CARGO COMPARISON TABLE */}
-      <section id="air-vs-sea-comparison" className="scroll-mt-28 space-y-6 pt-8 border-t border-border">
+      {/* SECTION: PRICING TABLES */}
+      <section id="pricing-tables" className="scroll-mt-28 space-y-8">
         <div className="border-b border-border pb-3">
-          <Badge variant="outline" size="sm" className="mb-2 font-mono uppercase">Comparison Matrix</Badge>
-          <h2 className="text-heading-xl font-bold text-brand-black">Air Cargo vs Sea Cargo — Which Should You Choose?</h2>
-        </div>
-
-        <div className="overflow-x-auto border border-border rounded-md shadow-xs bg-surface">
-          <table className="w-full text-left text-body-sm border-collapse">
-            <thead>
-              <tr className="bg-surface-subtle text-brand-black text-xs font-mono font-bold uppercase tracking-wider border-b border-border">
-                <th className="p-4 font-bold text-brand-black">Feature / Criteria</th>
-                <th className="p-4 font-bold text-brand-black">✈️ Air Cargo</th>
-                <th className="p-4 font-bold text-brand-black">🚢 Sea Cargo</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border font-normal text-slate-700">
-              <tr className="hover:bg-surface-subtle transition-colors">
-                <td className="p-4 font-bold text-brand-black">Speed / Transit Time</td>
-                <td className="p-4 font-semibold text-emerald-700">Generally 10–15 Days</td>
-                <td className="p-4 text-slate-600">Generally 1.5–2.5 Months</td>
-              </tr>
-              <tr className="hover:bg-surface-subtle transition-colors">
-                <td className="p-4 font-bold text-brand-black">Cost Structure</td>
-                <td className="p-4">Higher per kg</td>
-                <td className="p-4 font-semibold text-emerald-700">More economical for larger shipments</td>
-              </tr>
-              <tr className="hover:bg-surface-subtle transition-colors">
-                <td className="p-4 font-bold text-brand-black">Best For</td>
-                <td className="p-4 font-semibold text-brand-black">Faster, time-sensitive shipments</td>
-                <td className="p-4">Larger, heavier & bulky shipments</td>
-              </tr>
-              <tr className="hover:bg-surface-subtle transition-colors">
-                <td className="p-4 font-bold text-brand-black">Suitable Shipment Size</td>
-                <td className="p-4"><Badge variant="accent" size="sm">Min 20 KG</Badge></td>
-                <td className="p-4"><Badge variant="secondary" size="sm">Min 70–100 KG</Badge></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      {/* SECTION: PRICE TABLE */}
-      <section id="pricing-tables" className="scroll-mt-28 space-y-8 pt-8 border-t border-border">
-        <div className="border-b border-border pb-3">
-          <Badge variant="accent" size="sm" className="mb-2 font-mono uppercase">Indicative Pricing</Badge>
-          <h2 className="text-heading-xl font-bold text-brand-black">International Air & Sea Cargo Rates</h2>
+          <div className="text-xs font-mono text-slate-500 uppercase tracking-wider">Indicative Rate Cards</div>
+          <h2 className="text-heading-xl font-bold text-brand-black">Air & Sea Cargo Rate Tables</h2>
         </div>
 
         {/* AIR CARGO RATE TABLE */}
@@ -201,7 +142,7 @@ export const AirFreightServiceContent: React.FC<AirFreightServiceContentProps> =
                 Indicative air cargo rates per KG and estimated delivery timelines from Pakistan.
               </p>
             </div>
-            <Badge variant="accent" size="sm" className="font-mono font-bold">Minimum Air Shipment: 20 KG</Badge>
+            <Badge variant="accent" size="sm" className="font-mono font-bold">{airMinWeightText}</Badge>
           </div>
 
           <div className="overflow-x-auto border border-border rounded-md shadow-xs bg-surface">
@@ -218,7 +159,7 @@ export const AirFreightServiceContent: React.FC<AirFreightServiceContentProps> =
                 {airCargoRates.map((rate) => (
                   <tr key={rate.country} className="hover:bg-surface-subtle transition-colors">
                     <td className="p-4 font-bold text-brand-black text-body-md flex items-center gap-2.5">
-                      <span className="text-xl">{rate.flag}</span>
+                      <span className="text-xl">{rate.flag || '🏳️'}</span>
                       <span>{rate.country}</span>
                     </td>
                     <td className="p-4 font-bold font-mono text-brand-black text-body-md">
@@ -228,7 +169,7 @@ export const AirFreightServiceContent: React.FC<AirFreightServiceContentProps> =
                       {rate.deliveryTime}
                     </td>
                     <td className="p-4 text-right">
-                      <Link href={`/quote?service=air-freight`} className="text-xs font-bold text-brand-black hover:text-accent-dark underline">
+                      <Link href={rate.quoteHref || `/quote?service=air-freight`} className="text-xs font-bold text-brand-black hover:text-accent-dark underline">
                         Get Quote →
                       </Link>
                     </td>
@@ -250,7 +191,7 @@ export const AirFreightServiceContent: React.FC<AirFreightServiceContentProps> =
                 Indicative ocean freight rates (PKR/KG) and estimated delivery timelines from Pakistan.
               </p>
             </div>
-            <Badge variant="secondary" size="sm" className="font-mono font-bold">Minimum Sea Cargo: 70–100 KG</Badge>
+            <Badge variant="secondary" size="sm" className="font-mono font-bold">{seaMinWeightText}</Badge>
           </div>
 
           <div className="overflow-x-auto border border-border rounded-md shadow-xs bg-surface">
@@ -267,7 +208,7 @@ export const AirFreightServiceContent: React.FC<AirFreightServiceContentProps> =
                 {seaCargoRates.map((rate) => (
                   <tr key={rate.country} className="hover:bg-surface-subtle transition-colors">
                     <td className="p-4 font-bold text-brand-black text-body-md flex items-center gap-2.5">
-                      <span className="text-xl">{rate.flag}</span>
+                      <span className="text-xl">{rate.flag || '🏳️'}</span>
                       <span>{rate.country}</span>
                     </td>
                     <td className="p-4 font-bold font-mono text-brand-black text-body-md">
@@ -277,7 +218,7 @@ export const AirFreightServiceContent: React.FC<AirFreightServiceContentProps> =
                       {rate.deliveryTime}
                     </td>
                     <td className="p-4 text-right">
-                      <Link href={`/quote?service=sea-cargo`} className="text-xs font-bold text-brand-black hover:text-accent-dark underline">
+                      <Link href={rate.quoteHref || `/quote?service=sea-cargo`} className="text-xs font-bold text-brand-black hover:text-accent-dark underline">
                         Get Quote →
                       </Link>
                     </td>
@@ -286,10 +227,74 @@ export const AirFreightServiceContent: React.FC<AirFreightServiceContentProps> =
               </tbody>
             </table>
           </div>
-
           <p className="text-body-xs text-slate-500 italic">
-            * Rate Disclaimer: Rates shown above are indicative and may vary depending on shipment volume, weight, origin, destination, port/airport charges, airline/shipping line, customs requirements, fuel surcharges, and local delivery location. Contact Raahi International for a current quotation.
+            {seaDisclaimer}
           </p>
+        </div>
+      </section>
+
+      {/* SECTION: WHICH MODE SHOULD YOU PICK */}
+      <section id="which-to-pick" className="scroll-mt-28 space-y-6">
+        <div className="border-b border-border pb-3">
+          <div className="text-xs font-mono text-slate-500 uppercase tracking-wider">Selection Guidance</div>
+          <h2 className="text-heading-xl font-bold text-brand-black">Which Mode Should You Pick?</h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-emerald-50/70 border border-emerald-200 p-6 rounded-md space-y-3">
+            <h3 className="text-heading-sm font-bold text-emerald-950">Choose Air Cargo If:</h3>
+            <ul className="space-y-2 text-body-sm text-emerald-900 font-medium">
+              <li>• You require faster delivery within 10–15 days</li>
+              <li>• Your cargo weight is lighter or urgent (min 20 kg)</li>
+              <li>• Shipping personal items, excess baggage, or trade samples</li>
+            </ul>
+          </div>
+          <div className="bg-blue-50/70 border border-blue-200 p-6 rounded-md space-y-3">
+            <h3 className="text-heading-sm font-bold text-blue-950">Choose Sea Cargo If:</h3>
+            <ul className="space-y-2 text-body-sm text-blue-900 font-medium">
+              <li>• You are moving large commercial stock or household relocations</li>
+              <li>• Cost savings outweigh delivery urgency (min 70–100 kg)</li>
+              <li>• Delivery timelines are flexible (1.5–2.5 months)</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION: ESTIMATED TRANSIT TIMES */}
+      <section id="transit-times" className="scroll-mt-28 space-y-6">
+        <div className="border-b border-border pb-3">
+          <div className="text-xs font-mono text-slate-500 uppercase tracking-wider">Schedule Guidelines</div>
+          <h2 className="text-heading-xl font-bold text-brand-black">Estimated Transit Times</h2>
+        </div>
+        <p className="text-body-md text-slate-700 leading-relaxed font-normal">
+          Transit times vary depending on airline flight schedules, ocean vessel routing, port congestion, customs clearance verification, and destination doorstep delivery logistics.
+        </p>
+      </section>
+
+      {/* SECTION: WHY RAAHI INTERNATIONAL */}
+      <section id="why-raahi" className="scroll-mt-28 space-y-6">
+        <div className="border-b border-border pb-3">
+          <div className="text-xs font-mono text-slate-500 uppercase tracking-wider">Trust & Experience</div>
+          <h2 className="text-heading-xl font-bold text-brand-black">Why Raahi International</h2>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div className="bg-surface border border-border p-5 rounded-md space-y-2">
+            <h3 className="font-bold text-brand-black text-body-md flex items-center gap-2">
+              <Package className="w-4 h-4 text-accent-dark" /> Verified Network
+            </h3>
+            <p className="text-body-xs text-slate-600">Established pickup hubs in major Pakistani logistics centers.</p>
+          </div>
+          <div className="bg-surface border border-border p-5 rounded-md space-y-2">
+            <h3 className="font-bold text-brand-black text-body-md flex items-center gap-2">
+              <Clock className="w-4 h-4 text-accent-dark" /> Transparent Schedules
+            </h3>
+            <p className="text-body-xs text-slate-600">Clear transit timing and doorstep dispatch tracking.</p>
+          </div>
+          <div className="bg-surface border border-border p-5 rounded-md space-y-2">
+            <h3 className="font-bold text-brand-black text-body-md flex items-center gap-2">
+              <Truck className="w-4 h-4 text-accent-dark" /> Doorstep Collection
+            </h3>
+            <p className="text-body-xs text-slate-600">Convenient doorstep pickup across Pakistan.</p>
+          </div>
         </div>
       </section>
     </div>

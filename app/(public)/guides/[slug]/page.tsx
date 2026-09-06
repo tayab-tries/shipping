@@ -80,9 +80,6 @@ export async function generateMetadata({ params }: GuideArticlePageProps): Promi
 
 export default async function GuideArticleDetailPage({ params }: GuideArticlePageProps) {
   const { slug } = await params;
-  if (slug === 'air-vs-sea-cargo' || slug === 'air_vs_sea_cargo') {
-    permanentRedirect('/cargo-services');
-  }
   const sanityGuide: SanityGuideDocument | null = await getSanityGuideBySlug(slug);
   const fallbackArticle = getStaticArticleBySlug(slug);
 
@@ -199,8 +196,8 @@ export default async function GuideArticleDetailPage({ params }: GuideArticlePag
           {/* Executive Summary Callout */}
           <ArticleSummaryCallout summaryText={article.excerpt} />
 
-          {/* Sanitized Markdown Body */}
-          <ArticleBody contentMarkdown={article.contentMarkdown} />
+          {/* Article Main Body (Portable Text from Sanity, or Markdown fallback) */}
+          <ArticleBody body={sanityGuide?.body} contentMarkdown={article.contentMarkdown} />
 
           {/* Regulatory Considerations */}
           <ArticleConsiderations

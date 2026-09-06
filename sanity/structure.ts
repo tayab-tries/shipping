@@ -28,9 +28,17 @@ export const structure: StructureResolver = (S) =>
             .schemaType('aboutPage')
             .documentId('aboutPage')
         ),
+      S.listItem()
+        .title('Cargo Pricing & Rates')
+        .id('cargoPricing')
+        .child(
+          S.document()
+            .schemaType('cargoPricing')
+            .documentId('cargoPricing')
+        ),
       S.divider(),
       ...S.documentTypeListItems().filter(
         (listItem) =>
-          !['siteSettings', 'homepage', 'aboutPage'].includes(listItem.getId() || '')
+          !['siteSettings', 'homepage', 'aboutPage', 'cargoPricing'].includes(listItem.getId() || '')
       ),
     ]);

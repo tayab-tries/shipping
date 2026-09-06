@@ -85,9 +85,10 @@ export const guideType = defineType({
     }),
     defineField({
       name: 'contentMarkdown',
-      title: 'Article Markdown Content',
+      title: 'Article Markdown Content (Deprecated)',
       type: 'text',
       rows: 15,
+      hidden: true,
     }),
     defineField({
       name: 'body',

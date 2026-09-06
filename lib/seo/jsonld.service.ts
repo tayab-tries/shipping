@@ -9,12 +9,12 @@ export function getOrganizationJsonLd() {
     legalName: siteConfig.legalName || siteConfig.name,
     url: siteConfig.domain,
     description: siteConfig.defaultSeo.defaultDescription,
-    telephone: siteConfig.contact.phonePrimary || undefined,
-    email: siteConfig.contact.emailInfo || undefined,
-    address: siteConfig.verifiedOffices.length > 0 ? {
+    telephone: siteConfig.contact?.phonePrimary || undefined,
+    email: siteConfig.contact?.emailInfo || undefined,
+    address: (siteConfig.verifiedOffices?.length ?? 0) > 0 ? {
       '@type': 'PostalAddress',
-      addressLocality: siteConfig.verifiedOffices[0].city,
-      streetAddress: siteConfig.verifiedOffices[0].address,
+      addressLocality: siteConfig.verifiedOffices?.[0]?.city,
+      streetAddress: siteConfig.verifiedOffices?.[0]?.address,
       addressCountry: 'PK',
     } : undefined,
   };

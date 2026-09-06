@@ -17,7 +17,7 @@ import { Accordion } from '@/components/ui/Accordion';
 import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
-import { getSanityServiceBySlug, getSanityServicesList, SanityServiceDocument, getSanitySiteSettingsData } from '@/sanity/lib/fetch';
+import { getSanityServiceBySlug, getSanityServicesList, SanityServiceDocument, getSanitySiteSettingsData, getSanityCargoPricingData } from '@/sanity/lib/fetch';
 import { AirFreightServiceContent } from '@/components/services/AirFreightServiceContent';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
 
@@ -173,13 +173,14 @@ export default async function ServiceDetailPage({ params }: ServicePageProps) {
     permanentRedirect('/cargo-services');
   }
 
-  const [business, sanitySiteSettings] = await Promise.all([
+  const [business, sanitySiteSettings, sanityCargoPricing] = await Promise.all([
     getPublishedBusinessSettings(),
     getSanitySiteSettingsData(),
+    getSanityCargoPricingData(),
   ]);
 
-  const activePhone = sanitySiteSettings?.phone || business.phonePrimary || siteConfig.phone || '+92 300 1234567';
-  const activeWhatsapp = sanitySiteSettings?.whatsappNumber || business.whatsappNumber || siteConfig.contact?.whatsappNumber || activePhone;
+  const activePhone = sanitySiteSettings?.phone || business.phonePrimary || '';
+  const activeWhatsapp = sanitySiteSettings?.whatsappNumber || business.whatsappNumber || activePhone;
 
   const sanityService: SanityServiceDocument | null = await getSanityServiceBySlug(slug);
   const fallbackService = servicesRegistry.find((s) => s.slug === slug);
@@ -280,7 +281,7 @@ export default async function ServiceDetailPage({ params }: ServicePageProps) {
       {slug === 'air-freight' ? (
         <section className="w-full py-12 lg:py-20 border-b border-border">
           <Container>
-            <AirFreightServiceContent phone={activePhone} whatsappNumber={activeWhatsapp} />
+            <AirFreightServiceContent phone={activePhone} whatsappNumber={activeWhatsapp} cargoPricing={sanityCargoPricing} />
           </Container>
         </section>
       ) : (

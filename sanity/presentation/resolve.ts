@@ -41,6 +41,19 @@ export const resolve = {
         ],
       }),
     }),
+    cargoPricing: defineLocations({
+      select: {
+        title: 'hero.heading',
+      },
+      resolve: () => ({
+        locations: [
+          {
+            title: 'Air & Sea Cargo Services & Pricing',
+            href: '/cargo-services',
+          },
+        ],
+      }),
+    }),
     service: defineLocations({
       select: {
         title: 'name',

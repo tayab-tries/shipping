@@ -13,8 +13,8 @@ interface TopBarProps {
 
 export const TopBar: React.FC<TopBarProps> = async ({ phone: propPhone, whatsappNumber: propWhatsapp }) => {
   const business = await getPublishedBusinessSettings();
-  const phone = propPhone || business.phonePrimary || siteConfig.phone || '+92 300 1234567';
-  const whatsappNumber = propWhatsapp || business.whatsappNumber || siteConfig.contact?.whatsappNumber || phone;
+  const phone = propPhone || business.phonePrimary || '';
+  const whatsappNumber = propWhatsapp || business.whatsappNumber || phone;
   const whatsappUrl = buildWhatsappUrl(whatsappNumber);
 
   return (

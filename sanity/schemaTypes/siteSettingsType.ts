@@ -24,16 +24,26 @@ export const siteSettingsType = defineType({
       name: 'phone',
       title: 'Primary Phone Number',
       type: 'string',
+      description: 'Main business phone number (e.g. 0300 7097063 or +92 300 7097063)',
+      validation: (rule) => rule.required().error('Primary phone number is required'),
     }),
     defineField({
       name: 'whatsappNumber',
       title: 'WhatsApp Number',
       type: 'string',
+      description: 'WhatsApp number formatted with country code without spaces or dashes (e.g. 923007097063)',
+      validation: (rule) => rule.required().error('WhatsApp number is required'),
     }),
     defineField({
       name: 'email',
       title: 'Contact Email Address',
       type: 'string',
+      description: 'Official contact email address (e.g. raahiinternational4@gmail.com)',
+      validation: (rule) =>
+        rule
+          .required()
+          .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, { name: 'email', invert: false })
+          .error('Please enter a valid email address'),
     }),
     defineField({
       name: 'address',

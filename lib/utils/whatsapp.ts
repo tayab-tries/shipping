@@ -4,9 +4,9 @@ import { siteConfig } from '@/config/site.config';
  * Clean & sanitize WhatsApp phone number to digits only (e.g. "+92 300 1234567" -> "923001234567")
  */
 export function sanitizeWhatsappNumber(rawNumber?: string): string {
-  const num = rawNumber || siteConfig.contact?.whatsappNumber || siteConfig.whatsapp || siteConfig.phone || '923001234567';
+  const num = rawNumber || '';
   const cleaned = num.replace(/[^0-9]/g, '');
-  return cleaned || '923001234567';
+  return cleaned;
 }
 
 /**

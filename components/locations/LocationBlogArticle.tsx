@@ -41,8 +41,8 @@ export const LocationBlogArticle: React.FC<LocationBlogArticleProps> = ({
   phone,
   whatsappNumber,
 }) => {
-  const activePhone = phone || siteConfig.contact?.phonePrimary || siteConfig.phone || '+92 300 1234567';
-  const activeWhatsapp = whatsappNumber || siteConfig.contact?.whatsappNumber || siteConfig.whatsapp || activePhone;
+  const activePhone = phone || '';
+  const activeWhatsapp = whatsappNumber || activePhone;
   const whatsappUrl = buildWhatsappUrl(
     activeWhatsapp,
     `Assalam o Alaikum, I want to send international cargo from ${cityName}. Please guide me.`

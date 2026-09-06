@@ -18,7 +18,7 @@ export const MobileBottomCta: React.FC<MobileBottomCtaProps> = ({
   callLabel = 'Call Now',
   whatsappLabel = 'WhatsApp',
   quoteLabel = 'Get Quote',
-  phone = '+92 300 1234567',
+  phone = '',
   whatsappNumber,
 }) => {
   const whatsappUrl = buildWhatsappUrl(

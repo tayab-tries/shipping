@@ -19,33 +19,44 @@ import { Button } from '@/components/ui/Button';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { siteConfig } from '@/config/site.config';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
-import { getSanitySiteSettingsData } from '@/sanity/lib/fetch';
+import { getSanitySiteSettingsData, getSanityCargoPricingData, SanityCargoRateItem, SanityCargoComparisonRow } from '@/sanity/lib/fetch';
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
 
-export const metadata: Metadata = {
-  title: `Air & Sea Cargo Services from Pakistan | ${siteConfig.name}`,
-  description:
-    'Raahi International offers air and sea cargo services from Pakistan worldwide. Ship personal and commercial cargo with air freight, sea freight, customs clearance and delivery solutions.',
-  alternates: {
-    canonical: `${siteConfig.domain}/cargo-services`,
-  },
-  openGraph: {
-    title: `Air & Sea Cargo Services from Pakistan | ${siteConfig.name}`,
-    description:
-      'Raahi International offers air and sea cargo services from Pakistan worldwide. Ship personal and commercial cargo with air freight, sea freight, customs clearance and delivery solutions.',
-    url: `${siteConfig.domain}/cargo-services`,
-    type: 'website',
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const sanityCargoPricing = await getSanityCargoPricingData({ stega: false });
+
+  const title =
+    sanityCargoPricing?.seo?.metaTitle ||
+    `Air & Sea Cargo Rates & Services from Pakistan | ${siteConfig.name}`;
+  const description =
+    sanityCargoPricing?.seo?.metaDescription ||
+    'Raahi International offers air and sea cargo services from Pakistan worldwide. Ship personal and commercial cargo with air freight, sea freight, customs clearance and delivery solutions.';
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `${siteConfig.domain}/cargo-services`,
+    },
+    openGraph: {
+      title,
+      description,
+      url: `${siteConfig.domain}/cargo-services`,
+      type: 'website',
+      images: sanityCargoPricing?.seo?.socialImage ? [{ url: sanityCargoPricing.seo.socialImage }] : [],
+    },
+  };
+}
 
 export default async function CargoServicesPage() {
-  const [business, sanitySiteSettings] = await Promise.all([
+  const [business, sanitySiteSettings, sanityCargoPricing] = await Promise.all([
     getPublishedBusinessSettings(),
     getSanitySiteSettingsData(),
+    getSanityCargoPricingData(),
   ]);
 
-  const activePhone = sanitySiteSettings?.phone || business.phonePrimary || siteConfig.phone || '+92 300 1234567';
-  const activeWhatsapp = sanitySiteSettings?.whatsappNumber || business.whatsappNumber || siteConfig.contact?.whatsappNumber || activePhone;
+  const activePhone = sanitySiteSettings?.phone || business.phonePrimary || '';
+  const activeWhatsapp = sanitySiteSettings?.whatsappNumber || business.whatsappNumber || activePhone;
   const cleanPhone = activePhone.replace(/\s+/g, '');
 
   const quoteWhatsappUrl = buildWhatsappUrl(
@@ -64,85 +75,163 @@ export default async function CargoServicesPage() {
     { label: 'Air & Sea Cargo Services', url: '/cargo-services' },
   ];
 
-  const airCargoRates = [
-    { country: 'USA', flag: '🇺🇸', rate: 'Rs. 2,750 – 2,950/KG', deliveryTime: '10–15 Days' },
-    { country: 'United Kingdom', flag: '🇬🇧', rate: 'Rs. 1,750 – 1,850/KG', deliveryTime: '10–12 Days' },
-    { country: 'UAE', flag: '🇦🇪', rate: 'Rs. 1,350 – 1,450/KG', deliveryTime: '10–17 Days' },
-    { country: 'Canada', flag: '🇨🇦', rate: 'Rs. 2,850 – 2,950/KG', deliveryTime: '10–15 Days' },
-    { country: 'Saudi Arabia', flag: '🇸🇦', rate: 'Rs. 2,150 – 2,250/KG', deliveryTime: '10–20 Days' },
-    { country: 'Europe', flag: '🇪🇺', rate: 'Rs. 2,350 – 2,450/KG', deliveryTime: '10–15 Days' },
-    { country: 'Australia', flag: '🇦🇺', rate: 'Rs. 2,350 – 2,450/KG', deliveryTime: '10–15 Days' },
-    { country: 'Scotland', flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', rate: 'Rs. 2,350/KG', deliveryTime: '10–15 Days' },
-    { country: 'Dubai', flag: '🇦🇪', rate: 'Rs. 1,350 – 1,450/KG', deliveryTime: '10–17 Days' },
+  // 1. HERO SECTION & BADGES
+  const heroEyebrow = sanityCargoPricing?.hero?.eyebrow || 'Air & Sea Cargo Hub';
+  const heroHeading = sanityCargoPricing?.hero?.heading || 'Air & Sea Cargo Services from Pakistan';
+  const heroSubheading = sanityCargoPricing?.hero?.subheading || 'Reliable international air freight and ocean sea cargo solutions connecting Pakistan with destinations worldwide.';
+  const heroIntro = sanityCargoPricing?.hero?.introParagraph || 'At Raahi International Cargo & Logistics Services, we provide complete international air cargo and sea cargo solutions for individuals, families, traders and commercial exporters. Whether you need to send a smaller shipment quickly by air or move larger cargo economically by sea, we help you choose the best shipping option based on cargo type, weight, volume, destination, urgency and budget.';
+  const airBadgeTitle = sanityCargoPricing?.hero?.airBadgeTitle || 'Air Cargo Express';
+  const airMinWeightText = sanityCargoPricing?.hero?.airMinWeightText || 'Minimum Air Shipment: 20 KG';
+  const seaBadgeTitle = sanityCargoPricing?.hero?.seaBadgeTitle || 'Sea Freight Economical';
+  const seaMinWeightText = sanityCargoPricing?.hero?.seaMinWeightText || 'Minimum Sea Cargo: 70–100 KG';
+
+  // 2. AIR CARGO RATES & TIMELINES
+  const airSectionTitle = sanityCargoPricing?.airCargoSection?.title || 'Air Cargo Rates & Delivery Time';
+  const airSectionSubtitle = sanityCargoPricing?.airCargoSection?.subtitle || 'Indicative air cargo rates per KG and estimated delivery timelines from Pakistan.';
+  const airMinWeightBadge = sanityCargoPricing?.airCargoSection?.minWeightBadge || '20 KG MIN';
+  
+  const fallbackAirCargoRates: SanityCargoRateItem[] = [
+    { country: 'USA', flag: '🇺🇸', rate: 'Rs. 2,750 – 2,950/KG', deliveryTime: '10–15 Days', quoteHref: '/quote?service=air-freight' },
+    { country: 'United Kingdom', flag: '🇬🇧', rate: 'Rs. 1,750 – 1,850/KG', deliveryTime: '10–12 Days', quoteHref: '/quote?service=air-freight' },
+    { country: 'UAE', flag: '🇦🇪', rate: 'Rs. 1,350 – 1,450/KG', deliveryTime: '10–17 Days', quoteHref: '/quote?service=air-freight' },
+    { country: 'Canada', flag: '🇨🇦', rate: 'Rs. 2,850 – 2,950/KG', deliveryTime: '10–15 Days', quoteHref: '/quote?service=air-freight' },
+    { country: 'Saudi Arabia', flag: '🇸🇦', rate: 'Rs. 2,150 – 2,250/KG', deliveryTime: '10–20 Days', quoteHref: '/quote?service=air-freight' },
+    { country: 'Europe', flag: '🇪🇺', rate: 'Rs. 2,350 – 2,450/KG', deliveryTime: '10–15 Days', quoteHref: '/quote?service=air-freight' },
+    { country: 'Australia', flag: '🇦🇺', rate: 'Rs. 2,350 – 2,450/KG', deliveryTime: '10–15 Days', quoteHref: '/quote?service=air-freight' },
+    { country: 'Scotland', flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', rate: 'Rs. 2,350/KG', deliveryTime: '10–15 Days', quoteHref: '/quote?service=air-freight' },
+    { country: 'Dubai', flag: '🇦🇪', rate: 'Rs. 1,350 – 1,450/KG', deliveryTime: '10–17 Days', quoteHref: '/quote?service=air-freight' },
+  ];
+  const airCargoRates = sanityCargoPricing?.airCargoSection?.rates?.length ? sanityCargoPricing.airCargoSection.rates : fallbackAirCargoRates;
+
+  // 3. SEA CARGO RATES & TIMELINES
+  const seaSectionTitle = sanityCargoPricing?.seaCargoSection?.title || 'Sea Cargo Rates & Delivery Time';
+  const seaSectionSubtitle = sanityCargoPricing?.seaCargoSection?.subtitle || 'Indicative ocean freight rates (PKR/KG) and estimated delivery timelines from Pakistan.';
+  const seaMinWeightBadge = sanityCargoPricing?.seaCargoSection?.minWeightBadge || '70–100 KG MIN';
+  
+  const fallbackSeaCargoRates: SanityCargoRateItem[] = [
+    { country: 'United Kingdom', flag: '🇬🇧', rate: 'Rs. 950 – 1,000/KG', deliveryTime: '1.5 – 2.5 Months', quoteHref: '/quote?service=sea-cargo' },
+    { country: 'UAE', flag: '🇦🇪', rate: 'Rs. 600 – 700/KG', deliveryTime: '1.5 – 2.5 Months', quoteHref: '/quote?service=sea-cargo' },
+    { country: 'USA', flag: '🇺🇸', rate: 'Rs. 1,550 – 1,650/KG', deliveryTime: '2 – 2.5 Months', quoteHref: '/quote?service=sea-cargo' },
+    { country: 'Saudi Arabia', flag: '🇸🇦', rate: 'Rs. 950 – 1,000/KG', deliveryTime: '1.5 – 2.5 Months', quoteHref: '/quote?service=sea-cargo' },
+    { country: 'Germany', flag: '🇩🇪', rate: 'Rs. 1,450/KG', deliveryTime: '2 – 2.5 Months', quoteHref: '/quote?service=sea-cargo' },
+    { country: 'Canada', flag: '🇨🇦', rate: 'Rs. 1,750 – 1,850/KG', deliveryTime: '2 – 3 Months', quoteHref: '/quote?service=sea-cargo' },
+    { country: 'Scotland', flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', rate: 'Rs. 1,250/KG', deliveryTime: '1.5 – 2.5 Months', quoteHref: '/quote?service=sea-cargo' },
+    { country: 'Australia', flag: '🇦🇺', rate: 'Rs. 1,450/KG', deliveryTime: '2 – 2.5 Months', quoteHref: '/quote?service=sea-cargo' },
+    { country: 'Europe', flag: '🇪🇺', rate: 'Rs. 1,450/KG', deliveryTime: '2 – 2.5 Months', quoteHref: '/quote?service=sea-cargo' },
+  ];
+  const seaCargoRates = sanityCargoPricing?.seaCargoSection?.rates?.length ? sanityCargoPricing.seaCargoSection.rates : fallbackSeaCargoRates;
+  const seaDisclaimer = sanityCargoPricing?.seaCargoSection?.disclaimer || '* Rate Disclaimer: Rates shown above are indicative and may vary depending on shipment volume, weight, origin, destination, port/airport charges, airline/shipping line, customs requirements, fuel surcharges, and local delivery location. Contact Raahi International for a current quotation.';
+
+  // 4. QUICK COMPARISON MATRIX
+  const comparisonTitle = sanityCargoPricing?.quickComparison?.title || 'Choose the Right Cargo Option';
+  const comparisonSubtitle = sanityCargoPricing?.quickComparison?.subtitle || 'Side-by-Side Comparison';
+  const fallbackComparisonRows: SanityCargoComparisonRow[] = [
+    { feature: 'Best For', airValue: 'Faster shipments', seaValue: 'Larger & heavier shipments' },
+    { feature: 'Minimum Weight', airValue: '20 KG Minimum', seaValue: '70–100 KG Minimum', airBadge: '20 KG', seaBadge: '70–100 KG' },
+    { feature: 'Transit Time', airValue: 'Generally 10–15 Days', seaValue: 'Generally 1.5–2.5 Months' },
+    { feature: 'Cost', airValue: 'Higher per kg', seaValue: 'More economical for larger shipments' },
+    { feature: 'Suitable For', airValue: 'Personal & commercial cargo', seaValue: 'Personal, commercial & bulk cargo' },
+  ];
+  const comparisonRows = sanityCargoPricing?.quickComparison?.rows?.length ? sanityCargoPricing.quickComparison.rows : fallbackComparisonRows;
+
+  // 5. DECISION GUIDANCE
+  const decisionTitle = sanityCargoPricing?.decisionGuidance?.title || 'Which One Should I Pick?';
+  const decisionAirTitle = sanityCargoPricing?.decisionGuidance?.airTitle || 'Choose Air Cargo If:';
+  const decisionAirPoints = sanityCargoPricing?.decisionGuidance?.airPoints?.length ? sanityCargoPricing.decisionGuidance.airPoints : [
+    'You need faster delivery (10–15 days typical).',
+    'Your shipment is relatively smaller (above 20 kg minimum).',
+    'Delivery speed takes priority over lower ocean freight cost.',
+    'You are sending personal belongings, clothing, business samples, or excess baggage.',
+  ];
+  const decisionSeaTitle = sanityCargoPricing?.decisionGuidance?.seaTitle || 'Choose Sea Cargo If:';
+  const decisionSeaPoints = sanityCargoPricing?.decisionGuidance?.seaPoints?.length ? sanityCargoPricing.decisionGuidance.seaPoints : [
+    'Your shipment is large or heavy (70–100 kg minimum requirement).',
+    'Cost efficiency is more important than speed.',
+    'You have flexible delivery timelines (1.5–2.5 months typical).',
+    'You are shipping bulk commercial stock, machinery, or full household relocations.',
   ];
 
-  const seaCargoRates = [
-    { country: 'United Kingdom', flag: '🇬🇧', rate: 'Rs. 950 – 1,000/KG', deliveryTime: '1.5 – 2.5 Months' },
-    { country: 'UAE', flag: '🇦🇪', rate: 'Rs. 600 – 700/KG', deliveryTime: '1.5 – 2.5 Months' },
-    { country: 'USA', flag: '🇺🇸', rate: 'Rs. 1,550 – 1,650/KG', deliveryTime: '2 – 2.5 Months' },
-    { country: 'Saudi Arabia', flag: '🇸🇦', rate: 'Rs. 950 – 1,000/KG', deliveryTime: '1.5 – 2.5 Months' },
-    { country: 'Germany', flag: '🇩🇪', rate: 'Rs. 1,450/KG', deliveryTime: '2 – 2.5 Months' },
-    { country: 'Canada', flag: '🇨🇦', rate: 'Rs. 1,750 – 1,850/KG', deliveryTime: '2 – 3 Months' },
-    { country: 'Scotland', flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', rate: 'Rs. 1,250/KG', deliveryTime: '1.5 – 2.5 Months' },
-    { country: 'Australia', flag: '🇦🇺', rate: 'Rs. 1,450/KG', deliveryTime: '2 – 2.5 Months' },
-    { country: 'Europe', flag: '🇪🇺', rate: 'Rs. 1,450/KG', deliveryTime: '2 – 2.5 Months' },
+  // 6. DOOR-TO-DOOR
+  const doorToDoorBadge = sanityCargoPricing?.doorToDoor?.badge || 'Door-to-Door Service';
+  const doorToDoorTitle = sanityCargoPricing?.doorToDoor?.title || 'Need Delivery from Your Door to Their Door?';
+  const doorToDoorDesc = sanityCargoPricing?.doorToDoor?.description || 'For eligible routes and shipments, Raahi International can coordinate complete door-to-door international cargo solutions.';
+  const doorToDoorSteps = sanityCargoPricing?.doorToDoor?.workflowSteps?.length ? sanityCargoPricing.doorToDoor.workflowSteps : [
+    'Pickup in Pakistan',
+    'Export Handling',
+    'Customs Clearance',
+    'Air / Sea Transit',
+    'Destination Clearance',
+    'Final Door Delivery',
   ];
 
-  const faqs = [
+  // 7. FAQS
+  const fallbackFaqs = [
     {
       question: 'What is the minimum weight for air cargo?',
-      answer:
-        'Our minimum air cargo shipment weight is 20 kg. Actual service availability and pricing depend on destination and cargo requirements.',
+      answer: 'Our minimum air cargo shipment weight is 20 kg. Actual service availability and pricing depend on destination and cargo requirements.',
     },
     {
       question: 'What is the minimum weight for sea cargo?',
-      answer:
-        'Our minimum sea cargo requirement is approximately 70–100 kg, depending on destination, shipment type and available service.',
+      answer: 'Our minimum sea cargo requirement is approximately 70–100 kg, depending on destination, shipment type and available service.',
     },
     {
       question: 'Which is cheaper, air cargo or sea cargo?',
-      answer:
-        'Sea cargo is generally more economical for larger and heavier shipments, while air cargo is generally faster but has a higher transportation cost.',
+      answer: 'Sea cargo is generally more economical for larger and heavier shipments, while air cargo is generally faster but has a higher transportation cost.',
     },
     {
       question: 'Which is faster, air or sea cargo?',
-      answer:
-        'Air cargo is generally faster than sea cargo. Exact transit times vary depending on destination, carrier, customs clearance and operational factors.',
+      answer: 'Air cargo is generally faster than sea cargo. Exact transit times vary depending on destination, carrier, customs clearance and operational factors.',
     },
     {
       question: 'Can I ship personal belongings by air?',
-      answer:
-        'Yes, eligible personal belongings can be shipped by air, subject to carrier and destination-country regulations.',
+      answer: 'Yes, eligible personal belongings can be shipped by air, subject to carrier and destination-country regulations.',
     },
     {
       question: 'Can I ship household goods by sea?',
-      answer:
-        'Yes, sea freight can be suitable for larger quantities of household goods and personal belongings, subject to applicable regulations.',
+      answer: 'Yes, sea freight can be suitable for larger quantities of household goods and personal belongings, subject to applicable regulations.',
     },
     {
       question: 'What is LCL sea cargo?',
-      answer:
-        'LCL means Less Than Container Load. Your cargo shares container space with shipments belonging to other customers.',
+      answer: 'LCL means Less Than Container Load. Your cargo shares container space with shipments belonging to other customers.',
     },
     {
       question: 'What is FCL sea cargo?',
-      answer:
-        'FCL means Full Container Load, where an entire container is allocated to your shipment.',
+      answer: 'FCL means Full Container Load, where an entire container is allocated to your shipment.',
     },
     {
       question: 'Are the rates on this page final?',
-      answer:
-        'No. Rates displayed on this page are average/indicative rates. Your final quotation depends on shipment details, destination, carrier and applicable charges.',
+      answer: 'No. Rates displayed on this page are average/indicative rates. Your final quotation depends on shipment details, destination, carrier and applicable charges.',
     },
     {
       question: 'How can I get an exact cargo rate?',
-      answer:
-        'Send us your pickup city, destination, cargo type, weight, dimensions and number of packages. Our team can then provide a quotation based on your shipment requirements.',
+      answer: 'Send us your pickup city, destination, cargo type, weight, dimensions and number of packages. Our team can then provide a quotation based on your shipment requirements.',
     },
   ];
+  const faqs = sanityCargoPricing?.faqs?.length ? sanityCargoPricing.faqs : fallbackFaqs;
+
+  // Schema.org FAQPage JSON-LD
+  const faqJsonLd = faqs.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  } : null;
 
   return (
     <div className="w-full bg-background text-foreground font-sans">
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
+
       {/* 1. HERO SECTION — DUAL AIR & SEA CARGO HUB */}
       <section className="relative w-full bg-brand-navy py-16 lg:py-24 border-b border-border-dark text-white overflow-hidden">
         <div className="absolute inset-0 bg-radial-gradient opacity-40 pointer-events-none" />
@@ -152,21 +241,21 @@ export default async function CargoServicesPage() {
             
             <div className="flex flex-wrap items-center gap-2 pt-2">
               <Badge variant="accent" size="sm" className="font-mono uppercase tracking-wider font-bold">
-                Air & Sea Cargo Hub
+                {heroEyebrow}
               </Badge>
               <span className="text-xs text-slate-400 font-mono">• Direct Export Dispatch from Pakistan</span>
             </div>
 
             <h1 className="text-display-lg sm:text-display-xl font-bold tracking-tight text-white">
-              Air & Sea Cargo Services from Pakistan
+              {heroHeading}
             </h1>
 
             <p className="text-body-lg sm:text-xl text-slate-300 font-normal leading-relaxed max-w-3xl">
-              Reliable international air freight and ocean sea cargo solutions connecting Pakistan with destinations worldwide.
+              {heroSubheading}
             </p>
 
-            <p className="text-body-md text-slate-300 leading-relaxed max-w-3xl">
-              At Raahi International Cargo & Logistics Services, we provide complete international air cargo and sea cargo solutions for individuals, families, traders and commercial exporters. Whether you need to send a smaller shipment quickly by air or move larger cargo economically by sea, we help you choose the best shipping option based on cargo type, weight, volume, destination, urgency and budget.
+            <p className="text-body-md text-slate-300 leading-relaxed max-w-3xl font-normal">
+              {heroIntro}
             </p>
 
             {/* DUAL MODE CALLOUT BADGES */}
@@ -176,8 +265,8 @@ export default async function CargoServicesPage() {
                   <Plane className="w-6 h-6" />
                 </div>
                 <div>
-                  <div className="text-xs font-mono font-bold text-emerald-400 uppercase">Air Cargo Express</div>
-                  <div className="text-body-sm font-bold text-white">Minimum Air Shipment: 20 KG</div>
+                  <div className="text-xs font-mono font-bold text-emerald-400 uppercase">{airBadgeTitle}</div>
+                  <div className="text-body-sm font-bold text-white">{airMinWeightText}</div>
                 </div>
               </div>
 
@@ -186,8 +275,8 @@ export default async function CargoServicesPage() {
                   <Ship className="w-6 h-6" />
                 </div>
                 <div>
-                  <div className="text-xs font-mono font-bold text-blue-400 uppercase">Sea Freight Economical</div>
-                  <div className="text-body-sm font-bold text-white">Minimum Sea Cargo: 70–100 KG</div>
+                  <div className="text-xs font-mono font-bold text-blue-400 uppercase">{seaBadgeTitle}</div>
+                  <div className="text-body-sm font-bold text-white">{seaMinWeightText}</div>
                 </div>
               </div>
             </div>
@@ -262,7 +351,7 @@ export default async function CargoServicesPage() {
                     </a>
                   </li>
                   <li>
-                    <a href="#air-vs-sea" className="hover:text-accent-dark hover:underline flex items-center gap-1.5">
+                    <a href="#which-to-pick" className="hover:text-accent-dark hover:underline flex items-center gap-1.5">
                       <ChevronRight className="w-3.5 h-3.5 text-accent-dark shrink-0" /> Air vs Sea Decision Guide
                     </a>
                   </li>
@@ -282,8 +371,8 @@ export default async function CargoServicesPage() {
               {/* 2. QUICK SERVICE COMPARISON */}
               <section id="quick-comparison" className="scroll-mt-28 space-y-6">
                 <div className="border-b border-border pb-3">
-                  <div className="text-xs font-mono text-slate-500 uppercase tracking-wider">Side-by-Side Comparison</div>
-                  <h2 className="text-heading-xl font-bold text-brand-black">Choose the Right Cargo Option</h2>
+                  <div className="text-xs font-mono text-slate-500 uppercase tracking-wider">{comparisonSubtitle}</div>
+                  <h2 className="text-heading-xl font-bold text-brand-black">{comparisonTitle}</h2>
                 </div>
 
                 <div className="overflow-x-auto border border-border rounded-md shadow-xs bg-surface">
@@ -296,31 +385,25 @@ export default async function CargoServicesPage() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border font-normal text-slate-700">
-                      <tr className="hover:bg-surface-subtle transition-colors">
-                        <td className="p-4 font-bold text-brand-black">Best For</td>
-                        <td className="p-4 font-semibold text-brand-black">Faster shipments</td>
-                        <td className="p-4">Larger & heavier shipments</td>
-                      </tr>
-                      <tr className="hover:bg-surface-subtle transition-colors">
-                        <td className="p-4 font-bold text-brand-black">Minimum Weight</td>
-                        <td className="p-4"><Badge variant="accent" size="sm">20 KG</Badge></td>
-                        <td className="p-4"><Badge variant="secondary" size="sm">70–100 KG</Badge></td>
-                      </tr>
-                      <tr className="hover:bg-surface-subtle transition-colors">
-                        <td className="p-4 font-bold text-brand-black">Transit Time</td>
-                        <td className="p-4 text-emerald-700 font-semibold">Generally 10–15 Days</td>
-                        <td className="p-4 text-slate-600">Generally 1.5–2.5 Months</td>
-                      </tr>
-                      <tr className="hover:bg-surface-subtle transition-colors">
-                        <td className="p-4 font-bold text-brand-black">Cost</td>
-                        <td className="p-4">Higher per kg</td>
-                        <td className="p-4 font-semibold text-emerald-700">More economical for larger shipments</td>
-                      </tr>
-                      <tr className="hover:bg-surface-subtle transition-colors">
-                        <td className="p-4 font-bold text-brand-black">Suitable For</td>
-                        <td className="p-4">Personal & commercial cargo</td>
-                        <td className="p-4">Personal, commercial & bulk cargo</td>
-                      </tr>
+                      {comparisonRows.map((row, idx) => (
+                        <tr key={idx} className="hover:bg-surface-subtle transition-colors">
+                          <td className="p-4 font-bold text-brand-black">{row.feature}</td>
+                          <td className="p-4 font-semibold text-brand-black">
+                            {row.airBadge ? (
+                              <Badge variant="accent" size="sm">{row.airValue}</Badge>
+                            ) : (
+                              row.airValue
+                            )}
+                          </td>
+                          <td className="p-4">
+                            {row.seaBadge ? (
+                              <Badge variant="secondary" size="sm">{row.seaValue}</Badge>
+                            ) : (
+                              row.seaValue
+                            )}
+                          </td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
@@ -344,9 +427,9 @@ export default async function CargoServicesPage() {
                 <div className="bg-amber-50 border-l-4 border-amber-500 p-5 rounded-r-md flex items-center justify-between gap-4">
                   <div>
                     <div className="text-xs font-mono font-bold text-amber-800 uppercase tracking-wider">Air Cargo Requirement</div>
-                    <div className="text-heading-sm font-bold text-amber-900">Minimum Air Shipment: 20 KG</div>
+                    <div className="text-heading-sm font-bold text-amber-900">{airMinWeightText}</div>
                   </div>
-                  <Badge variant="accent" size="md" className="shrink-0 font-bold text-sm">20 KG MIN</Badge>
+                  <Badge variant="accent" size="md" className="shrink-0 font-bold text-sm">{airMinWeightBadge}</Badge>
                 </div>
 
                 {/* AIR CARGO RATES & DELIVERY TIME TABLE */}
@@ -354,13 +437,13 @@ export default async function CargoServicesPage() {
                   <div className="bg-surface-subtle p-5 rounded-md border border-border flex items-center justify-between flex-wrap gap-2">
                     <div>
                       <h3 className="text-heading-md font-bold text-brand-black">
-                        Air Cargo Rates & Delivery Time
+                        {airSectionTitle}
                       </h3>
                       <p className="text-body-xs text-slate-600">
-                        Indicative air cargo rates per KG and estimated delivery timelines from Pakistan.
+                        {airSectionSubtitle}
                       </p>
                     </div>
-                    <Badge variant="accent" size="sm" className="font-mono font-bold">20 KG MIN</Badge>
+                    <Badge variant="accent" size="sm" className="font-mono font-bold">{airMinWeightBadge}</Badge>
                   </div>
 
                   <div className="overflow-x-auto border border-border rounded-md shadow-xs bg-surface">
@@ -377,7 +460,7 @@ export default async function CargoServicesPage() {
                         {airCargoRates.map((rate) => (
                           <tr key={rate.country} className="hover:bg-surface-subtle transition-colors">
                             <td className="p-4 font-bold text-brand-black text-body-md flex items-center gap-2.5">
-                              <span className="text-xl">{rate.flag}</span>
+                              <span className="text-xl">{rate.flag || '🏳️'}</span>
                               <span>{rate.country}</span>
                             </td>
                             <td className="p-4 font-bold font-mono text-brand-black text-body-md">
@@ -387,7 +470,7 @@ export default async function CargoServicesPage() {
                               {rate.deliveryTime}
                             </td>
                             <td className="p-4 text-right">
-                              <Link href="/quote?service=air-freight" className="text-xs font-bold text-brand-black hover:text-accent-dark underline">
+                              <Link href={rate.quoteHref || '/quote?service=air-freight'} className="text-xs font-bold text-brand-black hover:text-accent-dark underline">
                                 Get Quote →
                               </Link>
                             </td>
@@ -417,9 +500,9 @@ export default async function CargoServicesPage() {
                 <div className="bg-blue-50 border-l-4 border-blue-600 p-5 rounded-r-md flex items-center justify-between gap-4">
                   <div>
                     <div className="text-xs font-mono font-bold text-blue-800 uppercase tracking-wider">Sea Cargo Requirement</div>
-                    <div className="text-heading-sm font-bold text-blue-950">Minimum Sea Cargo: 70–100 KG</div>
+                    <div className="text-heading-sm font-bold text-blue-950">{seaMinWeightText}</div>
                   </div>
-                  <Badge variant="secondary" size="md" className="shrink-0 font-bold text-sm">70–100 KG MIN</Badge>
+                  <Badge variant="secondary" size="md" className="shrink-0 font-bold text-sm">{seaMinWeightBadge}</Badge>
                 </div>
 
                 {/* SEA CARGO RATES & DELIVERY TIME TABLE */}
@@ -427,13 +510,13 @@ export default async function CargoServicesPage() {
                   <div className="bg-surface-subtle p-5 rounded-md border border-border flex items-center justify-between flex-wrap gap-2">
                     <div>
                       <h3 className="text-heading-md font-bold text-brand-black">
-                        Sea Cargo Rates & Delivery Time
+                        {seaSectionTitle}
                       </h3>
                       <p className="text-body-xs text-slate-600">
-                        Indicative ocean freight rates (PKR/KG) and estimated delivery timelines from Pakistan.
+                        {seaSectionSubtitle}
                       </p>
                     </div>
-                    <Badge variant="secondary" size="sm" className="font-mono font-bold">70–100 KG MIN</Badge>
+                    <Badge variant="secondary" size="sm" className="font-mono font-bold">{seaMinWeightBadge}</Badge>
                   </div>
 
                   <div className="overflow-x-auto border border-border rounded-md shadow-xs bg-surface">
@@ -450,7 +533,7 @@ export default async function CargoServicesPage() {
                         {seaCargoRates.map((rate) => (
                           <tr key={rate.country} className="hover:bg-surface-subtle transition-colors">
                             <td className="p-4 font-bold text-brand-black text-body-md flex items-center gap-2.5">
-                              <span className="text-xl">{rate.flag}</span>
+                              <span className="text-xl">{rate.flag || '🏳️'}</span>
                               <span>{rate.country}</span>
                             </td>
                             <td className="p-4 font-bold font-mono text-brand-black text-body-md">
@@ -460,7 +543,7 @@ export default async function CargoServicesPage() {
                               {rate.deliveryTime}
                             </td>
                             <td className="p-4 text-right">
-                              <Link href="/quote?service=sea-cargo" className="text-xs font-bold text-brand-black hover:text-accent-dark underline">
+                              <Link href={rate.quoteHref || '/quote?service=sea-cargo'} className="text-xs font-bold text-brand-black hover:text-accent-dark underline">
                                 Get Quote →
                               </Link>
                             </td>
@@ -471,7 +554,7 @@ export default async function CargoServicesPage() {
                   </div>
 
                   <p className="text-body-xs text-slate-500 italic">
-                    * Rate Disclaimer: Rates shown above are indicative and may vary depending on shipment volume, weight, origin, destination, port/airport charges, airline/shipping line, customs requirements, fuel surcharges, and local delivery location. Contact Raahi International for a current quotation.
+                    {seaDisclaimer}
                   </p>
                 </div>
               </section>
@@ -480,55 +563,35 @@ export default async function CargoServicesPage() {
               <section id="which-to-pick" className="scroll-mt-28 space-y-6 pt-8 border-t border-border">
                 <div className="border-b border-border pb-3">
                   <Badge variant="outline" size="sm" className="mb-2 font-mono uppercase">Practical Decision Guide</Badge>
-                  <h2 className="text-heading-xl font-bold text-brand-black">Which One Should I Pick?</h2>
+                  <h2 className="text-heading-xl font-bold text-brand-black">{decisionTitle}</h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="bg-emerald-50/70 border border-emerald-200 p-6 rounded-md space-y-4">
                     <h3 className="text-heading-sm font-bold text-emerald-950 flex items-center gap-2">
-                      <Plane className="w-5 h-5 text-emerald-600" /> Choose Air Cargo If:
+                      <Plane className="w-5 h-5 text-emerald-600" /> {decisionAirTitle}
                     </h3>
                     <ul className="space-y-2.5 text-body-sm text-emerald-900 font-medium">
-                      <li className="flex items-start gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                        <span>You need faster delivery (10–15 days typical).</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                        <span>Your shipment is relatively smaller (above 20 kg minimum).</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                        <span>Delivery speed takes priority over lower ocean freight cost.</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                        <span>You are sending personal belongings, clothing, business samples, or excess baggage.</span>
-                      </li>
+                      {decisionAirPoints.map((pt, idx) => (
+                        <li key={idx} className="flex items-start gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                          <span>{pt}</span>
+                        </li>
+                      ))}
                     </ul>
                   </div>
 
                   <div className="bg-blue-50/70 border border-blue-200 p-6 rounded-md space-y-4">
                     <h3 className="text-heading-sm font-bold text-blue-950 flex items-center gap-2">
-                      <Ship className="w-5 h-5 text-blue-600" /> Choose Sea Cargo If:
+                      <Ship className="w-5 h-5 text-blue-600" /> {decisionSeaTitle}
                     </h3>
                     <ul className="space-y-2.5 text-body-sm text-blue-900 font-medium">
-                      <li className="flex items-start gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-                        <span>Your shipment is large or heavy (70–100 kg minimum requirement).</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-                        <span>Cost efficiency is more important than speed.</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-                        <span>You have flexible delivery timelines (1.5–2.5 months typical).</span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
-                        <span>You are shipping bulk commercial stock, machinery, or full household relocations.</span>
-                      </li>
+                      {decisionSeaPoints.map((pt, idx) => (
+                        <li key={idx} className="flex items-start gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                          <span>{pt}</span>
+                        </li>
+                      ))}
                     </ul>
                   </div>
                 </div>
@@ -537,27 +600,24 @@ export default async function CargoServicesPage() {
               {/* SECTION: DOOR-TO-DOOR OPTION */}
               <section id="door-to-door" className="scroll-mt-28 space-y-6 pt-8 border-t border-border">
                 <div className="border-b border-border pb-3">
-                  <Badge variant="accent" size="sm" className="mb-2 font-mono uppercase">Door-to-Door Service</Badge>
-                  <h2 className="text-heading-xl font-bold text-brand-black">Need Delivery from Your Door to Their Door?</h2>
+                  <Badge variant="accent" size="sm" className="mb-2 font-mono uppercase">{doorToDoorBadge}</Badge>
+                  <h2 className="text-heading-xl font-bold text-brand-black">{doorToDoorTitle}</h2>
                   <p className="text-body-md text-slate-600">
-                    For eligible routes and shipments, Raahi International can coordinate complete door-to-door international cargo solutions.
+                    {doorToDoorDesc}
                   </p>
                 </div>
 
                 <div className="bg-brand-black text-white p-6 sm:p-8 rounded-md space-y-5 shadow-md">
                   <div className="text-xs font-mono text-slate-400 uppercase tracking-wider">Integrated Workflow</div>
                   <div className="flex flex-wrap items-center gap-2 text-xs font-mono text-accent font-bold">
-                    <span>Pickup in Pakistan</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
-                    <span>Export Handling</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
-                    <span>Customs Clearance</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
-                    <span>Air / Sea Transit</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
-                    <span>Destination Clearance</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
-                    <span>Final Door Delivery</span>
+                    {doorToDoorSteps.map((step, idx) => (
+                      <React.Fragment key={idx}>
+                        <span>{step}</span>
+                        {idx < doorToDoorSteps.length - 1 && (
+                          <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
+                        )}
+                      </React.Fragment>
+                    ))}
                   </div>
                   <p className="text-body-xs text-slate-300">
                     Door-to-door availability and charges depend on destination, cargo type, customs requirements and local delivery arrangements.

@@ -12,15 +12,15 @@ export interface SiteConfig {
   tagline: string;
   phone?: string;
   whatsapp?: string;
-  contact: {
-    phonePrimary: string;
-    phoneSecondary: string;
-    whatsappNumber: string;
-    whatsappDefaultMessage: string;
-    emailInfo: string;
-    emailQuotes: string;
+  contact?: {
+    phonePrimary?: string;
+    phoneSecondary?: string;
+    whatsappNumber?: string;
+    whatsappDefaultMessage?: string;
+    emailInfo?: string;
+    emailQuotes?: string;
   };
-  verifiedOffices: VerifiedOffice[];
+  verifiedOffices?: VerifiedOffice[];
   defaultSeo: {
     titleTemplate: string;
     defaultTitle: string;

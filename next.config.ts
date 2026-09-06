@@ -20,11 +20,6 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: '/guides/air-vs-sea-cargo',
-        destination: '/cargo-services',
-        permanent: true,
-      },
-      {
         source: '/services/cargo-services',
         destination: '/cargo-services',
         permanent: true,

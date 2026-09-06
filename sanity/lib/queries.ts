@@ -507,3 +507,83 @@ export const ABOUT_PAGE_QUERY = defineQuery(`
     }
   }
 `);
+
+// --------------------------------------------------
+// CARGO PRICING SINGLETON QUERY
+// --------------------------------------------------
+export const CARGO_PRICING_QUERY = defineQuery(`
+  *[_type == "cargoPricing"][0] {
+    hero {
+      eyebrow,
+      heading,
+      subheading,
+      introParagraph,
+      airBadgeTitle,
+      airMinWeightText,
+      seaBadgeTitle,
+      seaMinWeightText
+    },
+    airCargoSection {
+      title,
+      subtitle,
+      minWeightBadge,
+      rates[] {
+        country,
+        flag,
+        rate,
+        deliveryTime,
+        sortOrder,
+        quoteHref
+      }
+    },
+    seaCargoSection {
+      title,
+      subtitle,
+      minWeightBadge,
+      rates[] {
+        country,
+        flag,
+        rate,
+        deliveryTime,
+        sortOrder,
+        quoteHref
+      },
+      disclaimer
+    },
+    quickComparison {
+      title,
+      subtitle,
+      rows[] {
+        feature,
+        airValue,
+        seaValue,
+        airBadge,
+        seaBadge,
+        sortOrder
+      }
+    },
+    decisionGuidance {
+      title,
+      airTitle,
+      airPoints,
+      seaTitle,
+      seaPoints
+    },
+    doorToDoor {
+      badge,
+      title,
+      description,
+      workflowSteps
+    },
+    faqs[] {
+      question,
+      answer
+    },
+    seo {
+      metaTitle,
+      metaDescription,
+      "socialImage": socialImage.asset->url
+    }
+  }
+`);
+

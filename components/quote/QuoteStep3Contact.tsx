@@ -87,7 +87,7 @@ export const QuoteStep3Contact: React.FC<QuoteStep3ContactProps> = ({
             label="Phone / WhatsApp Number"
             id="sender_phone"
             name="sender_phone"
-            placeholder="+92 300 1234567"
+            placeholder="e.g. 0300 1234567"
             value={formData.sender_phone || ''}
             onChange={(e) => onChange('sender_phone', e.target.value)}
             error={errors.sender_phone}

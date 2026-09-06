@@ -29,15 +29,15 @@ export const Footer: React.FC<FooterProps> = async ({ sanitySiteSettings }) => {
 
   // Rule #1: Business contact fields as single source of contact info
   const brandName = sanitySiteSettings?.businessName || business.brandName || siteConfig.name;
-  const phone = sanitySiteSettings?.phone || business.phonePrimary || siteConfig.phone || '+92 300 1234567';
-  const whatsappNumber = sanitySiteSettings?.whatsappNumber || business.whatsappNumber || siteConfig.contact?.whatsappNumber || phone;
+  const phone = sanitySiteSettings?.phone || business.phonePrimary || '';
+  const whatsappNumber = sanitySiteSettings?.whatsappNumber || business.whatsappNumber || phone;
   const whatsappUrl = buildWhatsappUrl(whatsappNumber);
-  const email = sanitySiteSettings?.email || business.emailInfo || siteConfig.contact?.emailInfo || 'info@raahiinternational.pk';
-  const address = sanitySiteSettings?.address || (business as unknown as { addressPrimary?: string }).addressPrimary || 'Main Airport Cargo Terminal Area, Lahore / Karachi, Pakistan';
+  const email = sanitySiteSettings?.email || business.emailInfo || '';
+  const address = sanitySiteSettings?.address || business.addressPrimary || '';
 
   const footerDescription =
     sanitySiteSettings?.footerDescription ||
-    'International cargo delivery provider providing reliable air cargo, ocean sea cargo, and door-to-door shipping services connecting Pakistan worldwide.';
+    '';
 
   // Build footer navigation groups, dynamically replacing Origin Locations items if active locations exist
   const baseFooterGroups =

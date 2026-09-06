@@ -127,8 +127,8 @@ export default async function AboutUsPage() {
     getSanitySiteSettingsData(),
   ]);
 
-  const activePhone = sanitySiteSettings?.phone || business.phonePrimary || siteConfig.phone || '+92 300 1234567';
-  const activeWhatsapp = sanitySiteSettings?.whatsappNumber || business.whatsappNumber || siteConfig.contact?.whatsappNumber || activePhone;
+  const activePhone = sanitySiteSettings?.phone || business.phonePrimary || '';
+  const activeWhatsapp = sanitySiteSettings?.whatsappNumber || business.whatsappNumber || activePhone;
   const cleanPhone = activePhone.replace(/\s+/g, '');
 
   const quoteWhatsappUrl = buildWhatsappUrl(

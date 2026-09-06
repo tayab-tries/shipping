@@ -23,7 +23,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({ brandName: propBrand, phon
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const brandName = propBrand || siteConfig.name;
-  const phone = propPhone || siteConfig.phone || '+92 300 1234567';
+  const phone = propPhone || '';
   const whatsappNumber = propWhatsapp || phone;
   const whatsappUrl = buildWhatsappUrl(whatsappNumber);
 

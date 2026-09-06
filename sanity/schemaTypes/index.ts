@@ -1,6 +1,7 @@
 import { siteSettingsType } from './siteSettingsType';
 import { homepageType } from './homepageType';
 import { aboutPageType } from './aboutPageType';
+import { cargoPricingType } from './cargoPricingType';
 import { serviceType } from './serviceType';
 import { locationType } from './locationType';
 import { destinationCountryType } from './destinationCountryType';
@@ -20,6 +21,8 @@ import { processStepObject } from './objects/processStepObject';
 import { trustMetricObject } from './objects/trustMetricObject';
 import { testimonialItemObject } from './objects/testimonialItemObject';
 import { faqItemObject } from './objects/faqItemObject';
+import { cargoRateItemObject } from './objects/cargoRateItemObject';
+import { cargoComparisonRowObject } from './objects/cargoComparisonRowObject';
 
 export const schema = {
   types: [
@@ -27,6 +30,7 @@ export const schema = {
     siteSettingsType,
     homepageType,
     aboutPageType,
+    cargoPricingType,
     serviceType,
     locationType,
     destinationCountryType,
@@ -48,5 +52,7 @@ export const schema = {
     trustMetricObject,
     testimonialItemObject,
     faqItemObject,
+    cargoRateItemObject,
+    cargoComparisonRowObject,
   ],
 };
