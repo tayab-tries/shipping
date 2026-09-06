@@ -116,7 +116,7 @@ export default async function LocationDetailPage({ params }: LocationPageProps) 
     isVerified: true,
     isIndexable: true,
     faqs: sanityLocation?.faqs || fallbackLocation?.faqs || [],
-    sections: fallbackLocation?.sections,
+    sections: sanityLocation?.sections || fallbackLocation?.sections,
   };
 
   const quoteUrl = `/quote?origin=${location.slug}`;

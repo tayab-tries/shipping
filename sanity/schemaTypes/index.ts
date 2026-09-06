@@ -23,6 +23,7 @@ import { testimonialItemObject } from './objects/testimonialItemObject';
 import { faqItemObject } from './objects/faqItemObject';
 import { cargoRateItemObject } from './objects/cargoRateItemObject';
 import { cargoComparisonRowObject } from './objects/cargoComparisonRowObject';
+import { locationSectionObject } from './objects/locationSectionObject';
 
 export const schema = {
   types: [
@@ -54,5 +55,6 @@ export const schema = {
     faqItemObject,
     cargoRateItemObject,
     cargoComparisonRowObject,
+    locationSectionObject,
   ],
 };

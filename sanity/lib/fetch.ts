@@ -186,6 +186,12 @@ export interface SanityLocationDocument {
   localCoverageText?: string;
   supportedServices?: string[];
   faqs?: { question: string; answer: string }[];
+  sections?: Array<{
+    title: string;
+    content: string;
+    list?: string[];
+    links?: Array<{ label: string; href: string }>;
+  }>;
   seo?: {
     metaTitle?: string;
     metaDescription?: string;

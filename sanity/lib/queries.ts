@@ -270,6 +270,15 @@ export const LOCATIONS_LIST_QUERY = defineQuery(`
       question,
       answer
     },
+    sections[] {
+      title,
+      content,
+      list,
+      links[] {
+        label,
+        href
+      }
+    },
     seo {
       metaTitle,
       metaDescription,
@@ -296,6 +305,15 @@ export const LOCATION_BY_SLUG_QUERY = defineQuery(`
     faqs[] {
       question,
       answer
+    },
+    sections[] {
+      title,
+      content,
+      list,
+      links[] {
+        label,
+        href
+      }
     },
     seo {
       metaTitle,

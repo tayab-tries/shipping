@@ -86,6 +86,12 @@ export const locationType = defineType({
       of: [{ type: 'faqItemObject' }],
     }),
     defineField({
+      name: 'sections',
+      title: 'Editorial Article Content Sections',
+      type: 'array',
+      of: [{ type: 'locationSectionObject' }],
+    }),
+    defineField({
       name: 'seo',
       title: 'SEO Settings',
       type: 'seoObject',
