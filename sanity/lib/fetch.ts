@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { draftMode } from 'next/headers';
 import { client } from './client';
 import { isSanityConfigured, readToken } from '../env';
@@ -289,7 +290,7 @@ async function isDraftEnabled(): Promise<boolean> {
   }
 }
 
-export async function getSanitySiteSettingsData(options?: { stega?: boolean }): Promise<SanitySiteSettings | null> {
+export const getSanitySiteSettingsData = cache(async function getSanitySiteSettingsData(options?: { stega?: boolean }): Promise<SanitySiteSettings | null> {
   if (!isSanityConfigured) return null;
   try {
     const isDraft = await isDraftEnabled();
@@ -299,9 +300,9 @@ export async function getSanitySiteSettingsData(options?: { stega?: boolean }): 
     console.warn('[Sanity] getSanitySiteSettingsData fetch error, using fallbacks:', error);
     return null;
   }
-}
+});
 
-export async function getSanityHomepageData(options?: { stega?: boolean }): Promise<SanityHomepageData | null> {
+export const getSanityHomepageData = cache(async function getSanityHomepageData(options?: { stega?: boolean }): Promise<SanityHomepageData | null> {
   if (!isSanityConfigured) return null;
   try {
     const isDraft = await isDraftEnabled();
@@ -311,9 +312,9 @@ export async function getSanityHomepageData(options?: { stega?: boolean }): Prom
     console.warn('[Sanity] getSanityHomepageData fetch error, using fallbacks:', error);
     return null;
   }
-}
+});
 
-export async function getSanityServicesList(options?: { stega?: boolean }): Promise<SanityServiceDocument[]> {
+export const getSanityServicesList = cache(async function getSanityServicesList(options?: { stega?: boolean }): Promise<SanityServiceDocument[]> {
   if (!isSanityConfigured) return [];
   try {
     const isDraft = await isDraftEnabled();
@@ -324,9 +325,9 @@ export async function getSanityServicesList(options?: { stega?: boolean }): Prom
     console.warn('[Sanity] getSanityServicesList fetch error, using fallbacks:', error);
     return [];
   }
-}
+});
 
-export async function getSanityServiceBySlug(slug: string, options?: { stega?: boolean }): Promise<SanityServiceDocument | null> {
+export const getSanityServiceBySlug = cache(async function getSanityServiceBySlug(slug: string, options?: { stega?: boolean }): Promise<SanityServiceDocument | null> {
   if (!isSanityConfigured) return null;
   try {
     const isDraft = await isDraftEnabled();
@@ -336,9 +337,9 @@ export async function getSanityServiceBySlug(slug: string, options?: { stega?: b
     console.warn(`[Sanity] getSanityServiceBySlug fetch error for slug ${slug}, using fallbacks:`, error);
     return null;
   }
-}
+});
 
-export async function getSanityLocationsList(options?: { stega?: boolean }): Promise<SanityLocationDocument[]> {
+export const getSanityLocationsList = cache(async function getSanityLocationsList(options?: { stega?: boolean }): Promise<SanityLocationDocument[]> {
   if (!isSanityConfigured) return [];
   try {
     const isDraft = await isDraftEnabled();
@@ -349,9 +350,9 @@ export async function getSanityLocationsList(options?: { stega?: boolean }): Pro
     console.warn('[Sanity] getSanityLocationsList fetch error, using fallbacks:', error);
     return [];
   }
-}
+});
 
-export async function getSanityLocationBySlug(slug: string, options?: { stega?: boolean }): Promise<SanityLocationDocument | null> {
+export const getSanityLocationBySlug = cache(async function getSanityLocationBySlug(slug: string, options?: { stega?: boolean }): Promise<SanityLocationDocument | null> {
   if (!isSanityConfigured) return null;
   try {
     const isDraft = await isDraftEnabled();
@@ -361,7 +362,7 @@ export async function getSanityLocationBySlug(slug: string, options?: { stega?: 
     console.warn(`[Sanity] getSanityLocationBySlug fetch error for slug ${slug}, using fallbacks:`, error);
     return null;
   }
-}
+});
 
 export async function getSanityDestinationsList(options?: { stega?: boolean }): Promise<SanityDestinationCountryDocument[]> {
   if (!isSanityConfigured) return [];

@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next';
 import { siteConfig } from '@/config/site.config';
 import { getEnabledServices } from '@/config/services.config';
 import { getPublishedLocations } from '@/lib/locations/location-content';
+import { getSanityLocationsList } from '@/sanity/lib/fetch';
 import { getPublishedDestinations } from '@/lib/destinations/destination-content';
 import { getPublishedStaticArticles } from '@/lib/guides/guide-content';
 
@@ -27,9 +28,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .filter((s) => s.slug !== 'air-freight' && s.slug !== 'sea-cargo' && s.slug !== 'door-to-door')
     .map((s) => `/services/${s.slug}`);
 
-  // 2. Dynamically map ONLY published & verified location hubs
-  const publishedLocations = await getPublishedLocations();
-  const locationRoutes = publishedLocations.map((l) => `/locations/${l.slug}`);
+  // 2. Dynamically map ONLY published location hubs from Sanity
+  const sanityLocations = await getSanityLocationsList();
+  const fallbackLocations = await getPublishedLocations();
+  const activeLocations = sanityLocations.length > 0 ? sanityLocations : fallbackLocations;
+  const locationRoutes = activeLocations.map((l) => `/locations/${l.slug}`);
 
   // 3. Dynamically map ONLY published & verified destination countries & cities
   const publishedDestinations = await getPublishedDestinations();

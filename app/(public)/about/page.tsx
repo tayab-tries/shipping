@@ -25,7 +25,7 @@ import { Button } from '@/components/ui/Button';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { siteConfig } from '@/config/site.config';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
-import { getSanityAboutPageData, getSanitySiteSettingsData } from '@/sanity/lib/fetch';
+import { getSanityAboutPageData, getSanitySiteSettingsData, getSanityLocationsList, SanityLocationDocument } from '@/sanity/lib/fetch';
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -121,10 +121,11 @@ const portableTextComponents: PortableTextComponents = {
 };
 
 export default async function AboutUsPage() {
-  const [sanityAbout, business, sanitySiteSettings] = await Promise.all([
+  const [sanityAbout, business, sanitySiteSettings, sanityLocations] = await Promise.all([
     getSanityAboutPageData(),
     getPublishedBusinessSettings(),
     getSanitySiteSettingsData(),
+    getSanityLocationsList(),
   ]);
 
   const activePhone = sanitySiteSettings?.phone || business.phonePrimary || '';
@@ -147,15 +148,21 @@ export default async function AboutUsPage() {
     sanityAbout?.intro ||
     'Raahi International Cargo & Logistics Services is an international shipping and logistics company helping individuals and businesses move cargo from Pakistan to destinations around the world.';
 
-  const citiesList = [
-    { name: 'Lahore', href: '/locations/lahore', flag: '📍' },
-    { name: 'Karachi', href: '/locations/karachi', flag: '📍' },
-    { name: 'Islamabad', href: '/locations/islamabad', flag: '📍' },
-    { name: 'Rawalpindi', href: '/locations/rawalpindi', flag: '📍' },
-    { name: 'Multan', href: '/locations/multan', flag: '📍' },
-    { name: 'Peshawar', href: '/locations/peshawar', flag: '📍' },
-    { name: 'Faisalabad', href: '/locations/faisalabad', flag: '📍' },
+  const defaultCitiesList = [
+    { name: 'Lahore', href: '/locations/international-cargo-services-in-lahore', flag: '📍' },
+    { name: 'Karachi', href: '/locations/international-cargo-services-in-karachi', flag: '📍' },
+    { name: 'Islamabad', href: '/locations/international-cargo-services-in-islamabad', flag: '📍' },
+    { name: 'Rawalpindi', href: '/locations/international-cargo-services-in-rawalpindi', flag: '📍' },
+    { name: 'Multan', href: '/locations/international-cargo-services-in-multan', flag: '📍' },
+    { name: 'Peshawar', href: '/locations/international-cargo-services-in-peshawar', flag: '📍' },
+    { name: 'Faisalabad', href: '/locations/international-cargo-services-in-faisalabad', flag: '📍' },
+    { name: 'Sialkot', href: '/locations/international-cargo-services-in-sialkot', flag: '📍' },
   ];
+
+  const citiesList =
+    sanityLocations && sanityLocations.length > 0
+      ? sanityLocations.map((l: SanityLocationDocument) => ({ name: l.name, href: `/locations/${l.slug}`, flag: '📍' }))
+      : defaultCitiesList;
 
   const processSteps = [
     { step: '01', title: '1. Understand', desc: 'We first learn about your cargo, pickup location, destination and requirements.' },

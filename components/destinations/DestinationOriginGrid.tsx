@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { ArrowRight, MapPin } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
-import { getPublishedStaticLocations } from '@/lib/locations/location-content';
+import { getPublishedLocations } from '@/lib/locations/location-content';
 
 export interface DestinationOriginGridProps {
   countryName: string;
@@ -11,16 +11,22 @@ export interface DestinationOriginGridProps {
   supportedOrigins?: string[];
 }
 
-export const DestinationOriginGrid: React.FC<DestinationOriginGridProps> = ({
+export const DestinationOriginGrid: React.FC<DestinationOriginGridProps> = async ({
   countryName,
   countrySlug,
-  supportedOrigins = ['lahore', 'karachi', 'islamabad', 'rawalpindi'],
+  supportedOrigins,
 }) => {
-  const publishedLocations = getPublishedStaticLocations();
+  const publishedLocations = await getPublishedLocations();
 
-  const activeOrigins = publishedLocations.filter((loc) =>
-    supportedOrigins.includes(loc.slug)
-  );
+  const activeOrigins =
+    supportedOrigins && supportedOrigins.length > 0
+      ? publishedLocations.filter(
+          (loc) =>
+            supportedOrigins.includes(loc.slug) ||
+            supportedOrigins.includes(loc.name.toLowerCase()) ||
+            supportedOrigins.some((so) => loc.slug.includes(so.toLowerCase()))
+        )
+      : publishedLocations;
 
   if (activeOrigins.length === 0) return null;
 

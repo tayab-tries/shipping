@@ -1,19 +1,24 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowRight, MapPin } from 'lucide-react';
-import { getPublishedStaticLocations } from '@/lib/locations/location-content';
+import { getPublishedLocations } from '@/lib/locations/location-content';
 
 export interface RelatedLocationsBarProps {
   supportedOrigins?: string[];
 }
 
-export const RelatedLocationsBar: React.FC<RelatedLocationsBarProps> = ({
+export const RelatedLocationsBar: React.FC<RelatedLocationsBarProps> = async ({
   supportedOrigins = [],
 }) => {
-  const publishedLocations = getPublishedStaticLocations();
+  const publishedLocations = await getPublishedLocations();
 
   const related = supportedOrigins.length > 0
-    ? publishedLocations.filter((l) => supportedOrigins.includes(l.slug))
+    ? publishedLocations.filter(
+        (l) =>
+          supportedOrigins.includes(l.slug) ||
+          supportedOrigins.includes(l.name.toLowerCase()) ||
+          supportedOrigins.some((so) => l.slug.includes(so.toLowerCase()))
+      )
     : publishedLocations.slice(0, 3);
 
   if (related.length === 0) return null;

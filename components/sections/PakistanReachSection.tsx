@@ -34,14 +34,14 @@ export const PakistanReachSection: React.FC<PakistanReachSectionProps> = ({
     'Doorstep collection available across major commercial cities in Pakistan.';
 
   const defaultCities: PickupCityData[] = [
-    { name: 'Lahore', href: '/locations/lahore' },
-    { name: 'Karachi', href: '/locations/karachi' },
-    { name: 'Islamabad', href: '/locations/islamabad' },
-    { name: 'Rawalpindi', href: '/locations/rawalpindi' },
-    { name: 'Faisalabad', href: '/locations/faisalabad' },
-    { name: 'Sialkot', href: '/locations/sialkot' },
-    { name: 'Multan', href: '/locations/multan' },
-    { name: 'Peshawar', href: '/locations/peshawar' },
+    { name: 'Lahore', href: '/locations/international-cargo-services-in-lahore' },
+    { name: 'Karachi', href: '/locations/international-cargo-services-in-karachi' },
+    { name: 'Islamabad', href: '/locations/international-cargo-services-in-islamabad' },
+    { name: 'Rawalpindi', href: '/locations/international-cargo-services-in-rawalpindi' },
+    { name: 'Faisalabad', href: '/locations/international-cargo-services-in-faisalabad' },
+    { name: 'Sialkot', href: '/locations/international-cargo-services-in-sialkot' },
+    { name: 'Multan', href: '/locations/international-cargo-services-in-multan' },
+    { name: 'Peshawar', href: '/locations/international-cargo-services-in-peshawar' },
   ];
 
   const verifiedCities: PickupCityData[] =
