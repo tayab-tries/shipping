@@ -14,6 +14,8 @@ import {
 } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
+import ReactMarkdown from 'react-markdown';
+import rehypeSanitize from 'rehype-sanitize';
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
 import { siteConfig } from '@/config/site.config';
 
@@ -112,58 +114,66 @@ export const LocationBlogArticle: React.FC<LocationBlogArticleProps> = ({
             {/* Editorial Content Sections */}
             {sections && sections.length > 0 && (
               <div className="space-y-10">
-                {sections.map((sec, idx) => (
-                  <div
-                    key={idx}
-                    id={`section-${idx}`}
-                    className="bg-surface rounded-md border border-border p-6 sm:p-8 space-y-6 shadow-xs scroll-mt-28"
-                  >
-                    <h2 className="text-heading-lg sm:text-2xl font-extrabold text-foreground tracking-tight border-b border-border pb-3 flex items-center gap-3">
-                      <span className="text-accent font-mono text-xl">{idx + 1}.</span>
-                      <span>{sec.title}</span>
-                    </h2>
+                {sections.map((sec, idx) => {
+                  const cleanTitle = sec.title.replace(/^#+\s*/, '').trim();
+                  return (
+                    <div
+                      key={idx}
+                      id={`section-${idx}`}
+                      className="bg-surface rounded-md border border-border p-6 sm:p-8 space-y-6 shadow-xs scroll-mt-28"
+                    >
+                      <h2 className="text-heading-lg sm:text-2xl font-extrabold text-foreground tracking-tight border-b border-border pb-3 flex items-center gap-3">
+                        <span className="text-accent font-mono text-xl">{idx + 1}.</span>
+                        <span>{cleanTitle}</span>
+                      </h2>
 
-                    <div className="text-body-md text-slate-700 leading-relaxed whitespace-pre-line space-y-4">
-                      {sec.content}
-                    </div>
+                      <div className="text-body-md text-slate-800 leading-relaxed space-y-4 prose prose-slate max-w-none prose-h3:text-lg prose-h3:font-bold prose-h3:text-slate-900 prose-h3:mt-5 prose-h3:mb-2 prose-h3:border-b prose-h3:border-slate-200 prose-h3:pb-1 prose-h4:text-base prose-h4:font-semibold prose-h4:text-slate-900 prose-strong:font-semibold prose-strong:text-slate-900 prose-ul:list-disc prose-ul:pl-5 prose-ul:my-3 prose-ol:list-decimal prose-ol:pl-5 prose-ol:my-3 prose-li:my-1">
+                        <ReactMarkdown rehypePlugins={[rehypeSanitize]}>
+                          {sec.content}
+                        </ReactMarkdown>
+                      </div>
 
-                    {/* Bullet Points Checklist */}
-                    {sec.list && sec.list.length > 0 && (
-                      <div className="pt-2">
-                        <h4 className="text-xs font-mono font-bold text-slate-500 uppercase tracking-wider mb-3">
-                          Key Highlights & Service Includes:
-                        </h4>
-                        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                          {sec.list.map((item, lIdx) => (
-                            <li
-                              key={lIdx}
-                              className="flex items-start gap-2.5 bg-surface-subtle p-3 rounded border border-border/80 text-xs font-medium text-slate-800"
+                      {/* Bullet Points Checklist */}
+                      {sec.list && sec.list.length > 0 && (
+                        <div className="pt-2">
+                          <h4 className="text-xs font-mono font-bold text-slate-500 uppercase tracking-wider mb-3">
+                            Key Highlights & Service Includes:
+                          </h4>
+                          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            {sec.list.map((item, lIdx) => {
+                              const cleanItem = item.replace(/^(?:\d+\.|\*|-)\s*/, '').trim();
+                              return (
+                                <li
+                                  key={lIdx}
+                                  className="flex items-start gap-2.5 bg-surface-subtle p-3 rounded border border-border/80 text-xs font-medium text-slate-800"
+                                >
+                                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                                  <span>{cleanItem}</span>
+                                </li>
+                              );
+                            })}
+                          </ul>
+                        </div>
+                      )}
+
+                      {/* Hyperlinks & Related Services */}
+                      {sec.links && sec.links.length > 0 && (
+                        <div className="pt-4 border-t border-border flex flex-wrap items-center gap-3">
+                          {sec.links.map((link, kIdx) => (
+                            <Link
+                              key={kIdx}
+                              href={link.href}
+                              className="inline-flex items-center gap-2 px-4 py-2 bg-brand-navy hover:bg-slate-800 text-white rounded text-xs font-mono font-bold transition-colors shadow-xs"
                             >
-                              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                              <span>{item}</span>
-                            </li>
+                              <span>{link.label}</span>
+                              <ArrowRight className="w-3.5 h-3.5 text-accent" />
+                            </Link>
                           ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    {/* Hyperlinks & Related Services */}
-                    {sec.links && sec.links.length > 0 && (
-                      <div className="pt-4 border-t border-border flex flex-wrap items-center gap-3">
-                        {sec.links.map((link, kIdx) => (
-                          <Link
-                            key={kIdx}
-                            href={link.href}
-                            className="inline-flex items-center gap-2 px-4 py-2 bg-brand-navy hover:bg-slate-800 text-white rounded text-xs font-mono font-bold transition-colors shadow-xs"
-                          >
-                            <span>{link.label}</span>
-                            <ArrowRight className="w-3.5 h-3.5 text-accent" />
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             )}
 

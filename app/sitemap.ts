@@ -7,7 +7,7 @@ import { getPublishedDestinations } from '@/lib/destinations/destination-content
 import { getPublishedStaticArticles } from '@/lib/guides/guide-content';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = siteConfig.domain;
+  const baseUrl = 'https://raahiinternational.com';
 
   const staticRoutes = [
     '',

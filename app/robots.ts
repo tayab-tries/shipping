@@ -8,6 +8,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/admin/', '/api/', '/dev/'],
     },
-    sitemap: `${siteConfig.domain}/sitemap.xml`,
+    sitemap: 'https://raahiinternational.com/sitemap.xml',
   };
 }

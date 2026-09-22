@@ -19,12 +19,13 @@ export default defineConfig({
     presentationTool({
       resolve,
       previewUrl: {
-        origin: 'https://cargo.raahiinternational4.workers.dev',
+        origin: process.env.NEXT_PUBLIC_SITE_URL || 'https://raahiinternational.com',
         previewMode: {
           enable: '/api/draft-mode/enable',
         },
       },
       allowOrigins: [
+        process.env.NEXT_PUBLIC_SITE_URL || 'https://raahiinternational.com',
         'https://cargo.raahiinternational4.workers.dev',
       ],
     }),
