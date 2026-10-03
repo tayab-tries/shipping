@@ -8,7 +8,7 @@ import {
   ListOrdered,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
-import { SanityCargoPricingData, SanityCargoRateItem } from '@/sanity/lib/fetch';
+import { SanityCargoPricingData } from '@/sanity/lib/fetch';
 
 interface AirFreightServiceContentProps {
   phone?: string;

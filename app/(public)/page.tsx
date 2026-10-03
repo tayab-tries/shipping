@@ -23,15 +23,10 @@ export async function generateMetadata(): Promise<Metadata> {
     getSanitySiteSettingsData({ stega: false }),
   ]);
 
-  const title =
-    sanityHomepage?.seo?.metaTitle ||
-    sanitySiteSettings?.defaultSeoTitle ||
-    'Raahi International — Cargo Shipping & Door-to-Door Delivery From Pakistan';
+  const title = 'Raahi International | International Cargo & Logistics';
 
   const description =
-    sanityHomepage?.seo?.metaDescription ||
-    sanitySiteSettings?.defaultSeoDescription ||
-    'Reliable air cargo and sea cargo shipping with doorstep pickup across Pakistan and door-to-door delivery to UK, UAE, USA, Canada, KSA & worldwide.';
+    'International cargo and door-to-door shipping from Pakistan by air and sea. Get a fast quote and reliable delivery from Raahi International.';
 
   const socialImage =
     sanityHomepage?.seo?.socialImage ||
@@ -43,6 +38,8 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title,
       description,
+      url: 'https://raahiinternational.com/',
+      siteName: 'Raahi International',
       images: socialImage ? [{ url: socialImage }] : [],
     },
     twitter: {
@@ -64,8 +61,20 @@ export default async function HomePage() {
 
   const activeWhatsapp = sanitySiteSettings?.whatsappNumber || business.whatsappNumber;
 
+  const websiteJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Raahi International',
+    alternateName: 'Raahi',
+    url: 'https://raahiinternational.com/',
+  };
+
   return (
     <div className="w-full pb-16 sm:pb-0">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
       {/* 01. HERO */}
       {blocks.hero?.enabled && (
         <HeroSection

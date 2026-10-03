@@ -1,5 +1,3 @@
-import { siteConfig } from '@/config/site.config';
-
 /**
  * Clean & sanitize WhatsApp phone number to digits only (e.g. "+92 300 1234567" -> "923001234567")
  */

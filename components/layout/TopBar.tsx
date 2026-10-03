@@ -1,7 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
 import { Phone, Search, ShieldCheck, MessageSquare } from 'lucide-react';
-import { siteConfig } from '@/config/site.config';
 import { Container } from '@/components/ui/Container';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';

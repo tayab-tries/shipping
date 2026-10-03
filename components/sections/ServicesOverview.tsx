@@ -97,7 +97,7 @@ export const ServicesOverview: React.FC<ServicesOverviewProps> = ({
                   src={airImage}
                   alt={airAlt}
                   fill
-                  sizes="(max-width: 768px) 100vw, 600px"
+                  sizes="(max-width: 768px) 90vw, 600px"
                   className="object-cover object-center group-hover:scale-102 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-black/90 via-transparent to-transparent" />
@@ -139,7 +139,7 @@ export const ServicesOverview: React.FC<ServicesOverviewProps> = ({
                   src={seaImage}
                   alt={seaAlt}
                   fill
-                  sizes="(max-width: 768px) 100vw, 600px"
+                  sizes="(max-width: 768px) 90vw, 600px"
                   className="object-cover object-center group-hover:scale-102 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-black/90 via-transparent to-transparent" />

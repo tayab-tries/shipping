@@ -1,8 +1,11 @@
 import { MetadataRoute } from 'next';
-import { siteConfig } from '@/config/site.config';
 import { getEnabledServices } from '@/config/services.config';
 import { getPublishedLocations } from '@/lib/locations/location-content';
-import { getSanityLocationsList } from '@/sanity/lib/fetch';
+import {
+  getSanityLocationsList,
+  getSanityDestinationsList,
+  getSanityGuidesList,
+} from '@/sanity/lib/fetch';
 import { getPublishedDestinations } from '@/lib/destinations/destination-content';
 import { getPublishedStaticArticles } from '@/lib/guides/guide-content';
 
@@ -18,7 +21,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/locations',
     '/quote',
     '/track',
-    '/contact',
     '/guides',
   ];
 
@@ -34,32 +36,43 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const activeLocations = sanityLocations.length > 0 ? sanityLocations : fallbackLocations;
   const locationRoutes = activeLocations.map((l) => `/locations/${l.slug}`);
 
-  // 3. Dynamically map ONLY published & verified destination countries & cities
-  const publishedDestinations = await getPublishedDestinations();
+  // 3. Dynamically map ONLY published & verified destination countries & cities from Sanity
+  const sanityDestinations = await getSanityDestinationsList();
+  const fallbackDestinations = await getPublishedDestinations();
+  const activeDestinations = sanityDestinations.length > 0 ? sanityDestinations : fallbackDestinations;
   const destinationRoutes: string[] = [];
 
-  for (const country of publishedDestinations) {
-    destinationRoutes.push(`/destinations/${country.slug}`);
-    for (const city of country.cities) {
-      if (city.status === 'published' && city.isVerified === true && city.isIndexable === true) {
-        destinationRoutes.push(`/destinations/${country.slug}/${city.slug}`);
+  for (const country of activeDestinations) {
+    if (country.slug) {
+      destinationRoutes.push(`/destinations/${country.slug}`);
+    }
+    if (country.cities && country.cities.length > 0) {
+      for (const city of country.cities) {
+        if (city.slug) {
+          destinationRoutes.push(`/destinations/${country.slug}/${city.slug}`);
+        }
       }
     }
   }
 
-  // 4. Dynamically map ONLY published & verified educational guides (excluding redirected guides)
-  const publishedArticles = getPublishedStaticArticles();
-  const guideRoutes = publishedArticles
-    .filter((a) => a.slug !== 'air-vs-sea-cargo')
+  // 4. Dynamically map ONLY published & verified educational guides from Sanity (excluding redirected guides)
+  const sanityGuides = await getSanityGuidesList();
+  const fallbackArticles = getPublishedStaticArticles();
+  const activeGuides = sanityGuides.length > 0 ? sanityGuides : fallbackArticles;
+  const guideRoutes = activeGuides
+    .filter((a) => a.slug && a.slug !== 'air-vs-sea-cargo')
     .map((a) => `/guides/${a.slug}`);
 
-  const allRoutes = [
-    ...staticRoutes,
-    ...serviceRoutes,
-    ...locationRoutes,
-    ...destinationRoutes,
-    ...guideRoutes,
-  ];
+  // Deduplicate all generated routes to guarantee clean unique entries
+  const allRoutes = Array.from(
+    new Set([
+      ...staticRoutes,
+      ...serviceRoutes,
+      ...locationRoutes,
+      ...destinationRoutes,
+      ...guideRoutes,
+    ])
+  );
 
   return allRoutes.map((route) => ({
     url: `${baseUrl}${route}`,

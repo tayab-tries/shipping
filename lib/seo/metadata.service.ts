@@ -21,6 +21,7 @@ export function constructMetadata({
 
   return {
     metadataBase: new URL('https://raahiinternational.com'),
+    applicationName: siteConfig.name,
     title: fullTitle,
     description,
     verification: {

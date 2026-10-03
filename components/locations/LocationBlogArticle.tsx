@@ -17,7 +17,6 @@ import { Button } from '@/components/ui/Button';
 import ReactMarkdown from 'react-markdown';
 import rehypeSanitize from 'rehype-sanitize';
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
-import { siteConfig } from '@/config/site.config';
 
 export interface LocationBlogArticleProps {
   cityName: string;
