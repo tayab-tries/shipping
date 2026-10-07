@@ -7,7 +7,7 @@ export async function middleware(request: NextRequest) {
   // 0. Dedicated Host Redirect for workers.dev safeguard
   const rawHost = request.headers.get('host') || request.nextUrl.hostname;
   const host = rawHost.split(':')[0].toLowerCase();
-  if (host === 'cargo.raahiinternational4.workers.dev') {
+  if (host === 'cargo.raahiinternational4.workers.dev' || host === 'www.raahiinternational.com') {
     const { pathname, search } = request.nextUrl;
     return NextResponse.redirect(`https://raahiinternational.com${pathname}${search}`, 301);
   }
