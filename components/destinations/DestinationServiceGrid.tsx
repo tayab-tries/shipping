@@ -42,6 +42,12 @@ export const DestinationServiceGrid: React.FC<DestinationServiceGridProps> = ({
             const quoteUrl = service.quoteCargoType
               ? `/quote?destination=${countrySlug}&cargo=${service.quoteCargoType}`
               : `/quote?destination=${countrySlug}`;
+            const serviceHref =
+              service.slug === 'air-freight'
+                ? '/cargo-services#part-1-air-cargo'
+                : service.slug === 'sea-cargo'
+                ? '/cargo-services#part-2-sea-cargo'
+                : `/services/${service.slug}`;
 
             return (
               <div
@@ -54,7 +60,7 @@ export const DestinationServiceGrid: React.FC<DestinationServiceGridProps> = ({
                   </div>
                   <div className="space-y-1">
                     <h3 className="text-heading-md font-bold text-brand-black group-hover:text-accent transition-colors">
-                      <Link href={`/services/${service.slug}`}>{service.name}</Link>
+                      <Link href={serviceHref}>{service.name}</Link>
                     </h3>
                     <p className="text-body-sm text-slate-600 leading-relaxed font-normal">
                       {service.shortDescription}
@@ -64,7 +70,7 @@ export const DestinationServiceGrid: React.FC<DestinationServiceGridProps> = ({
 
                 <div className="flex items-center gap-4 md:justify-end md:w-1/2">
                   <Link
-                    href={`/services/${service.slug}`}
+                    href={serviceHref}
                     className="text-xs font-mono font-semibold text-brand-black hover:text-accent flex items-center gap-1 transition-colors"
                   >
                     <span>Service Details</span>

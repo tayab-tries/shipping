@@ -68,7 +68,7 @@ export const GuidesPreviewSection: React.FC<GuidesPreviewSectionProps> = ({ bloc
                 </div>
 
                 <h3 className="text-heading-xl font-bold text-brand-black group-hover:text-accent transition-colors">
-                  <Link href="/services/air-freight">{featured.title}</Link>
+                  <Link href="/cargo-services">{featured.title}</Link>
                 </h3>
 
                 <p className="text-body-md text-slate-600 leading-relaxed font-normal">{featured.excerpt}</p>
@@ -88,7 +88,7 @@ export const GuidesPreviewSection: React.FC<GuidesPreviewSectionProps> = ({ bloc
               <div className="pt-4 border-t border-border flex items-center justify-between">
                 <span className="text-xs font-mono text-slate-500">Featured Service Comparison</span>
                 <Link
-                  href="/services/air-freight"
+                  href="/cargo-services"
                   className="text-xs font-mono font-semibold text-brand-black group-hover:text-accent flex items-center gap-1.5 transition-colors"
                 >
                   <span>Compare Air & Sea Cargo</span>

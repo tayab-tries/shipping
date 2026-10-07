@@ -174,6 +174,7 @@ export interface SanityServiceDocument {
 
 export interface SanityLocationDocument {
   _id?: string;
+  _updatedAt?: string;
   name: string;
   slug: string;
   province: string;
@@ -202,6 +203,7 @@ export interface SanityLocationDocument {
 
 export interface SanityDestinationCitySummary {
   _id?: string;
+  _updatedAt?: string;
   name: string;
   slug: string;
   h1?: string;
@@ -216,6 +218,7 @@ export interface SanityDestinationCitySummary {
 
 export interface SanityDestinationCountryDocument {
   _id?: string;
+  _updatedAt?: string;
   name: string;
   slug: string;
   region: string;
@@ -239,6 +242,7 @@ export interface SanityDestinationCountryDocument {
 
 export interface SanityDestinationCityDocument {
   _id?: string;
+  _updatedAt?: string;
   name: string;
   slug: string;
   h1: string;
@@ -258,6 +262,7 @@ export interface SanityDestinationCityDocument {
 
 export interface SanityGuideDocument {
   _id?: string;
+  _updatedAt?: string;
   title: string;
   slug: string;
   excerpt: string;
@@ -364,7 +369,7 @@ export const getSanityLocationBySlug = cache(async function getSanityLocationByS
   }
 });
 
-export async function getSanityDestinationsList(options?: { stega?: boolean }): Promise<SanityDestinationCountryDocument[]> {
+export const getSanityDestinationsList = cache(async function getSanityDestinationsList(options?: { stega?: boolean }): Promise<SanityDestinationCountryDocument[]> {
   if (!isSanityConfigured) return [];
   try {
     const isDraft = await isDraftEnabled();
@@ -375,9 +380,9 @@ export async function getSanityDestinationsList(options?: { stega?: boolean }): 
     console.warn('[Sanity] getSanityDestinationsList fetch error, using fallbacks:', error);
     return [];
   }
-}
+});
 
-export async function getSanityDestinationBySlug(slug: string, options?: { stega?: boolean }): Promise<SanityDestinationCountryDocument | null> {
+export const getSanityDestinationBySlug = cache(async function getSanityDestinationBySlug(slug: string, options?: { stega?: boolean }): Promise<SanityDestinationCountryDocument | null> {
   if (!isSanityConfigured) return null;
   try {
     const isDraft = await isDraftEnabled();
@@ -387,9 +392,9 @@ export async function getSanityDestinationBySlug(slug: string, options?: { stega
     console.warn(`[Sanity] getSanityDestinationBySlug fetch error for slug ${slug}, using fallbacks:`, error);
     return null;
   }
-}
+});
 
-export async function getSanityDestinationCityBySlugs(
+export const getSanityDestinationCityBySlugs = cache(async function getSanityDestinationCityBySlugs(
   countrySlug: string,
   citySlug: string,
   options?: { stega?: boolean }
@@ -407,9 +412,9 @@ export async function getSanityDestinationCityBySlugs(
     console.warn(`[Sanity] getSanityDestinationCityBySlugs fetch error for ${countrySlug}/${citySlug}, using fallbacks:`, error);
     return null;
   }
-}
+});
 
-export async function getSanityGuidesList(options?: { stega?: boolean }): Promise<SanityGuideDocument[]> {
+export const getSanityGuidesList = cache(async function getSanityGuidesList(options?: { stega?: boolean }): Promise<SanityGuideDocument[]> {
   if (!isSanityConfigured) return [];
   try {
     const isDraft = await isDraftEnabled();
@@ -420,9 +425,9 @@ export async function getSanityGuidesList(options?: { stega?: boolean }): Promis
     console.warn('[Sanity] getSanityGuidesList fetch error, using fallbacks:', error);
     return [];
   }
-}
+});
 
-export async function getSanityGuideBySlug(slug: string, options?: { stega?: boolean }): Promise<SanityGuideDocument | null> {
+export const getSanityGuideBySlug = cache(async function getSanityGuideBySlug(slug: string, options?: { stega?: boolean }): Promise<SanityGuideDocument | null> {
   if (!isSanityConfigured) return null;
   try {
     const isDraft = await isDraftEnabled();
@@ -432,7 +437,7 @@ export async function getSanityGuideBySlug(slug: string, options?: { stega?: boo
     console.warn(`[Sanity] getSanityGuideBySlug fetch error for slug ${slug}, using fallbacks:`, error);
     return null;
   }
-}
+});
 
 export interface SanityAboutPageDocument {
   title?: string;
@@ -453,7 +458,7 @@ export interface SanityAboutPageDocument {
   };
 }
 
-export async function getSanityAboutPageData(options?: { stega?: boolean }): Promise<SanityAboutPageDocument | null> {
+export const getSanityAboutPageData = cache(async function getSanityAboutPageData(options?: { stega?: boolean }): Promise<SanityAboutPageDocument | null> {
   if (!isSanityConfigured) return null;
   try {
     const isDraft = await isDraftEnabled();
@@ -463,7 +468,7 @@ export async function getSanityAboutPageData(options?: { stega?: boolean }): Pro
     console.warn('[Sanity] getSanityAboutPageData fetch error, using fallbacks:', error);
     return null;
   }
-}
+});
 
 export interface SanityCargoRateItem {
   country: string;
@@ -533,7 +538,7 @@ export interface SanityCargoPricingData {
   };
 }
 
-export async function getSanityCargoPricingData(options?: { stega?: boolean }): Promise<SanityCargoPricingData | null> {
+export const getSanityCargoPricingData = cache(async function getSanityCargoPricingData(options?: { stega?: boolean }): Promise<SanityCargoPricingData | null> {
   if (!isSanityConfigured) return null;
   try {
     const isDraft = await isDraftEnabled();
@@ -543,5 +548,5 @@ export async function getSanityCargoPricingData(options?: { stega?: boolean }): 
     console.warn('[Sanity] getSanityCargoPricingData fetch error, using fallbacks:', error);
     return null;
   }
-}
+});
 

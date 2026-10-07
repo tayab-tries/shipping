@@ -254,6 +254,7 @@ export const SERVICE_BY_SLUG_QUERY = defineQuery(`
 export const LOCATIONS_LIST_QUERY = defineQuery(`
   *[_type == "location"] | order(sortOrder asc) {
     _id,
+    _updatedAt,
     name,
     "slug": slug.current,
     province,
@@ -329,6 +330,7 @@ export const LOCATION_BY_SLUG_QUERY = defineQuery(`
 export const DESTINATIONS_LIST_QUERY = defineQuery(`
   *[_type == "destinationCountry"] | order(sortOrder asc) {
     _id,
+    _updatedAt,
     name,
     "slug": slug.current,
     region,
@@ -343,6 +345,7 @@ export const DESTINATIONS_LIST_QUERY = defineQuery(`
     "supportedOrigins": supportedOrigins[]->slug.current,
     "cities": *[_type == "destinationCity" && references(^._id)] | order(sortOrder asc) {
       _id,
+      _updatedAt,
       name,
       "slug": slug.current,
       h1,

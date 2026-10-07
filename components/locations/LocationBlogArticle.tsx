@@ -158,16 +158,24 @@ export const LocationBlogArticle: React.FC<LocationBlogArticleProps> = ({
                       {/* Hyperlinks & Related Services */}
                       {sec.links && sec.links.length > 0 && (
                         <div className="pt-4 border-t border-border flex flex-wrap items-center gap-3">
-                          {sec.links.map((link, kIdx) => (
-                            <Link
-                              key={kIdx}
-                              href={link.href}
-                              className="inline-flex items-center gap-2 px-4 py-2 bg-brand-navy hover:bg-slate-800 text-white rounded text-xs font-mono font-bold transition-colors shadow-xs"
-                            >
-                              <span>{link.label}</span>
-                              <ArrowRight className="w-3.5 h-3.5 text-accent" />
-                            </Link>
-                          ))}
+                          {sec.links.map((link, kIdx) => {
+                            const cleanHref =
+                              link.href === '/services/air-freight'
+                                ? '/cargo-services#part-1-air-cargo'
+                                : link.href === '/services/sea-cargo'
+                                ? '/cargo-services#part-2-sea-cargo'
+                                : link.href;
+                            return (
+                              <Link
+                                key={kIdx}
+                                href={cleanHref}
+                                className="inline-flex items-center gap-2 px-4 py-2 bg-brand-navy hover:bg-slate-800 text-white rounded text-xs font-mono font-bold transition-colors shadow-xs"
+                              >
+                                <span>{link.label}</span>
+                                <ArrowRight className="w-3.5 h-3.5 text-accent" />
+                              </Link>
+                            );
+                          })}
                         </div>
                       )}
                     </div>
@@ -253,7 +261,7 @@ export const LocationBlogArticle: React.FC<LocationBlogArticleProps> = ({
               </h4>
               <div className="space-y-2.5">
                 <Link
-                  href="/services/air-freight"
+                  href="/cargo-services#part-1-air-cargo"
                   className="flex items-center justify-between p-3 bg-surface-subtle hover:bg-slate-100 rounded border border-border text-xs font-bold text-brand-black transition-colors"
                 >
                   <div className="flex items-center gap-2">
@@ -264,7 +272,7 @@ export const LocationBlogArticle: React.FC<LocationBlogArticleProps> = ({
                 </Link>
 
                 <Link
-                  href="/services/sea-cargo"
+                  href="/cargo-services#part-2-sea-cargo"
                   className="flex items-center justify-between p-3 bg-surface-subtle hover:bg-slate-100 rounded border border-border text-xs font-bold text-brand-black transition-colors"
                 >
                   <div className="flex items-center gap-2">

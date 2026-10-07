@@ -81,12 +81,16 @@ const portableTextComponents: PortableTextComponents = {
 export async function generateStaticParams() {
   const sanityServices = await getSanityServicesList();
   if (sanityServices && sanityServices.length > 0) {
-    return sanityServices.map((s) => ({ slug: s.slug }));
+    return sanityServices
+      .filter((s) => s.slug !== 'air-freight' && s.slug !== 'sea-cargo' && s.slug !== 'door-to-door')
+      .map((s) => ({ slug: s.slug }));
   }
   const enabledServices = getEnabledServices();
-  return enabledServices.map((service) => ({
-    slug: service.slug,
-  }));
+  return enabledServices
+    .filter((s) => s.slug !== 'air-freight' && s.slug !== 'sea-cargo' && s.slug !== 'door-to-door')
+    .map((service) => ({
+      slug: service.slug,
+    }));
 }
 
 /**
@@ -95,29 +99,30 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: ServicePageProps): Promise<Metadata> {
   const { slug } = await params;
 
-  if (slug === 'air-freight') {
+  if (
+    slug === 'air-freight' ||
+    slug === 'sea-cargo' ||
+    slug === 'cargo-services' ||
+    slug === 'cargo_services' ||
+    slug === 'air-and-sea-cargo' ||
+    slug === 'door-to-door' ||
+    slug === 'door_to_door'
+  ) {
     return {
-      title: `Air Cargo from Pakistan | ${siteConfig.name}`,
+      title: `Cargo Services from Pakistan | ${siteConfig.name}`,
       description:
-        'Air cargo services from Pakistan worldwide. Compare air freight vs sea cargo, rates, delivery timelines, customs clearance, and door-to-door solutions.',
+        'Air cargo and sea freight services from Pakistan worldwide. Door-to-door pickup, customs clearance, and global forwarding solutions.',
       alternates: {
-        canonical: 'https://raahiinternational.com/services/air-freight',
+        canonical: 'https://raahiinternational.com/cargo-services',
       },
       openGraph: {
-        title: `Air Cargo from Pakistan | ${siteConfig.name}`,
+        title: `Cargo Services from Pakistan | ${siteConfig.name}`,
         description:
-          'Air cargo services from Pakistan worldwide. Compare air freight vs sea cargo, rates, delivery timelines, customs clearance, and door-to-door solutions.',
-        url: 'https://raahiinternational.com/services/air-freight',
+          'Air cargo and sea freight services from Pakistan worldwide. Door-to-door pickup, customs clearance, and global forwarding solutions.',
+        url: 'https://raahiinternational.com/cargo-services',
         siteName: 'Raahi International',
         type: 'website',
       },
-    };
-  }
-
-  if (slug === 'door-to-door' || slug === 'door_to_door') {
-    return {
-      title: `Door-to-Door Delivery Available on Air & Sea Cargo | ${siteConfig.name}`,
-      description: 'Door-to-door delivery options are integrated directly into our Air Cargo and Sea Cargo services from Pakistan.',
     };
   }
 

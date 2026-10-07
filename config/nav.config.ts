@@ -28,12 +28,12 @@ export const mainNavigation: NavItem[] = [
     children: [
       {
         title: 'Air Cargo',
-        href: '/services/air-freight',
+        href: '/cargo-services#part-1-air-cargo',
         description: 'Air cargo shipping with door-to-door delivery.',
       },
       {
         title: 'Sea Cargo',
-        href: '/services/sea-cargo',
+        href: '/cargo-services#part-2-sea-cargo',
         description: 'Sea cargo shipping with door-to-door delivery.',
       },
       {
