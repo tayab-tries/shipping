@@ -148,9 +148,7 @@ export default async function DestinationCityDetailPage({ params }: CityPageProp
     name: `Cargo & Shipping Services to ${cityName}, ${countryName}`,
     description: sanityCity?.seo?.metaDescription || fallbackResult?.city.seoDescription || `Cargo shipping to ${cityName}`,
     provider: {
-      '@type': 'Organization',
-      name: siteConfig.name,
-      url: siteConfig.domain,
+      '@id': 'https://raahiinternational.com/#organization',
     },
     areaServed: {
       '@type': 'City',

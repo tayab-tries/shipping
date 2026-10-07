@@ -142,9 +142,7 @@ export default async function CountryDetailPage({ params }: CountryPageProps) {
     name: `International Cargo Shipping to ${destination.name}`,
     description: destination.seoDescription,
     provider: {
-      '@type': 'Organization',
-      name: siteConfig.name,
-      url: siteConfig.domain,
+      '@id': 'https://raahiinternational.com/#organization',
     },
     areaServed: {
       '@type': 'Country',

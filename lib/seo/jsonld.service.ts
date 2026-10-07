@@ -1,22 +1,20 @@
 import { siteConfig } from '@/config/site.config';
 import { BreadcrumbItem } from '@/types/content';
+import { ORGANIZATION_ID, getRootGraphJsonLd } from './schema.service';
+
+export { getRootGraphJsonLd };
 
 export function getOrganizationJsonLd() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: siteConfig.name,
-    legalName: siteConfig.legalName || siteConfig.name,
-    url: siteConfig.domain,
+    '@id': ORGANIZATION_ID,
+    name: 'Raahi International',
+    url: 'https://raahiinternational.com/',
+    logo: 'https://raahiinternational.com/logo.png',
     description: siteConfig.defaultSeo.defaultDescription,
-    telephone: siteConfig.contact?.phonePrimary || undefined,
-    email: siteConfig.contact?.emailInfo || undefined,
-    address: (siteConfig.verifiedOffices?.length ?? 0) > 0 ? {
-      '@type': 'PostalAddress',
-      addressLocality: siteConfig.verifiedOffices?.[0]?.city,
-      streetAddress: siteConfig.verifiedOffices?.[0]?.address,
-      addressCountry: 'PK',
-    } : undefined,
+    telephone: '+923007097063',
+    email: 'raahiinternational4@gmail.com',
   };
 }
 
@@ -27,9 +25,7 @@ export function getServiceJsonLd(serviceName: string, description: string) {
     name: serviceName,
     description: description,
     provider: {
-      '@type': 'Organization',
-      name: siteConfig.name,
-      url: siteConfig.domain,
+      '@id': ORGANIZATION_ID,
     },
     areaServed: {
       '@type': 'Country',
@@ -43,11 +39,17 @@ export function getBreadcrumbJsonLd(breadcrumbs: BreadcrumbItem[]) {
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
-    itemListElement: breadcrumbs.map((item, index) => ({
-      '@type': 'ListItem',
-      position: index + 1,
-      name: item.label,
-      item: `${siteConfig.domain}${item.url}`,
-    })),
+    itemListElement: breadcrumbs.map((item, index) => {
+      const cleanUrl = item.url.startsWith('http')
+        ? item.url
+        : `https://raahiinternational.com${item.url === '/' ? '/' : (item.url.startsWith('/') ? item.url : `/${item.url}`).replace(/\/+$/, '')}`;
+
+      return {
+        '@type': 'ListItem',
+        position: index + 1,
+        name: item.label,
+        item: cleanUrl,
+      };
+    }),
   };
 }

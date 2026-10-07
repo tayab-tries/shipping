@@ -19,6 +19,7 @@ import { Button } from '@/components/ui/Button';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { siteConfig } from '@/config/site.config';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
+import { getBreadcrumbJsonLd } from '@/lib/seo/jsonld.service';
 import { getSanitySiteSettingsData, getSanityCargoPricingData, SanityCargoRateItem, SanityCargoComparisonRow } from '@/sanity/lib/fetch';
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
 
@@ -224,8 +225,14 @@ export default async function CargoServicesPage() {
     })),
   } : null;
 
+  const breadcrumbJsonLd = getBreadcrumbJsonLd(breadcrumbs);
+
   return (
     <div className="w-full bg-background text-foreground font-sans">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       {faqJsonLd && (
         <script
           type="application/ld+json"

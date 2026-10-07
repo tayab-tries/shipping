@@ -136,9 +136,7 @@ export default async function LocationDetailPage({ params }: LocationPageProps) 
     name: `International Cargo Shipping in ${location.name}`,
     description: location.seoDescription,
     provider: {
-      '@type': 'Organization',
-      name: siteConfig.name,
-      url: siteConfig.domain,
+      '@id': 'https://raahiinternational.com/#organization',
     },
     areaServed: {
       '@type': 'City',

@@ -135,13 +135,11 @@ export default async function GuideArticleDetailPage({ params }: GuideArticlePag
       name: article.authorName,
     },
     publisher: {
-      '@type': 'Organization',
-      name: siteConfig.name,
-      url: siteConfig.domain,
+      '@id': 'https://raahiinternational.com/#organization',
     },
     datePublished: article.publishedAt,
     dateModified: article.updatedAt || article.publishedAt,
-    mainEntityOfPage: `${siteConfig.domain}/guides/${article.slug}`,
+    mainEntityOfPage: `https://raahiinternational.com/guides/${article.slug}`,
   };
 
   // Schema.org FAQPage JSON-LD if FAQs exist

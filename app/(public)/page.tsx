@@ -16,6 +16,7 @@ import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
 import { getPublishedHomepageBlocks } from '@/lib/cms/homepage.service';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
 import { getSanityHomepageData, getSanitySiteSettingsData } from '@/sanity/lib/fetch';
+import { getRootGraphJsonLd } from '@/lib/seo/schema.service';
 
 export async function generateMetadata(): Promise<Metadata> {
   const [sanityHomepage, sanitySiteSettings] = await Promise.all([
@@ -61,19 +62,17 @@ export default async function HomePage() {
 
   const activeWhatsapp = sanitySiteSettings?.whatsappNumber || business.whatsappNumber;
 
-  const websiteJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: 'Raahi International',
-    alternateName: 'Raahi',
-    url: 'https://raahiinternational.com/',
-  };
+  const rootGraphJsonLd = getRootGraphJsonLd({
+    telephone: sanitySiteSettings?.phone || business.phonePrimary,
+    email: sanitySiteSettings?.email || business.emailInfo,
+    address: sanitySiteSettings?.address || business.addressPrimary,
+  });
 
   return (
     <div className="w-full pb-16 sm:pb-0">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(rootGraphJsonLd) }}
       />
       {/* 01. HERO */}
       {blocks.hero?.enabled && (
