@@ -15,7 +15,15 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: `${siteConfig.domain}/track`,
+    canonical: 'https://raahiinternational.com/track',
+  },
+  openGraph: {
+    title: `Track Your Cargo | ${siteConfig.name}`,
+    description:
+      'Track international cargo shipments, air cargo dispatches, and sea cargo originating in Pakistan.',
+    url: 'https://raahiinternational.com/track',
+    siteName: 'Raahi International',
+    type: 'website',
   },
 };
 

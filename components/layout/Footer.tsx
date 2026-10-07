@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ShieldCheck, MapPin, Phone, Mail, MessageSquare } from 'lucide-react';
 import { siteConfig } from '@/config/site.config';
-import { footerNavigation as defaultFooterNav } from '@/config/nav.config';
+import { footerNavigation as defaultFooterNav, keyDestinationCities } from '@/config/nav.config';
 import { Container } from '@/components/ui/Container';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
@@ -125,6 +125,32 @@ export const Footer: React.FC<FooterProps> = async ({ sanitySiteSettings }) => {
               </ul>
             </div>
           ))}
+        </div>
+
+        {/* Popular Destination Cities Discovery Grid (P1 Crawl Discovery) */}
+        <div className="py-8 border-b border-border-dark space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <h3 className="text-xs font-mono font-semibold uppercase text-accent tracking-wider">
+              International Delivery Hubs & Destination Cities
+            </h3>
+            <Link
+              href="/destinations"
+              className="text-xs font-mono text-slate-400 hover:text-white transition-colors"
+            >
+              All Destination Corridors →
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5 text-xs">
+            {keyDestinationCities.map((city) => (
+              <Link
+                key={city.href}
+                href={city.href}
+                className="text-slate-400 hover:text-white hover:underline transition-colors py-1"
+              >
+                {city.name} Cargo ({city.countrySlug.toUpperCase()})
+              </Link>
+            ))}
+          </div>
         </div>
 
         {/* Bottom Legal Row */}

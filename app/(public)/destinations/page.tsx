@@ -12,6 +12,7 @@ import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
 import { getPublishedDestinations, DestinationCountryData } from '@/lib/destinations/destination-content';
 import { getPublishedLocations } from '@/lib/locations/location-content';
 import { siteConfig } from '@/config/site.config';
+import { keyDestinationCities } from '@/config/nav.config';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
 import { getSanityDestinationsList, getSanityLocationsList, SanityDestinationCountryDocument } from '@/sanity/lib/fetch';
 
@@ -20,7 +21,15 @@ export const metadata: Metadata = {
   description:
     'Explore international cargo shipping destination corridors from Pakistan including UK, USA, UAE, Canada, Saudi Arabia, and global ports.',
   alternates: {
-    canonical: `${siteConfig.domain}/destinations`,
+    canonical: 'https://raahiinternational.com/destinations',
+  },
+  openGraph: {
+    title: `International Cargo Destinations from Pakistan | ${siteConfig.name}`,
+    description:
+      'Explore international cargo shipping destination corridors from Pakistan including UK, USA, UAE, Canada, Saudi Arabia, and global ports.',
+    url: 'https://raahiinternational.com/destinations',
+    siteName: 'Raahi International',
+    type: 'website',
   },
 };
 
@@ -338,6 +347,19 @@ export default async function DestinationsHubPage() {
                       <Globe className="w-4 h-4 text-slate-500 group-hover:text-accent transition-colors shrink-0" />
                       <Link href={`/destinations/${dest.slug}`}>{dest.name}</Link>
                     </h3>
+                    {dest.cities && dest.cities.length > 0 && (
+                      <div className="pt-2 flex flex-wrap gap-1.5">
+                        {dest.cities.map((city) => (
+                          <Link
+                            key={city.slug}
+                            href={`/destinations/${dest.slug}/${city.slug}`}
+                            className="text-[11px] font-mono px-2 py-0.5 rounded bg-surface-subtle border border-border text-slate-700 hover:text-brand-black hover:border-slate-400 transition-colors"
+                          >
+                            {city.name} Cargo →
+                          </Link>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   <div className="text-xs font-mono text-slate-600 md:w-1/3">
@@ -367,6 +389,54 @@ export default async function DestinationsHubPage() {
           </Container>
         </section>
       )}
+
+      {/* 04B KEY DELIVERY CITIES DIRECTORY GRID */}
+      <section className="w-full bg-surface py-20 lg:py-28 border-b border-border text-brand-black">
+        <Container>
+          <SectionHeading
+            badge="City Hubs"
+            title="Direct Delivery Cities Worldwide"
+            subtitle="Explore direct destination delivery hubs across all 12 key delivery cities for air and sea cargo from Pakistan."
+            className="mb-14"
+          />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {keyDestinationCities.map((city) => (
+              <div
+                key={city.href}
+                className="p-6 rounded-md border border-border bg-surface-subtle hover:bg-surface hover:border-slate-400 transition-all group flex flex-col justify-between shadow-xs"
+              >
+                <div className="space-y-2">
+                  <div className="text-[11px] font-mono text-slate-500 uppercase tracking-wider">
+                    {city.country}
+                  </div>
+                  <h3 className="text-heading-sm font-bold text-brand-black group-hover:text-accent transition-colors flex items-center justify-between">
+                    <Link href={city.href}>{city.name} Cargo</Link>
+                    <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-accent transition-colors shrink-0" />
+                  </h3>
+                  <p className="text-xs text-slate-600 leading-relaxed pt-1">
+                    Direct air cargo and ocean container shipping service to {city.name}, {city.country}.
+                  </p>
+                </div>
+                <div className="pt-4 border-t border-border/60 mt-4 flex items-center justify-between">
+                  <Link
+                    href={city.href}
+                    className="text-xs font-mono font-semibold text-brand-black group-hover:text-accent transition-colors flex items-center gap-1"
+                  >
+                    <span>View {city.name}</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-accent" />
+                  </Link>
+                  <Link href={`/quote?destination=${city.countrySlug}`}>
+                    <Button variant="outline" size="sm">
+                      Quote
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Container>
+      </section>
 
       {/* 05 ORIGIN → DESTINATION EXPLANATION */}
       {originLocations.length > 0 && destinations.length > 0 && (

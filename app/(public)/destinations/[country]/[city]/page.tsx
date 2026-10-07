@@ -85,7 +85,7 @@ export async function generateMetadata({ params }: CityPageProps): Promise<Metad
     fallbackResult?.city.seoDescription ||
     `Cargo shipping services to ${cityName}, ${countryName}.`;
 
-  const canonicalUrl = `${siteConfig.domain}/destinations/${countrySlug}/${citySlug}`;
+  const canonicalUrl = `https://raahiinternational.com/destinations/${countrySlug}/${citySlug}`;
 
   return {
     title,
@@ -97,6 +97,7 @@ export async function generateMetadata({ params }: CityPageProps): Promise<Metad
       title,
       description,
       url: canonicalUrl,
+      siteName: 'Raahi International',
       type: 'website',
       images: sanityCity?.seo?.socialImage ? [{ url: sanityCity.seo.socialImage }] : [],
     },

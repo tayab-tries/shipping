@@ -19,7 +19,15 @@ export const metadata: Metadata = {
   description:
     'Explore international air freight, ocean sea cargo, door-to-door shipping, and commercial cargo services originating from Pakistan.',
   alternates: {
-    canonical: `${siteConfig.domain}/services`,
+    canonical: 'https://raahiinternational.com/services',
+  },
+  openGraph: {
+    title: `Core Cargo & Logistics Services | ${siteConfig.name}`,
+    description:
+      'Explore international air freight, ocean sea cargo, door-to-door shipping, and commercial cargo services originating from Pakistan.',
+    url: 'https://raahiinternational.com/services',
+    siteName: 'Raahi International',
+    type: 'website',
   },
 };
 

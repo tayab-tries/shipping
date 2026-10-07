@@ -23,7 +23,6 @@ import { Container } from '@/components/ui/Container';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
-import { siteConfig } from '@/config/site.config';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
 import { getSanityAboutPageData, getSanitySiteSettingsData, getSanityLocationsList, SanityLocationDocument } from '@/sanity/lib/fetch';
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
@@ -42,12 +41,13 @@ export async function generateMetadata(): Promise<Metadata> {
     title,
     description,
     alternates: {
-      canonical: `${siteConfig.domain}/about`,
+      canonical: 'https://raahiinternational.com/about',
     },
     openGraph: {
       title,
       description,
-      url: `${siteConfig.domain}/about`,
+      url: 'https://raahiinternational.com/about',
+      siteName: 'Raahi International',
       type: 'website',
       images: sanityAbout?.seo?.socialImage ? [{ url: sanityAbout.seo.socialImage }] : undefined,
     },

@@ -19,7 +19,15 @@ export const metadata: Metadata = {
     follow: true,
   },
   alternates: {
-    canonical: `${siteConfig.domain}/quote`,
+    canonical: 'https://raahiinternational.com/quote',
+  },
+  openGraph: {
+    title: `Request a Shipping Quote | ${siteConfig.name}`,
+    description:
+      'Request a custom quotation for air freight, ocean sea cargo, door-to-door shipping, or commercial freight originating in Pakistan.',
+    url: 'https://raahiinternational.com/quote',
+    siteName: 'Raahi International',
+    type: 'website',
   },
 };
 

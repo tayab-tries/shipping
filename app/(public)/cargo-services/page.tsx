@@ -36,12 +36,13 @@ export async function generateMetadata(): Promise<Metadata> {
     title,
     description,
     alternates: {
-      canonical: `${siteConfig.domain}/cargo-services`,
+      canonical: 'https://raahiinternational.com/cargo-services',
     },
     openGraph: {
       title,
       description,
-      url: `${siteConfig.domain}/cargo-services`,
+      url: 'https://raahiinternational.com/cargo-services',
+      siteName: 'Raahi International',
       type: 'website',
       images: sanityCargoPricing?.seo?.socialImage ? [{ url: sanityCargoPricing.seo.socialImage }] : [],
     },

@@ -19,7 +19,15 @@ export const metadata: Metadata = {
   description:
     'Explore international cargo shipping pickup centers and origin hubs across major cities in Pakistan.',
   alternates: {
-    canonical: `${siteConfig.domain}/locations`,
+    canonical: 'https://raahiinternational.com/locations',
+  },
+  openGraph: {
+    title: `Pakistan Cargo Pickup Locations & Origin Hubs | ${siteConfig.name}`,
+    description:
+      'Explore international cargo shipping pickup centers and origin hubs across major cities in Pakistan.',
+    url: 'https://raahiinternational.com/locations',
+    siteName: 'Raahi International',
+    type: 'website',
   },
 };
 

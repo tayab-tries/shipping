@@ -61,7 +61,7 @@ export async function generateMetadata({ params }: LocationPageProps): Promise<M
     fallbackLocation?.seoDescription ||
     'International cargo shipping services from Pakistan.';
 
-  const canonicalUrl = `${siteConfig.domain}/locations/${slug}`;
+  const canonicalUrl = `https://raahiinternational.com/locations/${slug}`;
 
   return {
     title,
@@ -73,6 +73,7 @@ export async function generateMetadata({ params }: LocationPageProps): Promise<M
       title,
       description,
       url: canonicalUrl,
+      siteName: 'Raahi International',
       type: 'website',
       images: sanityLocation?.seo?.socialImage ? [{ url: sanityLocation.seo.socialImage }] : [],
     },

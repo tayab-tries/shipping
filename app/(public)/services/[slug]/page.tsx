@@ -101,13 +101,14 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
       description:
         'Air cargo services from Pakistan worldwide. Compare air freight vs sea cargo, rates, delivery timelines, customs clearance, and door-to-door solutions.',
       alternates: {
-        canonical: `${siteConfig.domain}/services/air-freight`,
+        canonical: 'https://raahiinternational.com/services/air-freight',
       },
       openGraph: {
         title: `Air Cargo from Pakistan | ${siteConfig.name}`,
         description:
           'Air cargo services from Pakistan worldwide. Compare air freight vs sea cargo, rates, delivery timelines, customs clearance, and door-to-door solutions.',
-        url: `${siteConfig.domain}/services/air-freight`,
+        url: 'https://raahiinternational.com/services/air-freight',
+        siteName: 'Raahi International',
         type: 'website',
       },
     };
@@ -138,7 +139,7 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
     fallbackService?.seo.description ||
     'International cargo shipping services originating from Pakistan.';
 
-  const canonicalUrl = `${siteConfig.domain}/services/${slug}`;
+  const canonicalUrl = `https://raahiinternational.com/services/${slug}`;
 
   return {
     title,
@@ -150,6 +151,7 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
       title,
       description,
       url: canonicalUrl,
+      siteName: 'Raahi International',
       type: 'website',
       images: sanityService?.seo?.socialImage ? [{ url: sanityService.seo.socialImage }] : [],
     },

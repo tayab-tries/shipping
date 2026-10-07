@@ -56,7 +56,7 @@ export async function generateMetadata({ params }: GuideArticlePageProps): Promi
     fallbackArticle?.seoDescription ||
     'Customs and shipping guide for international cargo from Pakistan.';
 
-  const canonicalUrl = `${siteConfig.domain}/guides/${slug}`;
+  const canonicalUrl = `https://raahiinternational.com/guides/${slug}`;
   const publishedTime = sanityGuide?.publishedAt || fallbackArticle?.publishedAt || '2026-08-01';
   const authorName = sanityGuide?.authorName || fallbackArticle?.authorName || 'Logistics Editorial Team';
 
@@ -70,6 +70,7 @@ export async function generateMetadata({ params }: GuideArticlePageProps): Promi
       title,
       description,
       url: canonicalUrl,
+      siteName: 'Raahi International',
       type: 'article',
       publishedTime,
       authors: [authorName],

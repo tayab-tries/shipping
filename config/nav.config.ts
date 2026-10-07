@@ -112,6 +112,29 @@ export const primaryCta = {
   href: '/quote',
 };
 
+export interface KeyDestinationCity {
+  name: string;
+  slug: string;
+  country: string;
+  countrySlug: string;
+  href: string;
+}
+
+export const keyDestinationCities: KeyDestinationCity[] = [
+  { name: 'London', slug: 'london', country: 'United Kingdom', countrySlug: 'uk', href: '/destinations/uk/london' },
+  { name: 'Manchester', slug: 'manchester', country: 'United Kingdom', countrySlug: 'uk', href: '/destinations/uk/manchester' },
+  { name: 'Birmingham', slug: 'birmingham', country: 'United Kingdom', countrySlug: 'uk', href: '/destinations/uk/birmingham' },
+  { name: 'Dubai', slug: 'dubai', country: 'United Arab Emirates', countrySlug: 'uae', href: '/destinations/uae/dubai' },
+  { name: 'Abu Dhabi', slug: 'abu-dhabi', country: 'United Arab Emirates', countrySlug: 'uae', href: '/destinations/uae/abu-dhabi' },
+  { name: 'Riyadh', slug: 'riyadh', country: 'Saudi Arabia', countrySlug: 'ksa', href: '/destinations/ksa/riyadh' },
+  { name: 'Jeddah', slug: 'jeddah', country: 'Saudi Arabia', countrySlug: 'ksa', href: '/destinations/ksa/jeddah' },
+  { name: 'Toronto', slug: 'toronto', country: 'Canada', countrySlug: 'canada', href: '/destinations/canada/toronto' },
+  { name: 'Vancouver', slug: 'vancouver', country: 'Canada', countrySlug: 'canada', href: '/destinations/canada/vancouver' },
+  { name: 'New York', slug: 'new-york', country: 'United States', countrySlug: 'usa', href: '/destinations/usa/new-york' },
+  { name: 'Chicago', slug: 'chicago', country: 'United States', countrySlug: 'usa', href: '/destinations/usa/chicago' },
+  { name: 'Houston', slug: 'houston', country: 'United States', countrySlug: 'usa', href: '/destinations/usa/houston' },
+];
+
 export const footerNavigation: FooterNavGroup[] = [
   {
     title: 'Services',
@@ -130,6 +153,18 @@ export const footerNavigation: FooterNavGroup[] = [
       { label: 'Cargo to USA', href: '/destinations/usa' },
       { label: 'Cargo to Canada', href: '/destinations/canada' },
       { label: 'Cargo to KSA', href: '/destinations/ksa' },
+      { label: 'London, UK', href: '/destinations/uk/london' },
+      { label: 'Manchester, UK', href: '/destinations/uk/manchester' },
+      { label: 'Birmingham, UK', href: '/destinations/uk/birmingham' },
+      { label: 'Dubai, UAE', href: '/destinations/uae/dubai' },
+      { label: 'Abu Dhabi, UAE', href: '/destinations/uae/abu-dhabi' },
+      { label: 'Riyadh, KSA', href: '/destinations/ksa/riyadh' },
+      { label: 'Jeddah, KSA', href: '/destinations/ksa/jeddah' },
+      { label: 'Toronto, Canada', href: '/destinations/canada/toronto' },
+      { label: 'Vancouver, Canada', href: '/destinations/canada/vancouver' },
+      { label: 'New York, USA', href: '/destinations/usa/new-york' },
+      { label: 'Chicago, USA', href: '/destinations/usa/chicago' },
+      { label: 'Houston, USA', href: '/destinations/usa/houston' },
     ],
   },
   {

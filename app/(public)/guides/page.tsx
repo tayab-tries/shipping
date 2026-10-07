@@ -19,7 +19,15 @@ export const metadata: Metadata = {
   description:
     'Educational resources, export compliance advice, packing guidelines, and shipping mode comparisons for cargo originating in Pakistan.',
   alternates: {
-    canonical: `${siteConfig.domain}/guides`,
+    canonical: 'https://raahiinternational.com/guides',
+  },
+  openGraph: {
+    title: `Customs & Shipping Guides | ${siteConfig.name}`,
+    description:
+      'Educational resources, export compliance advice, packing guidelines, and shipping mode comparisons for cargo originating in Pakistan.',
+    url: 'https://raahiinternational.com/guides',
+    siteName: 'Raahi International',
+    type: 'website',
   },
 };
 

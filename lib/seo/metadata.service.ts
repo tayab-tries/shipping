@@ -9,6 +9,9 @@ export interface PageSeoOptions {
   noindex?: boolean;
 }
 
+export const SITE_NAME = 'Raahi International';
+export const SITE_URL = 'https://raahiinternational.com';
+
 export function constructMetadata({
   title,
   description = siteConfig.defaultSeo.defaultDescription,
@@ -16,12 +19,13 @@ export function constructMetadata({
   ogImage = siteConfig.defaultSeo.defaultOgImage,
   noindex = false,
 }: PageSeoOptions): Metadata {
-  const relativePath = path ? (path.startsWith('/') ? path : `/${path}`) : '/';
+  const cleanPath = path ? (path.startsWith('/') ? path : `/${path}`) : '/';
+  const canonicalUrl = cleanPath === '/' ? SITE_URL : `${SITE_URL}${cleanPath.replace(/\/+$/, '')}`;
   const fullTitle = siteConfig.defaultSeo.titleTemplate.replace('%s', title);
 
   return {
-    metadataBase: new URL('https://raahiinternational.com'),
-    applicationName: siteConfig.name,
+    metadataBase: new URL(SITE_URL),
+    applicationName: SITE_NAME,
     title: fullTitle,
     description,
     verification: {
@@ -36,16 +40,16 @@ export function constructMetadata({
       apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
     },
     alternates: {
-      canonical: relativePath,
+      canonical: canonicalUrl,
     },
     openGraph: {
       title: fullTitle,
       description,
-      url: relativePath,
-      siteName: siteConfig.name,
+      url: canonicalUrl,
+      siteName: SITE_NAME,
       images: [
         {
-          url: ogImage.startsWith('http') ? ogImage : `https://raahiinternational.com${ogImage}`,
+          url: ogImage.startsWith('http') ? ogImage : `${SITE_URL}${ogImage}`,
         },
       ],
       type: 'website',
@@ -54,7 +58,7 @@ export function constructMetadata({
       card: 'summary_large_image',
       title: fullTitle,
       description,
-      images: [ogImage.startsWith('http') ? ogImage : `https://raahiinternational.com${ogImage}`],
+      images: [ogImage.startsWith('http') ? ogImage : `${SITE_URL}${ogImage}`],
     },
     robots: noindex ? { index: false, follow: false } : { index: true, follow: true },
   };
