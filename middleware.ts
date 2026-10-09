@@ -89,8 +89,20 @@ export async function middleware(request: NextRequest) {
 
   const response = NextResponse.next();
 
-  // 4. Refresh Supabase Session Cookies ONLY for protected /admin routes
+  // 4. Edge Fast-Path Guard & Supabase Session Refresh for /admin routes
   if (pathname.startsWith('/admin')) {
+    // Fast-path edge redirect: Anonymous traffic without Supabase auth cookies redirects immediately
+    if (!pathname.startsWith('/admin/login')) {
+      const allCookies = request.cookies.getAll();
+      const hasAuthCookie = allCookies.some(
+        (c) => c.name.startsWith('sb-') && c.name.includes('-auth-token')
+      );
+
+      if (!hasAuthCookie) {
+        return NextResponse.redirect(new URL('/admin/login', request.url), 307);
+      }
+    }
+
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || '';
 

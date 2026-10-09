@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { siteConfig } from '@/config/site.config';
 import { requireAdminAuth } from '@/lib/supabase/auth-guard';
+import { adminLogoutAction } from './actions';
 
 export default async function ProtectedAdminLayout({ children }: { children: React.ReactNode }) {
   // Enforce Server-Side Auth Guard for all protected operational admin routes
@@ -54,12 +55,20 @@ export default async function ProtectedAdminLayout({ children }: { children: Rea
               <span className="text-emerald-700 capitalize font-bold">Role: {authUser.profile.role}</span>
             </div>
           )}
+          <form action={adminLogoutAction}>
+            <button
+              type="submit"
+              className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded transition-colors text-left cursor-pointer"
+            >
+              <LogOut className="w-4 h-4 shrink-0" />
+              <span>Sign Out / Lock Session</span>
+            </button>
+          </form>
           <Link
             href="/"
-            className="flex items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:text-foreground transition-colors"
+            className="flex items-center gap-2 px-3 py-1.5 text-xs text-slate-500 hover:text-foreground transition-colors"
           >
-            <LogOut className="w-4 h-4" />
-            <span>Return to Public Site</span>
+            <span>&larr; Return to Public Site</span>
           </Link>
         </div>
       </aside>

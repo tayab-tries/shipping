@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { ArrowLeft, RefreshCw } from 'lucide-react';
 import { getAdminQuoteById } from '@/lib/admin/quote-admin-service';
+import { updateQuoteLeadAction } from '../../actions';
 
 interface AdminQuoteDetailProps {
   params: Promise<{ id: string }>;
@@ -58,7 +59,8 @@ export default async function AdminQuoteDetailPage({ params }: AdminQuoteDetailP
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-4xl">
+        <form action={updateQuoteLeadAction} className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-4xl">
+          <input type="hidden" name="quoteId" value={quote.id} />
           {/* Main Lead Details (2 cols) */}
           <div className="lg:col-span-2 space-y-6">
             {/* Customer Details Card */}
@@ -141,13 +143,14 @@ export default async function AdminQuoteDetailPage({ params }: AdminQuoteDetailP
                 Internal Operational Notes
               </h3>
               <textarea
+                name="internalNotes"
                 rows={3}
                 defaultValue={quote.internal_notes || ''}
                 placeholder="Add confidential admin notes (never visible to customers)..."
                 className="w-full p-3 rounded-md border border-border bg-background text-foreground text-xs focus:border-primary"
               />
               <div className="flex justify-end">
-                <Button variant="outline" size="sm">
+                <Button type="submit" variant="outline" size="sm">
                   Save Notes
                 </Button>
               </div>
@@ -164,6 +167,7 @@ export default async function AdminQuoteDetailPage({ params }: AdminQuoteDetailP
               <div className="space-y-3">
                 <label className="block text-xs font-mono text-muted-foreground">Lifecycle State</label>
                 <select
+                  name="status"
                   defaultValue={quote.status}
                   className="w-full h-10 px-3 rounded border border-border bg-background text-xs font-mono text-foreground font-semibold"
                 >
@@ -174,7 +178,7 @@ export default async function AdminQuoteDetailPage({ params }: AdminQuoteDetailP
                   <option value="archived">ARCHIVED</option>
                 </select>
 
-                <Button variant="primary" size="sm" className="w-full mt-2">
+                <Button type="submit" variant="primary" size="sm" className="w-full mt-2">
                   Update Lead Status
                 </Button>
               </div>
@@ -223,7 +227,7 @@ export default async function AdminQuoteDetailPage({ params }: AdminQuoteDetailP
               </Button>
             </Link>
           </div>
-        </div>
+        </form>
       </Container>
     </div>
   );
