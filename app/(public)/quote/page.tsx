@@ -7,7 +7,7 @@ import { QuoteFormController } from '@/components/quote/QuoteFormController';
 import { getPublishedStaticLocations } from '@/lib/locations/location-content';
 import { getPublishedStaticDestinations } from '@/lib/destinations/destination-content';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
-import { cargoTypes } from '@/types/content';
+import { cargoTypes, CargoType } from '@/types/content';
 import { siteConfig } from '@/config/site.config';
 
 export const metadata: Metadata = {
@@ -36,11 +36,13 @@ interface QuotePageProps {
     origin?: string;
     destination?: string;
     cargo?: string;
+    service?: string;
   }>;
 }
 
 export default async function PublicQuotePage({ searchParams }: QuotePageProps) {
-  const { origin: rawOrigin, destination: rawDestination, cargo: rawCargo } = await searchParams;
+  const resolvedSearchParams = await searchParams;
+  const { origin: rawOrigin, destination: rawDestination } = resolvedSearchParams;
 
   const [publishedLocations, publishedDestinations, business] = await Promise.all([
     getPublishedStaticLocations(),
@@ -58,19 +60,24 @@ export default async function PublicQuotePage({ searchParams }: QuotePageProps) 
     ? rawDestination
     : undefined;
 
-  // Safe Cargo Type prefill mapping
-  const cargoSlugMap: Record<string, string> = {
-    'air-freight': 'air_freight',
-    'sea-cargo': 'sea_cargo',
-    'door-to-door': 'door_to_door',
-    'commercial-cargo': 'commercial_freight',
-    'excess-baggage': 'excess_baggage',
-  };
+  // Accept both cargo= and service= query parameters
+  const serviceParam = (resolvedSearchParams.cargo || resolvedSearchParams.service || '').toLowerCase();
+  let initialCargo: CargoType = 'air_freight';
 
-  const normalizedCargoKey = rawCargo ? cargoSlugMap[rawCargo] || rawCargo : undefined;
+  if (serviceParam.includes('sea')) {
+    initialCargo = 'sea_cargo';
+  } else if (serviceParam.includes('commercial')) {
+    initialCargo = 'commercial_freight';
+  } else if (serviceParam.includes('baggage') || serviceParam.includes('personal')) {
+    initialCargo = 'excess_baggage';
+  } else if (serviceParam.includes('door')) {
+    initialCargo = 'door_to_door';
+  } else if (serviceParam.includes('air')) {
+    initialCargo = 'air_freight';
+  }
 
-  const validCargo = (cargoTypes as readonly string[]).includes(normalizedCargoKey || '')
-    ? normalizedCargoKey
+  const validCargo = (cargoTypes as readonly string[]).includes(initialCargo)
+    ? initialCargo
     : undefined;
 
   const breadcrumbs = [

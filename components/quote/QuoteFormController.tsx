@@ -93,9 +93,35 @@ export const QuoteFormController: React.FC<QuoteFormControllerProps> = ({
   const handleStep2Next = () => {
     const errors: Record<string, string> = {};
     const weightNum = parseFloat(formData.estimated_weight_kg);
-    if (isNaN(weightNum) || weightNum <= 0) {
-      errors.estimated_weight_kg = 'Valid cargo weight in kg is required (must be greater than 0).';
+    if (isNaN(weightNum) || weightNum < 0.5) {
+      errors.estimated_weight_kg = 'Valid cargo weight in kg is required (minimum 0.5 kg).';
+    } else if (weightNum > 100000) {
+      errors.estimated_weight_kg = 'Weight exceeds single booking limit (max 100,000 kg).';
     }
+
+    const packageCountNum = parseInt(formData.package_count, 10);
+    if (isNaN(packageCountNum) || packageCountNum < 1) {
+      errors.package_count = 'Package count must be at least 1.';
+    } else if (packageCountNum > 1000) {
+      errors.package_count = 'Package count cannot exceed 1,000.';
+    }
+
+    if (formData.length_cm) {
+      const l = parseFloat(formData.length_cm);
+      if (isNaN(l) || l <= 0) errors.length_cm = 'Length must be greater than 0.';
+      else if (l > 1000) errors.length_cm = 'Length cannot exceed 1,000 cm.';
+    }
+    if (formData.width_cm) {
+      const w = parseFloat(formData.width_cm);
+      if (isNaN(w) || w <= 0) errors.width_cm = 'Width must be greater than 0.';
+      else if (w > 1000) errors.width_cm = 'Width cannot exceed 1,000 cm.';
+    }
+    if (formData.height_cm) {
+      const h = parseFloat(formData.height_cm);
+      if (isNaN(h) || h <= 0) errors.height_cm = 'Height must be greater than 0.';
+      else if (h > 1000) errors.height_cm = 'Height cannot exceed 1,000 cm.';
+    }
+
     if (!formData.cargo_description || formData.cargo_description.trim().length < 5) {
       errors.cargo_description = 'Cargo item description must be at least 5 characters.';
     }
@@ -124,9 +150,9 @@ export const QuoteFormController: React.FC<QuoteFormControllerProps> = ({
       cargo_type: formData.cargo_type as 'air_freight' | 'sea_cargo' | 'door_to_door' | 'commercial_freight' | 'excess_baggage',
       estimated_weight_kg: parseFloat(formData.estimated_weight_kg) || 0,
       package_count: parseInt(formData.package_count, 10) || 1,
-      length_cm: formData.length_cm ? parseInt(formData.length_cm, 10) : undefined,
-      width_cm: formData.width_cm ? parseInt(formData.width_cm, 10) : undefined,
-      height_cm: formData.height_cm ? parseInt(formData.height_cm, 10) : undefined,
+      length_cm: formData.length_cm ? parseFloat(formData.length_cm) : undefined,
+      width_cm: formData.width_cm ? parseFloat(formData.width_cm) : undefined,
+      height_cm: formData.height_cm ? parseFloat(formData.height_cm) : undefined,
       cargo_description: formData.cargo_description,
       sender_name: formData.sender_name,
       contact_preference: formData.contact_preference,
@@ -171,7 +197,8 @@ export const QuoteFormController: React.FC<QuoteFormControllerProps> = ({
         return;
       }
 
-      setQuoteReference(data.data.quoteReference);
+      const ref = data.quoteReference || data.data?.quoteReference || 'QTE-RECORDED';
+      setQuoteReference(ref);
       setIsSubmitted(true);
       trackQuoteLead();
       scrollAndFocusTop();
@@ -255,6 +282,7 @@ export const QuoteFormController: React.FC<QuoteFormControllerProps> = ({
           {/* STEP 2: CARGO DETAILS */}
           {step === 2 && (
             <QuoteStep2Details
+              cargoType={formData.cargo_type}
               formData={{
                 estimated_weight_kg: formData.estimated_weight_kg,
                 package_count: formData.package_count,

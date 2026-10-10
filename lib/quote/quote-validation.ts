@@ -7,11 +7,18 @@ export const quoteSubmissionSchema = z
     destination_country: z.string().min(2, 'Destination country is required.'),
     destination_city: z.string().optional(),
     cargo_type: z.enum(cargoTypes), // Derived directly from single source of truth
-    estimated_weight_kg: z.number().min(0.5, 'Estimated weight must be at least 0.5 kg.'),
-    package_count: z.number().int().min(1, 'Package count must be at least 1.'),
-    length_cm: z.number().int().min(1).optional(),
-    width_cm: z.number().int().min(1).optional(),
-    height_cm: z.number().int().min(1).optional(),
+    estimated_weight_kg: z
+      .number()
+      .min(0.5, 'Minimum weight is 0.5 kg')
+      .max(100000, 'Weight exceeds single booking limit'),
+    package_count: z
+      .number()
+      .int()
+      .min(1, 'Package count must be at least 1.')
+      .max(1000, 'Package count cannot exceed 1000.'),
+    length_cm: z.number().positive('Length must be greater than 0').max(1000, 'Length cannot exceed 1000 cm').optional(),
+    width_cm: z.number().positive('Width must be greater than 0').max(1000, 'Width cannot exceed 1000 cm').optional(),
+    height_cm: z.number().positive('Height must be greater than 0').max(1000, 'Height cannot exceed 1000 cm').optional(),
     cargo_description: z.string().min(5, 'Cargo description is required.'),
     sender_name: z.string().min(2, 'Full name is required.'),
     contact_preference: z.enum(['whatsapp', 'phone', 'email']).default('whatsapp'),

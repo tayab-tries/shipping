@@ -1,8 +1,9 @@
 import React from 'react';
-import { ArrowRight, ArrowLeft, PackageCheck } from 'lucide-react';
+import { ArrowRight, ArrowLeft, PackageCheck, Calculator, Info } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
+import { calculateShipmentMetrics } from '@/lib/quote/volumetric-calculator';
 
 export interface QuoteStep2Data {
   estimated_weight_kg: string;
@@ -15,6 +16,7 @@ export interface QuoteStep2Data {
 
 export interface QuoteStep2DetailsProps {
   formData: QuoteStep2Data;
+  cargoType?: string;
   errors?: Record<string, string>;
   onChange: (field: keyof QuoteStep2Data, value: string) => void;
   onNext: () => void;
@@ -23,6 +25,7 @@ export interface QuoteStep2DetailsProps {
 
 export const QuoteStep2Details: React.FC<QuoteStep2DetailsProps> = ({
   formData,
+  cargoType = 'air_freight',
   errors = {},
   onChange,
   onNext,
@@ -32,6 +35,27 @@ export const QuoteStep2Details: React.FC<QuoteStep2DetailsProps> = ({
     e.preventDefault();
     onNext();
   };
+
+  const actualWeight = parseFloat(formData.estimated_weight_kg) || 0;
+  const packageCount = parseInt(formData.package_count, 10) || 1;
+  const lengthNum = formData.length_cm ? parseFloat(formData.length_cm) : undefined;
+  const widthNum = formData.width_cm ? parseFloat(formData.width_cm) : undefined;
+  const heightNum = formData.height_cm ? parseFloat(formData.height_cm) : undefined;
+
+  const hasDimensions = Boolean(
+    lengthNum && lengthNum > 0 &&
+    widthNum && widthNum > 0 &&
+    heightNum && heightNum > 0
+  );
+
+  const metrics = calculateShipmentMetrics({
+    actualWeightKg: actualWeight,
+    packageCount,
+    lengthCm: lengthNum,
+    widthCm: widthNum,
+    heightCm: heightNum,
+    cargoType,
+  });
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6" id="quote-step-2-form">
@@ -53,6 +77,8 @@ export const QuoteStep2Details: React.FC<QuoteStep2DetailsProps> = ({
           type="number"
           step="0.1"
           min="0.5"
+          max="100000"
+          inputMode="decimal"
           placeholder="e.g. 50"
           value={formData.estimated_weight_kg}
           onChange={(e) => onChange('estimated_weight_kg', e.target.value)}
@@ -67,6 +93,8 @@ export const QuoteStep2Details: React.FC<QuoteStep2DetailsProps> = ({
           name="package_count"
           type="number"
           min="1"
+          max="1000"
+          inputMode="numeric"
           placeholder="e.g. 2"
           value={formData.package_count}
           onChange={(e) => onChange('package_count', e.target.value)}
@@ -87,7 +115,10 @@ export const QuoteStep2Details: React.FC<QuoteStep2DetailsProps> = ({
             id="length_cm"
             name="length_cm"
             type="number"
-            min="1"
+            min="0.1"
+            max="1000"
+            step="any"
+            inputMode="decimal"
             placeholder="Length"
             value={formData.length_cm || ''}
             onChange={(e) => onChange('length_cm', e.target.value)}
@@ -100,7 +131,10 @@ export const QuoteStep2Details: React.FC<QuoteStep2DetailsProps> = ({
             id="width_cm"
             name="width_cm"
             type="number"
-            min="1"
+            min="0.1"
+            max="1000"
+            step="any"
+            inputMode="decimal"
             placeholder="Width"
             value={formData.width_cm || ''}
             onChange={(e) => onChange('width_cm', e.target.value)}
@@ -113,7 +147,10 @@ export const QuoteStep2Details: React.FC<QuoteStep2DetailsProps> = ({
             id="height_cm"
             name="height_cm"
             type="number"
-            min="1"
+            min="0.1"
+            max="1000"
+            step="any"
+            inputMode="decimal"
             placeholder="Height"
             value={formData.height_cm || ''}
             onChange={(e) => onChange('height_cm', e.target.value)}
@@ -122,6 +159,43 @@ export const QuoteStep2Details: React.FC<QuoteStep2DetailsProps> = ({
           />
         </div>
       </div>
+
+      {/* Volumetric & Chargeable Metrics Display */}
+      {hasDimensions && metrics.totalCbm > 0 && (
+        <div className="bg-surface-subtle border border-accent/40 rounded-md p-4 space-y-3">
+          <div className="flex items-center justify-between border-b border-border pb-2">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-brand-black flex items-center gap-1.5">
+              <Calculator className="w-4 h-4 text-accent-dark" />
+              Estimated Shipment Metrics
+            </span>
+            <span className="text-[11px] font-mono text-slate-500">
+              IATA Air Divisor 5000
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="bg-surface p-2.5 rounded border border-border">
+              <span className="text-slate-500 block text-[11px] font-mono">Estimated Volume</span>
+              <span className="text-sm font-bold font-mono text-brand-black">{metrics.totalCbm} CBM</span>
+            </div>
+            <div className="bg-surface p-2.5 rounded border border-border">
+              <span className="text-slate-500 block text-[11px] font-mono">Volumetric Weight</span>
+              <span className="text-sm font-bold font-mono text-brand-black">{metrics.volumetricWeightKg} kg</span>
+            </div>
+            <div className={`p-2.5 rounded border ${metrics.isVolumetricHigher ? 'bg-amber-50 border-amber-300' : 'bg-surface border-border'}`}>
+              <span className="text-slate-500 block text-[11px] font-mono">Chargeable Weight</span>
+              <span className="text-sm font-bold font-mono text-brand-black">{metrics.chargeableWeightKg} kg</span>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-1.5 text-[11px] text-slate-600 bg-surface/60 p-2 rounded border border-border/50">
+            <Info className="w-3.5 h-3.5 text-accent-dark shrink-0 mt-0.5" />
+            <span>
+              Air cargo is billed based on whichever is higher between actual gross weight and volumetric space ({metrics.isVolumetricHigher ? 'volumetric weight applies' : 'actual scale weight applies'}).
+            </span>
+          </div>
+        </div>
+      )}
 
       <Textarea
         label="Cargo Description"
