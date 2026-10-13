@@ -44,3 +44,7 @@ next-env.d.ts
 /.open-next/
 /.wrangler/
 
+# crawler monitoring logs
+/logs/
+
+
