@@ -3,9 +3,9 @@ import { cargoTypes } from '@/types/content'; // Single Source of Truth
 
 export const quoteSubmissionSchema = z
   .object({
-    origin_city: z.string().min(2, 'Origin city is required.'),
-    destination_country: z.string().min(2, 'Destination country is required.'),
-    destination_city: z.string().optional(),
+    origin_city: z.string().trim().min(2, 'Origin city is required.').max(100),
+    destination_country: z.string().trim().min(2, 'Destination country is required.').max(100),
+    destination_city: z.string().trim().max(100).optional(),
     cargo_type: z.enum(cargoTypes), // Derived directly from single source of truth
     estimated_weight_kg: z
       .number()
@@ -19,11 +19,11 @@ export const quoteSubmissionSchema = z
     length_cm: z.number().positive('Length must be greater than 0').max(1000, 'Length cannot exceed 1000 cm').optional(),
     width_cm: z.number().positive('Width must be greater than 0').max(1000, 'Width cannot exceed 1000 cm').optional(),
     height_cm: z.number().positive('Height must be greater than 0').max(1000, 'Height cannot exceed 1000 cm').optional(),
-    cargo_description: z.string().min(5, 'Cargo description is required.'),
-    sender_name: z.string().min(2, 'Full name is required.'),
+    cargo_description: z.string().trim().min(5, 'Cargo description is required.').max(2000, 'Description must be under 2,000 characters.'),
+    sender_name: z.string().trim().min(2, 'Full name is required.').max(100, 'Name must be under 100 characters.'),
     contact_preference: z.enum(['whatsapp', 'phone', 'email']).default('whatsapp'),
-    sender_phone: z.string().optional(),
-    sender_email: z.string().optional(),
+    sender_phone: z.string().trim().max(30).optional(),
+    sender_email: z.string().trim().max(120).optional(),
     additional_notes: z.string().max(1000).optional(),
     source_page: z
       .string()

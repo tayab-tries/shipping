@@ -27,7 +27,18 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 3. Endpoint-Specific Rate Limiting (SENSITIVE / MUTATING POST REQUESTS ONLY)
+  // 3. Edge Payload-Size Guard (Reject oversized bodies before downstream parsing)
+  if (method === 'POST' && (pathname.startsWith('/api/quote') || pathname.startsWith('/api/track'))) {
+    const contentLength = request.headers.get('content-length');
+    if (contentLength && parseInt(contentLength, 10) > 65536) { // 64 KB limit
+      return NextResponse.json(
+        { success: false, error: 'Payload too large. Maximum size is 64KB.' },
+        { status: 413 }
+      );
+    }
+  }
+
+  // 4. Endpoint-Specific Rate Limiting (SENSITIVE / MUTATING POST REQUESTS ONLY)
   // Public GET page requests, RSC flight prefetch calls, and static assets bypass application rate limiting completely.
   if (method === 'POST') {
     let rateLimitKeyPrefix: string | null = null;

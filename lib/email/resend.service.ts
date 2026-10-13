@@ -28,6 +28,19 @@ export interface QuoteEmailPayload {
 }
 
 /**
+ * Utility to sanitize and HTML-escape user inputs preventing Email / HTML injection.
+ */
+export function escapeHtml(str: unknown): string {
+  if (typeof str !== 'string') return '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/**
  * Sends Admin Quote Notification Email via Resend API.
  * Never logs PII to server console.
  */
@@ -64,16 +77,17 @@ export async function sendAdminQuoteNotification(
         subject: `New Lead: Quote Reference ${payload.quoteReference} (${payload.originCity} to ${payload.destinationCountry})`,
         html: `
           <h2>New Quote Request Received</h2>
-          <p><strong>Reference:</strong> ${payload.quoteReference}</p>
-          <p><strong>Sender:</strong> ${payload.senderName}</p>
-          <p><strong>Contact Preference:</strong> ${payload.contactPreference}</p>
-          <p><strong>Phone:</strong> ${payload.senderPhone || 'N/A'}</p>
-          <p><strong>Email:</strong> ${payload.senderEmail || 'N/A'}</p>
-          <p><strong>Route:</strong> ${payload.originCity} &rarr; ${payload.destinationCountry} ${payload.destinationCity ? `(${payload.destinationCity})` : ''}</p>
-          <p><strong>Cargo Type:</strong> ${payload.cargoType}</p>
+          <p><strong>Reference:</strong> ${escapeHtml(payload.quoteReference)}</p>
+          <p><strong>Sender:</strong> ${escapeHtml(payload.senderName)}</p>
+          <p><strong>Contact Preference:</strong> ${escapeHtml(payload.contactPreference)}</p>
+          <p><strong>Phone:</strong> ${escapeHtml(payload.senderPhone || 'N/A')}</p>
+          <p><strong>Email:</strong> ${escapeHtml(payload.senderEmail || 'N/A')}</p>
+          <p><strong>Route:</strong> ${escapeHtml(payload.originCity)} &rarr; ${escapeHtml(payload.destinationCountry)} ${payload.destinationCity ? `(${escapeHtml(payload.destinationCity)})` : ''}</p>
+          <p><strong>Cargo Type:</strong> ${escapeHtml(payload.cargoType)}</p>
           <p><strong>Weight:</strong> ${payload.estimatedWeightKg} kg (${payload.packageCount} pkgs)</p>
           <p><strong>Dimensions:</strong> ${payload.lengthCm ? `${payload.lengthCm}x${payload.widthCm}x${payload.heightCm} cm` : 'Not specified'}</p>
-          <p><strong>Description:</strong> ${payload.cargoDescription}</p>
+          <p><strong>Description:</strong> ${escapeHtml(payload.cargoDescription)}</p>
+          ${payload.additionalNotes ? `<p><strong>Additional Notes:</strong> ${escapeHtml(payload.additionalNotes)}</p>` : ''}
         `,
       }),
     });
@@ -145,12 +159,12 @@ export async function sendCustomerQuoteConfirmation(
         to: [payload.senderEmail],
         subject: `Quote Request Received: Reference ${payload.quoteReference}`,
         html: `
-          <h2>Thank You for Reaching Out to ${siteConfig.name}</h2>
+          <h2>Thank You for Reaching Out to ${escapeHtml(siteConfig.name)}</h2>
           <p>We have received your request for international shipping support.</p>
-          <p><strong>Quote Reference:</strong> ${payload.quoteReference}</p>
-          <p><strong>Route:</strong> ${payload.originCity} to ${payload.destinationCountry}</p>
+          <p><strong>Quote Reference:</strong> ${escapeHtml(payload.quoteReference)}</p>
+          <p><strong>Route:</strong> ${escapeHtml(payload.originCity)} to ${escapeHtml(payload.destinationCountry)}</p>
           <p>Our operational team will review your cargo specifications and respond shortly.</p>
-          <p>Best regards,<br>${siteConfig.name} Operations Team</p>
+          <p>Best regards,<br>${escapeHtml(siteConfig.name)} Operations Team</p>
         `,
       }),
     });
