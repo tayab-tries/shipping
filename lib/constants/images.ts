@@ -55,19 +55,19 @@ export const IMAGE_SLOTS = {
     aspectRatio: 'aspect-[16/9]',
   },
   destination: {
-    src: '/images/destination-port.jpg',
+    src: '/images/destination-port.svg',
     fallbackSrc: '/images/destination-port.svg',
     alt: 'International container port facility and freight logistics terminal',
     aspectRatio: 'aspect-[16/9]',
   },
   guideCover: {
-    src: '/images/guide-cover.webp',
+    src: '/images/guide-cover.svg',
     fallbackSrc: '/images/guide-cover.svg',
     alt: 'Export customs documentation and international packaging guide',
     aspectRatio: 'aspect-[3/2]',
   },
   tracking: {
-    src: '/images/tracking-cargo.jpg',
+    src: '/images/tracking-cargo.svg',
     fallbackSrc: '/images/tracking-cargo.svg',
     alt: 'Cargo container tracking and shipment logistics monitoring',
     aspectRatio: 'aspect-[16/9]',

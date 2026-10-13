@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <defs>
+    <linearGradient id="ogBg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#06090E"/>
+      <stop offset="50%" stop-color="#0B1324"/>
+      <stop offset="100%" stop-color="#080C16"/>
+    </linearGradient>
+    <linearGradient id="ogCyan" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#22D3EE"/>
+      <stop offset="100%" stop-color="#0EA5E9"/>
+    </linearGradient>
+    <linearGradient id="ogOrange" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#F97316"/>
+      <stop offset="100%" stop-color="#EA580C"/>
+    </linearGradient>
+    <radialGradient id="glowTopRight" cx="80%" cy="20%" r="50%">
+      <stop offset="0%" stop-color="#0284C7" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#0284C7" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowBottomLeft" cx="20%" cy="80%" r="50%">
+      <stop offset="0%" stop-color="#F97316" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#F97316" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="ogGrid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M 48 0 L 0 0 0 48" fill="none" stroke="#1E293B" stroke-width="0.75" stroke-opacity="0.4"/>
+      <circle cx="24" cy="24" r="1" fill="#334155" opacity="0.5"/>
+    </pattern>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="1200" height="630" fill="url(#ogBg)"/>
+  <rect width="1200" height="630" fill="url(#ogGrid)"/>
+  <rect width="1200" height="630" fill="url(#glowTopRight)"/>
+  <rect width="1200" height="630" fill="url(#glowBottomLeft)"/>
+
+  <!-- Border Frame Accent -->
+  <rect x="24" y="24" width="1152" height="582" rx="16" fill="none" stroke="#1E293B" stroke-width="1.5"/>
+
+  <!-- Header: Brand Logo & Type -->
+  <g transform="translate(80, 80)">
+    <!-- Brand Mark Icon (Stylized Cargo Compass / R) -->
+    <rect width="48" height="48" rx="10" fill="#0F172A" stroke="#22D3EE" stroke-width="2"/>
+    <path d="M 14 34 L 14 14 L 26 14 C 30 14 34 17 34 21 C 34 25 30 28 26 28 L 14 28 M 24 28 L 34 34" stroke="#22D3EE" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    
+    <text x="64" y="26" fill="#F8FAFC" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="22" letter-spacing="1">RAAHI</text>
+    <text x="146" y="26" fill="#22D3EE" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="22" letter-spacing="1">INTERNATIONAL</text>
+    <text x="64" y="44" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-weight="500" font-size="12" letter-spacing="2">CARGO &amp; FREIGHT LOGISTICS</text>
+  </g>
+
+  <!-- Verified Badge (Top Right) -->
+  <g transform="translate(940, 80)">
+    <rect width="180" height="42" rx="21" fill="#0B132B" stroke="#22D3EE" stroke-width="1" stroke-opacity="0.6"/>
+    <circle cx="24" cy="21" r="5" fill="#10B981"/>
+    <text x="38" y="26" fill="#E2E8F0" font-family="monospace" font-size="12" font-weight="600" letter-spacing="0.5">EXPRESS GLOBAL</text>
+  </g>
+
+  <!-- Main Headline Block -->
+  <g transform="translate(80, 200)">
+    <!-- Category Subhead -->
+    <text x="0" y="0" fill="#F97316" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="14" letter-spacing="3">INTERNATIONAL FREIGHT FORWARDING</text>
+    
+    <!-- Main Big Title -->
+    <text x="0" y="52" fill="#F8FAFC" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="44" letter-spacing="-0.5">Connecting Pakistan —</text>
+    <text x="0" y="104" fill="url(#ogCyan)" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="44" letter-spacing="-0.5">Delivering Possibilities.</text>
+    
+    <!-- Subtitle description -->
+    <text x="0" y="152" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="400">
+      Door-to-door air cargo and scheduled ocean container shipping from Pakistan
+    </text>
+    <text x="0" y="180" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="400">
+      to the UK, USA, UAE, Canada, Saudi Arabia, Europe, and destinations worldwide.
+    </text>
+  </g>
+
+  <!-- Visual Feature Cards / Badges (Bottom Left) -->
+  <g transform="translate(80, 460)">
+    <!-- Pill 1: Air Cargo -->
+    <rect x="0" y="0" width="180" height="46" rx="8" fill="#0F172A" stroke="#334155" stroke-width="1.2"/>
+    <text x="24" y="28" fill="#F8FAFC" font-family="system-ui, sans-serif" font-weight="600" font-size="14">✈ Air Cargo</text>
+
+    <!-- Pill 2: Sea Freight -->
+    <rect x="195" y="0" width="180" height="46" rx="8" fill="#0F172A" stroke="#334155" stroke-width="1.2"/>
+    <text x="220" y="28" fill="#F8FAFC" font-family="system-ui, sans-serif" font-weight="600" font-size="14">🚢 Sea Freight</text>
+
+    <!-- Pill 3: Door to Door -->
+    <rect x="390" y="0" width="185" height="46" rx="8" fill="#0F172A" stroke="#334155" stroke-width="1.2"/>
+    <text x="412" y="28" fill="#F8FAFC" font-family="system-ui, sans-serif" font-weight="600" font-size="14">📦 Door to Door</text>
+
+    <!-- Pill 4: Customs Cleared -->
+    <rect x="590" y="0" width="185" height="46" rx="8" fill="#0F172A" stroke="#334155" stroke-width="1.2"/>
+    <text x="612" y="28" fill="#F8FAFC" font-family="system-ui, sans-serif" font-weight="600" font-size="14">🛡 Full Customs</text>
+  </g>
+
+  <!-- Right Side Visual Illustration: Flight Arcs & Cargo Route Globe -->
+  <g transform="translate(850, 320)">
+    <!-- Background Rings -->
+    <circle cx="100" cy="50" r="140" fill="none" stroke="#1E293B" stroke-width="1.5" stroke-dasharray="6 6"/>
+    <circle cx="100" cy="50" r="90" fill="none" stroke="#22D3EE" stroke-width="1" stroke-opacity="0.3"/>
+    
+    <!-- Curved Route Vector -->
+    <path d="M -80 120 Q 40 -60 180 80" fill="none" stroke="url(#ogCyan)" stroke-width="3"/>
+    <circle cx="-80" cy="120" r="6" fill="#F97316"/>
+    <circle cx="180" cy="80" r="6" fill="#22D3EE"/>
+    
+    <!-- Stylized Plane -->
+    <g transform="translate(60, -8) rotate(35)">
+      <path d="M 0 -18 L 6 -3 L 20 2 L 20 6 L 6 4 L 5 14 L 10 18 L 10 20 L 0 19 L -10 20 L -10 18 L -5 14 L -6 4 L -20 6 L -20 2 L -6 -3 Z" fill="#F8FAFC"/>
+    </g>
+    
+    <!-- Cargo Box Graphic -->
+    <rect x="50" y="80" width="70" height="45" rx="4" fill="#0B132B" stroke="#22D3EE" stroke-width="1.5"/>
+    <line x1="85" y1="80" x2="85" y2="125" stroke="#0284C7" stroke-width="1.5"/>
+    <line x1="60" y1="80" x2="60" y2="125" stroke="#1E293B" stroke-width="1"/>
+    <line x1="110" y1="80" x2="110" y2="125" stroke="#1E293B" stroke-width="1"/>
+  </g>
+
+  <!-- Footer Domain Badge (Bottom Right) -->
+  <g transform="translate(870, 530)">
+    <text x="210" y="24" fill="#38BDF8" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="16" text-anchor="end" letter-spacing="1">raahiinternational.com</text>
+  </g>
+</svg>

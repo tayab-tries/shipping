@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" fill="none">
+  <defs>
+    <linearGradient id="bgTrack" x1="0" y1="0" x2="1200" y2="675" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#070A0F"/>
+      <stop offset="50%" stop-color="#0B132B"/>
+      <stop offset="100%" stop-color="#080D1A"/>
+    </linearGradient>
+    <linearGradient id="cyanGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#22D3EE"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
+    </linearGradient>
+    <pattern id="radarGrid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#1E293B" stroke-width="0.75" stroke-opacity="0.4"/>
+      <circle cx="30" cy="30" r="1.5" fill="#334155" opacity="0.6"/>
+    </pattern>
+    <radialGradient id="pulseGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#22D3EE" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#22D3EE" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="1200" height="675" fill="url(#bgTrack)"/>
+  <rect width="1200" height="675" fill="url(#radarGrid)"/>
+
+  <!-- Radar Scope Concentric Rings -->
+  <g opacity="0.35" transform="translate(600, 340)">
+    <circle r="120" stroke="#334155" stroke-width="1" stroke-dasharray="4 4"/>
+    <circle r="220" stroke="#334155" stroke-width="1"/>
+    <circle r="340" stroke="#1E293B" stroke-width="1" stroke-dasharray="6 6"/>
+    <circle r="460" stroke="#1E293B" stroke-width="1"/>
+    <!-- Crosshairs -->
+    <line x1="-550" y1="0" x2="550" y2="0" stroke="#1E293B" stroke-width="1"/>
+    <line x1="0" y1="-300" x2="0" y2="300" stroke="#1E293B" stroke-width="1"/>
+  </g>
+
+  <!-- Global Route Trajectories (Great Circle Arcs) -->
+  <!-- Pakistan Hub Origin (approx (320, 380)) to Europe/UK (approx (880, 240)) -->
+  <path d="M 280 420 Q 560 160 920 220" fill="none" stroke="url(#cyanGrad)" stroke-width="3"/>
+  <path d="M 280 420 Q 560 160 920 220" fill="none" stroke="#22D3EE" stroke-width="8" stroke-opacity="0.15"/>
+
+  <!-- Secondary Route: Pakistan to Gulf / Middle East -->
+  <path d="M 280 420 Q 480 320 720 440" fill="none" stroke="#F97316" stroke-width="2.5" stroke-dasharray="6 6"/>
+
+  <!-- Secondary Route: Pakistan to North America linehaul -->
+  <path d="M 280 420 Q 480 80 1020 160" fill="none" stroke="#38BDF8" stroke-width="2" stroke-dasharray="4 6" opacity="0.6"/>
+
+  <!-- Animated-style Pulse Wave on Current In-Transit Position (approx (620, 260)) -->
+  <circle cx="620" cy="260" r="60" fill="url(#pulseGlow)"/>
+  <circle cx="620" cy="260" r="35" stroke="#22D3EE" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.7"/>
+  <circle cx="620" cy="260" r="18" fill="#0E7490" fill-opacity="0.4" stroke="#22D3EE" stroke-width="2"/>
+  <circle cx="620" cy="260" r="6" fill="#22D3EE"/>
+
+  <!-- Aircraft / Dispatch Icon at In-Transit Location -->
+  <g transform="translate(620, 260) rotate(15)">
+    <path d="M 0 -22 L 7 -4 L 25 2 L 25 7 L 7 5 L 6 18 L 12 23 L 12 26 L 0 24 L -12 26 L -12 23 L -6 18 L -7 5 L -25 7 L -25 2 L -7 -4 Z" fill="#F8FAFC" stroke="#0284C7" stroke-width="1.5"/>
+  </g>
+
+  <!-- Origin Waypoint Node: Pakistan Hub (Karachi / Lahore) -->
+  <g transform="translate(280, 420)">
+    <circle r="14" fill="#0B132B" stroke="#F97316" stroke-width="2.5"/>
+    <circle r="6" fill="#F97316"/>
+    <!-- Ripple ring -->
+    <circle r="24" stroke="#F97316" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>
+    <!-- Node Label Card -->
+    <rect x="-180" y="24" width="190" height="52" rx="6" fill="#0F172A" fill-opacity="0.95" stroke="#334155" stroke-width="1"/>
+    <text x="-166" y="44" fill="#F97316" font-family="monospace" font-weight="700" font-size="11">ORIGIN: PAKISTAN HUB</text>
+    <text x="-166" y="62" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="11">DISPATCH VERIFIED</text>
+  </g>
+
+  <!-- Destination Waypoint Node: International Destination Terminal -->
+  <g transform="translate(920, 220)">
+    <circle r="14" fill="#0B132B" stroke="#22D3EE" stroke-width="2.5"/>
+    <circle r="6" fill="#22D3EE"/>
+    <circle r="24" stroke="#22D3EE" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>
+    <!-- Node Label Card -->
+    <rect x="22" y="-12" width="200" height="52" rx="6" fill="#0F172A" fill-opacity="0.95" stroke="#334155" stroke-width="1"/>
+    <text x="36" y="8" fill="#38BDF8" font-family="monospace" font-weight="700" font-size="11">DESTINATION TERMINAL</text>
+    <text x="36" y="26" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="11">FINAL CLEARANCE READY</text>
+  </g>
+
+  <!-- Sea Route Node: Gulf Marine Terminal -->
+  <g transform="translate(720, 440)">
+    <circle r="10" fill="#0B132B" stroke="#F97316" stroke-width="2"/>
+    <circle r="4" fill="#F97316"/>
+    <rect x="20" y="-8" width="160" height="42" rx="6" fill="#0F172A" fill-opacity="0.9" stroke="#334155" stroke-width="1"/>
+    <text x="32" y="10" fill="#FB923C" font-family="monospace" font-weight="600" font-size="10">PORT DISPATCH</text>
+    <text x="32" y="24" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="10">OCEAN CONTAINER VESSEL</text>
+  </g>
+
+  <!-- Live Telemetry HUD Overlay Panel (Top Left) -->
+  <g transform="translate(60, 60)">
+    <rect width="360" height="110" rx="8" fill="#0B132B" fill-opacity="0.92" stroke="#1E293B" stroke-width="1.5"/>
+    <!-- Status Indicator -->
+    <circle cx="28" cy="30" r="6" fill="#22D3EE"/>
+    <text x="44" y="34" fill="#F8FAFC" font-family="system-ui, sans-serif" font-weight="700" font-size="13" letter-spacing="1">LIVE SHIPMENT TELEMETRY</text>
+    <line x1="20" y1="48" x2="340" y2="48" stroke="#1E293B" stroke-width="1"/>
+    <text x="24" y="68" fill="#64748B" font-family="monospace" font-size="11">STATUS:</text>
+    <text x="80" y="68" fill="#22D3EE" font-family="monospace" font-weight="700" font-size="11">IN TRANSIT — FLIGHT ACTIVE</text>
+    <text x="24" y="88" fill="#64748B" font-family="monospace" font-size="11">PROTOCOL:</text>
+    <text x="96" y="88" fill="#E2E8F0" font-family="monospace" font-size="11">AIR CARGO / SEA LINEHAUL</text>
+    <text x="24" y="104" fill="#64748B" font-family="monospace" font-size="10">SECURITY:</text>
+    <text x="96" y="104" fill="#10B981" font-family="monospace" font-size="10">CUSTOMS PRE-CLEARED</text>
+  </g>
+
+  <!-- Live Telemetry Coordinates (Top Right) -->
+  <g transform="translate(860, 60)">
+    <rect width="280" height="90" rx="8" fill="#0B132B" fill-opacity="0.92" stroke="#1E293B" stroke-width="1.5"/>
+    <text x="24" y="30" fill="#38BDF8" font-family="monospace" font-weight="600" font-size="12" letter-spacing="1">GLOBAL SATELLITE RADAR</text>
+    <line x1="20" y1="42" x2="260" y2="42" stroke="#1E293B" stroke-width="1"/>
+    <text x="24" y="60" fill="#94A3B8" font-family="monospace" font-size="11">LAT: 24.8607° N</text>
+    <text x="145" y="60" fill="#94A3B8" font-family="monospace" font-size="11">LON: 67.0011° E</text>
+    <text x="24" y="78" fill="#475569" font-family="monospace" font-size="10">CARGO INTEGRITY: SECURE</text>
+  </g>
+
+  <!-- Lower Branding Banner -->
+  <text x="600" y="635" fill="#475569" font-family="system-ui, sans-serif" font-size="12" font-weight="600" text-anchor="middle" letter-spacing="3" opacity="0.8">RAAHI INTERNATIONAL • REAL-TIME AIR &amp; SEA TRACKING SYSTEM</text>
+</svg>

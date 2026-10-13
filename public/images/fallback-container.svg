@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="600" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#070A0F"/>
+      <stop offset="100%" stop-color="#0B132B"/>
+    </linearGradient>
+    <pattern id="fallbackGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1E293B" stroke-width="0.75" stroke-opacity="0.3"/>
+    </pattern>
+  </defs>
+
+  <rect width="800" height="600" fill="url(#bgGrad)"/>
+  <rect width="800" height="600" fill="url(#fallbackGrid)"/>
+
+  <!-- Center Ambient Glow -->
+  <ellipse cx="400" cy="300" rx="260" ry="160" fill="#22D3EE" opacity="0.06"/>
+
+  <!-- Cargo Container Box Illustration -->
+  <g transform="translate(180, 170)">
+    <!-- Container Body -->
+    <rect x="0" y="0" width="440" height="230" rx="8" fill="#0F172A" stroke="#334155" stroke-width="2"/>
+
+    <!-- Corner Castings (ISO standard blocks) -->
+    <rect x="4" y="4" width="24" height="24" rx="2" fill="#1E293B" stroke="#475569" stroke-width="1.5"/>
+    <rect x="412" y="4" width="24" height="24" rx="2" fill="#1E293B" stroke="#475569" stroke-width="1.5"/>
+    <rect x="4" y="202" width="24" height="24" rx="2" fill="#1E293B" stroke="#475569" stroke-width="1.5"/>
+    <rect x="412" y="202" width="24" height="24" rx="2" fill="#1E293B" stroke="#475569" stroke-width="1.5"/>
+
+    <!-- Center Door Split Line -->
+    <line x1="220" y1="0" x2="220" y2="230" stroke="#0284C7" stroke-width="2"/>
+
+    <!-- Corrugation Ribs Left Door -->
+    <rect x="45" y="20" width="16" height="190" fill="#1E293B" rx="1"/>
+    <rect x="85" y="20" width="16" height="190" fill="#1E293B" rx="1"/>
+    <rect x="125" y="20" width="16" height="190" fill="#1E293B" rx="1"/>
+    <rect x="165" y="20" width="16" height="190" fill="#1E293B" rx="1"/>
+
+    <!-- Corrugation Ribs Right Door -->
+    <rect x="255" y="20" width="16" height="190" fill="#1E293B" rx="1"/>
+    <rect x="295" y="20" width="16" height="190" fill="#1E293B" rx="1"/>
+    <rect x="335" y="20" width="16" height="190" fill="#1E293B" rx="1"/>
+    <rect x="375" y="20" width="16" height="190" fill="#1E293B" rx="1"/>
+
+    <!-- Vertical Lock Rods -->
+    <line x1="195" y1="10" x2="195" y2="220" stroke="#94A3B8" stroke-width="3"/>
+    <line x1="245" y1="10" x2="245" y2="220" stroke="#94A3B8" stroke-width="3"/>
+
+    <!-- Door Handles / Cam Locks -->
+    <rect x="180" y="115" width="20" height="6" rx="2" fill="#F97316"/>
+    <rect x="240" y="115" width="20" height="6" rx="2" fill="#F97316"/>
+
+    <!-- Container ID Decal -->
+    <rect x="300" y="32" width="96" height="24" rx="3" fill="#1E293B" stroke="#0284C7" stroke-width="1"/>
+    <text x="348" y="48" fill="#38BDF8" font-family="monospace" font-size="10" font-weight="700" text-anchor="middle">RAAHI 2026</text>
+  </g>
+
+  <!-- Typography & Watermark -->
+  <text x="400" y="460" fill="#E2E8F0" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="700" text-anchor="middle" letter-spacing="2">INTERNATIONAL CARGO ASSET</text>
+  <text x="400" y="486" fill="#64748B" font-family="monospace" font-size="12" text-anchor="middle" letter-spacing="1">RAAHI INTERNATIONAL • VERIFIED LOGISTICS</text>
+</svg>
