@@ -1,5 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { applyTitleTemplate, pickDescription, pickTitle } from '@/lib/seo/seo-text';
+import { getOgImages } from '@/lib/seo/metadata.service';
 import { notFound } from 'next/navigation';
 import { Container } from '@/components/ui/Container';
 import {
@@ -47,14 +49,15 @@ export async function generateMetadata({ params }: GuideArticlePageProps): Promi
     };
   }
 
-  const title =
-    sanityGuide?.seo?.metaTitle ||
-    (fallbackArticle ? `${fallbackArticle.seoTitle} | ${siteConfig.name}` : `Shipping Guide | ${siteConfig.name}`);
+  const title = pickTitle(
+    sanityGuide?.seo?.metaTitle,
+    fallbackArticle ? applyTitleTemplate(fallbackArticle.seoTitle) : undefined
+  ) || applyTitleTemplate('Shipping Guide');
 
-  const description =
-    sanityGuide?.seo?.metaDescription ||
-    fallbackArticle?.seoDescription ||
-    'Customs and shipping guide for international cargo from Pakistan.';
+  const description = pickDescription(
+    sanityGuide?.seo?.metaDescription,
+    fallbackArticle?.seoDescription
+  ) || 'Customs and shipping guide for international cargo from Pakistan.';
 
   const canonicalUrl = `https://raahiinternational.com/guides/${slug}`;
   const publishedTime = sanityGuide?.publishedAt || fallbackArticle?.publishedAt || '2026-08-01';
@@ -74,7 +77,7 @@ export async function generateMetadata({ params }: GuideArticlePageProps): Promi
       type: 'article',
       publishedTime,
       authors: [authorName],
-      images: sanityGuide?.seo?.socialImage ? [{ url: sanityGuide.seo.socialImage }] : [],
+      images: getOgImages(sanityGuide?.seo?.socialImage),
     },
   };
 }

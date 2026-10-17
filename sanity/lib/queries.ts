@@ -289,7 +289,7 @@ export const LOCATIONS_LIST_QUERY = defineQuery(`
 `);
 
 export const LOCATION_BY_SLUG_QUERY = defineQuery(`
-  *[_type == "location" && slug.current == $slug][0] {
+  *[_type == "location" && slug.current in $slugs][0] {
     _id,
     name,
     "slug": slug.current,

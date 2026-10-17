@@ -17,6 +17,11 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
+  // Cloudflare Images binding: required by OpenNext for /_next/image resizing + AVIF/WebP.
+  // Without it the worker returns the original file unoptimized.
+  "images": {
+    "binding": "IMAGES"
+  },
   "unsafe": {
     "bindings": [
       {

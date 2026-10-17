@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { siteConfig } from '@/config/site.config';
+import { applyTitleTemplate } from './seo-text';
 
 export interface PageSeoOptions {
   title: string;
@@ -12,6 +13,25 @@ export interface PageSeoOptions {
 export const SITE_NAME = 'Raahi International';
 export const SITE_URL = 'https://raahiinternational.com';
 
+function toAbsoluteUrl(url: string): string {
+  return url.startsWith('http') ? url : `${SITE_URL}${url.startsWith('/') ? url : `/${url}`}`;
+}
+
+/**
+ * Open Graph images for a page, falling back to the site default.
+ * Page-level `openGraph` objects replace the root layout's entirely (shallow merge),
+ * so every page that sets `openGraph` must include `images` from here.
+ */
+export function getOgImages(image?: string | null): Array<{ url: string; width?: number; height?: number; alt: string }> {
+  if (image && image !== siteConfig.defaultSeo.defaultOgImage) return [{ url: toAbsoluteUrl(image), alt: SITE_NAME }];
+  return [{ url: toAbsoluteUrl(siteConfig.defaultSeo.defaultOgImage), width: 1200, height: 630, alt: SITE_NAME }];
+}
+
+/** Twitter card images, falling back to the site default. */
+export function getTwitterImages(image?: string | null): string[] {
+  return [toAbsoluteUrl(image || siteConfig.defaultSeo.defaultOgImage)];
+}
+
 export function constructMetadata({
   title,
   description = siteConfig.defaultSeo.defaultDescription,
@@ -21,7 +41,7 @@ export function constructMetadata({
 }: PageSeoOptions): Metadata {
   const cleanPath = path ? (path.startsWith('/') ? path : `/${path}`) : '/';
   const canonicalUrl = cleanPath === '/' ? SITE_URL : `${SITE_URL}${cleanPath.replace(/\/+$/, '')}`;
-  const fullTitle = siteConfig.defaultSeo.titleTemplate.replace('%s', title);
+  const fullTitle = applyTitleTemplate(title);
 
   return {
     metadataBase: new URL(SITE_URL),
@@ -47,18 +67,14 @@ export function constructMetadata({
       description,
       url: canonicalUrl,
       siteName: SITE_NAME,
-      images: [
-        {
-          url: ogImage.startsWith('http') ? ogImage : `${SITE_URL}${ogImage}`,
-        },
-      ],
+      images: getOgImages(ogImage),
       type: 'website',
     },
     twitter: {
       card: 'summary_large_image',
       title: fullTitle,
       description,
-      images: [ogImage.startsWith('http') ? ogImage : `${SITE_URL}${ogImage}`],
+      images: getTwitterImages(ogImage),
     },
     robots: noindex ? { index: false, follow: false } : { index: true, follow: true },
   };

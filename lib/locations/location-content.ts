@@ -1,6 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
 import { CITY_LOCATIONS_DATA, CityLocationRecord } from './location-data';
 import { getSanityLocationsList, getSanityLocationBySlug } from '@/sanity/lib/fetch';
+import { resolveSupportedDestinations, toLocationKey, toLocationPathSlug } from './location-slugs';
+
+export { resolveSupportedDestinations };
 
 export interface LocationData {
   id: string;
@@ -57,6 +60,11 @@ function mapCityRecordToLocationData(city: CityLocationRecord): LocationData {
 
 export const staticLocations: LocationData[] = CITY_LOCATIONS_DATA.map(mapCityRecordToLocationData);
 
+function findStaticLocation(slug: unknown): LocationData | undefined {
+  const key = toLocationKey(slug);
+  return key ? staticLocations.find((l) => l.slug === key) : undefined;
+}
+
 export async function getPublishedLocations(): Promise<LocationData[]> {
   try {
     const sanityDocs = await getSanityLocationsList();
@@ -64,11 +72,11 @@ export async function getPublishedLocations(): Promise<LocationData[]> {
       return sanityDocs.map((doc) => ({
         id: doc._id || doc.slug,
         name: doc.name,
-        slug: doc.slug,
+        slug: toLocationKey(doc.slug),
         province: doc.province || 'Pakistan',
         h1: doc.h1 || `Cargo Services in ${doc.name}`,
-        seoTitle: doc.seo?.metaTitle || `Cargo Shipping ${doc.name}`,
-        seoDescription: doc.seo?.metaDescription || `Cargo shipping in ${doc.name}`,
+        seoTitle: doc.seo?.metaTitle || findStaticLocation(doc.slug)?.seoTitle || `Cargo Shipping ${doc.name}`,
+        seoDescription: doc.seo?.metaDescription || findStaticLocation(doc.slug)?.seoDescription || `Cargo shipping in ${doc.name}`,
         introduction: doc.introduction || `Cargo shipping in ${doc.name}`,
         serviceAvailable: doc.serviceAvailable ?? true,
         collectionAvailable: doc.collectionAvailable ?? true,
@@ -76,7 +84,7 @@ export async function getPublishedLocations(): Promise<LocationData[]> {
         branchAddress: doc.branchAddress || '',
         localCoverageText: doc.localCoverageText || '',
         supportedServices: doc.supportedServices || ['air-freight', 'sea-cargo'],
-        supportedDestinations: [],
+        supportedDestinations: resolveSupportedDestinations(findStaticLocation(doc.slug)?.supportedDestinations),
         status: 'published',
         isVerified: true,
         isIndexable: true,
@@ -102,11 +110,11 @@ export async function getPublishedLocations(): Promise<LocationData[]> {
 
       if (data && data.length > 0) {
         return data.map((b) => {
-          const match = staticLocations.find((l) => l.slug === b.slug);
+          const match = findStaticLocation(b.slug);
           return {
             id: b.id,
             name: b.name,
-            slug: b.slug,
+            slug: toLocationKey(b.slug),
             province: b.province || match?.province || 'Pakistan',
             h1: match?.h1 || b.h1 || `Cargo Services in ${b.name}`,
             seoTitle: match?.seoTitle || b.meta_title || `Cargo Shipping ${b.name}`,
@@ -118,7 +126,7 @@ export async function getPublishedLocations(): Promise<LocationData[]> {
             branchAddress: b.hub_address || match?.branchAddress || '',
             localCoverageText: match?.localCoverageText || b.hub_address || '',
             supportedServices: match?.supportedServices || ['air-freight', 'sea-cargo'],
-            supportedDestinations: match?.supportedDestinations || [],
+            supportedDestinations: resolveSupportedDestinations(match?.supportedDestinations),
             status: 'published',
             isVerified: true,
             isIndexable: true,
@@ -136,17 +144,21 @@ export async function getPublishedLocations(): Promise<LocationData[]> {
 }
 
 export async function getLocationBySlug(slug: string): Promise<LocationData | undefined> {
+  const key = toLocationKey(slug);
+  if (!key) return undefined;
+  const staticMatch = findStaticLocation(key);
+
   try {
-    const sanityDoc = await getSanityLocationBySlug(slug);
+    const sanityDoc = await getSanityLocationBySlug(key);
     if (sanityDoc) {
       return {
         id: sanityDoc._id || sanityDoc.slug,
         name: sanityDoc.name,
-        slug: sanityDoc.slug,
+        slug: toLocationKey(sanityDoc.slug),
         province: sanityDoc.province || 'Pakistan',
         h1: sanityDoc.h1 || `Cargo Services in ${sanityDoc.name}`,
-        seoTitle: sanityDoc.seo?.metaTitle || `Cargo Shipping ${sanityDoc.name}`,
-        seoDescription: sanityDoc.seo?.metaDescription || `Cargo shipping in ${sanityDoc.name}`,
+        seoTitle: sanityDoc.seo?.metaTitle || staticMatch?.seoTitle || `Cargo Shipping ${sanityDoc.name}`,
+        seoDescription: sanityDoc.seo?.metaDescription || staticMatch?.seoDescription || `Cargo shipping in ${sanityDoc.name}`,
         introduction: sanityDoc.introduction || `Cargo shipping in ${sanityDoc.name}`,
         serviceAvailable: sanityDoc.serviceAvailable ?? true,
         collectionAvailable: sanityDoc.collectionAvailable ?? true,
@@ -154,7 +166,7 @@ export async function getLocationBySlug(slug: string): Promise<LocationData | un
         branchAddress: sanityDoc.branchAddress || '',
         localCoverageText: sanityDoc.localCoverageText || '',
         supportedServices: sanityDoc.supportedServices || ['air-freight', 'sea-cargo'],
-        supportedDestinations: [],
+        supportedDestinations: resolveSupportedDestinations(staticMatch?.supportedDestinations),
         status: 'published',
         isVerified: true,
         isIndexable: true,
@@ -166,8 +178,7 @@ export async function getLocationBySlug(slug: string): Promise<LocationData | un
     console.warn(`getLocationBySlug Sanity fetch error for ${slug}, falling back:`, err);
   }
 
-  const match = staticLocations.find((l) => l.slug === slug);
-  if (match) return match;
+  if (staticMatch) return staticMatch;
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
   const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || '';
@@ -178,15 +189,16 @@ export async function getLocationBySlug(slug: string): Promise<LocationData | un
       const { data } = await supabase
         .from('locations')
         .select('*')
-        .eq('slug', slug)
+        .in('slug', [key, toLocationPathSlug(key)])
         .eq('is_active', true)
+        .limit(1)
         .maybeSingle();
 
       if (data) {
         return {
           id: data.id,
           name: data.name,
-          slug: data.slug,
+          slug: toLocationKey(data.slug),
           province: data.province || 'Pakistan',
           h1: data.h1 || `Cargo Services in ${data.name}`,
           seoTitle: data.meta_title || `Cargo Shipping ${data.name}`,
@@ -198,7 +210,7 @@ export async function getLocationBySlug(slug: string): Promise<LocationData | un
           branchAddress: data.hub_address || '',
           localCoverageText: data.hub_address || '',
           supportedServices: ['air-freight', 'sea-cargo'],
-          supportedDestinations: [],
+          supportedDestinations: resolveSupportedDestinations(),
           status: 'published',
           isVerified: true,
           isIndexable: true,
@@ -218,5 +230,5 @@ export function getPublishedStaticLocations(): LocationData[] {
 }
 
 export function getStaticLocationBySlug(slug: string): LocationData | undefined {
-  return staticLocations.find((l) => l.slug === slug);
+  return findStaticLocation(slug);
 }

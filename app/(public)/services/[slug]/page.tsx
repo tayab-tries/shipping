@@ -1,5 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { applyTitleTemplate, pickDescription, pickTitle } from '@/lib/seo/seo-text';
+import { getOgImages } from '@/lib/seo/metadata.service';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { PortableText, PortableTextComponents } from 'next-sanity';
 import { servicesRegistry, getEnabledServices } from '@/config/services.config';
@@ -116,6 +118,7 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
         canonical: 'https://raahiinternational.com/cargo-services',
       },
       openGraph: {
+        images: getOgImages(),
         title: `Cargo Services from Pakistan | ${siteConfig.name}`,
         description:
           'Air cargo and sea freight services from Pakistan worldwide. Door-to-door pickup, customs clearance, and global forwarding solutions.',
@@ -135,14 +138,15 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
     };
   }
 
-  const title =
-    sanityService?.seo?.metaTitle ||
-    (fallbackService ? `${fallbackService.seo.title} | ${siteConfig.name}` : `Cargo Services | ${siteConfig.name}`);
+  const title = pickTitle(
+    sanityService?.seo?.metaTitle,
+    fallbackService ? applyTitleTemplate(fallbackService.seo.title) : undefined
+  ) || applyTitleTemplate('Cargo Services');
 
-  const description =
-    sanityService?.seo?.metaDescription ||
-    fallbackService?.seo.description ||
-    'International cargo shipping services originating from Pakistan.';
+  const description = pickDescription(
+    sanityService?.seo?.metaDescription,
+    fallbackService?.seo.description
+  ) || 'International cargo shipping services originating from Pakistan.';
 
   const canonicalUrl = `https://raahiinternational.com/services/${slug}`;
 
@@ -158,7 +162,7 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
       url: canonicalUrl,
       siteName: 'Raahi International',
       type: 'website',
-      images: sanityService?.seo?.socialImage ? [{ url: sanityService.seo.socialImage }] : [],
+      images: getOgImages(sanityService?.seo?.socialImage),
     },
   };
 }

@@ -1,5 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { applyTitleTemplate, pickDescription, pickTitle } from '@/lib/seo/seo-text';
+import { getOgImages } from '@/lib/seo/metadata.service';
 import { notFound } from 'next/navigation';
 import {
   getPublishedStaticDestinations,
@@ -99,16 +101,17 @@ export async function generateMetadata({ params }: CityPageProps): Promise<Metad
   const cityName = sanityCity?.name || cityLogistics?.cityName || fallbackResult?.city.name || citySlug;
   const countryName = sanityCity?.country?.name || cityLogistics?.countryName || fallbackResult?.country.name || countrySlug;
 
-  const title =
-    sanityCity?.seo?.metaTitle ||
-    cityLogistics?.metaTitle ||
-    (fallbackResult ? `${fallbackResult.city.seoTitle} | ${siteConfig.name}` : `Cargo to ${cityName}, ${countryName} | ${siteConfig.name}`);
+  const title = pickTitle(
+    sanityCity?.seo?.metaTitle,
+    cityLogistics?.metaTitle,
+    fallbackResult?.city.seoTitle
+  ) || applyTitleTemplate(`Cargo to ${cityName}, ${countryName}`);
 
-  const description =
-    sanityCity?.seo?.metaDescription ||
-    cityLogistics?.metaDescription ||
-    fallbackResult?.city.seoDescription ||
-    `Cargo shipping services to ${cityName}, ${countryName}. Door-to-door delivery, customs clearance, and air & sea freight from Pakistan.`;
+  const description = pickDescription(
+    sanityCity?.seo?.metaDescription,
+    cityLogistics?.metaDescription,
+    fallbackResult?.city.seoDescription
+  ) || `Cargo shipping services to ${cityName}, ${countryName}. Door-to-door delivery, customs clearance, and air & sea freight from Pakistan.`;
 
   const canonicalUrl = `https://raahiinternational.com/destinations/${countrySlug}/${citySlug}`;
 
@@ -124,7 +127,7 @@ export async function generateMetadata({ params }: CityPageProps): Promise<Metad
       url: canonicalUrl,
       siteName: 'Raahi International',
       type: 'website',
-      images: sanityCity?.seo?.socialImage ? [{ url: sanityCity.seo.socialImage }] : [],
+      images: getOgImages(sanityCity?.seo?.socialImage),
     },
   };
 }

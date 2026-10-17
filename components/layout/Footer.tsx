@@ -9,6 +9,7 @@ import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.servic
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
 import { SanitySiteSettings, getSanityLocationsList } from '@/sanity/lib/fetch';
 import { getPublishedLocations } from '@/lib/locations/location-content';
+import { getLocationHref } from '@/lib/locations/location-slugs';
 
 interface FooterProps {
   sanitySiteSettings?: SanitySiteSettings | null;
@@ -24,8 +25,8 @@ export const Footer: React.FC<FooterProps> = async ({ sanitySiteSettings }) => {
   // Dynamically resolve published city locations
   const activeLocations =
     sanityLocations && sanityLocations.length > 0
-      ? sanityLocations.map((l) => ({ label: `${l.name} Hub`, href: `/locations/${l.slug}` }))
-      : fallbackLocations.map((l) => ({ label: `${l.name} Hub`, href: `/locations/${l.slug}` }));
+      ? sanityLocations.map((l) => ({ label: `${l.name} Hub`, href: getLocationHref(l.slug) }))
+      : fallbackLocations.map((l) => ({ label: `${l.name} Hub`, href: getLocationHref(l.slug) }));
 
   // Rule #1: Business contact fields as single source of contact info
   const brandName = sanitySiteSettings?.businessName || business.brandName || siteConfig.name;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { PortableText, PortableTextComponents } from 'next-sanity';
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown, { Components } from 'react-markdown';
 import rehypeSanitize from 'rehype-sanitize';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -12,10 +12,11 @@ export interface ArticleBodyProps {
 
 const portableTextComponents: PortableTextComponents = {
   block: {
+    // The page hero owns the only <h1>; body-level h1 blocks are demoted to h2
     h1: ({ children }) => (
-      <h1 className="text-display-sm sm:text-3xl font-extrabold text-brand-black pt-6 pb-2 border-b border-border tracking-tight my-4">
+      <h2 className="text-display-sm sm:text-3xl font-extrabold text-brand-black pt-6 pb-2 border-b border-border tracking-tight my-4">
         {children}
-      </h1>
+      </h2>
     ),
     h2: ({ children }) => (
       <h2 className="text-heading-xl font-bold text-brand-black pt-8 pb-2 border-b border-border tracking-tight my-4">
@@ -97,6 +98,20 @@ const portableTextComponents: PortableTextComponents = {
   },
 };
 
+// The page hero owns the only <h1>: markdown `# ` headings render as h2
+const markdownComponents: Components = {
+  h1: ({ children }) => (
+    <h2 className="text-display-sm sm:text-3xl font-extrabold text-brand-black pt-6 pb-2 border-b border-border tracking-tight my-4">
+      {children}
+    </h2>
+  ),
+};
+
+// Markdown bodies often repeat the article title as a leading `# Title` line; drop it
+function stripLeadingTitleHeading(markdown: string): string {
+  return markdown.replace(/^\s*#(?!#)[^\n]*\n+/, '');
+}
+
 export const ArticleBody: React.FC<ArticleBodyProps> = ({ body, contentMarkdown }) => {
   if (Array.isArray(body) && body.length > 0) {
     return (
@@ -110,8 +125,8 @@ export const ArticleBody: React.FC<ArticleBodyProps> = ({ body, contentMarkdown 
 
   return (
     <div className="prose max-w-prose text-brand-black leading-relaxed font-normal space-y-6">
-      <ReactMarkdown rehypePlugins={[rehypeSanitize]}>
-        {contentMarkdown}
+      <ReactMarkdown rehypePlugins={[rehypeSanitize]} components={markdownComponents}>
+        {stripLeadingTitleHeading(contentMarkdown)}
       </ReactMarkdown>
     </div>
   );

@@ -2,6 +2,7 @@ import { cache } from 'react';
 import { draftMode } from 'next/headers';
 import { client } from './client';
 import { isSanityConfigured, readToken } from '../env';
+import { toLocationKey, toLocationPathSlug } from '../../lib/locations/location-slugs';
 import {
   HOMEPAGE_FULL_QUERY,
   SITE_SETTINGS_QUERY,
@@ -362,7 +363,9 @@ export const getSanityLocationBySlug = cache(async function getSanityLocationByS
   try {
     const isDraft = await isDraftEnabled();
     const fetchClient = isDraft && readToken ? client.withConfig({ token: readToken }) : client;
-    return await fetchClient.fetch<SanityLocationDocument>(LOCATION_BY_SLUG_QUERY, { slug }, { stega: options?.stega ?? isDraft });
+    // Sanity may store either the short key (`lahore`) or the SEO path slug; match both
+    const slugs = [toLocationKey(slug), toLocationPathSlug(slug)].filter(Boolean);
+    return await fetchClient.fetch<SanityLocationDocument>(LOCATION_BY_SLUG_QUERY, { slugs }, { stega: options?.stega ?? isDraft });
   } catch (error) {
     console.warn(`[Sanity] getSanityLocationBySlug fetch error for slug ${slug}, using fallbacks:`, error);
     return null;

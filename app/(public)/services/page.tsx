@@ -1,5 +1,8 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { getBreadcrumbJsonLd, getItemListJsonLd } from '@/lib/seo/jsonld.service';
+import { applyTitleTemplate } from '@/lib/seo/seo-text';
+import { getOgImages } from '@/lib/seo/metadata.service';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Package, Plane, Ship, Truck, FileText, Building2, Luggage, ArrowRight, ShieldCheck, Search } from 'lucide-react';
@@ -10,19 +13,19 @@ import { Button } from '@/components/ui/Button';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
 import { getEnabledServices, ServiceConfigItem } from '@/config/services.config';
-import { siteConfig } from '@/config/site.config';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
 import { getSanityServicesList, SanityServiceDocument } from '@/sanity/lib/fetch';
 
 export const metadata: Metadata = {
-  title: `Core Cargo & Logistics Services | ${siteConfig.name}`,
+  title: applyTitleTemplate('Core Cargo & Logistics Services'),
   description:
     'Explore international air freight, ocean sea cargo, door-to-door shipping, and commercial cargo services originating from Pakistan.',
   alternates: {
     canonical: 'https://raahiinternational.com/services',
   },
   openGraph: {
-    title: `Core Cargo & Logistics Services | ${siteConfig.name}`,
+    images: getOgImages(),
+    title: applyTitleTemplate('Core Cargo & Logistics Services'),
     description:
       'Explore international air freight, ocean sea cargo, door-to-door shipping, and commercial cargo services originating from Pakistan.',
     url: 'https://raahiinternational.com/services',
@@ -81,8 +84,24 @@ export default async function ServicesHubPage() {
     { label: 'Services', url: '/services' },
   ];
 
+  const breadcrumbJsonLd = getBreadcrumbJsonLd(breadcrumbs);
+  const itemListJsonLd = getItemListJsonLd('Cargo & Logistics Services', [
+    { name: 'Air & Sea Cargo Services', url: '/cargo-services' },
+    ...services
+      .filter((s) => !['air-freight', 'sea-cargo', 'door-to-door'].includes(s.slug))
+      .map((s) => ({ name: s.name, url: `/services/${s.slug}` })),
+  ]);
+
   return (
     <div className="w-full bg-background">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+      />
       {/* 1. Services Hero Header */}
       <section className="relative w-full bg-brand-black text-white py-16 lg:py-24 border-b border-border-dark overflow-hidden">
         <div className="absolute inset-0 z-0 bg-brand-black-deep">

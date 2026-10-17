@@ -1,4 +1,5 @@
 import { defineLocations } from 'sanity/presentation';
+import { getLocationHref } from '../../lib/locations/location-slugs';
 
 export const resolve = {
   locations: {
@@ -81,7 +82,7 @@ export const resolve = {
         locations: [
           {
             title: doc?.title ? `Location: ${doc.title}` : 'Location Hub',
-            href: doc?.slug ? `/locations/${doc.slug}` : '/locations',
+            href: getLocationHref(doc?.slug),
           },
           {
             title: 'Locations Network Directory',

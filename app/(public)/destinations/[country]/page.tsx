@@ -1,5 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { applyTitleTemplate, pickDescription, pickTitle } from '@/lib/seo/seo-text';
+import { getOgImages } from '@/lib/seo/metadata.service';
 import { notFound } from 'next/navigation';
 import {
   getPublishedDestinations,
@@ -52,14 +54,15 @@ export async function generateMetadata({ params }: CountryPageProps): Promise<Me
     };
   }
 
-  const title =
-    sanityDestination?.seo?.metaTitle ||
-    (fallbackDestination ? `${fallbackDestination.seoTitle} | ${siteConfig.name}` : `Cargo Shipping | ${siteConfig.name}`);
+  const title = pickTitle(
+    sanityDestination?.seo?.metaTitle,
+    fallbackDestination ? applyTitleTemplate(fallbackDestination.seoTitle) : undefined
+  ) || applyTitleTemplate('Cargo Shipping');
 
-  const description =
-    sanityDestination?.seo?.metaDescription ||
-    fallbackDestination?.seoDescription ||
-    'International cargo shipping services from Pakistan.';
+  const description = pickDescription(
+    sanityDestination?.seo?.metaDescription,
+    fallbackDestination?.seoDescription
+  ) || 'International cargo shipping services from Pakistan.';
 
   const canonicalUrl = `https://raahiinternational.com/destinations/${country}`;
 
@@ -75,7 +78,7 @@ export async function generateMetadata({ params }: CountryPageProps): Promise<Me
       url: canonicalUrl,
       siteName: 'Raahi International',
       type: 'website',
-      images: sanityDestination?.seo?.socialImage ? [{ url: sanityDestination.seo.socialImage }] : [],
+      images: getOgImages(sanityDestination?.seo?.socialImage),
     },
   };
 }

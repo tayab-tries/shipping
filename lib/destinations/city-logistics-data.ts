@@ -515,7 +515,7 @@ export const cityLogisticsProfiles: Record<string, CityLogisticsProfile> = {
     metroAreaName: 'Emirate of Abu Dhabi & Al Ain',
     h1: 'Cargo Shipping to Abu Dhabi from Pakistan (Air & Sea Freight Doorstep Service)',
     metaTitle: 'Cargo to Abu Dhabi from Pakistan | Air & Ocean Door Delivery | Raahi International',
-    metaDescription: 'Door-to-door cargo shipping from Pakistan to Abu Dhabi, Mussafah, and Al Ain. Air cargo via Zayed Airport (AUH) and ocean freight via Khalifa Port. Customs cleared delivery.',
+    metaDescription: 'Cargo from Pakistan to Abu Dhabi in 2–4 days by air or 5–8 days by sea. Door-to-door delivery to Mussafah and Al Ain, customs cleared. Get a quote today.',
     editorialOverview:
       'As the capital and government center of the United Arab Emirates, Abu Dhabi represents a vital destination for heavy industrial machinery, corporate relocations, and Pakistani diaspora family shipments. Raahi International serves the entire emirate via direct air services into Zayed International Airport (AUH), supported by ocean container services docking at Khalifa Port—the region’s state-of-the-art semi-automated container gateway. We maintain dedicated scheduled linehaul trucks connecting central Abu Dhabi, the extensive Mussafah industrial district, and the inland oasis city of Al Ain.',
     gateways: [
@@ -616,7 +616,7 @@ export const cityLogisticsProfiles: Record<string, CityLogisticsProfile> = {
     metroAreaName: 'Riyadh Metropolitan Province',
     h1: 'Cargo Shipping to Riyadh from Pakistan (Air Freight & Dry Port Sea Cargo)',
     metaTitle: 'Cargo to Riyadh from Pakistan | Air Freight & Sea Delivery | Raahi International',
-    metaDescription: 'Direct cargo shipping from Pakistan to Riyadh. Air cargo via King Khalid Airport (RUH) and ocean container clearance via Riyadh Dry Port. Serving Al Batha, Olaya, and Modon.',
+    metaDescription: 'Air cargo from Pakistan to Riyadh in 3–5 business days, sea cargo in 14–18 days. Door-to-door delivery with FASAH customs clearance. Request a quote now.',
     editorialOverview:
       'Riyadh, the political and economic capital of the Kingdom of Saudi Arabia, is experiencing massive infrastructure expansion under Vision 2030, fueling substantial demand for commercial goods, construction supplies, and personal diaspora cargo from Pakistan. Raahi International manages scheduled air cargo flights into King Khalid International Airport (RUH) Cargo Village. For ocean freight from Karachi Port, maritime containers dock at King Abdulaziz Port in Dammam before transiting via bonded intermodal rail directly into the Riyadh Dry Port (Riyadh Container Terminal - RCT) for centralized customs clearance and doorstep delivery.',
     gateways: [
@@ -708,7 +708,7 @@ export const cityLogisticsProfiles: Record<string, CityLogisticsProfile> = {
     metroAreaName: 'Makkah Province / Western Region',
     h1: 'Cargo Shipping to Jeddah from Pakistan (Air Freight & Jeddah Islamic Port Sea Cargo)',
     metaTitle: 'Cargo to Jeddah from Pakistan | Red Sea Air & Ocean Delivery | Raahi International',
-    metaDescription: 'Direct cargo shipping from Pakistan to Jeddah, Makkah, and the Western Province. Air cargo via King Abdulaziz Airport (JED) and ocean shipping via Jeddah Islamic Port.',
+    metaDescription: 'Ship cargo from Pakistan to Jeddah and Makkah: air in 3–5 business days, sea in 10–14 days. Door-to-door with ZATCA customs clearance. Get a quote today.',
     editorialOverview:
       'Jeddah is Saudi Arabia’s commercial gateway on the Red Sea and the principal logistics conduit for the holy cities of Makkah and Madinah. Raahi International operates high-frequency air routes into King Abdulaziz International Airport (JED), alongside direct maritime shipping connections from Karachi into Jeddah Islamic Port (RSGT and DP World terminals). Our logistics framework provides specialized handling for retail textile distributors in historic Al Balad, hospitality suppliers, and Pakistani diaspora expatriates across the Western Province.',
     gateways: [
@@ -803,7 +803,7 @@ export const cityLogisticsProfiles: Record<string, CityLogisticsProfile> = {
     metroAreaName: 'Greater Toronto Area (GTA)',
     h1: 'Cargo Shipping to Toronto from Pakistan (Air Freight & Doorstep Delivery)',
     metaTitle: 'Cargo to Toronto from Pakistan | GTA Air & Ocean Door Delivery | Raahi International',
-    metaDescription: 'Reliable air and sea cargo from Pakistan to Toronto, Mississauga, Brampton, and the GTA. YYZ Pearson customs clearance and intermodal container rail forwarding.',
+    metaDescription: 'Cargo from Pakistan to Toronto and the GTA: air in 4–7 business days, sea in 30–36 days. Door delivery with CBSA customs release. Request your quote today.',
     editorialOverview:
       'Home to the largest Pakistani diaspora community in North America, the Greater Toronto Area (GTA) maintains vigorous commercial, family, and student shipping links with Pakistan. Raahi International manages scheduled air cargo arrivals at Toronto Pearson International Airport (YYZ), backed by professional Canada Border Services Agency (CBSA) customs clearance. For ocean shipments originating in Karachi, containers sail into Port of Halifax or Port of Montreal before transferring via CN and CP intermodal rail directly to the Brampton and Vaughan intermodal terminals for final-mile palletized and parcel delivery across Brampton, Mississauga, Scarborough, and Milton.',
     gateways: [
@@ -907,7 +907,7 @@ export const cityLogisticsProfiles: Record<string, CityLogisticsProfile> = {
     metroAreaName: 'Metro Vancouver & Fraser Valley',
     h1: 'Cargo Shipping to Vancouver from Pakistan (Air Freight & Port Sea Cargo)',
     metaTitle: 'Cargo to Vancouver from Pakistan | BC Air & Ocean Door Delivery | Raahi International',
-    metaDescription: 'Direct cargo services from Pakistan to Vancouver, Surrey, Richmond, and the Fraser Valley. Air cargo via YVR and container shipping via Port of Vancouver.',
+    metaDescription: 'Air cargo from Pakistan to Vancouver in 5–8 business days, sea in 32–38 days. Door delivery across Surrey and Richmond, CBSA cleared. Get a quote today.',
     editorialOverview:
       'Serving the thriving commercial and diaspora centers of British Columbia’s Lower Mainland, Vancouver is Canada’s primary Pacific trade gateway. Raahi International coordinates air cargo flights into Vancouver International Airport (YVR) South Cargo Terminal, complemented by ocean container shipping direct into the Port of Vancouver (Roberts Bank Deltaport and Centerm). Our regional fleet provides seamless door delivery across Vancouver, Richmond, Burnaby, and the extensive Pakistani communities of Surrey and Abbotsford in the Fraser Valley.',
     gateways: [
@@ -1002,7 +1002,7 @@ export const cityLogisticsProfiles: Record<string, CityLogisticsProfile> = {
     metroAreaName: 'New York Tri-State Area',
     h1: 'Cargo Shipping to New York from Pakistan (Air & Ocean Doorstep Delivery)',
     metaTitle: 'Cargo to New York from Pakistan | JFK & Port of NY Door Delivery | Raahi International',
-    metaDescription: 'Direct cargo shipping from Pakistan to New York City, Brooklyn, Queens, and Long Island. JFK Airport air cargo and Port of NY/NJ ocean freight with US Customs clearance.',
+    metaDescription: 'Cargo from Pakistan to New York in 4–6 business days by air or 26–32 days by sea. Door delivery to Brooklyn and Queens, CBP cleared. Request a quote today.',
     editorialOverview:
       'New York City and the surrounding Tri-State Metropolitan Area host one of the most prominent Pakistani-American commercial and cultural communities in the United States. Raahi International provides scheduled transatlantic air cargo connections into John F. Kennedy International Airport (JFK) and Newark Liberty (EWR). For ocean freight, containers discharge at the Port of New York and New Jersey (Maher Terminals and Port Newark Container Terminal - PNCT), moving through bonded container freight stations before final delivery across Brooklyn, Queens, Manhattan, Long Island, and Northern New Jersey.',
     gateways: [
@@ -1107,7 +1107,7 @@ export const cityLogisticsProfiles: Record<string, CityLogisticsProfile> = {
     metroAreaName: 'Greater Chicagoland & Midwest',
     h1: 'Cargo Shipping to Chicago from Pakistan (Air Freight & Rail Intermodal Sea Cargo)',
     metaTitle: 'Cargo to Chicago from Pakistan | Air & Ocean Door Delivery | Raahi International',
-    metaDescription: 'Direct cargo shipping from Pakistan to Chicago, Devon Avenue, Schaumburg, and Naperville. O’Hare (ORD) air freight and Midwest intermodal container rail forwarding.',
+    metaDescription: 'Air cargo from Pakistan to Chicago in 4–7 business days, sea in 28–34 days. Door delivery to Devon Avenue and the suburbs, CBP cleared. Get a quote today.',
     editorialOverview:
       'Chicago serves as the industrial heart and transport crossroads of the American Midwest, anchoring an extensive and prosperous Pakistani diaspora. Raahi International routes air freight directly into Chicago O’Hare International Airport (ORD)—one of the busiest air cargo campuses in the Western Hemisphere. For ocean container cargo, shipments arriving from Karachi at US East Coast ports transfer seamlessly via high-speed intermodal rail directly into the BNSF Logistics Park Chicago (Joliet) and Union Pacific Global IV railheads for centralized deconsolidation and doorstep delivery across Cook, DuPage, and Lake counties.',
     gateways: [
@@ -1212,7 +1212,7 @@ export const cityLogisticsProfiles: Record<string, CityLogisticsProfile> = {
     metroAreaName: 'Greater Houston & Texas Gulf Coast',
     h1: 'Cargo Shipping to Houston from Pakistan (Air Freight & Port Houston Sea Cargo)',
     metaTitle: 'Cargo to Houston from Pakistan | Texas Air & Port Houston Sea Delivery | Raahi International',
-    metaDescription: 'Direct cargo shipping from Pakistan to Houston, Sugar Land, Katy, and Hillcroft. Air cargo via IAH and direct ocean container services via Port Houston. Door-to-door delivery.',
+    metaDescription: 'Cargo from Pakistan to Houston: air in 4–7 business days, sea in 26–34 days via Port Houston. Door delivery to Sugar Land and Katy. Request a quote today.',
     editorialOverview:
       'Houston is the energy capital of the world and the commercial powerhouse of the American South, home to one of the fastest-growing and most prosperous Pakistani-American diaspora communities. Raahi International operates scheduled air cargo routes into George Bush Intercontinental Airport (IAH) Air Cargo Center. For sea freight, maritime containers sail directly into Port Houston (Barbours Cut and Bayport container terminals) on the Houston Ship Channel—providing the fastest ocean transit route for heavy industrial machinery, energy sector valves, and full household relocations heading into Texas.',
     gateways: [
