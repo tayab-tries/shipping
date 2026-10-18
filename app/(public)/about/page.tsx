@@ -1,5 +1,8 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { getAboutPageJsonLd, getBreadcrumbJsonLd } from '@/lib/seo/jsonld.service';
+import { pickDescription, pickTitle } from '@/lib/seo/seo-text';
+import { getOgImages } from '@/lib/seo/metadata.service';
 import Link from 'next/link';
 import {
   Plane,
@@ -26,16 +29,19 @@ import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
 import { getSanityAboutPageData, getSanitySiteSettingsData, getSanityLocationsList, SanityLocationDocument } from '@/sanity/lib/fetch';
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
+import { getLocationHref } from '@/lib/locations/location-slugs';
 
 export async function generateMetadata(): Promise<Metadata> {
   const sanityAbout = await getSanityAboutPageData();
 
-  const title =
-    sanityAbout?.seo?.metaTitle ||
-    `About Raahi International | International Cargo & Logistics Services`;
-  const description =
-    sanityAbout?.seo?.metaDescription ||
-    `Learn about Raahi International Cargo & Logistics Services, providing air freight, sea freight, customs clearance and door-to-door international shipping solutions from Pakistan.`;
+  const title = pickTitle(
+    sanityAbout?.seo?.metaTitle,
+    'About Raahi International | Cargo & Logistics Pakistan'
+  );
+  const description = pickDescription(
+    sanityAbout?.seo?.metaDescription,
+    'About Raahi International: air freight, sea cargo, customs clearance and door-to-door shipping from Pakistan to the UK, UAE, USA, Canada and KSA.'
+  );
 
   return {
     title,
@@ -49,7 +55,7 @@ export async function generateMetadata(): Promise<Metadata> {
       url: 'https://raahiinternational.com/about',
       siteName: 'Raahi International',
       type: 'website',
-      images: sanityAbout?.seo?.socialImage ? [{ url: sanityAbout.seo.socialImage }] : undefined,
+      images: getOgImages(sanityAbout?.seo?.socialImage),
     },
   };
 }
@@ -161,7 +167,7 @@ export default async function AboutUsPage() {
 
   const citiesList =
     sanityLocations && sanityLocations.length > 0
-      ? sanityLocations.map((l: SanityLocationDocument) => ({ name: l.name, href: `/locations/${l.slug}`, flag: '📍' }))
+      ? sanityLocations.map((l: SanityLocationDocument) => ({ name: l.name, href: getLocationHref(l.slug), flag: '📍' }))
       : defaultCitiesList;
 
   const processSteps = [
@@ -171,8 +177,19 @@ export default async function AboutUsPage() {
     { step: '04', title: '4. Deliver', desc: 'Your cargo moves through the selected international shipping process toward its final destination.' },
   ];
 
+  const breadcrumbJsonLd = getBreadcrumbJsonLd(breadcrumbs);
+  const aboutPageJsonLd = getAboutPageJsonLd(heroIntro);
+
   return (
     <div className="w-full bg-background text-foreground font-sans">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutPageJsonLd) }}
+      />
       {/* 1. HERO SECTION */}
       <section className="relative w-full bg-brand-navy py-16 lg:py-24 border-b border-border-dark text-white overflow-hidden">
         <div className="absolute inset-0 bg-radial-gradient opacity-40 pointer-events-none" />

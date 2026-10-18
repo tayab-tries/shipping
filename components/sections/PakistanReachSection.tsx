@@ -5,6 +5,7 @@ import { MapPin, ArrowRight } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
+import { getLocationHref } from '@/lib/locations/location-slugs';
 
 export interface PickupCityData {
   name: string;
@@ -94,7 +95,7 @@ export const PakistanReachSection: React.FC<PakistanReachSectionProps> = ({
 
             <div className="divide-y divide-border-dark">
               {verifiedCities.map((city, idx) => {
-                const targetHref = city.href || `/locations/${city.name.toLowerCase()}`;
+                const targetHref = city.href || getLocationHref(city.name);
 
                 return (
                   <Link

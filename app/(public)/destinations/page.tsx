@@ -1,5 +1,8 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { getBreadcrumbJsonLd, getItemListJsonLd } from '@/lib/seo/jsonld.service';
+import { applyTitleTemplate } from '@/lib/seo/seo-text';
+import { getOgImages } from '@/lib/seo/metadata.service';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Globe, ArrowRight, Search } from 'lucide-react';
@@ -11,20 +14,21 @@ import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
 import { getPublishedDestinations, DestinationCountryData } from '@/lib/destinations/destination-content';
 import { getPublishedLocations } from '@/lib/locations/location-content';
-import { siteConfig } from '@/config/site.config';
 import { keyDestinationCities } from '@/config/nav.config';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
 import { getSanityDestinationsList, getSanityLocationsList, SanityDestinationCountryDocument } from '@/sanity/lib/fetch';
+import { getLocationHref } from '@/lib/locations/location-slugs';
 
 export const metadata: Metadata = {
-  title: `International Cargo Destinations from Pakistan | ${siteConfig.name}`,
+  title: applyTitleTemplate('International Cargo Destinations from Pakistan'),
   description:
     'Explore international cargo shipping destination corridors from Pakistan including UK, USA, UAE, Canada, Saudi Arabia, and global ports.',
   alternates: {
     canonical: 'https://raahiinternational.com/destinations',
   },
   openGraph: {
-    title: `International Cargo Destinations from Pakistan | ${siteConfig.name}`,
+    images: getOgImages(),
+    title: applyTitleTemplate('International Cargo Destinations from Pakistan'),
     description:
       'Explore international cargo shipping destination corridors from Pakistan including UK, USA, UAE, Canada, Saudi Arabia, and global ports.',
     url: 'https://raahiinternational.com/destinations',
@@ -96,8 +100,22 @@ export default async function DestinationsHubPage() {
     { label: 'Destinations', url: '/destinations' },
   ];
 
+  const breadcrumbJsonLd = getBreadcrumbJsonLd(breadcrumbs);
+  const itemListJsonLd = getItemListJsonLd(
+    'International Cargo Destinations from Pakistan',
+    destinations.map((d) => ({ name: `Cargo to ${d.name}`, url: `/destinations/${d.slug}` }))
+  );
+
   return (
     <div className="w-full bg-background">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+      />
       {/* 01 HUB HERO (Dark / Photo-led) */}
       <section className="relative w-full bg-brand-black text-white py-16 lg:py-24 border-b border-border-dark overflow-hidden">
         <div className="absolute inset-0 z-0 bg-brand-black-deep">
@@ -462,7 +480,7 @@ export default async function DestinationsHubPage() {
                     {originLocations.map((loc) => (
                       <Link
                         key={loc.slug}
-                        href={`/locations/${loc.slug}`}
+                        href={getLocationHref(loc.slug)}
                         className="group min-h-[56px] py-3.5 px-4 rounded flex items-center justify-between hover:bg-surface transition-colors"
                       >
                         <div className="space-y-0.5">

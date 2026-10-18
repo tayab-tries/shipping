@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { ArrowRight, MapPin } from 'lucide-react';
 import { getPublishedLocations } from '@/lib/locations/location-content';
+import { getLocationHref, toLocationKey, toLocationKeys } from '@/lib/locations/location-slugs';
 
 export interface RelatedLocationsBarProps {
   supportedOrigins?: string[];
@@ -12,12 +13,12 @@ export const RelatedLocationsBar: React.FC<RelatedLocationsBarProps> = async ({
 }) => {
   const publishedLocations = await getPublishedLocations();
 
-  const related = supportedOrigins.length > 0
+  // Null/broken CMS reference entries are dropped before matching
+  const originKeys = toLocationKeys(supportedOrigins);
+
+  const related = originKeys.length > 0
     ? publishedLocations.filter(
-        (l) =>
-          supportedOrigins.includes(l.slug) ||
-          supportedOrigins.includes(l.name.toLowerCase()) ||
-          supportedOrigins.some((so) => l.slug.includes(so.toLowerCase()))
+        (l) => originKeys.includes(l.slug) || originKeys.includes(toLocationKey(l.name))
       )
     : publishedLocations.slice(0, 3);
 
@@ -33,7 +34,7 @@ export const RelatedLocationsBar: React.FC<RelatedLocationsBarProps> = async ({
         {related.map((loc) => (
           <Link
             key={loc.slug}
-            href={`/locations/${loc.slug}`}
+            href={getLocationHref(loc.slug)}
             className="p-4 flex items-center justify-between hover:bg-surface-subtle transition-colors group"
           >
             <div className="flex items-center gap-3">

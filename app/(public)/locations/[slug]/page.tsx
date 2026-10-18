@@ -1,13 +1,18 @@
 import React from 'react';
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { applyTitleTemplate, pickDescription, pickTitle } from '@/lib/seo/seo-text';
+import { getOgImages } from '@/lib/seo/metadata.service';
+import { notFound, permanentRedirect } from 'next/navigation';
 import {
   getPublishedLocations,
   getLocationBySlug,
+  getStaticLocationBySlug,
   LocationData,
+  resolveSupportedDestinations,
 } from '@/lib/locations/location-content';
+import { getLocationHref, toLocationKey, toLocationPathSlug } from '@/lib/locations/location-slugs';
 import { siteConfig } from '@/config/site.config';
-import { getBreadcrumbJsonLd } from '@/lib/seo/jsonld.service';
+import { getBreadcrumbJsonLd, getLocalBusinessJsonLd } from '@/lib/seo/jsonld.service';
 import { LocationHero } from '@/components/locations/LocationHero';
 import { OperationalBadge } from '@/components/locations/OperationalBadge';
 import { LocationServiceGrid } from '@/components/locations/LocationServiceGrid';
@@ -25,16 +30,15 @@ interface LocationPageProps {
 
 /**
  * Pre-render static params for published location routes.
+ * Locations are keyed by short slug internally; routes use the canonical SEO path segment.
  */
 export async function generateStaticParams() {
   const sanityLocations = await getSanityLocationsList();
-  if (sanityLocations && sanityLocations.length > 0) {
-    return sanityLocations.map((loc) => ({ slug: loc.slug }));
-  }
-  const publishedLocations = await getPublishedLocations();
-  return publishedLocations.map((location) => ({
-    slug: location.slug,
-  }));
+  const slugs =
+    sanityLocations && sanityLocations.length > 0
+      ? sanityLocations.map((loc) => loc.slug)
+      : (await getPublishedLocations()).map((location) => location.slug);
+  return slugs.map(toLocationPathSlug).filter(Boolean).map((slug) => ({ slug }));
 }
 
 /**
@@ -42,8 +46,9 @@ export async function generateStaticParams() {
  */
 export async function generateMetadata({ params }: LocationPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const sanityLocation = await getSanityLocationBySlug(slug, { stega: false });
-  const fallbackLocation = await getLocationBySlug(slug);
+  const key = toLocationKey(slug);
+  const sanityLocation = await getSanityLocationBySlug(key, { stega: false });
+  const fallbackLocation = await getLocationBySlug(key);
 
   if (!sanityLocation && !fallbackLocation) {
     return {
@@ -51,17 +56,20 @@ export async function generateMetadata({ params }: LocationPageProps): Promise<M
     };
   }
 
-  const title =
-    sanityLocation?.seo?.metaTitle ||
-    fallbackLocation?.seoTitle ||
-    `Cargo Shipping ${fallbackLocation?.name || ''} | ${siteConfig.name}`;
+  const staticLocation = getStaticLocationBySlug(key);
+  const title = pickTitle(
+    sanityLocation?.seo?.metaTitle,
+    fallbackLocation?.seoTitle,
+    staticLocation?.seoTitle
+  ) || applyTitleTemplate(`Cargo Shipping ${fallbackLocation?.name || ''}`);
 
-  const description =
-    sanityLocation?.seo?.metaDescription ||
-    fallbackLocation?.seoDescription ||
-    'International cargo shipping services from Pakistan.';
+  const description = pickDescription(
+    sanityLocation?.seo?.metaDescription,
+    fallbackLocation?.seoDescription,
+    staticLocation?.seoDescription
+  ) || 'International cargo shipping services from Pakistan.';
 
-  const canonicalUrl = `https://raahiinternational.com/locations/${slug}`;
+  const canonicalUrl = `https://raahiinternational.com${getLocationHref(key)}`;
 
   return {
     title,
@@ -75,16 +83,23 @@ export async function generateMetadata({ params }: LocationPageProps): Promise<M
       url: canonicalUrl,
       siteName: 'Raahi International',
       type: 'website',
-      images: sanityLocation?.seo?.socialImage ? [{ url: sanityLocation.seo.socialImage }] : [],
+      images: getOgImages(sanityLocation?.seo?.socialImage),
     },
   };
 }
 
 export default async function LocationDetailPage({ params }: LocationPageProps) {
   const { slug } = await params;
+  const key = toLocationKey(slug);
+
+  // Short or legacy slugs (e.g. /locations/lahore) resolve to the single canonical SEO path
+  if (key && slug !== toLocationPathSlug(key)) {
+    permanentRedirect(getLocationHref(key));
+  }
+
   const [sanityLocation, fallbackLocation, business, sanitySiteSettings] = await Promise.all([
-    getSanityLocationBySlug(slug),
-    getLocationBySlug(slug),
+    getSanityLocationBySlug(key),
+    getLocationBySlug(key),
     getPublishedBusinessSettings(),
     getSanitySiteSettingsData(),
   ]);
@@ -98,9 +113,9 @@ export default async function LocationDetailPage({ params }: LocationPageProps) 
   const activeWhatsapp = sanitySiteSettings?.whatsappNumber || business?.whatsappNumber;
 
   const location: LocationData = {
-    id: sanityLocation?._id || fallbackLocation?.id || slug,
+    id: sanityLocation?._id || fallbackLocation?.id || key,
     name: sanityLocation?.name || fallbackLocation?.name || 'Pakistan City',
-    slug,
+    slug: key,
     province: sanityLocation?.province || fallbackLocation?.province || 'Pakistan',
     h1: sanityLocation?.h1 || fallbackLocation?.h1 || `Cargo Services in ${sanityLocation?.name || fallbackLocation?.name}`,
     seoTitle: sanityLocation?.seo?.metaTitle || fallbackLocation?.seoTitle || `Cargo Shipping ${sanityLocation?.name || fallbackLocation?.name}`,
@@ -112,7 +127,7 @@ export default async function LocationDetailPage({ params }: LocationPageProps) 
     branchAddress: sanityLocation?.branchAddress || fallbackLocation?.branchAddress || '',
     localCoverageText: sanityLocation?.localCoverageText || fallbackLocation?.localCoverageText || '',
     supportedServices: sanityLocation?.supportedServices || fallbackLocation?.supportedServices || ['air-freight', 'sea-cargo'],
-    supportedDestinations: fallbackLocation?.supportedDestinations || [],
+    supportedDestinations: resolveSupportedDestinations(fallbackLocation?.supportedDestinations),
     status: 'published',
     isVerified: true,
     isIndexable: true,
@@ -124,7 +139,7 @@ export default async function LocationDetailPage({ params }: LocationPageProps) 
   const breadcrumbs = [
     { label: 'Home', url: '/' },
     { label: 'Locations', url: '/locations' },
-    { label: location.name, url: `/locations/${location.slug}` },
+    { label: location.name, url: getLocationHref(location.slug) },
   ];
 
   const breadcrumbJsonLd = getBreadcrumbJsonLd(breadcrumbs);
@@ -145,20 +160,17 @@ export default async function LocationDetailPage({ params }: LocationPageProps) 
     serviceType: 'International Cargo Shipping',
   };
 
-  // LocalBusiness schema rendered ONLY if verified physical branch exists
+  // LocalBusiness only for staffed branches; other cities keep Service + areaServed schema above
   const localBusinessJsonLd =
     location.hasPhysicalBranch && location.branchAddress
-      ? {
-          '@context': 'https://schema.org',
-          '@type': 'LocalBusiness',
-          name: `${siteConfig.name} - ${location.name} Branch`,
-          address: {
-            '@type': 'PostalAddress',
-            addressLocality: location.name,
-            streetAddress: location.branchAddress,
-            addressCountry: 'PK',
-          },
-        }
+      ? getLocalBusinessJsonLd({
+          key: location.slug,
+          name: location.name,
+          province: location.province,
+          url: getLocationHref(location.slug),
+          branchAddress: location.branchAddress,
+          description: location.seoDescription,
+        })
       : null;
 
   return (

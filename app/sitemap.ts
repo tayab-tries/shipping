@@ -8,6 +8,7 @@ import {
 } from '@/sanity/lib/fetch';
 import { getPublishedDestinations } from '@/lib/destinations/destination-content';
 import { getPublishedStaticArticles } from '@/lib/guides/guide-content';
+import { getLocationHref } from '@/lib/locations/location-slugs';
 
 export const revalidate = 86400;
 
@@ -61,7 +62,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const rawDate = '_updatedAt' in location ? location._updatedAt : undefined;
     const locationDate = rawDate ? new Date(rawDate) : STABLE_DATE;
     entries.push({
-      url: `${baseUrl}/locations/${location.slug}`,
+      url: `${baseUrl}${getLocationHref(location.slug)}`,
       lastModified: isNaN(locationDate.getTime()) ? STABLE_DATE : locationDate,
       changeFrequency: 'weekly',
       priority: 0.85,
@@ -99,11 +100,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
-  // 4. Dynamically map ONLY published & verified educational guides from Sanity (excluding redirected guides)
+  // 4. Dynamically map ONLY published & verified educational guides from Sanity
   const sanityGuides = await getSanityGuidesList();
   const fallbackArticles = getPublishedStaticArticles();
   const activeGuides = sanityGuides.length > 0 ? sanityGuides : fallbackArticles;
-  const filteredGuides = activeGuides.filter((a) => a.slug && a.slug !== 'air-vs-sea-cargo');
+  const filteredGuides = activeGuides.filter((a) => a.slug);
   for (const guide of filteredGuides) {
     const rawDate =
       ('updatedAt' in guide ? guide.updatedAt : undefined) ||

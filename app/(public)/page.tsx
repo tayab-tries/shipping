@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Metadata } from 'next';
+import { getOgImages, getTwitterImages } from '@/lib/seo/metadata.service';
 import { HeroSection } from '@/components/sections/HeroSection';
 import { QuickQuoteTeaser } from '@/components/sections/QuickQuoteTeaser';
 import { UseCasesSection } from '@/components/sections/UseCasesSection';
@@ -13,6 +14,7 @@ import { TrustSection } from '@/components/sections/TrustSection';
 import { TestimonialsSection } from '@/components/sections/TestimonialsSection';
 import { FaqSection } from '@/components/sections/FaqSection';
 import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
+import { InternalLinkGrid } from '@/components/sections/InternalLinkGrid';
 import { getPublishedHomepageBlocks } from '@/lib/cms/homepage.service';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
 import { getSanityHomepageData, getSanitySiteSettingsData } from '@/sanity/lib/fetch';
@@ -41,13 +43,13 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       url: 'https://raahiinternational.com/',
       siteName: 'Raahi International',
-      images: socialImage ? [{ url: socialImage }] : [],
+      images: getOgImages(socialImage),
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: socialImage ? [socialImage] : [],
+      images: getTwitterImages(socialImage),
     },
   };
 }
@@ -66,6 +68,7 @@ export default async function HomePage() {
     telephone: sanitySiteSettings?.phone || business.phonePrimary,
     email: sanitySiteSettings?.email || business.emailInfo,
     address: sanitySiteSettings?.address || business.addressPrimary,
+    sameAs: Object.values(sanitySiteSettings?.socialLinks ?? {}),
   });
 
   return (
@@ -209,6 +212,9 @@ export default async function HomePage() {
           whatsappNumber={activeWhatsapp}
         />
       )}
+
+      {/* 14. INTERNAL LINKING MESH ARCHITECTURE */}
+      <InternalLinkGrid />
     </div>
   );
 }

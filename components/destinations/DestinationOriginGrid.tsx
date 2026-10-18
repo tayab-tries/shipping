@@ -4,6 +4,7 @@ import { ArrowRight, MapPin } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { getPublishedLocations } from '@/lib/locations/location-content';
+import { getLocationHref, toLocationKey, toLocationKeys } from '@/lib/locations/location-slugs';
 
 export interface DestinationOriginGridProps {
   countryName: string;
@@ -11,24 +12,26 @@ export interface DestinationOriginGridProps {
   supportedOrigins?: string[];
 }
 
-export const DestinationOriginGrid: React.FC<DestinationOriginGridProps> = async ({
+export async function DestinationOriginGrid({
   countryName,
   countrySlug,
   supportedOrigins,
-}) => {
+}: DestinationOriginGridProps) {
   const publishedLocations = await getPublishedLocations();
 
+  // Null/broken CMS reference entries are dropped before matching
+  const originKeys = toLocationKeys(supportedOrigins);
+
   const activeOrigins =
-    supportedOrigins && supportedOrigins.length > 0
+    originKeys.length > 0
       ? publishedLocations.filter(
-          (loc) =>
-            supportedOrigins.includes(loc.slug) ||
-            supportedOrigins.includes(loc.name.toLowerCase()) ||
-            supportedOrigins.some((so) => loc.slug.includes(so.toLowerCase()))
+          (loc) => originKeys.includes(loc.slug) || originKeys.includes(toLocationKey(loc.name))
         )
       : publishedLocations;
 
-  if (activeOrigins.length === 0) return null;
+  const originsToRender = activeOrigins.length > 0 ? activeOrigins : publishedLocations;
+
+  if (originsToRender.length === 0) return null;
 
   return (
     <section className="w-full bg-surface py-20 lg:py-28 border-b border-border text-brand-black">
@@ -37,11 +40,27 @@ export const DestinationOriginGrid: React.FC<DestinationOriginGridProps> = async
           badge="Pakistan Dispatch Hubs"
           title={`Origin Dispatch Cities to ${countryName}`}
           subtitle={`Doorstep collection and export handling available from key origin cities in Pakistan connecting with ${countryName}.`}
-          className="mb-14"
+          className="mb-10"
         />
 
+        {/* Editorial Contextual Cross-Linking Banner */}
+        <div className="mb-10 p-6 bg-surface-subtle border border-border rounded-lg text-sm text-slate-700 leading-relaxed shadow-xs">
+          <p className="font-medium text-slate-800">
+            Ship directly to {countryName} from our primary Pakistan dispatch hubs including{' '}
+            <Link href="/locations/international-cargo-services-in-lahore" className="font-semibold text-brand-black hover:text-accent underline underline-offset-2">Lahore Cargo Office</Link>,{' '}
+            <Link href="/locations/international-cargo-services-in-karachi" className="font-semibold text-brand-black hover:text-accent underline underline-offset-2">Karachi Cargo Hub</Link>,{' '}
+            <Link href="/locations/international-cargo-services-in-islamabad" className="font-semibold text-brand-black hover:text-accent underline underline-offset-2">Islamabad Cargo Branch</Link>,{' '}
+            <Link href="/locations/international-cargo-services-in-sialkot" className="font-semibold text-brand-black hover:text-accent underline underline-offset-2">Sialkot Export Cargo Hub</Link>,{' '}
+            <Link href="/locations/international-cargo-services-in-faisalabad" className="font-semibold text-brand-black hover:text-accent underline underline-offset-2">Faisalabad Cargo Center</Link>,{' '}
+            <Link href="/locations/international-cargo-services-in-rawalpindi" className="font-semibold text-brand-black hover:text-accent underline underline-offset-2">Rawalpindi Cargo Office</Link>,{' '}
+            <Link href="/locations/international-cargo-services-in-multan" className="font-semibold text-brand-black hover:text-accent underline underline-offset-2">Multan Cargo Office</Link>, and{' '}
+            <Link href="/locations/international-cargo-services-in-peshawar" className="font-semibold text-brand-black hover:text-accent underline underline-offset-2">Peshawar Cargo Branch</Link>.
+            Every origin facility provides complete doorstep collection, commercial packing, export customs clearance, and air or sea consolidation to {countryName}.
+          </p>
+        </div>
+
         <div className="bg-surface-subtle rounded-md border border-border divide-y divide-border shadow-xs overflow-hidden">
-          {activeOrigins.map((loc) => (
+          {originsToRender.map((loc) => (
             <div
               key={loc.slug}
               className="p-6 lg:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:bg-surface/80 transition-colors group"
@@ -54,13 +73,13 @@ export const DestinationOriginGrid: React.FC<DestinationOriginGridProps> = async
                 </div>
                 <h3 className="text-heading-md font-bold text-brand-black group-hover:text-accent transition-colors flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-slate-500 group-hover:text-accent transition-colors shrink-0" />
-                  <Link href={`/locations/${loc.slug}`}>{loc.name}</Link>
+                  <Link href={getLocationHref(loc.slug)}>{loc.name}</Link>
                 </h3>
               </div>
 
               <div className="flex items-center gap-4 md:justify-end md:w-1/2">
                 <Link
-                  href={`/locations/${loc.slug}`}
+                  href={getLocationHref(loc.slug)}
                   className="text-xs font-mono font-semibold text-brand-black hover:text-accent flex items-center gap-1 transition-colors"
                 >
                   <span>Explore Origin Hub</span>
@@ -78,4 +97,4 @@ export const DestinationOriginGrid: React.FC<DestinationOriginGridProps> = async
       </Container>
     </section>
   );
-};
+}

@@ -4,6 +4,8 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
     formats: ['image/avif', 'image/webp'],
+    // Capped at 2560px (default goes to 3840) to avoid oversized variants for full-bleed heroes
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2560],
     minimumCacheTTL: 31536000,
     remotePatterns: [
       {

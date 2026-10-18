@@ -1,8 +1,8 @@
 import { siteConfig } from '@/config/site.config';
 import { BreadcrumbItem } from '@/types/content';
-import { ORGANIZATION_ID, getRootGraphJsonLd } from './schema.service';
+import { ORGANIZATION_ID, getRootGraphJsonLd, getLocalBusinessJsonLd, getItemListJsonLd, getAboutPageJsonLd } from './schema.service';
 
-export { getRootGraphJsonLd };
+export { getRootGraphJsonLd, getLocalBusinessJsonLd, getItemListJsonLd, getAboutPageJsonLd };
 
 export function getOrganizationJsonLd() {
   return {

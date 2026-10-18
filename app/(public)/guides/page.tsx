@@ -1,5 +1,8 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { getBreadcrumbJsonLd, getItemListJsonLd } from '@/lib/seo/jsonld.service';
+import { applyTitleTemplate } from '@/lib/seo/seo-text';
+import { getOgImages } from '@/lib/seo/metadata.service';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Calendar, Clock, ArrowRight, ShieldCheck } from 'lucide-react';
@@ -10,19 +13,19 @@ import { Button } from '@/components/ui/Button';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
 import { getPublishedStaticArticles, GuideArticleData } from '@/lib/guides/guide-content';
-import { siteConfig } from '@/config/site.config';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
 import { getSanityGuidesList, SanityGuideDocument } from '@/sanity/lib/fetch';
 
 export const metadata: Metadata = {
-  title: `Customs & Shipping Guides | ${siteConfig.name}`,
+  title: applyTitleTemplate('Customs & Shipping Guides'),
   description:
     'Educational resources, export compliance advice, packing guidelines, and shipping mode comparisons for cargo originating in Pakistan.',
   alternates: {
     canonical: 'https://raahiinternational.com/guides',
   },
   openGraph: {
-    title: `Customs & Shipping Guides | ${siteConfig.name}`,
+    images: getOgImages(),
+    title: applyTitleTemplate('Customs & Shipping Guides'),
     description:
       'Educational resources, export compliance advice, packing guidelines, and shipping mode comparisons for cargo originating in Pakistan.',
     url: 'https://raahiinternational.com/guides',
@@ -98,8 +101,22 @@ export default async function GuidesHubPage({ searchParams }: GuidesPageProps) {
     { label: 'Guides', url: '/guides' },
   ];
 
+  const breadcrumbJsonLd = getBreadcrumbJsonLd(breadcrumbs);
+  const itemListJsonLd = getItemListJsonLd(
+    'Customs & Shipping Guides',
+    allArticles.map((a) => ({ name: a.title, url: `/guides/${a.slug}` }))
+  );
+
   return (
     <div className="w-full bg-background text-brand-black">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+      />
       {/* 01 HERO (Light / Editorial Header) */}
       <section className="w-full bg-surface py-12 lg:py-16 border-b border-border">
         <Container>

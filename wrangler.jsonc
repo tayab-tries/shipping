@@ -17,6 +17,11 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
+  // Cloudflare Images binding: required by OpenNext for /_next/image resizing + AVIF/WebP.
+  // Without it the worker returns the original file unoptimized.
+  "images": {
+    "binding": "IMAGES"
+  },
   "unsafe": {
     "bindings": [
       {
@@ -29,5 +34,32 @@
         }
       }
     ]
+  },
+  // Staging: separate Worker (cargo-app-staging) on workers.dev only, no custom domains.
+  // Deploy with: npx opennextjs-cloudflare build && npx opennextjs-cloudflare deploy --env staging
+  "env": {
+    "staging": {
+      "workers_dev": true,
+      "routes": [],
+      "vars": {
+        "NEXT_PUBLIC_SITE_URL": "https://raahiinternational.com"
+      },
+      "images": {
+        "binding": "IMAGES"
+      },
+      "unsafe": {
+        "bindings": [
+          {
+            "name": "RATE_LIMITER",
+            "type": "ratelimit",
+            "namespace_id": "1000",
+            "simple": {
+              "limit": 10,
+              "period": 60
+            }
+          }
+        ]
+      }
+    }
   }
 }

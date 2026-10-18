@@ -1,5 +1,8 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { getBreadcrumbJsonLd, getItemListJsonLd } from '@/lib/seo/jsonld.service';
+import { applyTitleTemplate } from '@/lib/seo/seo-text';
+import { getOgImages } from '@/lib/seo/metadata.service';
 import Link from 'next/link';
 import Image from 'next/image';
 import { MapPin, ArrowRight, ShieldCheck, CheckCircle2, Search } from 'lucide-react';
@@ -10,19 +13,20 @@ import { Button } from '@/components/ui/Button';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
 import { getPublishedLocations, LocationData } from '@/lib/locations/location-content';
-import { siteConfig } from '@/config/site.config';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
 import { getSanityLocationsList, SanityLocationDocument } from '@/sanity/lib/fetch';
+import { getLocationHref, toLocationKey } from '@/lib/locations/location-slugs';
 
 export const metadata: Metadata = {
-  title: `Pakistan Cargo Pickup Locations & Origin Hubs | ${siteConfig.name}`,
+  title: applyTitleTemplate('Pakistan Cargo Pickup Locations & Origin Hubs'),
   description:
     'Explore international cargo shipping pickup centers and origin hubs across major cities in Pakistan.',
   alternates: {
     canonical: 'https://raahiinternational.com/locations',
   },
   openGraph: {
-    title: `Pakistan Cargo Pickup Locations & Origin Hubs | ${siteConfig.name}`,
+    images: getOgImages(),
+    title: applyTitleTemplate('Pakistan Cargo Pickup Locations & Origin Hubs'),
     description:
       'Explore international cargo shipping pickup centers and origin hubs across major cities in Pakistan.',
     url: 'https://raahiinternational.com/locations',
@@ -40,7 +44,7 @@ export default async function LocationsHubPage() {
   const locations: LocationData[] =
     sanityLocations.length > 0
       ? sanityLocations.map((doc: SanityLocationDocument) => {
-          const fallback = fallbackLocations.find((f) => f.slug === doc.slug);
+          const fallback = fallbackLocations.find((f) => f.slug === toLocationKey(doc.slug));
           return {
             id: doc._id || doc.slug,
             name: doc.name,
@@ -70,8 +74,22 @@ export default async function LocationsHubPage() {
     { label: 'Locations', url: '/locations' },
   ];
 
+  const breadcrumbJsonLd = getBreadcrumbJsonLd(breadcrumbs);
+  const itemListJsonLd = getItemListJsonLd(
+    'Pakistan Cargo Pickup Locations',
+    locations.map((l) => ({ name: `Cargo Services in ${l.name}`, url: getLocationHref(l.slug) }))
+  );
+
   return (
     <div className="w-full bg-background">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+      />
       {/* 1. Locations Hero */}
       <section className="relative w-full bg-brand-black text-white py-16 lg:py-24 border-b border-border-dark overflow-hidden">
         <div className="absolute inset-0 z-0 bg-brand-black-deep">
@@ -182,7 +200,7 @@ export default async function LocationsHubPage() {
               {locations.map((city) => (
                 <Link
                   key={city.slug}
-                  href={`/locations/${city.slug}`}
+                  href={getLocationHref(city.slug)}
                   className="group bg-brand-navy rounded-md border border-border-dark hover:border-accent p-6 space-y-4 transition-all hover:-translate-y-1 shadow-lg flex flex-col justify-between"
                 >
                   <div className="space-y-3">
@@ -300,7 +318,7 @@ export default async function LocationsHubPage() {
                     </div>
                     <h3 className="text-heading-md font-bold text-brand-black group-hover:text-accent transition-colors flex items-center gap-2">
                       <MapPin className="w-4 h-4 text-slate-500 group-hover:text-accent transition-colors shrink-0" />
-                      <Link href={`/locations/${city.slug}`}>{city.name}</Link>
+                      <Link href={getLocationHref(city.slug)}>{city.name}</Link>
                     </h3>
                   </div>
 
@@ -319,13 +337,13 @@ export default async function LocationsHubPage() {
 
                   <div className="flex items-center gap-4 md:justify-end md:w-1/3">
                     <Link
-                      href={`/locations/${city.slug}`}
+                      href={getLocationHref(city.slug)}
                       className="text-xs font-mono font-semibold text-brand-black hover:text-accent flex items-center gap-1 transition-colors"
                     >
                       <span>View City Hub</span>
                       <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-accent" />
                     </Link>
-                    <Link href={`/quote?origin=${city.slug}`}>
+                    <Link href={`/quote?origin=${toLocationKey(city.slug)}`}>
                       <Button variant="outline" size="sm">
                         Quote
                       </Button>

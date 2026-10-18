@@ -1,13 +1,14 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { applyTitleTemplate } from '@/lib/seo/seo-text';
+import { getOgImages } from '@/lib/seo/metadata.service';
 import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { TrackingViewController } from '@/components/tracking/TrackingViewController';
-import { siteConfig } from '@/config/site.config';
 
 export const metadata: Metadata = {
-  title: `Track Your Cargo | ${siteConfig.name}`,
+  title: applyTitleTemplate('Track Your Cargo'),
   description:
     'Track international cargo shipments, air cargo dispatches, and sea cargo originating in Pakistan.',
   robots: {
@@ -18,7 +19,8 @@ export const metadata: Metadata = {
     canonical: 'https://raahiinternational.com/track',
   },
   openGraph: {
-    title: `Track Your Cargo | ${siteConfig.name}`,
+    images: getOgImages(),
+    title: applyTitleTemplate('Track Your Cargo'),
     description:
       'Track international cargo shipments, air cargo dispatches, and sea cargo originating in Pakistan.',
     url: 'https://raahiinternational.com/track',

@@ -18,6 +18,17 @@ import ReactMarkdown from 'react-markdown';
 import rehypeSanitize from 'rehype-sanitize';
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
 
+// Legacy service pages folded into /cargo-services; matched on the exact path only
+const legacyServiceRewrites: Record<string, string> = {
+  '/services/air-freight': '/cargo-services#part-1-air-cargo',
+  '/services/sea-cargo': '/cargo-services#part-2-sea-cargo',
+};
+
+function rewriteLegacyServiceHref(href: string): string {
+  const path = href.split(/[?#]/)[0].replace(/\/+$/, '');
+  return legacyServiceRewrites[path] ?? href;
+}
+
 export interface LocationBlogArticleProps {
   cityName: string;
   introduction: string;
@@ -159,12 +170,7 @@ export const LocationBlogArticle: React.FC<LocationBlogArticleProps> = ({
                       {sec.links && sec.links.length > 0 && (
                         <div className="pt-4 border-t border-border flex flex-wrap items-center gap-3">
                           {sec.links.map((link, kIdx) => {
-                            const cleanHref =
-                              link.href === '/services/air-freight'
-                                ? '/cargo-services#part-1-air-cargo'
-                                : link.href === '/services/sea-cargo'
-                                ? '/cargo-services#part-2-sea-cargo'
-                                : link.href;
+                            const cleanHref = rewriteLegacyServiceHref(link.href);
                             return (
                               <Link
                                 key={kIdx}

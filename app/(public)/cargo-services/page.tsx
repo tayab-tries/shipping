@@ -1,5 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { applyTitleTemplate, pickDescription, pickTitle } from '@/lib/seo/seo-text';
+import { getOgImages } from '@/lib/seo/metadata.service';
 import Link from 'next/link';
 import {
   Plane,
@@ -17,7 +19,6 @@ import { Container } from '@/components/ui/Container';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
-import { siteConfig } from '@/config/site.config';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
 import { getBreadcrumbJsonLd } from '@/lib/seo/jsonld.service';
 import { getSanitySiteSettingsData, getSanityCargoPricingData, SanityCargoRateItem, SanityCargoComparisonRow } from '@/sanity/lib/fetch';
@@ -26,12 +27,14 @@ import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
 export async function generateMetadata(): Promise<Metadata> {
   const sanityCargoPricing = await getSanityCargoPricingData({ stega: false });
 
-  const title =
-    sanityCargoPricing?.seo?.metaTitle ||
-    `Air & Sea Cargo Rates & Services from Pakistan | ${siteConfig.name}`;
-  const description =
-    sanityCargoPricing?.seo?.metaDescription ||
-    'Raahi International offers air and sea cargo services from Pakistan worldwide. Ship personal and commercial cargo with air freight, sea freight, customs clearance and delivery solutions.';
+  const title = pickTitle(
+    sanityCargoPricing?.seo?.metaTitle,
+    applyTitleTemplate('Air & Sea Cargo Rates from Pakistan')
+  );
+  const description = pickDescription(
+    sanityCargoPricing?.seo?.metaDescription,
+    'Air and sea cargo from Pakistan to the UK, UAE, USA, Canada and Saudi Arabia. Compare rates and transit times, then request a door-to-door quote.'
+  );
 
   return {
     title,
@@ -45,7 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
       url: 'https://raahiinternational.com/cargo-services',
       siteName: 'Raahi International',
       type: 'website',
-      images: sanityCargoPricing?.seo?.socialImage ? [{ url: sanityCargoPricing.seo.socialImage }] : [],
+      images: getOgImages(sanityCargoPricing?.seo?.socialImage),
     },
   };
 }
@@ -728,6 +731,18 @@ export default async function CargoServicesPage() {
                   </a>
                   <Link href="/services/commercial-cargo" className="block p-2.5 rounded-xs bg-surface-subtle hover:bg-border transition-colors font-semibold text-brand-black flex items-center justify-between">
                     <span>Commercial Cargo</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-accent-dark" />
+                  </Link>
+                  <Link href="/services/excess-baggage" className="block p-2.5 rounded-xs bg-surface-subtle hover:bg-border transition-colors font-semibold text-brand-black flex items-center justify-between">
+                    <span>Excess Baggage</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-accent-dark" />
+                  </Link>
+                  <Link href="/guides/packing-cargo-guide" className="block p-2.5 rounded-xs bg-surface-subtle hover:bg-border transition-colors font-semibold text-brand-black flex items-center justify-between">
+                    <span>Packaging & Crating Guide</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-accent-dark" />
+                  </Link>
+                  <Link href="/guides/export-customs-documentation-guide" className="block p-2.5 rounded-xs bg-surface-subtle hover:bg-border transition-colors font-semibold text-brand-black flex items-center justify-between">
+                    <span>Customs Documentation Guide</span>
                     <ArrowRight className="w-3.5 h-3.5 text-accent-dark" />
                   </Link>
                 </div>

@@ -1,17 +1,19 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { applyTitleTemplate } from '@/lib/seo/seo-text';
+import { getOgImages } from '@/lib/seo/metadata.service';
 import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { QuoteFormController } from '@/components/quote/QuoteFormController';
 import { getPublishedStaticLocations } from '@/lib/locations/location-content';
+import { toLocationKey } from '@/lib/locations/location-slugs';
 import { getPublishedStaticDestinations } from '@/lib/destinations/destination-content';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
 import { cargoTypes, CargoType } from '@/types/content';
-import { siteConfig } from '@/config/site.config';
 
 export const metadata: Metadata = {
-  title: `Request a Shipping Quote | ${siteConfig.name}`,
+  title: applyTitleTemplate('Request a Shipping Quote'),
   description:
     'Request a custom quotation for air freight, ocean sea cargo, door-to-door shipping, or commercial freight originating in Pakistan.',
   robots: {
@@ -22,7 +24,8 @@ export const metadata: Metadata = {
     canonical: 'https://raahiinternational.com/quote',
   },
   openGraph: {
-    title: `Request a Shipping Quote | ${siteConfig.name}`,
+    images: getOgImages(),
+    title: applyTitleTemplate('Request a Shipping Quote'),
     description:
       'Request a custom quotation for air freight, ocean sea cargo, door-to-door shipping, or commercial freight originating in Pakistan.',
     url: 'https://raahiinternational.com/quote',
@@ -51,8 +54,10 @@ export default async function PublicQuotePage({ searchParams }: QuotePageProps) 
   ]);
 
   // Validate prefill origin query param
-  const validOrigin = publishedLocations.some((l) => l.slug === rawOrigin)
-    ? rawOrigin
+  // Accepts short keys (?origin=lahore) as well as legacy long slugs
+  const originKey = toLocationKey(rawOrigin);
+  const validOrigin = publishedLocations.some((l) => l.slug === originKey)
+    ? originKey
     : undefined;
 
   // Validate prefill destination query param
