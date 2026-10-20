@@ -5,6 +5,7 @@ import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { getPublishedLocations } from '@/lib/locations/location-content';
 import { getLocationHref, toLocationKey, toLocationKeys } from '@/lib/locations/location-slugs';
+import { getLahoreRouteForCountry, LAHORE_LOCATION_KEY } from '@/lib/routes/lahore-content';
 
 export interface DestinationOriginGridProps {
   countryName: string;
@@ -33,6 +34,8 @@ export async function DestinationOriginGrid({
 
   if (originsToRender.length === 0) return null;
 
+  const lahoreRoute = getLahoreRouteForCountry(countrySlug);
+
   return (
     <section className="w-full bg-surface py-20 lg:py-28 border-b border-border text-brand-black">
       <Container>
@@ -57,6 +60,15 @@ export async function DestinationOriginGrid({
             <Link href="/locations/international-cargo-services-in-peshawar" className="font-semibold text-brand-black hover:text-accent underline underline-offset-2">Peshawar Cargo Branch</Link>.
             Every origin facility provides complete doorstep collection, commercial packing, export customs clearance, and air or sea consolidation to {countryName}.
           </p>
+          {lahoreRoute && (
+            <Link
+              href={lahoreRoute.path}
+              className="mt-4 inline-flex items-center gap-2 font-semibold text-brand-black hover:text-accent underline underline-offset-2"
+            >
+              Shipping from Lahore: {lahoreRoute.breadcrumbs[lahoreRoute.breadcrumbs.length - 1].label} rates and transit times
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          )}
         </div>
 
         <div className="bg-surface-subtle rounded-md border border-border divide-y divide-border shadow-xs overflow-hidden">
@@ -78,6 +90,15 @@ export async function DestinationOriginGrid({
               </div>
 
               <div className="flex items-center gap-4 md:justify-end md:w-1/2">
+                {lahoreRoute && loc.slug === LAHORE_LOCATION_KEY && (
+                  <Link
+                    href={lahoreRoute.path}
+                    className="text-xs font-mono font-semibold text-brand-black hover:text-accent flex items-center gap-1 transition-colors"
+                  >
+                    <span>Shipping from Lahore</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-accent" />
+                  </Link>
+                )}
                 <Link
                   href={getLocationHref(loc.slug)}
                   className="text-xs font-mono font-semibold text-brand-black hover:text-accent flex items-center gap-1 transition-colors"
