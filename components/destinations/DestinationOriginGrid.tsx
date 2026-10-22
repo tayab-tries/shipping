@@ -10,12 +10,15 @@ import { getLahoreRouteForCountry, LAHORE_LOCATION_KEY } from '@/lib/routes/laho
 export interface DestinationOriginGridProps {
   countryName: string;
   countrySlug: string;
+  /** Set on destination city pages, so the Lahore route link can use city-specific anchor text. */
+  citySlug?: string;
   supportedOrigins?: string[];
 }
 
 export async function DestinationOriginGrid({
   countryName,
   countrySlug,
+  citySlug,
   supportedOrigins,
 }: DestinationOriginGridProps) {
   const publishedLocations = await getPublishedLocations();
@@ -35,6 +38,9 @@ export async function DestinationOriginGrid({
   if (originsToRender.length === 0) return null;
 
   const lahoreRoute = getLahoreRouteForCountry(countrySlug);
+  const lahoreRouteLabel = lahoreRoute
+    ? (citySlug && lahoreRoute.cityLinkLabels?.[citySlug]) || lahoreRoute.countryLinkLabel || lahoreRoute.linkLabel
+    : undefined;
 
   return (
     <section className="w-full bg-surface py-20 lg:py-28 border-b border-border text-brand-black">
@@ -61,13 +67,16 @@ export async function DestinationOriginGrid({
             Every origin facility provides complete doorstep collection, commercial packing, export customs clearance, and air or sea consolidation to {countryName}.
           </p>
           {lahoreRoute && (
-            <Link
-              href={lahoreRoute.path}
-              className="mt-4 inline-flex items-center gap-2 font-semibold text-brand-black hover:text-accent underline underline-offset-2"
-            >
-              Shipping from Lahore: {lahoreRoute.breadcrumbs[lahoreRoute.breadcrumbs.length - 1].label} rates and transit times
+            <p className="mt-4 flex items-center gap-2 font-medium text-slate-800">
+              <Link
+                href={lahoreRoute.path}
+                className="font-semibold text-brand-black hover:text-accent underline underline-offset-2"
+              >
+                {lahoreRouteLabel}
+              </Link>
+              <span>: rates and transit times</span>
               <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
+            </p>
           )}
         </div>
 

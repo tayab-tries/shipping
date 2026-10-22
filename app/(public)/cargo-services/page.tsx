@@ -98,13 +98,13 @@ export default async function CargoServicesPage() {
   const fallbackAirCargoRates: SanityCargoRateItem[] = [
     { country: 'USA', flag: '🇺🇸', rate: 'Rs. 2,750 – 2,950/KG', deliveryTime: '10–15 Days', quoteHref: '/quote?service=air-freight' },
     { country: 'United Kingdom', flag: '🇬🇧', rate: 'Rs. 1,750 – 1,850/KG', deliveryTime: '10–12 Days', quoteHref: '/quote?service=air-freight' },
-    { country: 'UAE', flag: '🇦🇪', rate: 'Rs. 1,350 – 1,450/KG', deliveryTime: '10–17 Days', quoteHref: '/quote?service=air-freight' },
+    { country: 'UAE', flag: '🇦🇪', rate: 'Rs. 1,350 – 1,450/KG', deliveryTime: '3–4 Days', quoteHref: '/quote?service=air-freight' },
     { country: 'Canada', flag: '🇨🇦', rate: 'Rs. 2,850 – 2,950/KG', deliveryTime: '10–15 Days', quoteHref: '/quote?service=air-freight' },
     { country: 'Saudi Arabia', flag: '🇸🇦', rate: 'Rs. 2,150 – 2,250/KG', deliveryTime: '10–20 Days', quoteHref: '/quote?service=air-freight' },
     { country: 'Europe', flag: '🇪🇺', rate: 'Rs. 2,350 – 2,450/KG', deliveryTime: '10–15 Days', quoteHref: '/quote?service=air-freight' },
     { country: 'Australia', flag: '🇦🇺', rate: 'Rs. 2,350 – 2,450/KG', deliveryTime: '10–15 Days', quoteHref: '/quote?service=air-freight' },
     { country: 'Scotland', flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿', rate: 'Rs. 2,350/KG', deliveryTime: '10–15 Days', quoteHref: '/quote?service=air-freight' },
-    { country: 'Dubai', flag: '🇦🇪', rate: 'Rs. 1,350 – 1,450/KG', deliveryTime: '10–17 Days', quoteHref: '/quote?service=air-freight' },
+    { country: 'Dubai', flag: '🇦🇪', rate: 'Rs. 1,350 – 1,450/KG', deliveryTime: '3–4 Days', quoteHref: '/quote?service=air-freight' },
   ];
   const airCargoRates = sanityCargoPricing?.airCargoSection?.rates?.length ? sanityCargoPricing.airCargoSection.rates : fallbackAirCargoRates;
 

@@ -264,6 +264,7 @@ export default async function DestinationCityDetailPage({ params }: CityPageProp
       <DestinationOriginGrid
         countryName={`${cityName}, ${countryName}`}
         countrySlug={countrySlug}
+        citySlug={citySlug}
         supportedOrigins={supportedOrigins}
       />
 

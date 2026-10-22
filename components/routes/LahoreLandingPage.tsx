@@ -13,6 +13,7 @@ import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
 import {
   ContentBlock,
   LahorePage,
+  LAHORE_CITY_PAGE,
   LAHORE_CITY_PATH,
   LAHORE_LOCATION_KEY,
   LAHORE_ROUTE_PAGES,
@@ -23,7 +24,7 @@ const BASE_URL = 'https://raahiinternational.com';
 // Internal links use client-side navigation; external citations open in a new tab
 const markdownComponents: Components = {
   a: ({ href = '', children }) =>
-    href.startsWith('/') ? (
+    href.startsWith('/') || href.startsWith('#') ? (
       <Link href={href} className="font-semibold text-brand-black underline underline-offset-2 hover:text-accent-dark">
         {children}
       </Link>
@@ -48,8 +49,15 @@ function Markdown({ text }: { text: string }) {
   );
 }
 
+// Schema text must be plain: keep link labels, drop link targets and bold markers
+function toPlainText(markdown: string) {
+  return markdown.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/\*\*/g, '');
+}
+
 function Block({ block }: { block: ContentBlock }) {
   switch (block.type) {
+    case 'h3':
+      return <h3 className="text-heading-md font-bold text-foreground pt-2">{block.text}</h3>;
     case 'p':
       return (
         <p className="text-body-md text-slate-800 leading-relaxed">
@@ -125,15 +133,22 @@ export function getLahorePageJsonLd(page: LahorePage) {
   const schemas: object[] = [getBreadcrumbJsonLd(page.breadcrumbs)];
 
   if (page.service) {
+    const { name, areaServed, airRate, seaRate } = page.service;
+    const perKgOffer = (mode: 'Air' | 'Sea', [minPrice, maxPrice]: [number, number]) => ({
+      '@type': 'Offer',
+      name: `${mode} ${name.charAt(0).toLowerCase()}${name.slice(1)}`,
+      priceSpecification: { '@type': 'UnitPriceSpecification', minPrice, maxPrice, priceCurrency: 'PKR', unitCode: 'KGM' },
+    });
     schemas.push({
       '@context': 'https://schema.org',
       '@type': 'Service',
-      name: page.service.serviceType,
-      serviceType: page.service.serviceType,
+      name,
+      serviceType: 'Door-to-door international cargo',
       description: page.seoDescription,
       url: `${BASE_URL}${page.path}`,
       provider: { '@id': ORGANIZATION_ID },
-      areaServed: { '@type': 'Country', name: page.service.areaServed.name, identifier: page.service.areaServed.code },
+      areaServed: { '@type': 'Country', name: areaServed.name, identifier: areaServed.code },
+      offers: [perKgOffer('Air', airRate), perKgOffer('Sea', seaRate)],
     });
   } else {
     schemas.push({
@@ -155,7 +170,7 @@ export function getLahorePageJsonLd(page: LahorePage) {
       mainEntity: page.faqs.map((faq) => ({
         '@type': 'Question',
         name: faq.question,
-        acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+        acceptedAnswer: { '@type': 'Answer', text: toPlainText(faq.answer) },
       })),
     });
   }
@@ -219,17 +234,25 @@ export function LahoreLandingPage({ page, whatsappNumber }: LahoreLandingPagePro
                 <section id="faqs" className="bg-surface rounded-md border border-border p-6 sm:p-8 space-y-6 shadow-xs scroll-mt-28">
                   <h2 className="text-heading-lg sm:text-2xl font-extrabold text-foreground tracking-tight border-b border-border pb-3 flex items-center gap-2">
                     <HelpCircle className="w-5 h-5 text-accent-dark shrink-0" />
-                    <span>Frequently asked questions</span>
+                    <span>{page.faqTitle ?? 'Frequently asked questions'}</span>
                   </h2>
                   <div className="space-y-6 divide-y divide-border/60">
                     {page.faqs.map((faq, idx) => (
                       <div key={idx} className={idx > 0 ? 'pt-6 space-y-2' : 'space-y-2'}>
                         <h3 className="text-heading-md font-bold text-foreground">{faq.question}</h3>
-                        <p className="text-body-md text-slate-700 leading-relaxed">{faq.answer}</p>
+                        <p className="text-body-md text-slate-700 leading-relaxed">
+                          <Markdown text={faq.answer} />
+                        </p>
                       </div>
                     ))}
                   </div>
                 </section>
+              )}
+
+              {page.closing && (
+                <p className="text-body-md text-slate-800 leading-relaxed border-l-4 border-accent pl-4">
+                  <Markdown text={page.closing} />
+                </p>
               )}
             </div>
 
@@ -269,10 +292,10 @@ export function LahoreLandingPage({ page, whatsappNumber }: LahoreLandingPagePro
                 <p className="text-xs font-mono font-bold text-slate-500 uppercase tracking-wider">Shipping from Lahore</p>
                 <div className="space-y-2.5">
                   {page.path !== LAHORE_CITY_PATH && (
-                    <SidebarLink href={LAHORE_CITY_PATH} label="Cargo services in Lahore" />
+                    <SidebarLink href={LAHORE_CITY_PATH} label={LAHORE_CITY_PAGE.linkLabel} />
                   )}
                   {otherRoutes.map(([slug, route]) => (
-                    <SidebarLink key={slug} href={route.path} label={route.breadcrumbs[route.breadcrumbs.length - 1].label} />
+                    <SidebarLink key={slug} href={route.path} label={route.linkLabel} />
                   ))}
                   {page.countrySlug && (
                     <SidebarLink href={`/destinations/${page.countrySlug}`} label={`All cargo to ${page.service?.areaServed.name}`} />
