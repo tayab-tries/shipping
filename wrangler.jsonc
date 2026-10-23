@@ -22,6 +22,16 @@
   "images": {
     "binding": "IMAGES"
   },
+  // Writable page cache + revalidation tags (open-next.config.ts) for instant Sanity publishing
+  "kv_namespaces": [
+    { "binding": "NEXT_INC_CACHE_KV", "id": "6974e1d749574091bd874eaf16e217eb" }
+  ],
+  "d1_databases": [
+    { "binding": "NEXT_TAG_CACHE_D1", "database_name": "cargo-app-tag-cache", "database_id": "960ca13c-fb12-4efb-b73a-deb5462b6fbb" }
+  ],
+  "services": [
+    { "binding": "WORKER_SELF_REFERENCE", "service": "cargo-app" }
+  ],
   "unsafe": {
     "bindings": [
       {
@@ -47,6 +57,15 @@
       "images": {
         "binding": "IMAGES"
       },
+      "kv_namespaces": [
+        { "binding": "NEXT_INC_CACHE_KV", "id": "89e55ed571a548a8b027adf472a1e18b" }
+      ],
+      "d1_databases": [
+        { "binding": "NEXT_TAG_CACHE_D1", "database_name": "cargo-app-staging-tag-cache", "database_id": "16039ed0-64e7-40d6-8c45-3057de44b020" }
+      ],
+      "services": [
+        { "binding": "WORKER_SELF_REFERENCE", "service": "cargo-app-staging" }
+      ],
       "unsafe": {
         "bindings": [
           {
