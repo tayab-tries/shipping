@@ -80,16 +80,9 @@ export const mainNavigation: NavItem[] = [
     ],
   },
   {
-    title: 'Guides',
-    label: 'Guides',
+    title: 'Blog',
+    label: 'Blog',
     href: '/guides',
-    viewAllHref: '/guides',
-    viewAllLabel: 'View all guides',
-    children: [
-      { title: 'Customs & Documentation', href: '/guides/export-customs-documentation-guide' },
-      { title: 'Packaging Guidelines', href: '/guides/packing-cargo-guide' },
-      { title: 'Air vs Sea Cargo', href: '/cargo-services#quick-comparison' },
-    ],
   },
   {
     title: 'About Us',

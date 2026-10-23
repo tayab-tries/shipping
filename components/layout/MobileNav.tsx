@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Menu, X, ArrowRight, Search, Phone, MessageSquare } from 'lucide-react';
+import { Menu, X, ArrowRight, ChevronDown, Search, Phone, MessageSquare } from 'lucide-react';
 import { navConfig, primaryCta } from '@/config/nav.config';
 import { siteConfig } from '@/config/site.config';
 import { Button } from '@/components/ui/Button';
@@ -21,6 +21,7 @@ const emptySubscribe = () => () => {};
 
 export const MobileNav: React.FC<MobileNavProps> = ({ brandName: propBrand, phone: propPhone, whatsappNumber: propWhatsapp }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [expandedHref, setExpandedHref] = useState<string | null>(null);
   const pathname = usePathname();
   const brandName = propBrand || siteConfig.name;
   const phone = propPhone || '';
@@ -95,21 +96,70 @@ export const MobileNav: React.FC<MobileNavProps> = ({ brandName: propBrand, phon
         <div className="px-6 py-8 space-y-3 overflow-y-auto flex-1">
           {navConfig.map((item) => {
             const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
+            const rowClass = `rounded-md min-h-[52px] flex items-center justify-between transition-colors ${
+              isActive
+                ? 'text-accent bg-brand-navy font-bold border border-border-dark'
+                : 'text-slate-100 hover:text-white hover:bg-brand-navy-light/40 border border-transparent'
+            }`;
+
+            if (!item.children || item.children.length === 0) {
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={closeMenu}
+                  className={`px-5 py-4 text-lg font-semibold ${rowClass}`}
+                >
+                  <span>{item.label}</span>
+                  <ArrowRight className="w-5 h-5 text-slate-400" />
+                </Link>
+              );
+            }
+
+            const isExpanded = expandedHref === item.href;
+            const panelId = `mobile-nav-${item.href.replace(/\W+/g, '')}`;
 
             return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={closeMenu}
-                className={`px-5 py-4 text-lg font-semibold rounded-md min-h-[52px] flex items-center justify-between transition-colors ${
-                  isActive
-                    ? 'text-accent bg-brand-navy font-bold border border-border-dark'
-                    : 'text-slate-100 hover:text-white hover:bg-brand-navy-light/40 border border-transparent'
-                }`}
-              >
-                <span>{item.label}</span>
-                <ArrowRight className="w-5 h-5 text-slate-400" />
-              </Link>
+              <div key={item.href}>
+                <div className={rowClass}>
+                  <Link
+                    href={item.href}
+                    onClick={closeMenu}
+                    className="flex-1 px-5 py-4 text-lg font-semibold"
+                  >
+                    {item.label}
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => setExpandedHref(isExpanded ? null : item.href)}
+                    aria-label={`${isExpanded ? 'Collapse' : 'Expand'} ${item.label}`}
+                    aria-expanded={isExpanded}
+                    aria-controls={panelId}
+                    className="min-h-[52px] min-w-[52px] flex items-center justify-center text-slate-300 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-md"
+                  >
+                    <ChevronDown className={`w-5 h-5 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                  </button>
+                </div>
+                {isExpanded && (
+                  <ul id={panelId} className="mt-1 ml-4 pl-4 border-l border-border-dark space-y-1">
+                    {item.children.map((child) => (
+                      <li key={child.href}>
+                        <Link
+                          href={child.href}
+                          onClick={closeMenu}
+                          className={`block px-3 py-3 text-base rounded-md transition-colors ${
+                            pathname === child.href
+                              ? 'text-accent bg-brand-navy font-semibold'
+                              : 'text-slate-200 hover:text-white hover:bg-brand-navy-light/40'
+                          }`}
+                        >
+                          {child.title}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             );
           })}
         </div>
