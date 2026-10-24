@@ -7,17 +7,11 @@ import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { LocationHero } from '@/components/locations/LocationHero';
 import { LocationCta } from '@/components/locations/LocationCta';
-import { getBreadcrumbJsonLd } from '@/lib/seo/jsonld.service';
+import { getBreadcrumbJsonLd, getLocalBusinessJsonLd } from '@/lib/seo/jsonld.service';
 import { ORGANIZATION_ID } from '@/lib/seo/schema.service';
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
-import {
-  ContentBlock,
-  LahorePage,
-  LAHORE_CITY_PAGE,
-  LAHORE_CITY_PATH,
-  LAHORE_LOCATION_KEY,
-  LAHORE_ROUTE_PAGES,
-} from '@/lib/routes/lahore-content';
+import { CITY_LANDINGS } from '@/lib/routes/registry';
+import { ContentBlock, LandingPage } from '@/lib/routes/shared';
 
 const BASE_URL = 'https://raahiinternational.com';
 
@@ -97,11 +91,11 @@ function Block({ block }: { block: ContentBlock }) {
                   {row.map((cell, cIdx) =>
                     cIdx === 0 ? (
                       <th key={cIdx} scope="row" className="px-4 py-3 font-semibold text-brand-black">
-                        {cell}
+                        <Markdown text={cell} />
                       </th>
                     ) : (
                       <td key={cIdx} className="px-4 py-3 text-slate-800">
-                        {cell}
+                        <Markdown text={cell} />
                       </td>
                     )
                   )}
@@ -122,14 +116,16 @@ function FactList({ items }: { items: Array<[string, string]> }) {
       {items.map(([label, value]) => (
         <div key={label} className="bg-surface-subtle p-4 rounded border border-border">
           <dt className="text-xs font-mono font-bold text-slate-500 uppercase tracking-wider">{label}</dt>
-          <dd className="mt-1 text-sm font-semibold text-brand-black">{value}</dd>
+          <dd className="mt-1 text-sm font-semibold text-brand-black">
+            <Markdown text={value} />
+          </dd>
         </div>
       ))}
     </dl>
   );
 }
 
-export function getLahorePageJsonLd(page: LahorePage) {
+export function getLandingPageJsonLd(page: LandingPage) {
   const schemas: object[] = [getBreadcrumbJsonLd(page.breadcrumbs)];
 
   if (page.service) {
@@ -150,16 +146,26 @@ export function getLahorePageJsonLd(page: LahorePage) {
       areaServed: { '@type': 'Country', name: areaServed.name, identifier: areaServed.code },
       offers: [perKgOffer('Air', airRate), perKgOffer('Sea', seaRate)],
     });
+  } else if (page.localBusiness) {
+    schemas.push(
+      getLocalBusinessJsonLd({
+        key: page.origin.key,
+        name: page.origin.name,
+        province: page.origin.province,
+        url: page.path,
+        description: page.seoDescription,
+      })
+    );
   } else {
     schemas.push({
       '@context': 'https://schema.org',
       '@type': 'Service',
-      name: 'International Cargo Services in Lahore',
-      serviceType: 'International Cargo Shipping',
+      name: page.linkLabel,
+      serviceType: 'Door-to-door international cargo',
       description: page.seoDescription,
       url: `${BASE_URL}${page.path}`,
       provider: { '@id': ORGANIZATION_ID },
-      areaServed: { '@type': 'City', name: 'Lahore' },
+      areaServed: { '@type': 'City', name: page.origin.name },
     });
   }
 
@@ -178,24 +184,26 @@ export function getLahorePageJsonLd(page: LahorePage) {
   return schemas;
 }
 
-export interface LahoreLandingPageProps {
-  page: LahorePage;
+export interface CityLandingPageProps {
+  page: LandingPage;
   whatsappNumber?: string;
 }
 
-export function LahoreLandingPage({ page, whatsappNumber }: LahoreLandingPageProps) {
+export function CityLandingPage({ page, whatsappNumber }: CityLandingPageProps) {
+  const { origin } = page;
   const whatsappUrl = buildWhatsappUrl(whatsappNumber, page.whatsappMessage);
-  const otherRoutes = Object.entries(LAHORE_ROUTE_PAGES).filter(([, route]) => route.path !== page.path);
+  const { cityPage, routes, relatedLinks = [] } = CITY_LANDINGS[origin.key];
+  const otherRoutes = Object.entries(routes).filter(([, route]) => route.path !== page.path);
 
   return (
     <article className="w-full bg-background">
-      {getLahorePageJsonLd(page).map((schema, idx) => (
+      {getLandingPageJsonLd(page).map((schema, idx) => (
         <script key={idx} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       ))}
 
       <LocationHero
-        cityName="Lahore"
-        province="Punjab"
+        cityName={origin.name}
+        province={origin.province}
         h1={page.h1}
         introduction={page.intro.join(' ')}
         quoteUrl={page.quoteUrl}
@@ -260,7 +268,7 @@ export function LahoreLandingPage({ page, whatsappNumber }: LahoreLandingPagePro
               <div className="bg-brand-black-deep text-white rounded-md border border-border-dark p-6 space-y-5 shadow-2xl">
                 <div className="space-y-2">
                   <span className="text-xs font-mono text-accent uppercase tracking-wider font-semibold">Get a price</span>
-                  <p className="text-heading-lg font-bold text-white">Send cargo from Lahore</p>
+                  <p className="text-heading-lg font-bold text-white">Send cargo from {origin.name}</p>
                   <p className="text-body-xs text-slate-300 leading-relaxed">
                     Tell us the destination, what is inside and the rough weight. We reply with the per-kg rate and the total.
                   </p>
@@ -288,15 +296,17 @@ export function LahoreLandingPage({ page, whatsappNumber }: LahoreLandingPagePro
                 </div>
               </div>
 
-              <nav aria-label="Shipping from Lahore" className="bg-surface rounded-md border border-border p-6 space-y-4 shadow-xs">
-                <p className="text-xs font-mono font-bold text-slate-500 uppercase tracking-wider">Shipping from Lahore</p>
+              <nav aria-label={`Shipping from ${origin.name}`} className="bg-surface rounded-md border border-border p-6 space-y-4 shadow-xs">
+                <p className="text-xs font-mono font-bold text-slate-500 uppercase tracking-wider">Shipping from {origin.name}</p>
                 <div className="space-y-2.5">
-                  {page.path !== LAHORE_CITY_PATH && (
-                    <SidebarLink href={LAHORE_CITY_PATH} label={LAHORE_CITY_PAGE.linkLabel} />
+                  {page.path !== origin.cityPath && (
+                    <SidebarLink href={origin.cityPath} label={cityPage.linkLabel} />
                   )}
                   {otherRoutes.map(([slug, route]) => (
                     <SidebarLink key={slug} href={route.path} label={route.linkLabel} />
                   ))}
+                  {page.path === origin.cityPath &&
+                    relatedLinks.map((link) => <SidebarLink key={link.href} href={link.href} label={link.label} />)}
                   {page.countrySlug && (
                     <SidebarLink href={`/destinations/${page.countrySlug}`} label={`All cargo to ${page.service?.areaServed.name}`} />
                   )}
@@ -308,7 +318,7 @@ export function LahoreLandingPage({ page, whatsappNumber }: LahoreLandingPagePro
         </Container>
       </div>
 
-      <LocationCta cityName="Lahore" slug={LAHORE_LOCATION_KEY} />
+      <LocationCta cityName={origin.name} slug={origin.key} />
     </article>
   );
 }

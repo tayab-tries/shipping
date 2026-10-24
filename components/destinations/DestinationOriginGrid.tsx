@@ -5,12 +5,12 @@ import { Container } from '@/components/ui/Container';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { getPublishedLocations } from '@/lib/locations/location-content';
 import { getLocationHref, toLocationKey, toLocationKeys } from '@/lib/locations/location-slugs';
-import { getLahoreRouteForCountry, LAHORE_LOCATION_KEY } from '@/lib/routes/lahore-content';
+import { getRoutesForCountry } from '@/lib/routes/registry';
 
 export interface DestinationOriginGridProps {
   countryName: string;
   countrySlug: string;
-  /** Set on destination city pages, so the Lahore route link can use city-specific anchor text. */
+  /** Set on destination city pages, so origin route links can use city-specific anchor text. */
   citySlug?: string;
   supportedOrigins?: string[];
 }
@@ -37,10 +37,8 @@ export async function DestinationOriginGrid({
 
   if (originsToRender.length === 0) return null;
 
-  const lahoreRoute = getLahoreRouteForCountry(countrySlug);
-  const lahoreRouteLabel = lahoreRoute
-    ? (citySlug && lahoreRoute.cityLinkLabels?.[citySlug]) || lahoreRoute.countryLinkLabel || lahoreRoute.linkLabel
-    : undefined;
+  const routes = getRoutesForCountry(countrySlug);
+  const routeByOrigin = new Map(routes.map((route) => [route.origin.key, route]));
 
   return (
     <section className="w-full bg-surface py-20 lg:py-28 border-b border-border text-brand-black">
@@ -57,27 +55,27 @@ export async function DestinationOriginGrid({
           <p className="font-medium text-slate-800">
             Ship directly to {countryName} from our primary Pakistan dispatch hubs including{' '}
             <Link href="/locations/international-cargo-services-in-lahore" className="font-semibold text-brand-black hover:text-accent underline underline-offset-2">Lahore Cargo Office</Link>,{' '}
-            <Link href="/locations/international-cargo-services-in-karachi" className="font-semibold text-brand-black hover:text-accent underline underline-offset-2">Karachi Cargo Hub</Link>,{' '}
-            <Link href="/locations/international-cargo-services-in-islamabad" className="font-semibold text-brand-black hover:text-accent underline underline-offset-2">Islamabad Cargo Branch</Link>,{' '}
-            <Link href="/locations/international-cargo-services-in-sialkot" className="font-semibold text-brand-black hover:text-accent underline underline-offset-2">Sialkot Export Cargo Hub</Link>,{' '}
-            <Link href="/locations/international-cargo-services-in-faisalabad" className="font-semibold text-brand-black hover:text-accent underline underline-offset-2">Faisalabad Cargo Center</Link>,{' '}
+            <Link href="/locations/international-cargo-services-in-karachi" className="font-semibold text-brand-black hover:text-accent underline underline-offset-2">Karachi Cargo Services</Link>,{' '}
+            <Link href="/locations/international-cargo-services-in-islamabad" className="font-semibold text-brand-black hover:text-accent underline underline-offset-2">Islamabad Cargo Services</Link>,{' '}
+            <Link href="/locations/international-cargo-services-in-sialkot" className="font-semibold text-brand-black hover:text-accent underline underline-offset-2">Sialkot Cargo Services</Link>,{' '}
+            <Link href="/locations/international-cargo-services-in-faisalabad" className="font-semibold text-brand-black hover:text-accent underline underline-offset-2">Faisalabad Cargo Services</Link>,{' '}
             <Link href="/locations/international-cargo-services-in-rawalpindi" className="font-semibold text-brand-black hover:text-accent underline underline-offset-2">Rawalpindi Cargo Office</Link>,{' '}
-            <Link href="/locations/international-cargo-services-in-multan" className="font-semibold text-brand-black hover:text-accent underline underline-offset-2">Multan Cargo Office</Link>, and{' '}
-            <Link href="/locations/international-cargo-services-in-peshawar" className="font-semibold text-brand-black hover:text-accent underline underline-offset-2">Peshawar Cargo Branch</Link>.
-            Every origin facility provides complete doorstep collection, commercial packing, export customs clearance, and air or sea consolidation to {countryName}.
+            <Link href="/locations/international-cargo-services-in-multan" className="font-semibold text-brand-black hover:text-accent underline underline-offset-2">Multan Cargo Services</Link>, and{' '}
+            <Link href="/locations/international-cargo-services-in-peshawar" className="font-semibold text-brand-black hover:text-accent underline underline-offset-2">Peshawar Cargo Services</Link>.
+            Every origin city has doorstep collection, packing, export customs clearance, and air or sea cargo to {countryName}.
           </p>
-          {lahoreRoute && (
-            <p className="mt-4 flex items-center gap-2 font-medium text-slate-800">
+          {routes.map((route, idx) => (
+            <p key={route.path} className={`${idx === 0 ? 'mt-4' : 'mt-2'} flex items-center gap-2 font-medium text-slate-800`}>
               <Link
-                href={lahoreRoute.path}
+                href={route.path}
                 className="font-semibold text-brand-black hover:text-accent underline underline-offset-2"
               >
-                {lahoreRouteLabel}
+                {(citySlug && route.cityLinkLabels?.[citySlug]) || route.countryLinkLabel || route.linkLabel}
               </Link>
               <span>: rates and transit times</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </p>
-          )}
+          ))}
         </div>
 
         <div className="bg-surface-subtle rounded-md border border-border divide-y divide-border shadow-xs overflow-hidden">
@@ -99,12 +97,12 @@ export async function DestinationOriginGrid({
               </div>
 
               <div className="flex items-center gap-4 md:justify-end md:w-1/2">
-                {lahoreRoute && loc.slug === LAHORE_LOCATION_KEY && (
+                {routeByOrigin.has(loc.slug) && (
                   <Link
-                    href={lahoreRoute.path}
+                    href={routeByOrigin.get(loc.slug)!.path}
                     className="text-xs font-mono font-semibold text-brand-black hover:text-accent flex items-center gap-1 transition-colors"
                   >
-                    <span>Shipping from Lahore</span>
+                    <span>Shipping from {loc.name}</span>
                     <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-accent" />
                   </Link>
                 )}

@@ -23,8 +23,8 @@ import { LocationGuides } from '@/components/locations/LocationGuides';
 import { LocationCta } from '@/components/locations/LocationCta';
 import { getSanityLocationBySlug, getSanityLocationsList, getSanitySiteSettingsData } from '@/sanity/lib/fetch';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
-import { LAHORE_CITY_PAGE, LAHORE_LOCATION_KEY } from '@/lib/routes/lahore-content';
-import { LahoreLandingPage } from '@/components/routes/LahoreLandingPage';
+import { CITY_LANDINGS } from '@/lib/routes/registry';
+import { CityLandingPage } from '@/components/routes/CityLandingPage';
 
 interface LocationPageProps {
   params: Promise<{ slug: string }>;
@@ -50,16 +50,17 @@ export async function generateMetadata({ params }: LocationPageProps): Promise<M
   const { slug } = await params;
   const key = toLocationKey(slug);
 
-  // Lahore uses the code-defined copy (lib/routes/lahore-content.ts), not the Sanity document
-  if (key === LAHORE_LOCATION_KEY) {
-    const canonicalUrl = `https://raahiinternational.com${LAHORE_CITY_PAGE.path}`;
+  // Lahore and Islamabad use the code-defined copy (lib/routes/*-content.ts), not the Sanity document
+  const cityPage = CITY_LANDINGS[key]?.cityPage;
+  if (cityPage) {
+    const canonicalUrl = `https://raahiinternational.com${cityPage.path}`;
     return {
-      title: LAHORE_CITY_PAGE.seoTitle,
-      description: LAHORE_CITY_PAGE.seoDescription,
+      title: cityPage.seoTitle,
+      description: cityPage.seoDescription,
       alternates: { canonical: canonicalUrl },
       openGraph: {
-        title: LAHORE_CITY_PAGE.seoTitle,
-        description: LAHORE_CITY_PAGE.seoDescription,
+        title: cityPage.seoTitle,
+        description: cityPage.seoDescription,
         url: canonicalUrl,
         siteName: 'Raahi International',
         type: 'website',
@@ -118,14 +119,15 @@ export default async function LocationDetailPage({ params }: LocationPageProps) 
     permanentRedirect(getLocationHref(key));
   }
 
-  if (key === LAHORE_LOCATION_KEY) {
+  const cityPage = CITY_LANDINGS[key]?.cityPage;
+  if (cityPage) {
     const [business, sanitySiteSettings] = await Promise.all([
       getPublishedBusinessSettings(),
       getSanitySiteSettingsData(),
     ]);
     return (
-      <LahoreLandingPage
-        page={LAHORE_CITY_PAGE}
+      <CityLandingPage
+        page={cityPage}
         whatsappNumber={sanitySiteSettings?.whatsappNumber || business?.whatsappNumber}
       />
     );

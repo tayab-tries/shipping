@@ -35,13 +35,13 @@ const keyDestinationCities = [
 
 const pakistanOrigins = [
   { key: 'lahore', name: 'Lahore Cargo Office' },
-  { key: 'karachi', name: 'Karachi Cargo Hub' },
-  { key: 'islamabad', name: 'Islamabad Cargo Branch' },
+  { key: 'karachi', name: 'Karachi Cargo Services' },
+  { key: 'islamabad', name: 'Islamabad Cargo Services' },
   { key: 'rawalpindi', name: 'Rawalpindi Cargo Office' },
-  { key: 'faisalabad', name: 'Faisalabad Cargo Center' },
-  { key: 'sialkot', name: 'Sialkot Cargo Hub' },
-  { key: 'multan', name: 'Multan Cargo Office' },
-  { key: 'peshawar', name: 'Peshawar Cargo Branch' },
+  { key: 'faisalabad', name: 'Faisalabad Cargo Services' },
+  { key: 'sialkot', name: 'Sialkot Cargo Services' },
+  { key: 'multan', name: 'Multan Cargo Services' },
+  { key: 'peshawar', name: 'Peshawar Cargo Services' },
 ].map((hub) => ({ ...hub, href: getLocationHref(hub.key) }));
 
 export const LocationDestinationGrid: React.FC<LocationDestinationGridProps> = ({

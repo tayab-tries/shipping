@@ -2,8 +2,8 @@ import React from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getOgImages } from '@/lib/seo/metadata.service';
-import { LAHORE_ROUTE_PAGES } from '@/lib/routes/lahore-content';
-import { LahoreLandingPage } from '@/components/routes/LahoreLandingPage';
+import { ROUTE_PAGES } from '@/lib/routes/registry';
+import { CityLandingPage } from '@/components/routes/CityLandingPage';
 import { getSanitySiteSettingsData } from '@/sanity/lib/fetch';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
 
@@ -15,12 +15,12 @@ interface RoutePageProps {
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return Object.keys(LAHORE_ROUTE_PAGES).map((route) => ({ route }));
+  return Object.keys(ROUTE_PAGES).map((route) => ({ route }));
 }
 
 export async function generateMetadata({ params }: RoutePageProps): Promise<Metadata> {
   const { route } = await params;
-  const page = LAHORE_ROUTE_PAGES[route];
+  const page = ROUTE_PAGES[route];
   if (!page) return {};
 
   const canonicalUrl = `https://raahiinternational.com${page.path}`;
@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: RoutePageProps): Promise<Meta
 
 export default async function RoutePage({ params }: RoutePageProps) {
   const { route } = await params;
-  const page = LAHORE_ROUTE_PAGES[route];
+  const page = ROUTE_PAGES[route];
   if (!page) notFound();
 
   const [business, sanitySiteSettings] = await Promise.all([
@@ -50,7 +50,7 @@ export default async function RoutePage({ params }: RoutePageProps) {
   ]);
 
   return (
-    <LahoreLandingPage
+    <CityLandingPage
       page={page}
       whatsappNumber={sanitySiteSettings?.whatsappNumber || business?.whatsappNumber}
     />
