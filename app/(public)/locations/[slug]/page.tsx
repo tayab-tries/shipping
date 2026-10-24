@@ -23,6 +23,8 @@ import { LocationGuides } from '@/components/locations/LocationGuides';
 import { LocationCta } from '@/components/locations/LocationCta';
 import { getSanityLocationBySlug, getSanityLocationsList, getSanitySiteSettingsData } from '@/sanity/lib/fetch';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
+import { CITY_LANDINGS } from '@/lib/routes/registry';
+import { CityLandingPage } from '@/components/routes/CityLandingPage';
 
 interface LocationPageProps {
   params: Promise<{ slug: string }>;
@@ -47,6 +49,26 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: LocationPageProps): Promise<Metadata> {
   const { slug } = await params;
   const key = toLocationKey(slug);
+
+  // Lahore and Islamabad use the code-defined copy (lib/routes/*-content.ts), not the Sanity document
+  const cityPage = CITY_LANDINGS[key]?.cityPage;
+  if (cityPage) {
+    const canonicalUrl = `https://raahiinternational.com${cityPage.path}`;
+    return {
+      title: cityPage.seoTitle,
+      description: cityPage.seoDescription,
+      alternates: { canonical: canonicalUrl },
+      openGraph: {
+        title: cityPage.seoTitle,
+        description: cityPage.seoDescription,
+        url: canonicalUrl,
+        siteName: 'Raahi International',
+        type: 'website',
+        images: getOgImages(),
+      },
+    };
+  }
+
   const sanityLocation = await getSanityLocationBySlug(key, { stega: false });
   const fallbackLocation = await getLocationBySlug(key);
 
@@ -95,6 +117,20 @@ export default async function LocationDetailPage({ params }: LocationPageProps) 
   // Short or legacy slugs (e.g. /locations/lahore) resolve to the single canonical SEO path
   if (key && slug !== toLocationPathSlug(key)) {
     permanentRedirect(getLocationHref(key));
+  }
+
+  const cityPage = CITY_LANDINGS[key]?.cityPage;
+  if (cityPage) {
+    const [business, sanitySiteSettings] = await Promise.all([
+      getPublishedBusinessSettings(),
+      getSanitySiteSettingsData(),
+    ]);
+    return (
+      <CityLandingPage
+        page={cityPage}
+        whatsappNumber={sanitySiteSettings?.whatsappNumber || business?.whatsappNumber}
+      />
+    );
   }
 
   const [sanityLocation, fallbackLocation, business, sanitySiteSettings] = await Promise.all([

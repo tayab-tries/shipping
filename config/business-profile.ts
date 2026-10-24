@@ -16,6 +16,8 @@ export interface OpeningHoursSpec {
 }
 
 export interface BranchProfile {
+  /** Business name exactly as on the Google Business Profile (defaults to "Raahi International - <City> Branch"). */
+  name?: string;
   /** Exact street address as shown on the Google Business Profile, e.g. "Office 12, Main Boulevard, Gulberg III". */
   streetAddress?: string;
   postalCode?: string;
@@ -26,6 +28,8 @@ export interface BranchProfile {
   /** Google Business Profile / Maps URL for this branch. */
   googleBusinessProfileUrl?: string;
   openingHours?: OpeningHoursSpec[];
+  /** Cities the branch serves (defaults to the branch city). */
+  areaServed?: string[];
 }
 
 export const businessProfile = {
@@ -50,5 +54,13 @@ export const businessProfile = {
    * Per-branch overrides keyed by location short slug (`lahore`, `islamabad`, ...).
    * Branches without an entry fall back to the location's `branchAddress` text.
    */
-  branches: {} as Record<string, BranchProfile>,
+  branches: {
+    rawalpindi: {
+      name: 'Raahi International',
+      streetAddress: 'Office #1B, opposite Flying Club, near Old Airport Road, Dhoke Raja Muhammad Khan',
+      postalCode: '46000',
+      addressRegion: 'Punjab',
+      areaServed: ['Rawalpindi', 'Islamabad'],
+    },
+  } as Record<string, BranchProfile>,
 };

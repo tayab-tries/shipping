@@ -9,6 +9,7 @@ import {
 import { getPublishedDestinations } from '@/lib/destinations/destination-content';
 import { getPublishedStaticArticles } from '@/lib/guides/guide-content';
 import { getLocationHref } from '@/lib/locations/location-slugs';
+import { ROUTE_PAGES } from '@/lib/routes/registry';
 
 export const revalidate = 86400;
 
@@ -100,7 +101,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
-  // 4. Dynamically map ONLY published & verified educational guides from Sanity
+  // 4. Origin → destination route pages (e.g. /routes/lahore-to-uk)
+  for (const route of Object.values(ROUTE_PAGES)) {
+    entries.push({
+      url: `${baseUrl}${route.path}`,
+      lastModified: new Date('2026-10-24T00:00:00.000Z'),
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    });
+  }
+
+  // 5. Dynamically map ONLY published & verified educational guides from Sanity
   const sanityGuides = await getSanityGuidesList();
   const fallbackArticles = getPublishedStaticArticles();
   const activeGuides = sanityGuides.length > 0 ? sanityGuides : fallbackArticles;

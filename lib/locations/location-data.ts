@@ -151,8 +151,7 @@ export const CITY_LOCATIONS_DATA: CityLocationRecord[] = [
     supportedDestinations: ['uk', 'uae', 'usa', 'canada', 'ksa'],
     serviceAvailable: true,
     collectionAvailable: true,
-    hasPhysicalBranch: true,
-    branchAddress: 'Jinnah International Airport Freight Terminal & Port Qasim Logistics Hub, Karachi, Sindh 75200',
+    hasPhysicalBranch: false,
     sections: [
       {
         title: 'Maritime Ocean Freight Operations via Karachi Port Trust (KPT) & Port Qasim',

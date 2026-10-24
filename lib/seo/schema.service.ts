@@ -128,7 +128,7 @@ export function getLocalBusinessJsonLd(location: LocalBusinessInput) {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
     '@id': `${toAbsoluteUrl(location.url)}#localbusiness`,
-    name: `Raahi International - ${location.name} Branch`,
+    name: branch.name || `Raahi International - ${location.name} Branch`,
     url: toAbsoluteUrl(location.url),
     image: LOGO_URL,
     logo: LOGO_URL,
@@ -147,7 +147,9 @@ export function getLocalBusinessJsonLd(location: LocalBusinessInput) {
     openingHoursSpecification: getOpeningHoursJsonLd(branch.openingHours ?? businessProfile.openingHours),
     contactPoint: getContactPointsJsonLd(branch.telephone || businessProfile.telephone),
     parentOrganization: { '@id': ORGANIZATION_ID },
-    areaServed: { '@type': 'City', name: location.name },
+    areaServed: branch.areaServed
+      ? branch.areaServed.map((city) => ({ '@type': 'City', name: city }))
+      : { '@type': 'City', name: location.name },
     ...(sameAs.length > 0 ? { sameAs } : {}),
   };
 }
