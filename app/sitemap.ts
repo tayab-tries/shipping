@@ -7,6 +7,7 @@ import {
   getSanityGuidesList,
 } from '@/sanity/lib/fetch';
 import { getPublishedDestinations } from '@/lib/destinations/destination-content';
+import { COUNTRY_LANDINGS, COUNTRY_PAGES_UPDATED } from '@/lib/destinations/country-pages';
 import { getPublishedStaticArticles } from '@/lib/guides/guide-content';
 import { getLocationHref } from '@/lib/locations/location-slugs';
 import { ROUTE_PAGES } from '@/lib/routes/registry';
@@ -80,7 +81,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     if (country.slug) {
       entries.push({
         url: `${baseUrl}/destinations/${country.slug}`,
-        lastModified: isNaN(countryDate.getTime()) ? STABLE_DATE : countryDate,
+        lastModified: COUNTRY_LANDINGS[country.slug]
+          ? COUNTRY_PAGES_UPDATED
+          : isNaN(countryDate.getTime())
+            ? STABLE_DATE
+            : countryDate,
         changeFrequency: 'weekly',
         priority: 0.88,
       });
