@@ -64,7 +64,19 @@ const MULTAN_CITY_PAGE: LandingPage = {
           type: 'p',
           text: '**UAE:** our cheapest destination, at Rs 1,350–1,450 a kilo by air and Rs 600–700 by sea, the same for every emirate. See [cargo to Dubai](/destinations/uae/dubai).',
         },
-        { type: 'p', text: 'The receiver needs a full local address and a phone number in that country.' },
+        { type: 'h3', text: 'What the receiver in the Gulf needs' },
+        {
+          type: 'list',
+          items: [
+            'A full address: building or villa number, street, area and the nearest landmark.',
+            'A local mobile number that will be answered, so the delivery can be arranged.',
+            'In Saudi Arabia an Iqama or national ID number, and in the UAE an Emirates ID, in case customs asks for it.',
+          ],
+        },
+        {
+          type: 'p',
+          text: 'With those, the boxes go to the door: a family flat in Riyadh, a shared apartment in Sharjah or a workplace address.',
+        },
       ],
     },
     {
@@ -97,6 +109,22 @@ const MULTAN_CITY_PAGE: LandingPage = {
         {
           type: 'p',
           text: 'Anything you are selling abroad, rather than giving, travels as [commercial cargo](/services/commercial-cargo) with an invoice.',
+        },
+        { type: 'h3', text: 'Packing blue pottery, step by step' },
+        {
+          type: 'list',
+          ordered: true,
+          items: [
+            'Wrap each piece in two layers of bubble wrap and tape it closed.',
+            'Fill hollow pieces, such as vases and bowls, with crumpled paper so they cannot flex.',
+            'Pack them into a small inner box with at least 5 cm of padding all round.',
+            'Put the inner box inside a larger double-wall carton, with another 5 cm of padding. A knock to the outer box then never reaches the pottery.',
+            'Mark the carton "Fragile" and "This way up".',
+          ],
+        },
+        {
+          type: 'p',
+          text: 'Large plates, tiles and panels go in a wooden crate instead. We can do all of this for you.',
         },
       ],
     },
@@ -197,6 +225,18 @@ const MULTAN_CITY_PAGE: LandingPage = {
     {
       question: 'Can you pack blue pottery so it does not break?',
       answer: 'Yes. Each piece is wrapped and padded separately, and large pieces are crated.',
+    },
+    {
+      question: 'Can my family in Saudi Arabia receive the boxes at home?',
+      answer: 'Yes. Delivery is door to door, as long as you give a full address and a local phone number.',
+    },
+    {
+      question: 'How long does cargo from Multan to Dubai take?',
+      answer: 'By air, 3–4 days door to door. By sea, 1.5–2.5 months.',
+    },
+    {
+      question: 'Do you collect outside Multan city?',
+      answer: 'Ask us first for Khanewal, Lodhran, Vehari, Muzaffargarh and Bahawalpur.',
     },
   ],
   closing: `For international cargo services in Multan, send your list on [WhatsApp ${PHONE}](${WHATSAPP_URL}) and we will reply with a written price.`,

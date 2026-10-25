@@ -77,6 +77,16 @@ const SIALKOT_CITY_PAGE: LandingPage = {
           type: 'p',
           text: 'Two rules to check with your buyer first. The USA no longer exempts small commercial shipments from duty. And medical and surgical instruments can need approvals in the destination country before they are sold, which the importer usually handles. For regular full-container exports, tell us the volumes and we will tell you whether we can take them on. See [commercial cargo](/services/commercial-cargo).',
         },
+        { type: 'h3', text: 'Export paperwork, in plain terms' },
+        {
+          type: 'list',
+          items: [
+            "**Pakistan side:** every commercial shipment is declared to Pakistan Customs before it leaves. We prepare that declaration from your invoice and packing list. If your bank is handling the buyer's payment, it may ask for its own export paperwork too.",
+            "**Buyer's side:** some buyers ask for a certificate of origin, which the local chamber of commerce issues. Ask your buyer before you book, not after the boxes have gone.",
+            '**Values:** samples sent free still need a value on the invoice, usually what they cost you to make. A shipment with no value gets held.',
+          ],
+        },
+        { type: 'p', text: 'We tell you what your particular shipment needs when we quote.' },
       ],
     },
     {
@@ -92,6 +102,10 @@ const SIALKOT_CITY_PAGE: LandingPage = {
             '**Bulk cartons:** stacked on a pallet and stretch-wrapped for sea cargo; any wooden pallet or crate must be ISPM 15 heat-treated for the UK, USA and Canada.',
           ],
         },
+        {
+          type: 'p',
+          text: 'Steel instruments (surgical, dental, beauty and manicure tools) can rust on a long sea journey through humid ports. Pack them dry, in anti-corrosion (VCI) bags, in foam-lined boxes, and add silica gel to every carton. For samples a buyer is waiting on, send by air instead.',
+        },
       ],
     },
     {
@@ -105,6 +119,11 @@ const SIALKOT_CITY_PAGE: LandingPage = {
             '**USA:** Rs 2,750–2,950 a kilo by air, 10–15 days. Only genuine gifts of $100 or less still enter duty-free. See [cargo to the USA](/destinations/usa).',
             '**Canada, UAE, Saudi Arabia:** see [cargo to Canada](/destinations/canada), [Dubai](/destinations/uae/dubai) and [Saudi Arabia](/destinations/ksa).',
           ],
+        },
+        { type: 'h3', text: 'Getting samples to a buyer on time' },
+        {
+          type: 'p',
+          text: "Work back from the buyer's deadline. Air cargo takes 10–12 days to the UK and 10–15 days to the USA and Canada, door to door, plus a day or two for pickup and export clearance in Sialkot. For a UK meeting on the 30th, book by about the 15th. For Europe and other countries, see our [cargo rates page](/cargo-services) or ask us.",
         },
       ],
     },
@@ -177,6 +196,22 @@ const SIALKOT_CITY_PAGE: LandingPage = {
     {
       question: 'Do you ship full containers of exports?',
       answer: 'Ask us with your volumes. We quote 20 ft and 40 ft containers, and will tell you plainly if an order is beyond what we handle.',
+    },
+    {
+      question: 'How long does air cargo take from Sialkot to the UK?',
+      answer: '10–12 days door to door, plus a day or two for pickup and export clearance.',
+    },
+    {
+      question: 'Do I need a certificate of origin?',
+      answer: 'Only if your buyer or their country asks for one. It is issued by the local chamber of commerce.',
+    },
+    {
+      question: 'How do I stop leather and steel goods getting damaged by damp?',
+      answer: 'Pack them dry with silica gel; put steel in anti-corrosion bags and leather in breathable wrap, not sealed plastic.',
+    },
+    {
+      question: 'Do samples sent free need a value?',
+      answer: 'Yes. Put a realistic value on the invoice, usually the cost of making them, or customs may hold the shipment.',
     },
   ],
   closing: `For cargo services in Sialkot, send your carton list on [WhatsApp ${PHONE}](${WHATSAPP_URL}) for a written price.`,
