@@ -9,8 +9,8 @@ import {
 import { getPublishedDestinations } from '@/lib/destinations/destination-content';
 import { COUNTRY_LANDINGS, COUNTRY_PAGES_UPDATED } from '@/lib/destinations/country-pages';
 import { getPublishedStaticArticles } from '@/lib/guides/guide-content';
-import { getLocationHref } from '@/lib/locations/location-slugs';
-import { ROUTE_PAGES } from '@/lib/routes/registry';
+import { getLocationHref, toLocationKey } from '@/lib/locations/location-slugs';
+import { CITY_LANDINGS, CITY_PAGES_UPDATED, ROUTE_PAGES } from '@/lib/routes/registry';
 
 export const revalidate = 86400;
 
@@ -60,12 +60,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const sanityLocations = await getSanityLocationsList();
   const fallbackLocations = await getPublishedLocations();
   const activeLocations = sanityLocations.length > 0 ? sanityLocations : fallbackLocations;
+  // Code-defined city pages are listed even without a Sanity document, dated by their copy, not Sanity's _updatedAt
+  const locationEntries = new Map<string, Date>(Object.keys(CITY_LANDINGS).map((key) => [key, CITY_PAGES_UPDATED]));
   for (const location of activeLocations) {
+    const key = toLocationKey(location.slug);
+    if (!key || locationEntries.has(key)) continue;
     const rawDate = '_updatedAt' in location ? location._updatedAt : undefined;
     const locationDate = rawDate ? new Date(rawDate) : STABLE_DATE;
+    locationEntries.set(key, isNaN(locationDate.getTime()) ? STABLE_DATE : locationDate);
+  }
+  for (const [key, lastModified] of locationEntries) {
     entries.push({
-      url: `${baseUrl}${getLocationHref(location.slug)}`,
-      lastModified: isNaN(locationDate.getTime()) ? STABLE_DATE : locationDate,
+      url: `${baseUrl}${getLocationHref(key)}`,
+      lastModified,
       changeFrequency: 'weekly',
       priority: 0.85,
     });

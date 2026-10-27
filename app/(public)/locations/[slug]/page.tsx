@@ -114,8 +114,11 @@ export default async function LocationDetailPage({ params }: LocationPageProps) 
   const { slug } = await params;
   const key = toLocationKey(slug);
 
-  // Short or legacy slugs (e.g. /locations/lahore) resolve to the single canonical SEO path
+  // Short or legacy slugs (e.g. /locations/lahore) resolve to the single canonical SEO path;
+  // unknown cities 404 here instead of redirecting to a canonical path that 404s
   if (key && slug !== toLocationPathSlug(key)) {
+    const known = CITY_LANDINGS[key] || (await getSanityLocationBySlug(key)) || (await getLocationBySlug(key));
+    if (!known) notFound();
     permanentRedirect(getLocationHref(key));
   }
 

@@ -208,6 +208,7 @@ export function CityLandingPage({ page, whatsappNumber }: CityLandingPageProps) 
         introduction={page.intro.join(' ')}
         quoteUrl={page.quoteUrl}
         breadcrumbs={page.breadcrumbs}
+        showStatusLine={false}
       />
 
       <div className="w-full bg-background text-foreground py-12 lg:py-20 border-b border-border">
