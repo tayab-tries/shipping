@@ -20,6 +20,9 @@ export const CITY_LANDINGS: Record<string, CityLanding> = {
   sialkot: SIALKOT_LANDING,
 };
 
+/** Last content change to the code-defined city pages, for the sitemap. */
+export const CITY_PAGES_UPDATED = new Date('2026-10-25');
+
 /** Every city → country route page, keyed by route slug (`lahore-to-uk`, `islamabad-to-dubai`). */
 export const ROUTE_PAGES: Record<string, LandingPage> = Object.assign(
   {},

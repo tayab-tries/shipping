@@ -25,8 +25,8 @@ export const Footer: React.FC<FooterProps> = async ({ sanitySiteSettings }) => {
   // Dynamically resolve published city locations
   const activeLocations =
     sanityLocations && sanityLocations.length > 0
-      ? sanityLocations.map((l) => ({ label: `${l.name} Hub`, href: getLocationHref(l.slug) }))
-      : fallbackLocations.map((l) => ({ label: `${l.name} Hub`, href: getLocationHref(l.slug) }));
+      ? sanityLocations.map((l) => ({ label: `${l.name} Cargo Services`, href: getLocationHref(l.slug) }))
+      : fallbackLocations.map((l) => ({ label: `${l.name} Cargo Services`, href: getLocationHref(l.slug) }));
 
   // Rule #1: Business contact fields as single source of contact info
   const brandName = sanitySiteSettings?.businessName || business.brandName || siteConfig.name;
@@ -132,7 +132,7 @@ export const Footer: React.FC<FooterProps> = async ({ sanitySiteSettings }) => {
         <div className="py-8 border-b border-border-dark space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <h3 className="text-xs font-mono font-semibold uppercase text-accent tracking-wider">
-              International Delivery Hubs & Destination Cities
+              International Destination Cities
             </h3>
             <Link
               href="/destinations"

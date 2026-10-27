@@ -76,6 +76,33 @@ export interface CityLanding {
   relatedLinks?: Array<{ label: string; href: string }>;
 }
 
+/** A destination country page (`/destinations/uk`): the hub for searches naming the country but no Pakistani city. */
+export interface CountryLanding {
+  /** Destination slug (`uk`, `uae`, `ksa`, `usa`, `canada`). */
+  slug: string;
+  name: string;
+  region: string;
+  path: string;
+  seoTitle: string;
+  seoDescription: string;
+  h1: string;
+  intro: string[];
+  sections: ContentSection[];
+  faqTitle: string;
+  faqs: Array<{ question: string; answer: string }>;
+  closing: string;
+  quoteUrl: string;
+  whatsappMessage: string;
+  /** Service schema; offers are named "Air/Sea cargo from Pakistan to <offerTarget>". */
+  service: {
+    name: string;
+    areaServed: { code: string; name: string };
+    offerTarget: string;
+    airRate: [min: number, max: number];
+    seaRate: [min: number, max: number];
+  };
+}
+
 export const PHONE = '0300 7097063';
 export const WHATSAPP_NUMBER = '923007097063';
 export const RATES_UPDATED = 'October 2026';
@@ -88,6 +115,32 @@ export const contentWhatsappLink = (origin: string, destination?: string) =>
     WHATSAPP_NUMBER,
     `Hi Raahi, I want a cargo quote from ${origin}${destination ? ` to ${destination}` : ''}`
   );
+
+/** WhatsApp message naming the destination (e.g. "…cargo quote to the UK"), so enquiries show the page they came from. */
+export const destinationWhatsappMessage = (destination: string) => `Hi Raahi, I want a cargo quote to ${destination}`;
+
+export const destinationWhatsappLink = (destination: string) =>
+  buildWhatsappUrl(WHATSAPP_NUMBER, destinationWhatsappMessage(destination));
+
+/** Pickup city pages, for the country pages' "eight cities" lists. */
+export const ORIGIN_CITY_PATHS: Record<string, string> = {
+  lahore: '/locations/international-cargo-services-in-lahore',
+  islamabad: '/locations/international-cargo-services-in-islamabad',
+  rawalpindi: '/locations/international-cargo-services-in-rawalpindi',
+  karachi: '/locations/international-cargo-services-in-karachi',
+  faisalabad: '/locations/international-cargo-services-in-faisalabad',
+  multan: '/locations/international-cargo-services-in-multan',
+  peshawar: '/locations/international-cargo-services-in-peshawar',
+  sialkot: '/locations/international-cargo-services-in-sialkot',
+};
+
+/** "[Lahore](…), [Karachi](…), … and [Sialkot](…)" in the copy's order. */
+export const originCityLinks = (keys: string[]) => {
+  const links = keys.map((key) => `[${key.charAt(0).toUpperCase()}${key.slice(1)}](${ORIGIN_CITY_PATHS[key]})`);
+  return `${links.slice(0, -1).join(', ')} and ${links[links.length - 1]}`;
+};
+
+export const ALL_ORIGIN_KEYS = ['lahore', 'karachi', 'islamabad', 'rawalpindi', 'faisalabad', 'multan', 'peshawar', 'sialkot'];
 
 /** Sidebar links to the destination country pages. */
 export const DESTINATION_LINKS = [

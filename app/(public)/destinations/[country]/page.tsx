@@ -20,7 +20,10 @@ import { DestinationSubCitiesGrid } from '@/components/destinations/DestinationS
 import { DestinationGuides } from '@/components/destinations/DestinationGuides';
 import { DestinationFaq } from '@/components/destinations/DestinationFaq';
 import { DestinationCta } from '@/components/destinations/DestinationCta';
-import { getSanityDestinationBySlug, getSanityDestinationsList, SanityDestinationCountryDocument } from '@/sanity/lib/fetch';
+import { getSanityDestinationBySlug, getSanityDestinationsList, getSanitySiteSettingsData, SanityDestinationCountryDocument } from '@/sanity/lib/fetch';
+import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
+import { COUNTRY_LANDINGS } from '@/lib/destinations/country-pages';
+import { CountryLandingPage } from '@/components/destinations/CountryLandingPage';
 
 interface CountryPageProps {
   params: Promise<{ country: string }>;
@@ -31,13 +34,11 @@ interface CountryPageProps {
  */
 export async function generateStaticParams() {
   const sanityDestinations = await getSanityDestinationsList();
-  if (sanityDestinations && sanityDestinations.length > 0) {
-    return sanityDestinations.map((dest) => ({ country: dest.slug }));
-  }
-  const publishedDestinations = await getPublishedDestinations();
-  return publishedDestinations.map((dest) => ({
-    country: dest.slug,
-  }));
+  const slugs =
+    sanityDestinations && sanityDestinations.length > 0
+      ? sanityDestinations.map((dest) => dest.slug)
+      : (await getPublishedDestinations()).map((dest) => dest.slug);
+  return [...new Set([...slugs, ...Object.keys(COUNTRY_LANDINGS)])].map((country) => ({ country }));
 }
 
 /**
@@ -45,6 +46,26 @@ export async function generateStaticParams() {
  */
 export async function generateMetadata({ params }: CountryPageProps): Promise<Metadata> {
   const { country } = await params;
+
+  // UK, UAE, KSA, USA and Canada use the code-defined copy (lib/destinations/country-pages), not the Sanity document
+  const countryPage = COUNTRY_LANDINGS[country];
+  if (countryPage) {
+    const canonicalUrl = `https://raahiinternational.com${countryPage.path}`;
+    return {
+      title: countryPage.seoTitle,
+      description: countryPage.seoDescription,
+      alternates: { canonical: canonicalUrl },
+      openGraph: {
+        title: countryPage.seoTitle,
+        description: countryPage.seoDescription,
+        url: canonicalUrl,
+        siteName: 'Raahi International',
+        type: 'website',
+        images: getOgImages(),
+      },
+    };
+  }
+
   const sanityDestination = await getSanityDestinationBySlug(country, { stega: false });
   const fallbackDestination = await getDestinationBySlug(country);
 
@@ -85,6 +106,21 @@ export async function generateMetadata({ params }: CountryPageProps): Promise<Me
 
 export default async function CountryDetailPage({ params }: CountryPageProps) {
   const { country } = await params;
+
+  const countryPage = COUNTRY_LANDINGS[country];
+  if (countryPage) {
+    const [business, sanitySiteSettings] = await Promise.all([
+      getPublishedBusinessSettings(),
+      getSanitySiteSettingsData(),
+    ]);
+    return (
+      <CountryLandingPage
+        page={countryPage}
+        whatsappNumber={sanitySiteSettings?.whatsappNumber || business?.whatsappNumber}
+      />
+    );
+  }
+
   const sanityDestination: SanityDestinationCountryDocument | null = await getSanityDestinationBySlug(country);
   const fallbackDestination = await getDestinationBySlug(country);
 

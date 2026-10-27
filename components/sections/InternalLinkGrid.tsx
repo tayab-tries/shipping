@@ -32,14 +32,14 @@ export const InternalLinkGrid: React.FC<InternalLinkGridProps> = ({ className = 
   ];
 
   const departureHubs = [
-    { label: 'Cargo Services in Lahore', href: '/locations/international-cargo-services-in-lahore', sub: 'Punjab Central Hub (LHR)' },
-    { label: 'Cargo Services in Karachi', href: '/locations/international-cargo-services-in-karachi', sub: 'Seaport & Air Terminal (KHI)' },
-    { label: 'Cargo Services in Islamabad', href: '/locations/international-cargo-services-in-islamabad', sub: 'Federal Capital Gateway (ISB)' },
-    { label: 'Cargo Services in Rawalpindi', href: '/locations/international-cargo-services-in-rawalpindi', sub: 'Twin Cities Dispatch' },
-    { label: 'Cargo Services in Faisalabad', href: '/locations/international-cargo-services-in-faisalabad', sub: 'Textile Export Center' },
-    { label: 'Cargo Services in Sialkot', href: '/locations/international-cargo-services-in-sialkot', sub: 'Manufacturing & Export Hub (SKT)' },
-    { label: 'Cargo Services in Multan', href: '/locations/international-cargo-services-in-multan', sub: 'South Punjab Dispatch Hub' },
-    { label: 'Cargo Services in Peshawar', href: '/locations/international-cargo-services-in-peshawar', sub: 'Khyber Pakhtunkhwa Gateway' },
+    { label: 'Cargo Services in Lahore', href: '/locations/international-cargo-services-in-lahore', sub: 'Punjab' },
+    { label: 'Cargo Services in Karachi', href: '/locations/international-cargo-services-in-karachi', sub: 'Sindh' },
+    { label: 'Cargo Services in Islamabad', href: '/locations/international-cargo-services-in-islamabad', sub: 'Islamabad Capital Territory' },
+    { label: 'Cargo Services in Rawalpindi', href: '/locations/international-cargo-services-in-rawalpindi', sub: 'Punjab, walk-in office' },
+    { label: 'Cargo Services in Faisalabad', href: '/locations/international-cargo-services-in-faisalabad', sub: 'Punjab' },
+    { label: 'Cargo Services in Sialkot', href: '/locations/international-cargo-services-in-sialkot', sub: 'Punjab' },
+    { label: 'Cargo Services in Multan', href: '/locations/international-cargo-services-in-multan', sub: 'Punjab' },
+    { label: 'Cargo Services in Peshawar', href: '/locations/international-cargo-services-in-peshawar', sub: 'Khyber Pakhtunkhwa' },
   ];
 
   const coreServicesAndTools = [
@@ -73,7 +73,7 @@ export const InternalLinkGrid: React.FC<InternalLinkGridProps> = ({ className = 
             id="internal-link-mesh-heading"
             className="text-heading-xl sm:text-3xl font-extrabold text-brand-black tracking-tight"
           >
-            Explore Pakistan Origin Hubs, Global Corridors & Shipping Services
+            Explore Pakistan Pickup Cities, Global Corridors & Shipping Services
           </h2>
           <p className="text-body-sm text-slate-600 mt-2.5 leading-relaxed">
             Quickly navigate our verified international delivery mesh. Select a departure terminal across Pakistan, an international destination hub, or access our instant quote and tracking tools.
@@ -94,7 +94,7 @@ export const InternalLinkGrid: React.FC<InternalLinkGridProps> = ({ className = 
                     International Destinations
                   </h3>
                   <span className="text-xs font-mono text-slate-500">
-                    5 Primary Countries • 12 City Hubs
+                    5 Primary Countries • 12 Cities
                   </span>
                 </div>
               </div>
@@ -153,7 +153,7 @@ export const InternalLinkGrid: React.FC<InternalLinkGridProps> = ({ className = 
             </div>
           </div>
 
-          {/* Column 2: Pakistan Departure Hubs */}
+          {/* Column 2: Pakistan Pickup Cities */}
           <div className="bg-surface rounded-lg border border-border p-6 sm:p-7 shadow-xs flex flex-col justify-between">
             <div className="space-y-6">
               <div className="flex items-center gap-3 border-b border-border pb-3.5">
@@ -162,7 +162,7 @@ export const InternalLinkGrid: React.FC<InternalLinkGridProps> = ({ className = 
                 </div>
                 <div>
                   <h3 className="text-heading-md font-bold text-brand-black">
-                    Pakistan Departure Hubs
+                    Pakistan Pickup Cities
                   </h3>
                   <span className="text-xs font-mono text-slate-500">
                     8 Verified Dispatch Centers

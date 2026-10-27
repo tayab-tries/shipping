@@ -35,7 +35,7 @@ const markdownComponents: Components = {
   p: ({ children }) => <>{children}</>,
 };
 
-function Markdown({ text }: { text: string }) {
+export function Markdown({ text }: { text: string }) {
   return (
     <ReactMarkdown rehypePlugins={[rehypeSanitize]} components={markdownComponents}>
       {text}
@@ -44,11 +44,11 @@ function Markdown({ text }: { text: string }) {
 }
 
 // Schema text must be plain: keep link labels, drop link targets and bold markers
-function toPlainText(markdown: string) {
+export function toPlainText(markdown: string) {
   return markdown.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/\*\*/g, '');
 }
 
-function Block({ block }: { block: ContentBlock }) {
+export function Block({ block }: { block: ContentBlock }) {
   switch (block.type) {
     case 'h3':
       return <h3 className="text-heading-md font-bold text-foreground pt-2">{block.text}</h3>;
@@ -208,6 +208,7 @@ export function CityLandingPage({ page, whatsappNumber }: CityLandingPageProps) 
         introduction={page.intro.join(' ')}
         quoteUrl={page.quoteUrl}
         breadcrumbs={page.breadcrumbs}
+        showStatusLine={false}
       />
 
       <div className="w-full bg-background text-foreground py-12 lg:py-20 border-b border-border">
@@ -323,7 +324,7 @@ export function CityLandingPage({ page, whatsappNumber }: CityLandingPageProps) 
   );
 }
 
-function SidebarLink({ href, label }: { href: string; label: string }) {
+export function SidebarLink({ href, label }: { href: string; label: string }) {
   return (
     <Link
       href={href}

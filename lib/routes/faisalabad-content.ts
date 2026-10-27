@@ -89,6 +89,22 @@ const FAISALABAD_CITY_PAGE: LandingPage = {
             '**Mixing both in one box** often gives the best price: the dense pieces fill the weight, the soft ones fill the gaps.',
           ],
         },
+        { type: 'h3', text: 'Two boxes, two prices' },
+        {
+          type: 'p',
+          text: 'Two cartons of the same size, 60 × 40 × 40 cm, each have a size weight of 16 kg (60 × 40 × 40 ÷ 6,000).',
+        },
+        {
+          type: 'list',
+          items: [
+            'Packed with folded bedsheets and towels, each weighs about 22 kg. You pay for the 44 kg on the scale: Rs 77,000–81,400 to England by air.',
+            'Packed with two razais each, they weigh about 7 kg apiece. You pay for 32 kg of size weight, Rs 56,000–59,200, to send 14 kg of quilts.',
+          ],
+        },
+        {
+          type: 'p',
+          text: 'Per kilo of goods, the quilts cost more than twice as much. Vacuum-pack them, or send them by sea, where the minimum is 70–100 kg and the rate drops to Rs 950–1,000 a kilo.',
+        },
       ],
     },
     {
@@ -102,6 +118,29 @@ const FAISALABAD_CITY_PAGE: LandingPage = {
         {
           type: 'p',
           text: 'Goods for sale travel as commercial cargo with a commercial invoice and a packing list, and the buyer clears them in their own name. For full-container exports from mills and factories, tell us the volume and destination and we will tell you whether we can take it on.',
+        },
+      ],
+    },
+    {
+      id: 'home-sellers',
+      title: 'Selling from home or a boutique',
+      blocks: [
+        {
+          type: 'p',
+          text: "A lot of Faisalabad stock goes abroad in small amounts: a home-based seller's lawn suits for customers in Canada, or a boutique's first order for a shop in Birmingham. That is commercial cargo, even at 25 kg.",
+        },
+        {
+          type: 'list',
+          items: [
+            '**Invoice:** list each item, the quantity and the price you are selling at.',
+            '**UK:** the buyer needs an EORI number and pays duty and VAT on the invoice value.',
+            '**Canada:** goods for sale pay duty and GST/HST. The CAD $60 gift allowance does not cover them.',
+            '**USA:** small commercial shipments no longer enter duty-free.',
+          ],
+        },
+        {
+          type: 'p',
+          text: 'Declaring stock as gifts to avoid duty can get the whole shipment held at customs. We would rather tell you the likely charges before you book.',
         },
       ],
     },
@@ -206,6 +245,20 @@ const FAISALABAD_CITY_PAGE: LandingPage = {
       answer: 'No. We pick up in Faisalabad. Our offices are in Rawalpindi and Lahore, but you do not need to visit either.',
     },
     { question: 'Can I send food from Faisalabad?', answer: 'No. Food is not accepted in any shipment.' },
+    {
+      question: 'How long does air cargo take from Faisalabad?',
+      answer: 'Door to door: 10–12 days to the UK, 10–15 to the USA and Canada, 3–4 to the UAE and 10–20 to Saudi Arabia.',
+    },
+    {
+      question: 'What is the difference between scale weight and size weight?',
+      answer:
+        'Scale weight is what the box weighs. Size weight is length × width × height in cm ÷ 6,000. You pay whichever is higher, box by box.',
+    },
+    {
+      question: 'Can a home-based seller send stock abroad?',
+      answer:
+        'Yes, as commercial cargo with an invoice, from 20 kg by air. Tell us the destination and we will tell you what the buyer will pay on arrival.',
+    },
   ],
   closing: `For international cargo services in Faisalabad, message [WhatsApp ${PHONE}](${WHATSAPP_URL}) or use the [quote form](${QUOTE_URL}), and we will collect from your door.`,
   breadcrumbs: cityBreadcrumbs(FAISALABAD),

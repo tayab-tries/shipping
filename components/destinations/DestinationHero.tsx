@@ -16,6 +16,8 @@ export interface DestinationHeroProps {
   introduction?: string;
   quoteUrl?: string;
   breadcrumbs?: Array<{ label: string; url?: string; href?: string }>;
+  /** The template's dispatch status line; the code-defined country pages leave it out. */
+  showStatusLine?: boolean;
 }
 
 export const DestinationHero: React.FC<DestinationHeroProps> = ({
@@ -26,6 +28,7 @@ export const DestinationHero: React.FC<DestinationHeroProps> = ({
   introduction,
   quoteUrl = '/quote',
   breadcrumbs = [],
+  showStatusLine = true,
 }) => {
   const displayTitle = h1 || `Cargo Shipping to ${cityName ? `${cityName}, ${countryName}` : countryName}`;
   const displayIntro = introduction || `Direct commercial air freight, ocean sea cargo, and doorstep collection connecting Pakistan with ${countryName}.`;
@@ -127,10 +130,12 @@ export const DestinationHero: React.FC<DestinationHeroProps> = ({
             </Link>
           </div>
 
-          <div className="pt-6 border-t border-border-dark/80 flex items-center gap-2 text-xs font-mono text-slate-400">
-            <ShieldCheck className="w-4 h-4 text-accent shrink-0" />
-            <span>Export Customs Declaration & Scheduled Linehaul Dispatch Active</span>
-          </div>
+          {showStatusLine && (
+            <div className="pt-6 border-t border-border-dark/80 flex items-center gap-2 text-xs font-mono text-slate-400">
+              <ShieldCheck className="w-4 h-4 text-accent shrink-0" />
+              <span>Export Customs Declaration & Scheduled Linehaul Dispatch Active</span>
+            </div>
+          )}
         </div>
       </Container>
     </section>

@@ -15,6 +15,8 @@ export interface LocationHeroProps {
   introduction?: string;
   quoteUrl?: string;
   breadcrumbs?: Array<{ label: string; url?: string; href?: string }>;
+  /** The template's "operational" status line; the code-defined city pages leave it out. */
+  showStatusLine?: boolean;
   location?: {
     name: string;
     description?: string;
@@ -32,6 +34,7 @@ export const LocationHero: React.FC<LocationHeroProps> = ({
   introduction,
   quoteUrl = '/quote',
   breadcrumbs = [],
+  showStatusLine = true,
   location,
 }) => {
   const name = cityName || location?.name || 'Pakistan Location';
@@ -133,10 +136,12 @@ export const LocationHero: React.FC<LocationHeroProps> = ({
             </Link>
           </div>
 
-          <div className="pt-6 border-t border-border-dark/80 flex items-center gap-2 text-xs font-mono text-slate-400">
-            <ShieldCheck className="w-4 h-4 text-accent shrink-0" />
-            <span>Origin Collection & Export Clearance Operational in {name}</span>
-          </div>
+          {showStatusLine && (
+            <div className="pt-6 border-t border-border-dark/80 flex items-center gap-2 text-xs font-mono text-slate-400">
+              <ShieldCheck className="w-4 h-4 text-accent shrink-0" />
+              <span>Origin Collection & Export Clearance Operational in {name}</span>
+            </div>
+          )}
         </div>
       </Container>
     </section>

@@ -106,6 +106,16 @@ const PESHAWAR_CITY_PAGE: LandingPage = {
           type: 'p',
           text: 'Flying out for work, study or Umrah with more luggage than the airline allows? Send the extra ahead by air cargo instead of paying excess fees at the airport. 22 kg to Dubai costs Rs 29,700–31,900. See [excess baggage shipping](/services/excess-baggage).',
         },
+        { type: 'h3', text: 'Sending luggage ahead before you fly to the Gulf' },
+        {
+          type: 'list',
+          items: [
+            '**Compare the price.** Ask your airline what an extra kilo costs at the counter, then compare it with ours: 22 kg to Dubai is Rs 29,700–31,900, and 22 kg to Riyadh is Rs 47,300–49,500.',
+            '**Book in time.** Air cargo takes 3–4 days to the UAE and 10–20 days to Saudi Arabia, door to door. For Saudi Arabia, book about three weeks before you fly; for the UAE, a week is usually enough.',
+            "**Give a real address.** The boxes go to the address you give, so use your accommodation or a relative's home, with a local phone number.",
+            '**Pack what travels well.** Clothes, bedding, work boots and kitchen items are fine. Food, attar and perfume, and power banks cannot go.',
+          ],
+        },
       ],
     },
     {
@@ -117,7 +127,7 @@ const PESHAWAR_CITY_PAGE: LandingPage = {
           type: 'list',
           items: [
             'Hayatabad, Karkhano Market and the Industrial Estate',
-            'University Road, Board Bazaar and Tehkal',
+            'University Town, University Road, Board Bazaar and Tehkal',
             'Saddar, Cantt and Gulbahar',
             'Qissa Khwani and the old city',
             'Ring Road, Warsak Road, Charsadda Road, Regi Model Town and DHA Peshawar',
@@ -184,6 +194,23 @@ const PESHAWAR_CITY_PAGE: LandingPage = {
       answer: 'Yes. Rolled and wrapped, by air or by sea. Large rugs usually cost less by sea.',
     },
     { question: 'Can I send dry fruit from Peshawar?', answer: 'No. We do not carry food of any kind.' },
+    {
+      question: 'Can I send extra luggage ahead before I fly to Saudi Arabia or the UAE?',
+      answer: 'Yes, from 20 kg. Book about three weeks ahead for Saudi Arabia and a week ahead for the UAE.',
+    },
+    {
+      question: 'Do you collect from Hayatabad, University Town and Karkhano Market?',
+      answer: 'Yes. All three are in our Peshawar pickup area.',
+    },
+    {
+      question: 'Can I send Peshawari chappals to sell abroad?',
+      answer: 'Yes, as commercial cargo with an invoice. The buyer pays any import duty in their country.',
+    },
+    {
+      question: 'What do I need to send cargo from Peshawar?',
+      answer:
+        "A copy of your CNIC or passport, the receiver's full address and phone number, and a list of what is in each box with values.",
+    },
   ],
   closing: `Book international cargo services in Peshawar on [WhatsApp ${PHONE}](${WHATSAPP_URL}), and we will collect from your door.`,
   breadcrumbs: cityBreadcrumbs(PESHAWAR),
