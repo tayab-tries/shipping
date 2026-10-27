@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Metadata } from 'next';
 import { getBreadcrumbJsonLd, getItemListJsonLd } from '@/lib/seo/jsonld.service';
 import { applyTitleTemplate } from '@/lib/seo/seo-text';
@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
+import { GuidesBrowser, GuidesBrowserView, GuideListItem } from '@/components/guides/GuidesBrowser';
 import { getPublishedStaticArticles, GuideArticleData } from '@/lib/guides/guide-content';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
 import { getSanityGuidesList, SanityGuideDocument } from '@/sanity/lib/fetch';
@@ -34,13 +35,8 @@ export const metadata: Metadata = {
   },
 };
 
-interface GuidesPageProps {
-  searchParams: Promise<{ category?: string }>;
-}
-
-export default async function GuidesHubPage({ searchParams }: GuidesPageProps) {
-  const { category: activeCategory } = await searchParams;
-
+// ?category= is read client-side (GuidesBrowser) so this hub stays prerendered and cached
+export default async function GuidesHubPage() {
   const [sanityGuides, fallbackGuides] = await Promise.all([
     getSanityGuidesList(),
     getPublishedStaticArticles(),
@@ -79,12 +75,14 @@ export default async function GuidesHubPage({ searchParams }: GuidesPageProps) {
         })
       : fallbackGuides;
 
-  const filteredArticles = activeCategory
-    ? allArticles.filter((a) => a.category === activeCategory)
-    : allArticles;
-
   const featuredArticle = allArticles.find((a) => a.isFeatured) || allArticles[0];
-  const supportingArticles = filteredArticles.filter((a) => a.slug !== featuredArticle?.slug);
+  const articleList: GuideListItem[] = allArticles.map(({ slug, title, excerpt, category, readingTimeMinutes }) => ({
+    slug,
+    title,
+    excerpt,
+    category,
+    readingTimeMinutes,
+  }));
 
   const categories = [
     { label: 'All Guides', slug: '' },
@@ -105,6 +103,66 @@ export default async function GuidesHubPage({ searchParams }: GuidesPageProps) {
   const itemListJsonLd = getItemListJsonLd(
     'Customs & Shipping Guides',
     allArticles.map((a) => ({ name: a.title, url: `/guides/${a.slug}` }))
+  );
+
+  const featuredSection = featuredArticle && (
+    <section className="w-full bg-surface py-16 lg:py-24 border-b border-border">
+      <Container>
+        <SectionHeading
+          badge="Featured Logistics Guide"
+          title="Primary Editorial Guide"
+          className="mb-10"
+        />
+
+        <div className="bg-surface-subtle rounded-md border border-border overflow-hidden p-8 lg:p-12 shadow-xs grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          {/* Featured Visual Image Slot */}
+          <div className="lg:col-span-6 relative aspect-[16/10] rounded-md overflow-hidden bg-surface border border-border">
+            <Image
+              src={IMAGE_SLOTS.guideCover.src}
+              alt={featuredArticle.title}
+              fill
+              sizes="(max-width: 1024px) 100vw, 550px"
+              className="object-cover object-center"
+            />
+          </div>
+
+          {/* Featured Copy & Action */}
+          <div className="lg:col-span-6 space-y-6">
+            <div className="flex items-center gap-3 text-xs font-mono text-slate-500">
+              <Badge variant="navy">{featuredArticle.category.replace('-', ' ')}</Badge>
+              <span>{featuredArticle.readingTimeMinutes} min read</span>
+            </div>
+
+            <h2 className="text-display-sm font-bold text-brand-black leading-tight hover:text-accent transition-colors">
+              <Link href={`/guides/${featuredArticle.slug}`}>{featuredArticle.title}</Link>
+            </h2>
+
+            <p className="text-body-md text-slate-700 leading-relaxed font-normal">
+              {featuredArticle.excerpt}
+            </p>
+
+            <div className="pt-4 border-t border-border flex items-center justify-between">
+              <div className="flex items-center gap-4 text-xs font-mono text-slate-500">
+                <span className="flex items-center gap-1">
+                  <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                  {featuredArticle.publishedAt}
+                </span>
+                <span className="flex items-center gap-1">
+                  <Clock className="w-3.5 h-3.5 text-slate-400" />
+                  {featuredArticle.authorName}
+                </span>
+              </div>
+
+              <Link href={`/guides/${featuredArticle.slug}`}>
+                <Button variant="accent" size="md" rightIcon={<ArrowRight className="w-4 h-4 text-brand-black" />}>
+                  Read Guide
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </Container>
+    </section>
   );
 
   return (
@@ -139,144 +197,24 @@ export default async function GuidesHubPage({ searchParams }: GuidesPageProps) {
         </Container>
       </section>
 
-      {/* 02 CATEGORY NAVIGATION (Server-rendered Tabs with Horizontal Scroll) */}
-      <section className="w-full bg-surface-subtle border-b border-border sticky top-16 z-30 shadow-2xs">
-        <Container>
-          <div className="flex items-center gap-6 overflow-x-auto no-scrollbar py-3 text-xs font-mono">
-            {categories.map((cat) => {
-              const isActive = (activeCategory || '') === cat.slug;
-              const href = cat.slug ? `/guides?category=${cat.slug}` : '/guides';
-              return (
-                <Link
-                  key={cat.slug}
-                  href={href}
-                  className={`shrink-0 pb-1.5 border-b-2 font-semibold transition-colors ${
-                    isActive
-                      ? 'border-accent text-brand-black font-bold'
-                      : 'border-transparent text-slate-600 hover:text-brand-black'
-                  }`}
-                >
-                  {cat.label}
-                </Link>
-              );
-            })}
-          </div>
-        </Container>
-      </section>
-
-      {/* 03 FEATURED GUIDE (2-Column Editorial Composition) */}
-      {!activeCategory && featuredArticle && (
-        <section className="w-full bg-surface py-16 lg:py-24 border-b border-border">
-          <Container>
-            <SectionHeading
-              badge="Featured Logistics Guide"
-              title="Primary Editorial Guide"
-              className="mb-10"
-            />
-
-            <div className="bg-surface-subtle rounded-md border border-border overflow-hidden p-8 lg:p-12 shadow-xs grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-              {/* Featured Visual Image Slot */}
-              <div className="lg:col-span-6 relative aspect-[16/10] rounded-md overflow-hidden bg-surface border border-border">
-                <Image
-                  src={IMAGE_SLOTS.guideCover.src}
-                  alt={featuredArticle.title}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 550px"
-                  className="object-cover object-center"
-                />
-              </div>
-
-              {/* Featured Copy & Action */}
-              <div className="lg:col-span-6 space-y-6">
-                <div className="flex items-center gap-3 text-xs font-mono text-slate-500">
-                  <Badge variant="navy">{featuredArticle.category.replace('-', ' ')}</Badge>
-                  <span>{featuredArticle.readingTimeMinutes} min read</span>
-                </div>
-
-                <h2 className="text-display-sm font-bold text-brand-black leading-tight hover:text-accent transition-colors">
-                  <Link href={`/guides/${featuredArticle.slug}`}>{featuredArticle.title}</Link>
-                </h2>
-
-                <p className="text-body-md text-slate-700 leading-relaxed font-normal">
-                  {featuredArticle.excerpt}
-                </p>
-
-                <div className="pt-4 border-t border-border flex items-center justify-between">
-                  <div className="flex items-center gap-4 text-xs font-mono text-slate-500">
-                    <span className="flex items-center gap-1">
-                      <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                      {featuredArticle.publishedAt}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5 text-slate-400" />
-                      {featuredArticle.authorName}
-                    </span>
-                  </div>
-
-                  <Link href={`/guides/${featuredArticle.slug}`}>
-                    <Button variant="accent" size="md" rightIcon={<ArrowRight className="w-4 h-4 text-brand-black" />}>
-                      Read Guide
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </Container>
-        </section>
-      )}
-
-      {/* 04 GUIDE DIRECTORY (Clean Editorial List with Row Dividers) */}
-      <section className="w-full bg-background py-16 lg:py-24 border-b border-border">
-        <Container>
-          <SectionHeading
-            badge="Articles Directory"
-            title={activeCategory ? `Guides in "${activeCategory.replace('-', ' ')}"` : 'All Published Logistics Guides'}
-            subtitle="Verified educational resources, compliance advice, and packing checklists."
-            className="mb-12"
+      <Suspense
+        fallback={
+          <GuidesBrowserView
+            activeCategory=""
+            categories={categories}
+            articles={articleList}
+            featuredSlug={featuredArticle?.slug}
+            featured={featuredSection}
           />
-
-          {supportingArticles.length === 0 ? (
-            <div className="p-8 bg-surface border border-border rounded text-center text-slate-600">
-              No additional guides found in this category.
-            </div>
-          ) : (
-            <div className="bg-surface rounded-md border border-border divide-y divide-border shadow-xs overflow-hidden">
-              {supportingArticles.map((art) => (
-                <div
-                  key={art.slug}
-                  className="p-6 lg:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:bg-surface-subtle/80 transition-colors group"
-                >
-                  <div className="space-y-2 md:w-2/3">
-                    <div className="flex items-center gap-3 text-xs font-mono text-slate-500">
-                      <span className="uppercase font-semibold text-slate-700">{art.category.replace('-', ' ')}</span>
-                      <span>•</span>
-                      <span>{art.readingTimeMinutes} min read</span>
-                    </div>
-
-                    <h3 className="text-heading-md font-bold text-brand-black group-hover:text-accent transition-colors">
-                      <Link href={`/guides/${art.slug}`}>{art.title}</Link>
-                    </h3>
-
-                    <p className="text-body-sm text-slate-600 leading-relaxed line-clamp-2 font-normal">
-                      {art.excerpt}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-4 md:justify-end md:w-1/3">
-                    <Link
-                      href={`/guides/${art.slug}`}
-                      className="text-xs font-mono font-semibold text-brand-black hover:text-accent flex items-center gap-1 transition-colors"
-                    >
-                      <span>Read Guide</span>
-                      <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-accent" />
-                    </Link>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </Container>
-      </section>
+        }
+      >
+        <GuidesBrowser
+          categories={categories}
+          articles={articleList}
+          featuredSlug={featuredArticle?.slug}
+          featured={featuredSection}
+        />
+      </Suspense>
 
       {/* 05 FINAL CTA */}
       <FinalCtaSection />
