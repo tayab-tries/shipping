@@ -1,49 +1,40 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowRight, MapPin } from 'lucide-react';
-import { getPublishedLocations } from '@/lib/locations/location-content';
-import { getLocationHref, toLocationKey, toLocationKeys } from '@/lib/locations/location-slugs';
+import { toLocationKeys } from '@/lib/locations/location-slugs';
+import { getCityPageLinks } from '@/lib/routes/registry';
 
 export interface RelatedLocationsBarProps {
   supportedOrigins?: string[];
 }
 
-export const RelatedLocationsBar: React.FC<RelatedLocationsBarProps> = async ({
-  supportedOrigins = [],
-}) => {
-  const publishedLocations = await getPublishedLocations();
-
-  // Null/broken CMS reference entries are dropped before matching
+export const RelatedLocationsBar: React.FC<RelatedLocationsBarProps> = ({ supportedOrigins = [] }) => {
+  // Null/broken CMS reference entries are dropped before matching; no origins (or none matching) lists every city
   const originKeys = toLocationKeys(supportedOrigins);
-
-  const related = originKeys.length > 0
-    ? publishedLocations.filter(
-        (l) => originKeys.includes(l.slug) || originKeys.includes(toLocationKey(l.name))
-      )
-    : publishedLocations.slice(0, 3);
-
-  if (related.length === 0) return null;
+  const allCities = getCityPageLinks();
+  const matched = allCities.filter((city) => originKeys.includes(city.key));
+  const related = matched.length > 0 ? matched : allCities;
 
   return (
     <div className="py-8 border-t border-border space-y-4">
       <div className="text-xs font-mono font-bold uppercase text-slate-500 tracking-wider">
-        Pakistan Pickup Origin Hubs
+        Cargo Pickup Across Pakistan
       </div>
 
-      <div className="divide-y divide-border rounded border border-border bg-surface overflow-hidden">
-        {related.map((loc) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-px rounded border border-border bg-border overflow-hidden">
+        {related.map((city) => (
           <Link
-            key={loc.slug}
-            href={getLocationHref(loc.slug)}
-            className="p-4 flex items-center justify-between hover:bg-surface-subtle transition-colors group"
+            key={city.key}
+            href={city.href}
+            className="p-4 flex items-center justify-between gap-3 bg-surface hover:bg-surface-subtle transition-colors group"
           >
-            <div className="flex items-center gap-3">
-              <MapPin className="w-4 h-4 text-slate-500 group-hover:text-accent transition-colors" />
+            <span className="flex items-center gap-3 min-w-0">
+              <MapPin className="w-4 h-4 shrink-0 text-slate-500 group-hover:text-accent transition-colors" />
               <span className="text-body-sm font-bold text-brand-black group-hover:text-accent transition-colors">
-                Cargo Pickup in {loc.name} ({loc.province})
+                {city.label}
               </span>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-accent transition-colors" />
+            </span>
+            <ArrowRight className="w-3.5 h-3.5 shrink-0 text-slate-400 group-hover:text-accent transition-colors" />
           </Link>
         ))}
       </div>

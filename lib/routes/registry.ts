@@ -33,3 +33,10 @@ export const ROUTE_PAGES: Record<string, LandingPage> = Object.assign(
 export function getRoutesForCountry(countrySlug: string): LandingPage[] {
   return Object.values(ROUTE_PAGES).filter((page) => page.countrySlug === countrySlug);
 }
+
+/** Keyword-anchored links to every code-defined city page, optionally excluding one city by short slug. */
+export function getCityPageLinks(excludeKey?: string): Array<{ key: string; href: string; label: string }> {
+  return Object.entries(CITY_LANDINGS)
+    .filter(([key]) => key !== excludeKey)
+    .map(([key, { cityPage }]) => ({ key, href: cityPage.path, label: cityPage.linkLabel }));
+}

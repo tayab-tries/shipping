@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
+import { PakistanReachSection } from '@/components/sections/PakistanReachSection';
 import { getEnabledServices, ServiceConfigItem } from '@/config/services.config';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
 import { getSanityServicesList, SanityServiceDocument } from '@/sanity/lib/fetch';
@@ -343,6 +344,9 @@ export default async function ServicesHubPage() {
           </Container>
         </section>
       )}
+
+      {/* Pickup cities: in-body links to every city page */}
+      <PakistanReachSection />
 
       {/* 4. Selection Guidance Callout Section */}
       <section className="w-full bg-brand-navy py-16 text-white border-b border-border-dark">

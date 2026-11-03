@@ -23,6 +23,7 @@ import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.servic
 import { getBreadcrumbJsonLd } from '@/lib/seo/jsonld.service';
 import { getSanitySiteSettingsData, getSanityCargoPricingData, SanityCargoRateItem, SanityCargoComparisonRow } from '@/sanity/lib/fetch';
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
+import { getCityPageLinks } from '@/lib/routes/registry';
 
 export async function generateMetadata(): Promise<Metadata> {
   const sanityCargoPricing = await getSanityCargoPricingData({ stega: false });
@@ -747,6 +748,21 @@ export default async function CargoServicesPage() {
                   </Link>
                 </div>
               </div>
+
+              {/* PICKUP CITY LINKS */}
+              <nav aria-label="Ship from your city" className="bg-surface border border-border rounded-md p-6 space-y-3 shadow-2xs">
+                <h4 className="text-xs font-mono font-bold text-slate-500 uppercase tracking-wider">
+                  Ship From Your City
+                </h4>
+                <div className="space-y-2 text-body-xs">
+                  {getCityPageLinks().map((city) => (
+                    <Link key={city.key} href={city.href} className="block p-2.5 rounded-xs bg-surface-subtle hover:bg-border transition-colors font-semibold text-brand-black flex items-center justify-between">
+                      <span>{city.label}</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-accent-dark" />
+                    </Link>
+                  ))}
+                </div>
+              </nav>
             </aside>
           </div>
         </Container>
