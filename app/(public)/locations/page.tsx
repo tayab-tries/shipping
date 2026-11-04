@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
+import { PopularRoutesSection } from '@/components/routes/PopularRoutesSection';
 import { getPublishedLocations, LocationData } from '@/lib/locations/location-content';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
 import { getSanityLocationsList, SanityLocationDocument } from '@/sanity/lib/fetch';
@@ -355,6 +356,9 @@ export default async function LocationsHubPage() {
           </Container>
         </section>
       )}
+
+      {/* Origin → destination route pages */}
+      <PopularRoutesSection />
 
       {/* 4. Service & Dispatch Guidance Section */}
       <section className="w-full bg-brand-navy py-16 text-white border-b border-border-dark">

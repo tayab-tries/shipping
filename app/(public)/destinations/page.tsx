@@ -18,6 +18,7 @@ import { keyDestinationCities } from '@/config/nav.config';
 import { IMAGE_SLOTS } from '@/lib/constants/images';
 import { getSanityDestinationsList, getSanityLocationsList, SanityDestinationCountryDocument } from '@/sanity/lib/fetch';
 import { getLocationHref } from '@/lib/locations/location-slugs';
+import { PopularRoutesSection } from '@/components/routes/PopularRoutesSection';
 
 export const metadata: Metadata = {
   title: applyTitleTemplate('International Cargo Destinations from Pakistan'),
@@ -540,6 +541,9 @@ export default async function DestinationsHubPage() {
           </Container>
         </section>
       )}
+
+      {/* Origin → destination route pages */}
+      <PopularRoutesSection />
 
       {/* 06 FINAL CONVERSION PANEL */}
       <FinalCtaSection />

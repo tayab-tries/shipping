@@ -10,7 +10,7 @@ import { LocationCta } from '@/components/locations/LocationCta';
 import { getBreadcrumbJsonLd, getLocalBusinessJsonLd } from '@/lib/seo/jsonld.service';
 import { ORGANIZATION_ID } from '@/lib/seo/schema.service';
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
-import { CITY_LANDINGS, getCityPageLinks } from '@/lib/routes/registry';
+import { CITY_LANDINGS, getCityPageLinks, getRoutesForCountry } from '@/lib/routes/registry';
 import { getDestinationCityLinks } from '@/lib/destinations/city-logistics-data';
 import { ContentBlock, LandingPage } from '@/lib/routes/shared';
 
@@ -195,6 +195,11 @@ export function CityLandingPage({ page, whatsappNumber }: CityLandingPageProps) 
   const whatsappUrl = buildWhatsappUrl(whatsappNumber, page.whatsappMessage);
   const { cityPage, routes, relatedLinks = [] } = CITY_LANDINGS[origin.key];
   const otherRoutes = Object.entries(routes).filter(([, route]) => route.path !== page.path);
+  // Same destination from the other Pakistan origin cities (e.g. Islamabad and Karachi to UK on the Lahore to UK page)
+  const sameDestinationRoutes = page.countrySlug
+    ? getRoutesForCountry(page.countrySlug).filter((route) => route.origin.key !== origin.key)
+    : [];
+  const destinationName = page.service?.areaServed.name ?? 'this destination';
 
   return (
     <article className="w-full bg-background">
@@ -315,6 +320,19 @@ export function CityLandingPage({ page, whatsappNumber }: CityLandingPageProps) 
                   <SidebarLink href="/cargo-services" label="All cargo rates" />
                 </div>
               </nav>
+
+              {sameDestinationRoutes.length > 0 && (
+                <nav aria-label={`Other cities to ${destinationName}`} className="bg-surface rounded-md border border-border p-6 space-y-4 shadow-xs">
+                  <p className="text-xs font-mono font-bold text-slate-500 uppercase tracking-wider">
+                    Also shipping to {destinationName} from
+                  </p>
+                  <div className="space-y-2.5">
+                    {sameDestinationRoutes.map((route) => (
+                      <SidebarLink key={route.path} href={route.path} label={route.linkLabel} />
+                    ))}
+                  </div>
+                </nav>
+              )}
 
               {page.path === origin.cityPath && (
                 <nav aria-label="Other cities we collect from" className="bg-surface rounded-md border border-border p-6 space-y-4 shadow-xs">
