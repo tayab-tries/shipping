@@ -52,6 +52,7 @@ export const InternalLinkGrid: React.FC<InternalLinkGridProps> = ({ className = 
     { label: 'All Cargo Services Overview', href: '/services', category: 'Directory' },
     { label: 'Instant Freight Rate Calculator', href: '/quote', category: 'Tool' },
     { label: 'Live Shipment Tracking & Status', href: '/track', category: 'Tool' },
+    { label: 'Air vs Sea Cargo Guide', href: '/guides/air-vs-sea-cargo', category: 'Guide' },
     { label: 'Export Customs Documentation Guide', href: '/guides/export-customs-documentation-guide', category: 'Guide' },
     { label: 'Cargo Packaging & Crating Guidelines', href: '/guides/packing-cargo-guide', category: 'Guide' },
     { label: 'Shipping & Customs Guides Directory', href: '/guides', category: 'Directory' },
