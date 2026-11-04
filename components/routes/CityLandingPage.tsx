@@ -12,6 +12,7 @@ import { ORGANIZATION_ID } from '@/lib/seo/schema.service';
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
 import { CITY_LANDINGS, getCityPageLinks, getRoutesForCountry } from '@/lib/routes/registry';
 import { getDestinationCityLinks } from '@/lib/destinations/city-logistics-data';
+import { GuideLinksNav } from '@/components/guides/GuideLinksNav';
 import { ContentBlock, LandingPage } from '@/lib/routes/shared';
 
 const BASE_URL = 'https://raahiinternational.com';
@@ -355,6 +356,7 @@ export function CityLandingPage({ page, whatsappNumber }: CityLandingPageProps) 
                   </div>
                 </nav>
               )}
+              <GuideLinksNav />
             </aside>
           </div>
         </Container>

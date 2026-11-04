@@ -21,6 +21,8 @@ import { DestinationCta } from '@/components/destinations/DestinationCta';
 import { CityGatewayRouting } from '@/components/destinations/CityGatewayRouting';
 import { CityDeliveryCoverage } from '@/components/destinations/CityDeliveryCoverage';
 import { DestinationCityLinks } from '@/components/destinations/DestinationCityLinks';
+import { GuideLinksNav } from '@/components/guides/GuideLinksNav';
+import { Container } from '@/components/ui/Container';
 import { getSanityDestinationCityBySlugs, getSanityDestinationsList } from '@/sanity/lib/fetch';
 import { getCityLogisticsData, cityLogisticsProfiles } from '@/lib/destinations/city-logistics-data';
 
@@ -294,6 +296,15 @@ export default async function DestinationCityDetailPage({ params }: CityPageProp
           cityName={cityName}
           countryName={countryName}
         />
+      )}
+
+      {/* Shipping guides (the full guides preview stays on the country page) */}
+      {cityLogistics && (
+        <section className="w-full bg-surface pb-16 lg:pb-20 border-b border-border">
+          <Container>
+            <GuideLinksNav className="max-w-xl" />
+          </Container>
+        </section>
       )}
 
       {/* 10 CITY-SPECIFIC FAQ ACCORDION (LIGHT) */}

@@ -12,6 +12,7 @@ import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
 import { getRoutesForCountry } from '@/lib/routes/registry';
 import { CountryLanding } from '@/lib/routes/shared';
 import { getStaticDestinationBySlug } from '@/lib/destinations/destination-content';
+import { GuideLinksNav } from '@/components/guides/GuideLinksNav';
 
 const BASE_URL = 'https://raahiinternational.com';
 
@@ -167,6 +168,8 @@ export function CountryLandingPage({ page, whatsappNumber }: CountryLandingPageP
                   <SidebarLink href="/cargo-services" label="All cargo rates" />
                 </div>
               </nav>
+
+              <GuideLinksNav />
             </aside>
           </div>
         </Container>

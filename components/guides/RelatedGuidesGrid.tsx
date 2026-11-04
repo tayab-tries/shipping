@@ -1,18 +1,16 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowRight, BookOpen, Clock } from 'lucide-react';
-import { getPublishedStaticArticles } from '@/lib/guides/guide-content';
+import { getGuideLinks } from '@/lib/guides/guide-links';
 
 export interface RelatedGuidesGridProps {
   currentSlug?: string;
   category?: string;
 }
 
-export const RelatedGuidesGrid: React.FC<RelatedGuidesGridProps> = ({
-  currentSlug,
-  category,
-}) => {
-  const published = getPublishedStaticArticles();
+export async function RelatedGuidesGrid({ currentSlug, category }: RelatedGuidesGridProps) {
+  // Sanity holds the published guides; the code-defined list is only a fallback
+  const published = await getGuideLinks();
 
   const related = published
     .filter((a) => a.slug !== currentSlug)
@@ -35,7 +33,7 @@ export const RelatedGuidesGrid: React.FC<RelatedGuidesGridProps> = ({
           {displayArticles.map((art) => (
             <Link
               key={art.slug}
-              href={`/guides/${art.slug}`}
+              href={art.href}
               className="p-6 bg-surface rounded-md border border-border flex flex-col justify-between space-y-4 hover:border-slate-400 transition-colors group block shadow-2xs"
             >
               <div className="space-y-2">
@@ -43,7 +41,7 @@ export const RelatedGuidesGrid: React.FC<RelatedGuidesGridProps> = ({
                   <span className="uppercase">{art.category.replace('-', ' ')}</span>
                   <span className="flex items-center gap-1">
                     <Clock className="w-3 h-3 text-slate-400" />
-                    {art.readingTimeMinutes} min read
+                    {art.readingTimeMinutes ?? 5} min read
                   </span>
                 </div>
                 <h3 className="text-heading-sm font-bold text-brand-black group-hover:text-accent transition-colors leading-snug">
@@ -67,4 +65,4 @@ export const RelatedGuidesGrid: React.FC<RelatedGuidesGridProps> = ({
       </div>
     </section>
   );
-};
+}

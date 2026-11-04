@@ -42,7 +42,7 @@ export function DestinationCityLinks({ countrySlug, citySlug, cityName, countryN
     );
 
   return (
-    <section className="w-full bg-surface py-16 lg:py-20 border-b border-border text-brand-black">
+    <section className="w-full bg-surface pt-16 lg:pt-20 pb-8 text-brand-black">
       <Container>
         <div className="space-y-8">
           <div className="space-y-2">
