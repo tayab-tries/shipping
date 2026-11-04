@@ -24,6 +24,7 @@ import { getBreadcrumbJsonLd } from '@/lib/seo/jsonld.service';
 import { getSanitySiteSettingsData, getSanityCargoPricingData, SanityCargoRateItem, SanityCargoComparisonRow } from '@/sanity/lib/fetch';
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
 import { getCityPageLinks } from '@/lib/routes/registry';
+import { ServiceLinksNav } from '@/components/services/ServiceLinksNav';
 
 export async function generateMetadata(): Promise<Metadata> {
   const sanityCargoPricing = await getSanityCargoPricingData({ stega: false });
@@ -748,6 +749,8 @@ export default async function CargoServicesPage() {
                   </Link>
                 </div>
               </div>
+
+              <ServiceLinksNav excludeHref="/cargo-services" />
 
               {/* PICKUP CITY LINKS */}
               <nav aria-label="Ship from your city" className="bg-surface border border-border rounded-md p-6 space-y-3 shadow-2xs">

@@ -13,6 +13,7 @@ import { getRoutesForCountry } from '@/lib/routes/registry';
 import { CountryLanding } from '@/lib/routes/shared';
 import { getStaticDestinationBySlug } from '@/lib/destinations/destination-content';
 import { GuideLinksNav } from '@/components/guides/GuideLinksNav';
+import { ServiceLinksNav } from '@/components/services/ServiceLinksNav';
 
 const BASE_URL = 'https://raahiinternational.com';
 
@@ -169,6 +170,7 @@ export function CountryLandingPage({ page, whatsappNumber }: CountryLandingPageP
                 </div>
               </nav>
 
+              <ServiceLinksNav />
               <GuideLinksNav />
             </aside>
           </div>

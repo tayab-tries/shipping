@@ -22,6 +22,8 @@ import { FinalCtaSection } from '@/components/sections/FinalCtaSection';
 import { getSanityServiceBySlug, getSanityServicesList, SanityServiceDocument, getSanitySiteSettingsData, getSanityCargoPricingData } from '@/sanity/lib/fetch';
 import { AirFreightServiceContent } from '@/components/services/AirFreightServiceContent';
 import { getPublishedBusinessSettings } from '@/lib/cms/business-settings.service';
+import { ServiceLinksNav } from '@/components/services/ServiceLinksNav';
+import { GuideLinksNav } from '@/components/guides/GuideLinksNav';
 
 interface ServicePageProps {
   params: Promise<{ slug: string }>;
@@ -359,6 +361,16 @@ export default async function ServiceDetailPage({ params }: ServicePageProps) {
       <RelatedDestinationsBar destinationSlugs={fallbackService?.relatedDestinations} />
       <RelatedLocationsBar locationSlugs={fallbackService?.relatedLocations} />
       <RelatedServicesGrid relatedSlugs={fallbackService?.relatedServices} />
+
+      {/* Other service pages and shipping guides */}
+      <section className="w-full bg-surface py-12 lg:py-16 border-b border-border">
+        <Container>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <ServiceLinksNav excludeHref={`/services/${slug}`} />
+            <GuideLinksNav />
+          </div>
+        </Container>
+      </section>
 
       {/* 6. Visible FAQ Accordion */}
       {faqItems && faqItems.length > 0 && (

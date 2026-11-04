@@ -22,6 +22,7 @@ import { CityGatewayRouting } from '@/components/destinations/CityGatewayRouting
 import { CityDeliveryCoverage } from '@/components/destinations/CityDeliveryCoverage';
 import { DestinationCityLinks } from '@/components/destinations/DestinationCityLinks';
 import { GuideLinksNav } from '@/components/guides/GuideLinksNav';
+import { ServiceLinksNav } from '@/components/services/ServiceLinksNav';
 import { Container } from '@/components/ui/Container';
 import { getSanityDestinationCityBySlugs, getSanityDestinationsList } from '@/sanity/lib/fetch';
 import { getCityLogisticsData, cityLogisticsProfiles } from '@/lib/destinations/city-logistics-data';
@@ -298,11 +299,14 @@ export default async function DestinationCityDetailPage({ params }: CityPageProp
         />
       )}
 
-      {/* Shipping guides (the full guides preview stays on the country page) */}
+      {/* Cargo services and shipping guides (the full sections stay on the country page) */}
       {cityLogistics && (
         <section className="w-full bg-surface pb-16 lg:pb-20 border-b border-border">
           <Container>
-            <GuideLinksNav className="max-w-xl" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <ServiceLinksNav />
+              <GuideLinksNav />
+            </div>
           </Container>
         </section>
       )}
