@@ -1307,3 +1307,30 @@ export function getCityLogisticsData(countrySlug: string, citySlug: string): Cit
   const key = `${countrySlug}/${citySlug}`;
   return cityLogisticsProfiles[key];
 }
+
+const COUNTRY_SHORT_NAMES: Record<string, string> = {
+  uk: 'UK',
+  usa: 'USA',
+  uae: 'UAE',
+  ksa: 'Saudi Arabia',
+  canada: 'Canada',
+};
+
+export interface DestinationCityLink {
+  key: string;
+  countrySlug: string;
+  href: string;
+  label: string;
+}
+
+/** Keyword-anchored links to every profiled destination city page, optionally excluding one (`uk/london`). */
+export function getDestinationCityLinks(excludeKey?: string): DestinationCityLink[] {
+  return Object.entries(cityLogisticsProfiles)
+    .filter(([key]) => key !== excludeKey)
+    .map(([key, profile]) => ({
+      key,
+      countrySlug: profile.countrySlug,
+      href: `/destinations/${key}`,
+      label: `Cargo to ${profile.cityName}, ${COUNTRY_SHORT_NAMES[profile.countrySlug] ?? profile.countryName}`,
+    }));
+}
