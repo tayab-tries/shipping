@@ -13,6 +13,8 @@ export interface DestinationOriginGridProps {
   /** Set on destination city pages, so origin route links can use city-specific anchor text. */
   citySlug?: string;
   supportedOrigins?: string[];
+  /** Keep the linked summary paragraph and route links, without the per-origin rows that repeat on every city page. */
+  compact?: boolean;
 }
 
 export async function DestinationOriginGrid({
@@ -20,6 +22,7 @@ export async function DestinationOriginGrid({
   countrySlug,
   citySlug,
   supportedOrigins,
+  compact = false,
 }: DestinationOriginGridProps) {
   const publishedLocations = await getPublishedLocations();
 
@@ -51,7 +54,7 @@ export async function DestinationOriginGrid({
         />
 
         {/* Editorial Contextual Cross-Linking Banner */}
-        <div className="mb-10 p-6 bg-surface-subtle border border-border rounded-lg text-sm text-slate-700 leading-relaxed shadow-xs">
+        <div className={`${compact ? '' : 'mb-10 '}p-6 bg-surface-subtle border border-border rounded-lg text-sm text-slate-700 leading-relaxed shadow-xs`}>
           <p className="font-medium text-slate-800">
             Ship directly to {countryName} from our primary Pakistan dispatch hubs including{' '}
             <Link href="/locations/international-cargo-services-in-lahore" className="font-semibold text-brand-black hover:text-accent underline underline-offset-2">Lahore Cargo Office</Link>,{' '}
@@ -78,50 +81,52 @@ export async function DestinationOriginGrid({
           ))}
         </div>
 
-        <div className="bg-surface-subtle rounded-md border border-border divide-y divide-border shadow-xs overflow-hidden">
-          {originsToRender.map((loc) => (
-            <div
-              key={loc.slug}
-              className="p-6 lg:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:bg-surface/80 transition-colors group"
-            >
-              <div className="space-y-1 md:w-1/2">
-                <div className="text-xs font-mono text-slate-500 uppercase tracking-wider flex items-center gap-2">
-                  <span>{loc.province}</span>
-                  <span className="text-slate-400 font-bold">→</span>
-                  <span className="font-semibold text-brand-black">{countryName}</span>
+        {!compact && (
+          <div className="bg-surface-subtle rounded-md border border-border divide-y divide-border shadow-xs overflow-hidden">
+            {originsToRender.map((loc) => (
+              <div
+                key={loc.slug}
+                className="p-6 lg:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:bg-surface/80 transition-colors group"
+              >
+                <div className="space-y-1 md:w-1/2">
+                  <div className="text-xs font-mono text-slate-500 uppercase tracking-wider flex items-center gap-2">
+                    <span>{loc.province}</span>
+                    <span className="text-slate-400 font-bold">→</span>
+                    <span className="font-semibold text-brand-black">{countryName}</span>
+                  </div>
+                  <h3 className="text-heading-md font-bold text-brand-black group-hover:text-accent transition-colors flex items-center gap-2">
+                    <MapPin className="w-4 h-4 text-slate-500 group-hover:text-accent transition-colors shrink-0" />
+                    <Link href={getLocationHref(loc.slug)}>{loc.name}</Link>
+                  </h3>
                 </div>
-                <h3 className="text-heading-md font-bold text-brand-black group-hover:text-accent transition-colors flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-slate-500 group-hover:text-accent transition-colors shrink-0" />
-                  <Link href={getLocationHref(loc.slug)}>{loc.name}</Link>
-                </h3>
-              </div>
 
-              <div className="flex items-center gap-4 md:justify-end md:w-1/2">
-                {routeByOrigin.has(loc.slug) && (
+                <div className="flex items-center gap-4 md:justify-end md:w-1/2">
+                  {routeByOrigin.has(loc.slug) && (
+                    <Link
+                      href={routeByOrigin.get(loc.slug)!.path}
+                      className="text-xs font-mono font-semibold text-brand-black hover:text-accent flex items-center gap-1 transition-colors"
+                    >
+                      <span>Shipping from {loc.name}</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-accent" />
+                    </Link>
+                  )}
                   <Link
-                    href={routeByOrigin.get(loc.slug)!.path}
+                    href={getLocationHref(loc.slug)}
                     className="text-xs font-mono font-semibold text-brand-black hover:text-accent flex items-center gap-1 transition-colors"
                   >
-                    <span>Shipping from {loc.name}</span>
+                    <span>Explore Origin Hub</span>
                     <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-accent" />
                   </Link>
-                )}
-                <Link
-                  href={getLocationHref(loc.slug)}
-                  className="text-xs font-mono font-semibold text-brand-black hover:text-accent flex items-center gap-1 transition-colors"
-                >
-                  <span>Explore Origin Hub</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-accent" />
-                </Link>
-                <Link href={`/quote?origin=${loc.slug}&destination=${countrySlug}`}>
-                  <span className="px-3 py-1.5 bg-surface rounded border border-border text-xs font-mono font-semibold hover:border-slate-400 transition-colors">
-                    Quote Route
-                  </span>
-                </Link>
+                  <Link href={`/quote?origin=${loc.slug}&destination=${countrySlug}`}>
+                    <span className="px-3 py-1.5 bg-surface rounded border border-border text-xs font-mono font-semibold hover:border-slate-400 transition-colors">
+                      Quote Route
+                    </span>
+                  </Link>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </Container>
     </section>
   );

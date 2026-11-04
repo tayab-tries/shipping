@@ -152,9 +152,10 @@ export default async function DestinationCityDetailPage({ params }: CityPageProp
     cityLogistics?.metaDescription ||
     fallbackResult?.city.introduction ||
     `Cargo shipping to ${cityName}, ${countryName}.`;
+  // Code-defined city profiles carry the long, city-specific copy; Sanity's short overview only fills gaps
   const overview =
-    sanityCity?.overview ||
     cityLogistics?.editorialOverview ||
+    sanityCity?.overview ||
     fallbackResult?.city.overview ||
     introduction;
   const preparationConsiderations =
@@ -254,11 +255,13 @@ export default async function DestinationCityDetailPage({ params }: CityPageProp
       />
 
       {/* 05 AVAILABLE SERVICES (LIGHT / WHITE - Inherited from parent country) */}
-      <DestinationServiceGrid
-        countryName={`${cityName}, ${countryName}`}
-        countrySlug={countrySlug}
-        supportedServices={supportedServices}
-      />
+      {!cityLogistics && (
+        <DestinationServiceGrid
+          countryName={`${cityName}, ${countryName}`}
+          countrySlug={countrySlug}
+          supportedServices={supportedServices}
+        />
+      )}
 
       {/* 06 PAKISTAN ORIGIN CITIES (WHITE - Inherited from parent country) */}
       <DestinationOriginGrid
@@ -266,19 +269,21 @@ export default async function DestinationCityDetailPage({ params }: CityPageProp
         countrySlug={countrySlug}
         citySlug={citySlug}
         supportedOrigins={supportedOrigins}
+        compact={Boolean(cityLogistics)}
       />
 
-      {/* 07 SHIPPING PROCESS (LIGHT) */}
-      <DestinationProcess countryName={`${cityName}, ${countryName}`} />
-
-      {/* 08 PREPARATION / CUSTOMS / DELIVERY NOTES (WHITE) */}
-      <DestinationConsiderations
-        countryName={`${cityName}, ${countryName}`}
-        preparationConsiderations={preparationConsiderations}
-      />
-
-      {/* 09 GUIDES (WHITE) */}
-      <DestinationGuides countryName={cityName} />
+      {/* Process, customs and guides repeat on every city page; profiled cities cover customs in CityDeliveryCoverage
+          and leave the shared process and guides to the country page */}
+      {!cityLogistics && (
+        <>
+          <DestinationProcess countryName={`${cityName}, ${countryName}`} />
+          <DestinationConsiderations
+            countryName={`${cityName}, ${countryName}`}
+            preparationConsiderations={preparationConsiderations}
+          />
+          <DestinationGuides countryName={cityName} />
+        </>
+      )}
 
       {/* 10 CITY-SPECIFIC FAQ ACCORDION (LIGHT) */}
       <DestinationFaq countryName={cityName} faqs={cityFaqs} />
