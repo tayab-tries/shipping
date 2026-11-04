@@ -20,6 +20,7 @@ import { DestinationFaq } from '@/components/destinations/DestinationFaq';
 import { DestinationCta } from '@/components/destinations/DestinationCta';
 import { CityGatewayRouting } from '@/components/destinations/CityGatewayRouting';
 import { CityDeliveryCoverage } from '@/components/destinations/CityDeliveryCoverage';
+import { DestinationCityLinks } from '@/components/destinations/DestinationCityLinks';
 import { getSanityDestinationCityBySlugs, getSanityDestinationsList } from '@/sanity/lib/fetch';
 import { getCityLogisticsData, cityLogisticsProfiles } from '@/lib/destinations/city-logistics-data';
 
@@ -283,6 +284,16 @@ export default async function DestinationCityDetailPage({ params }: CityPageProp
           />
           <DestinationGuides countryName={cityName} />
         </>
+      )}
+
+      {/* Sibling destination cities, then cities in other countries */}
+      {cityLogistics && (
+        <DestinationCityLinks
+          countrySlug={countrySlug}
+          citySlug={citySlug}
+          cityName={cityName}
+          countryName={countryName}
+        />
       )}
 
       {/* 10 CITY-SPECIFIC FAQ ACCORDION (LIGHT) */}

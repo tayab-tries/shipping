@@ -11,6 +11,7 @@ import { getBreadcrumbJsonLd, getLocalBusinessJsonLd } from '@/lib/seo/jsonld.se
 import { ORGANIZATION_ID } from '@/lib/seo/schema.service';
 import { buildWhatsappUrl } from '@/lib/utils/whatsapp';
 import { CITY_LANDINGS, getCityPageLinks } from '@/lib/routes/registry';
+import { getDestinationCityLinks } from '@/lib/destinations/city-logistics-data';
 import { ContentBlock, LandingPage } from '@/lib/routes/shared';
 
 const BASE_URL = 'https://raahiinternational.com';
@@ -320,6 +321,17 @@ export function CityLandingPage({ page, whatsappNumber }: CityLandingPageProps) 
                   <p className="text-xs font-mono font-bold text-slate-500 uppercase tracking-wider">Other cities we collect from</p>
                   <div className="space-y-2.5">
                     {getCityPageLinks(origin.key).map((city) => (
+                      <SidebarLink key={city.key} href={city.href} label={city.label} />
+                    ))}
+                  </div>
+                </nav>
+              )}
+
+              {page.path === origin.cityPath && (
+                <nav aria-label={`Delivery cities from ${origin.name}`} className="bg-surface rounded-md border border-border p-6 space-y-4 shadow-xs">
+                  <p className="text-xs font-mono font-bold text-slate-500 uppercase tracking-wider">Delivery cities abroad</p>
+                  <div className="space-y-2.5">
+                    {getDestinationCityLinks().map((city) => (
                       <SidebarLink key={city.key} href={city.href} label={city.label} />
                     ))}
                   </div>
