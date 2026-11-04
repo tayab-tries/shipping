@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Globe, MapPin, Truck, ArrowRight, Compass } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
+import { ROUTE_PAGES } from '@/lib/routes/registry';
 
 export interface InternalLinkGridProps {
   className?: string;
@@ -187,6 +188,25 @@ export const InternalLinkGrid: React.FC<InternalLinkGridProps> = ({ className = 
                         <span className="text-[11px] font-mono text-slate-500">
                           {hub.sub}
                         </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="space-y-2 pt-2 border-t border-border/70">
+                <span className="text-[11px] font-mono uppercase tracking-wider font-bold text-slate-500">
+                  Popular Shipping Routes
+                </span>
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-2 gap-y-1 text-xs font-medium">
+                  {Object.values(ROUTE_PAGES).map((route) => (
+                    <li key={route.path}>
+                      <Link
+                        href={route.path}
+                        className="text-slate-600 hover:text-brand-black hover:underline transition-colors py-0.5 block truncate"
+                        title={route.linkLabel}
+                      >
+                        {route.linkLabel}
                       </Link>
                     </li>
                   ))}
